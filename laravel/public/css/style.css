@@ -1,0 +1,75 @@
+*{
+font-family: "微軟正黑體", "Microsoft JhengHei";
+}
+
+/* main */
+main{
+    width: 100vw;
+    height: 100vh;
+    background-color: #555;
+}
+[role="main"] {
+    padding: 0px;
+}
+@media (min-width: 768px){
+[role="main"] {
+    padding: 0px;
+}}
+
+main > .header{
+    line-height: 20px;
+    background-color: #fff;
+}
+
+main > .header .logout{
+    color: #222;
+}
+main > .header .logout:hover{
+    color: #888;
+    text-decoration: none;
+}
+
+.bg-dark{
+    background-color: #222 !important;
+}
+
+/* sidebar */
+.nav-logo{
+    margin-bottom: 20px;
+}
+.sidebar{
+    padding: 20px 0 0;
+}
+.sidebar .nav-link{
+    color: #ededed;
+}
+.sidebar-sticky{
+    padding-top: .8rem;
+} 
+.border-top{
+    border-top: 0.5px solid #444 !important;
+}
+.sidebar-heading{
+    font-size: .875rem;
+}
+.text-muted{
+    color: #ddd !important;
+}
+.nav-sub-item{
+    color: #888 !important;
+    font-size: 0.8rem;
+}
+
+.header-card h5,.header-card h6{
+    margin-bottom: 0;
+}
+.card-body{
+    padding: 0.6rem 0.8rem;
+}
+
+.sidebar-sticky .bottom-nav{
+    margin-top: auto;
+    flex-direction: column;
+    display: flex;
+    margin: 0;
+}
