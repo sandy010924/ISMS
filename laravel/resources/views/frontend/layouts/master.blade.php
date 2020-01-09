@@ -1,7 +1,5 @@
 <html lang="zh-TW">
-
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
@@ -21,12 +19,13 @@
   <!-- Custom styles -->
   <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
   <link href="{{ asset('css/web.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/form.css') }}" rel="stylesheet">
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
 </head>
 
 <body>
   <div class="container-fluid">
-    <div class="row">
 
       @include('frontend.layouts.navbar')
 
@@ -37,7 +36,6 @@
           @yield('content')
         
         </main>
-    </div>
   </div>
 
 
@@ -49,7 +47,6 @@
     integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-
 </body>
 
 </html>

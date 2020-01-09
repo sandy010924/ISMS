@@ -9,8 +9,8 @@
         <div class="card m-3">
           <div class="card-body">
             <div class="row menu_search">
-              <div class="col-4">
-                <div class="input-group mb-3 search">
+              <div class="col">
+                <div class="input-group mb-3">
                   <input type="search" class="form-control" placeholder="搜尋手機" aria-label="Recipient's username"
                     aria-describedby="button-addon2">
                   <div class="input-group-append">
@@ -18,8 +18,8 @@
                   </div>
                 </div>
               </div>
-              <div class="col-8">
-                <div class="input-group mb-3 search">
+              <div class="col">
+                <div class="input-group mb-3">
                   <input type="search" class="form-control" placeholder="搜尋姓名" aria-label="Recipient's username"
                     aria-describedby="button-addon2">
                   <div class="input-group-append">
@@ -32,39 +32,30 @@
               <table class="table table-striped table-sm class_table">
                 <thead>
                   <tr>
-                    <th>日期</th>
-                    <th>課程名稱</th>
-                    <th>場次</th>
-                    <th>即時報名筆數</th>
-                    <th>實到人數</th>
-                    <th></th>
+                    <th>姓名</th>
+                    <th>連絡電話</th>
+                    <th>信箱</th>
+                    <td></td>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>2019/11/20(三)</td>
-                    <td>零秒成交數</td>
-                    <td>台北下午場</td>
-                    <td>56/3</td>
-                    <td></td>
-                    <td><a href="{{ route('check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
-                    </td>
+                    <td>王曉明</td>
+                    <td>0912345678</td>
+                    <td>asd123123@gmail.com</td>
+                    <td><button type="button" class="btn btn-secondary btn-sm">詳細資訊</button></td>
                   </tr>
                   <tr>
-                    <td>2019/11/20(三)</td>
-                    <td>零秒成交數</td>
-                    <td>台北晚上場</td>
-                    <td>98/5</td>
-                    <td></td>
-                    <td><button type="button" class="btn btn-secondary btn-sm">查詢名單</button></td>
+                    <td>陳美美</td>
+                    <td>0987654321</td>
+                    <td>ppqq1478@gmail.com</td>
+                    <td><button type="button" class="btn btn-secondary btn-sm">詳細資訊</button></td>
                   </tr>
                   <tr>
-                    <td>2019/11/26(二)</td>
-                    <td>零秒成交數</td>
-                    <td>台北晚上場</td>
-                    <td>47</td>
-                    <td></td>
-                    <td><button type="button" class="btn btn-secondary btn-sm">查詢名單</button></td>
+                    <td>蔡阿祥</td>
+                    <td>0911223344</td>
+                    <td>sfsdf45457@gmail.com</td>
+                    <td><button type="button" class="btn btn-secondary btn-sm">詳細資訊</button></td>
                   </tr>
 
                 </tbody>

@@ -8,14 +8,12 @@
         <!--搜尋課程頁面內容-->
         <div class="card m-3">
           <div class="card-body">
-            <div class="row menu_search">
-              <div class="col-3"></div>
-              <div class="col-9">
-                <div class="input-group mb-3 search">
-                  <input type="search" class="form-control" placeholder="搜尋課程" aria-label="Recipient's username"
-                    aria-describedby="button-addon2">
+            <div class="row mb-3">
+              <div class="col-6 mx-auto">
+                <div class="input-group">
+                  <input type="search" class="form-control" placeholder="搜尋課程" aria-describedby="btn_search">
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">搜尋</button>
+                    <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
                   </div>
                 </div>
               </div>
@@ -39,7 +37,7 @@
                     <td>台北下午場</td>
                     <td>56/3</td>
                     <td></td>
-                    <td><a href="{{ route('check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+                    <td><a href="{{ route('course_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
                     </td>
                   </tr>
                   <tr>
@@ -48,7 +46,7 @@
                     <td>台北晚上場</td>
                     <td>98/5</td>
                     <td></td>
-                    <td><a href="{{ route('check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+                    <td><a href="{{ route('course_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
                     </td>
                   </tr>
                   <tr>
@@ -57,7 +55,7 @@
                     <td>台北晚上場</td>
                     <td>47</td>
                     <td></td>
-                    <td><a href="{{ route('check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+                    <td><a href="{{ route('course_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
                     </td>
                   </tr>
 
