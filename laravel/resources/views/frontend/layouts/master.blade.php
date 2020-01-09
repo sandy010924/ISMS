@@ -21,11 +21,7 @@
   <link href="{{ asset('css/web.css') }}" rel="stylesheet">
   <link href="{{ asset('css/form.css') }}" rel="stylesheet">
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-<<<<<<< HEAD
-
-=======
   <link href="{{ asset('css/course_list_chart.css') }}" rel="stylesheet">
->>>>>>> origin/master
 </head>
 
 <body>
@@ -51,11 +47,10 @@
     integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-<<<<<<< HEAD
-=======
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
   <script src="{{ asset('js/course_list_chart.js') }}"></script>
->>>>>>> origin/master
+  <script src="{{ asset('js/style.js') }}"></script>
+  <script src="{{ asset('js/otd.js') }}"></script>
 </body>
 
 </html>
