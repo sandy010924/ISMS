@@ -20,9 +20,12 @@ Route::get('/', function () {
 })->name('login');
 
 /*** 課程管理 ***/
-Route::get('course', function () {
-    return view('frontend.course');
-})->name('course');
+// Route::get('course', function () {
+//     return view('frontend.course');
+// })->name('course');
+/* Rocky(2019/12/29)*/
+Route::post('course', 'CourseController@upload');
+Route::get('course', 'CourseController@uploadPage')->name('course');
 
 Route::get('course_form', function () {
     return view('frontend.course_form');

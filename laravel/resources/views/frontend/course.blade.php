@@ -22,7 +22,7 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                        <form>
+                      <form class="form" action="{{url('course')}}" method="POST" enctype="multipart/form-data">
                           <div class="form-group">
                             <label for="import_teacher" class="col-form-label">講師</label>
                             <select class="custom-select" id="import_teacher">
@@ -36,8 +36,8 @@
                             <label for="import_flie" class="col-form-label">上傳檔案</label>
                             {{-- <textarea class="form-control" id="message-text"></textarea> --}}
                             <div class="custom-file">
-                              <input type="file" class="custom-file-input" id="import_flie" aria-describedby="inputGroupFileAddon01"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                               <label class="custom-file-label" for="import_flie">瀏覽檔案</label>
+                              <input type="file" class="custom-file-input" id="import_flie" aria-describedby="inputGroupFileAddon01"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                             </div>
                           </div>
                         </form>
@@ -177,4 +177,15 @@
           </div>
         </div>
 <!-- Content End -->
+
+<script>
+  // Rocky(2020/01/06)
+$("document").ready(function(){
+  $("#inputGroupFile01").change(function(){
+    var i = $(this).prev('label').clone();
+    var file = $('#inputGroupFile01')[0].files[0].name;
+    $(this).prev('label').text(file);
+  }); 
+});
+</script>
 @endsection
