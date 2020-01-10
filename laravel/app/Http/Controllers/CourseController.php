@@ -37,28 +37,51 @@ class CourseController extends Controller
         $id_course = "";
         $id_student = "";
         $id_SalesRegistration = "";
-
+        $events = "";
         foreach ($excel_data as $key => $data) {
             $course = new Course;
             $student = new Student;
             $SalesRegistration = new SalesRegistration;
             $check_student = $student::where('phone', $data[3])->get();
         
-                     
+            
+            
             // 從日期+時間+場次+地點欄位切割
             $str_sec = explode(" ", $data[6]);
-    
-            // 切割日期
-            $str_date = explode("（", $str_sec[0]);
+            // if(count($str_sec) != 4){
 
-            //切割時間(開始時間、結束時間)
-            $str_time = explode("）", $str_sec[0]);
+            //     echo count($str_sec)."<br>";
+            // }
+
+           
             
-            // $time[0] -> 開始時間,$time[1] -> 結束時間
-            $time = explode("-", $str_time[1]);
-            $time_start = date('Y-m-d H:i:s', strtotime($str_date[0].$time[0])).PHP_EOL;
-            $time_end = date('Y-m-d H:i:s', strtotime($str_date[0].$time[1])).PHP_EOL;
-
+            if (count($str_sec) == 4) {
+                
+                // 切割日期
+                $str_date = explode("（", $str_sec[0]);
+                
+                //切割時間(開始時間、結束時間)
+                $str_time = explode("）", $str_sec[0]);
+                
+                //場次
+                $events = $str_sec[2];
+                // $time[0] -> 開始時間,$time[1] -> 結束時間
+                $time = explode("-", $str_time[1]);
+                $time_start = date('Y-m-d H:i:s', strtotime($str_date[0].$time[0])).PHP_EOL;
+                $time_end = date('Y-m-d H:i:s', strtotime($str_date[0].$time[1])).PHP_EOL;
+            } else {
+                switch (count($str_sec)) {
+                    case 1:
+                        $events = '';
+                        break;
+                    case 2:
+                        $events = $str_sec[1];
+                        break;
+                    case 3:
+                        $events = $str_sec[2];
+                        break;
+                }
+            }
 
 
             // 新增課程資料(只新增一筆資料)
@@ -66,7 +89,7 @@ class CourseController extends Controller
                 $course->id_teacher       = $id_teacher;     // 講師ID
                 $course->name             = '';             // 課程名稱
                 $course->location         = $str_sec[3];    // 課程地點
-                $course->events           = $str_sec[2];    // 課程場次
+                $course->events           = $events;    // 課程場次
                 $course->course_start_at  = $time_start;    // 課程開始時間
                 $course->course_end_at    = $time_end;      // 課程結束時間
                 $course->memo             = '';             // 課程備註
