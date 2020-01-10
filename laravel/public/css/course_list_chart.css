@@ -1,0 +1,28 @@
+.custom_card {
+  width: 280px;
+}
+.custom_card_header {
+  padding: 30px;
+}
+.custom_card_body {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+.content_box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px 0 ;
+}
+.pie_box {
+  width: 400px;
+  margin: 10px;
+}
+.custom_row {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 10px;
+}
+.custom_label {
+  margin: 0;
+}

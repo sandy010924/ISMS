@@ -8,29 +8,29 @@
         <!--現場表單頁面內容-->
         <div class="card m-3">
           <div class="card-body">
-            <div class="title">
-              <div class="row form_title">
-                <div class="col-7">
-                  <p class="form_text">零秒成交數 2019/11/20 台北下午場</p>
-                </div>
-                <div class="col-5">
-                  <p class="form_text">講座地點 : </p>
-                </div>
-
-
+            <div class="row mb-3">
+              <div class="col-5">
+                <h5>零秒成交數 2019/11/20 台北下午場</h5>
               </div>
+              <div class="col-7 text-right">
+                <h5>講座地點 : 台北市金山南路一段17號5樓(博宇藝享空間)</h5>
+              </div>
+            </div>
               <div class="row">
-                <div class="col-3">
-                  <p class="form_text">主持開收 : </p>
+                <div class="col-2">
+                  <p class="form_text">主持 : </p>
+                </div>
+                <div class="col-2">
+                  <p class="form_text">開收 : </p>
                 </div>
                 <div class="col-3">
                   <p class="form_text">工作人員 : </p>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                   <p class="form_text">天氣 : </p>
                 </div>
                 <div class="col-3">
-                  <p class="form_text">該場備註 : <input type="text" class="form_input"></p>
+                  <p class="form_text">該場總金額 : </p>
                 </div>
               </div>
               <div class="row">
@@ -44,12 +44,20 @@
                   <p class="form_text">分期付款 : <input type="text" class="form_input"></p>
                 </div>
                 <div class="col-3">
-                  <p class="form_text">該場總金額 : </p>
+                  <p class="form_text">該場備註 : <input type="text" class="form_input"></p>
                 </div>
-
+              </div>
+              <div class="row">
+                <div class="col-3 mx-auto">
+                  <button type="button" class="btn btn-secondary  btn-block">儲存</button>
+                </div>
               </div>
             </div>
-            <div class="table-responsive ">
+        </div>
+
+        <div class="card m-3">
+          <div class="card-body">
+            <div class="table-responsive">
               <table class="table table-striped table-sm class_table form_table">
                 <thead>
                   <tr>

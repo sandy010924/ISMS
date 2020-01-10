@@ -2,22 +2,22 @@
 .btn_date{
   float: right; 
 }
-.menu_search{
+/* .menu_search{
     margin: 0 20%;
 }
 .search{
     width:70%;
-}
+} */
 /*搜尋表格*/
-.class_table{
+/* .class_table{
     text-align: center;
-}
+} */
 /*開始報到頁面*/
 
-.check_title{
+/* .check_title{
     
     font-size: 16px;
-}
+} */
 .check_content{
     width: 70%;
     text-align: center;
@@ -25,24 +25,27 @@
     padding: 20px;
     font-size: 22px;
 }
-.three_num_search{
+/* .three_num_search{
     float: right;
-}
-.present{
+} */
+/* .present{
     background-color: #4CAF50;
     border-color: #4CAF50;
+    color: #fff;
 }
 .absent{
     background-color: #6c757d;
     border-color: #6c757d;
+    color: #fff;
 }
 .cancel{
     background-color: #E43D40;
     border-color: #E43D40;
+    color: #fff;
 }
 .more{
     color:#555;
-}
+} */
 /*現場表單頁面*/
 .title{
     font-size: 16px;
@@ -55,7 +58,6 @@
 }
 /*現場人員今日課程*/
 .main_body{
-    
     flex: 0 0 100%;
     max-width: 100%;
 }
@@ -90,4 +92,35 @@
   
 .login_button:hover {
     opacity: 0.8;
+}
+/*正課表單*/
+
+.form_back{
+    width: 40%;
+    margin:0 auto;
+    background-color: #ffffff;
+}
+#course_form{
+    font-size: 20px;
+    color: #000;
+}
+.form_input{
+    width: 100%;
+    padding: 5px 10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.born{
+    border: 1px solid #ccc;
+}
+.next_btn{
+    background-color: #222;
+    color: white;
+    padding: 5px 10px;
+    margin: 15px 0;
+    border: none;
+    cursor: pointer;
+    width: 30%;
 }

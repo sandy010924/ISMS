@@ -53,7 +53,7 @@
                     </div>
                     <div class="col-6">
                         <button type="button" class="btn btn-outline-secondary" >現場報名</button>
-                        <a href="{{ route('ots_return_form') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a>
+                        <a href="{{ route('ots_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a>
                       </div>
                 </div>
                 <div class="table-responsive check_table">
@@ -79,10 +79,10 @@
                             <button class="btn btn-sm more" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   •••
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                              <button class="dropdown-item" type="button">報到</button>
-                              <button class="dropdown-item" type="button">未到</button>
-                              <button class="dropdown-item" type="button">取消</button>
+                            <div class="dropdown-menu dropdown_status" aria-labelledby="dropdownMenu2">
+                              <button class="dropdown-item" type="button" onclick="check()">報到</button>
+                              <button class="dropdown-item" type="button" onclick="nocheck()">未到</button>
+                              <button class="dropdown-item" type="button" onclick="cancel()">取消</button>
                             </div>
                           </div>
                         </td>

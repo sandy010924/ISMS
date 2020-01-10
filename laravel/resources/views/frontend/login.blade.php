@@ -8,7 +8,7 @@
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Jekyll v3.8.6">
   
-  <title>@yield('title') | 無極限學員系統</title>
+  <title>登入 | 無極限學員系統</title>
 
   <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/dashboard/">
   
