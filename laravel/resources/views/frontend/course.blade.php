@@ -23,9 +23,10 @@
                       </div>
                       <div class="modal-body">
                       <form class="form" action="{{url('course')}}" method="POST" enctype="multipart/form-data">
+                          @csrf
                           <div class="form-group">
                             <label for="import_teacher" class="col-form-label">講師</label>
-                            <select class="custom-select" id="import_teacher">
+                            <select class="custom-select" name="import_teacher" id="import_teacher">
                               <option selected>選擇講師</option>
                               <option value="1">Julia</option>
                               <option value="2">Jack</option>
@@ -37,14 +38,15 @@
                             {{-- <textarea class="form-control" id="message-text"></textarea> --}}
                             <div class="custom-file">
                               <label class="custom-file-label" for="import_flie">瀏覽檔案</label>
-                              <input type="file" class="custom-file-input" id="import_flie" aria-describedby="inputGroupFileAddon01"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                              <input type="file" class="custom-file-input" id="import_flie" name="import_flie" aria-describedby="inputGroupFileAddon01"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                             </div>
                           </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <!-- <button type="button" id="import_check" class="btn btn-primary">確認</button> -->
+                            <button type="submit"  class="btn btn-primary" >確認</button>
+                          </div>
                         </form>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                        <button type="button" id="import_check" class="btn btn-primary">確認</button>
                       </div>
                     </div>
                   </div>
@@ -176,14 +178,30 @@
             </div>
           </div>
         </div>
+        <!-- Rocky(2020/01/11) -->
+        @if (session('status') == "匯入成功")
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ session('status') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        @elseif (session('status') == "匯入失敗" || session('status') == "請選檔案/填講師姓名")  
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ session('status') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        @endif
 <!-- Content End -->
 
 <script>
   // Rocky(2020/01/06)
 $("document").ready(function(){
-  $("#inputGroupFile01").change(function(){
+  $("#import_flie").change(function(){
     var i = $(this).prev('label').clone();
-    var file = $('#inputGroupFile01')[0].files[0].name;
+    var file = $('#import_flie')[0].files[0].name;
     $(this).prev('label').text(file);
   }); 
 });

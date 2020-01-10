@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Storage;
-use DateTime;
-use DateTimeZone;
 use App\Course;
 use App\Student;
 use App\SalesRegistration;
-use App\Teacher;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CourseController extends Controller
@@ -23,28 +19,14 @@ class CourseController extends Controller
     // Rocky (2019/12/29)
     public function upload(Request $request)
     {
-        // 變數
-        $id_teacher = "";
-
         // 前端資料
         $path = $request->file('import_flie');
-        $name_teacher = $request->input('import_teacher');
-
-        // Model
-        $teacher = new Teacher;
-
+        $id_teacher = $request->get('import_teacher');
 
         //如果檔案是空的 -> rturn
-        if ($path == "" || $name_teacher == "") {
+        if ($path == "" || $id_teacher == "") {
             return redirect('course')->with('status', '請選檔案/填講師姓名');
         }
-
-         // 新增講師資料
-         $teacher -> name = $name_teacher;
-         $teacher -> phone = '';
-         $teacher -> save();
-         $id_teacher = $teacher -> id;
-
 
         $excel_data = Excel::toCollection(null, $path);
         $excel_data =  $excel_data[0];
@@ -62,9 +44,7 @@ class CourseController extends Controller
             $SalesRegistration = new SalesRegistration;
             $check_student = $student::where('phone', $data[3])->get();
         
-         
-            
-            
+                     
             // 從日期+時間+場次+地點欄位切割
             $str_sec = explode(" ", $data[6]);
     
@@ -114,8 +94,6 @@ class CourseController extends Controller
                 $student->save();
                 $id_student = $student->id;
             }
-
-            
 
             // 新增銷售講座報名資料
             if ($id_course != "" && $id_student != "") {
