@@ -77,6 +77,9 @@ Route::get('ots_return', function () {
 })->name('ots_return');
 
 /*** 學員管理 ***/
-Route::get('student_list', function () {
-    return view('frontend.student_list');
-})->name('student_list');
+// Route::get('student_list', function () {
+//     return view('frontend.student_list');
+// })->name('student_list');
+
+/* Rocky (2020/01/14) */
+Route::get('student_list', 'StudentListController@show')->name('student_list');

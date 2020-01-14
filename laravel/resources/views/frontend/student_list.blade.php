@@ -39,25 +39,14 @@
                   </tr>
                 </thead>
                 <tbody>
+                @foreach($students as $student)
                   <tr>
-                    <td>王曉明</td>
-                    <td>0912345678</td>
-                    <td>asd123123@gmail.com</td>
+                    <td>{{ $student->name }}</td>
+                    <td>{{ $student->phone }}</td>
+                    <td>{{ $student->email }}</td>
                     <td><button type="button" class="btn btn-secondary btn-sm">詳細資訊</button></td>
                   </tr>
-                  <tr>
-                    <td>陳美美</td>
-                    <td>0987654321</td>
-                    <td>ppqq1478@gmail.com</td>
-                    <td><button type="button" class="btn btn-secondary btn-sm">詳細資訊</button></td>
-                  </tr>
-                  <tr>
-                    <td>蔡阿祥</td>
-                    <td>0911223344</td>
-                    <td>sfsdf45457@gmail.com</td>
-                    <td><button type="button" class="btn btn-secondary btn-sm">詳細資訊</button></td>
-                  </tr>
-
+                @endforeach
                 </tbody>
               </table>
             </div>
