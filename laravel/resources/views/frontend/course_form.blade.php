@@ -23,7 +23,7 @@
 </head>
 
 <body>
-  
+
 <div class="container-fluid">
       <main role="main" class="col-md-9 col-lg-10 px-4 main_body ">
           <form id="course_form">
@@ -31,14 +31,14 @@
             <p style="text-align: center; font-size: 30px; margin: 2% auto; color: white;">無極限國際有限公司</p>
             <div class="card mb-3 form_back">
                 <div class="card-body">
-            
+
             <div class="container">
               <ul style="list-style:none;padding: 0; " id="firstpage">
 
                 <li><label for="rphone"><b>手機號碼</b></label>
                     <input type="text" name="rphone" required class="form_input" id="phone_num">
                 </li>
-              
+
                 <button type="button" class="next_btn" id="page1_next" onclick="firstnext(),topFunction()">下一步</button>
               </ul>
               <ul style="list-style:none;padding: 0; display: none; " id="secondpage">
@@ -79,8 +79,8 @@
                     <li><label for="remail"><b>電子郵件</b></label>
                         <input type="text" name="remail" required class="form_input">
                     </li>
-                    <li><label for="born"><b>出生日期</b></label>           
-                      <input type="date" name="born" required class="form_input">                     
+                    <li><label for="born"><b>出生日期</b></label>
+                      <input type="date" name="born" required class="form_input">
                     </li>
                     <li><label for="rcompany"><b>公司名稱</b></label>
                         <input type="text" name="rcompany" required class="form_input">
@@ -145,7 +145,7 @@
                           <hr>
                           <p style="text-align: center;"> <strong><span style="font-size: 18pt;">自在交易工作坊</span></strong></p>
                           <p style="text-align: center;"><strong><span style="font-size: 18pt;">一般方案：998,00</span></strong></p>
-                        
+
                     </li>
                     <li><label for="join"><b>我想參加課程</b></label>
                         <div style="margin: 8px 0;">
@@ -198,6 +198,7 @@
                         <button type="button" class="next_btn" onclick="fifthnext(),topFunction()">下一步</button>
               </ul>
               <ul style="list-style:none;padding: 0; display: none;" id="sixthpage">
+              <!-- <ul style="list-style:none;padding: 0; display: block;" id="sixthpage"> -->
                     <li >
                         <p style="text-align: center;"><span style="font-size: 24pt;"><strong>課程服務須知</strong></span></p>
                         <p style="text-align: center;"><span style="font-size: 14pt;"><strong>請詳讀後勾選</strong></span></p>
@@ -211,11 +212,11 @@
                         <p><input type="checkbox" name="agree" id="agree_check2" onchange="check()" />我同意</p>
                         <textarea readonly style="width: 100%; height: 200px; font-size: 18px;">如您於繳交費用後無法參加課程，請保留此表單備分內容。(報名完成會寄到您填寫的email)
 申請之退費方式、款項如下：
-★5日內全額退費(繳費後隔日起算)  
-★第6日起：課程費用80%(繳交費用未達20%者，恕不辦理退費) 
+★5日內全額退費(繳費後隔日起算)
+★第6日起：課程費用80%(繳交費用未達20%者，恕不辦理退費)
 ★第31日起或開課後：恕不辦理退費。</textarea>
                     </li>
-                    <hr>      
+                    <hr>
                     <li>
                         <p><input type="checkbox" name="agree" id="agree_check3" onchange="check()" />我同意</p>
                         <textarea readonly style="width: 100%; font-size: 18px;">報名完成後1年內須參加課程服務，逾期則不得參加課程服務，亦不得要求退還已繳交之費用。</textarea>
@@ -223,7 +224,10 @@
                     <hr>
                     <li>
                         <p>本人保證上述資料之真實性並願遵守本「課程服務合約」之內容(請簽中文正楷)</p>
-                        <textarea readonly style="width: 100%; height: 200px; font-size: 18px;"></textarea>
+                        <!-- 電子簽章 -->
+                        <canvas style="border:1px solid;" id="signature_pad" class="signature_pad" width=530 height=200></canvas>
+                        <button type="button" id="signature_pad_clear" style="margin:10px 0px;">清除</button>
+                        <!-- <textarea readonly style="width: 100%; height: 200px; font-size: 18px;"></textarea> -->
                     </li>
                     <button type="button" class="next_btn" onclick="sixthlast(),topFunction()">上一步</button>
                     <button type="button" class="next_btn" onclick="sixthnext(),topFunction()">預覽確認</button>
@@ -248,41 +252,41 @@
                     <label name="remail" readonly>abc@gmail.com</label>
                 </li>
                 <li><label for="born"><b>出生日期</b></label><br/>
-                    <label name="born" readonly>1980-1-1</label>                         
+                    <label name="born" readonly>1980-1-1</label>
                 </li>
                 <li><label for="rcompany"><b>公司名稱</b></label><br/>
-                    <label name="rcompany" readonly></label> 
+                    <label name="rcompany" readonly></label>
                 </li>
                 <li><label for="rwork"><b>職業</b></label><br/>
-                    <label name="rwork" readonly>資訊業</label> 
+                    <label name="rwork" readonly>資訊業</label>
                 </li>
                 <li><label for="raddress"><b>聯絡地址</b></label><br/>
-                    <label name="raddress" readonly></label> 
+                    <label name="raddress" readonly></label>
                 </li>
                 <li><label for="join"><b>我想參加課程</b></label><br/>
-                    <label name="join" readonly>現場最優惠價格</label> 
+                    <label name="join" readonly>現場最優惠價格</label>
                 </li>
                 <li><label for="pay"><b>付款方式</b></label><br/>
-                    <label name="pay" readonly>現金</label> 
+                    <label name="pay" readonly>現金</label>
                 </li>
                 <li><label for="price"><b>付款金額</b></label><br/>
-                    <label name="price" readonly></label> 
+                    <label name="price" readonly></label>
                 </li>
                 <li><label for="num"><b>匯款帳號/卡號後五碼</b></label><br/>
-                    <label name="num" readonly></label> 
+                    <label name="num" readonly></label>
                 </li>
                 <li><label for="invoice"><b>統一發票</b></label><br/>
-                    <label name="invoice" readonly>二聯式</label> 
+                    <label name="invoice" readonly>二聯式</label>
                 </li>
                 <li><label for="num2"><b>統編</b></label><br/>
-                    <label name="num2" readonly></label> 
+                    <label name="num2" readonly></label>
                 </li>
                 <li><label for="num3"><b>抬頭</b></label><br/>
-                    <label name="num3" readonly></label> 
+                    <label name="num3" readonly></label>
                 </li>
                 <button type="button" class="next_btn" onclick="sevenlast(),topFunction()">上一步</button>
                 <button type="submit" class="next_btn" >確認報名</button>
-          </ul>  
+          </ul>
             </div>
           </form>
           </div>
@@ -297,9 +301,10 @@
     integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
   {{-- <script src="{{ asset('js/dashboard.js') }}"></script> --}}
   <script src="{{ asset('js/form.js') }}"></script>
-
+  <script src="{{ asset('js/signature.js') }}"></script>
 </body>
 
 </html>
