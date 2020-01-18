@@ -49,5 +49,6 @@
       <div class="pie_box"><canvas id="pie-chart_check_in_rate" width="200px" height="200px"></canvas></div>
     </div>
   </div>
+  <!-- <input id="refresh" type="button" value="更新圖表"></button> -->
 </div>
 <!-- Content End -->
