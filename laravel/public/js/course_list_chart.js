@@ -1,3 +1,6 @@
+// Chart global Setting
+Chart.defaults.global.defaultFontFamily = '微軟正黑體';
+
 // 成交率
 // 成交率data 圖表設定
 var turnover_rate_config = {
@@ -10,6 +13,14 @@ var turnover_rate_config = {
     }]
   },
   options: {
+  //   layout: {
+  //     padding: {
+  //         left: 0,
+  //         right: 0,
+  //         top: 0,
+  //         bottom: 0
+  //     }
+  // },
     title: {
       display: true,
       text: '成交率: 0.12%',
