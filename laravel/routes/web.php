@@ -24,16 +24,21 @@ Route::get('/', function () {
 //     return view('frontend.course');
 // })->name('course');
 /* Rocky(2019/12/29)*/
-Route::post('course', 'CourseController@upload');
-Route::get('course', 'CourseController@uploadPage')->name('course');
+Route::post('course', 'Backend\CourseController@upload');
+// Route::get('course', 'CourseController@uploadPage')->name('course');
+/* Sandy (2020/01/14) */
+Route::get('course', 'Frontend\CourseController@show')->name('course');
 
 Route::get('course_form', function () {
     return view('frontend.course_form');
 })->name('course_form');
 
-Route::get('course_apply', function () {
-    return view('frontend.course_apply');
-})->name('course_apply');
+//Sandy (2020/01/15)
+// Route::get('course_apply', function () {
+//     return view('frontend.course_apply');
+// })->name('course_apply');7
+Route::get('course_apply','Frontend\CourseApplyController@show')->name('course_apply');
+Route::post('course_apply', 'Backend\CourseApplyController@update');
 
 Route::get('course_list', function () {
     return view('frontend.course_list');
@@ -51,17 +56,25 @@ Route::get('course_list_chart', function () {
     return view('frontend.course_list_chart');
 })->name('course_list_chart');
 
-Route::get('course_today', function () {
-    return view('frontend.course_today');
-})->name('course_today');
+//Sandy (2020/01/17)
+// Route::get('course_today', function () {
+//     return view('frontend.course_today');
+// })->name('course_today');
+Route::get('course_today', 'Frontend\CourseTodayController@show')->name('course_today');
+
+//Sandy (2020/01/17)
+// Route::get('course_check', function () {
+//     return view('frontend.course_check');
+// })->name('course_check');
+Route::get('course_check','Frontend\CourseCheckController@show')->name('course_check');
+Route::post('course_check', 'Backend\CourseCheckController@update');
+Route::post('dropdown_check', 'Backend\CourseCheckController@update_check');
+Route::post('dropdown_absent', 'Backend\CourseCheckController@update_absent');
+Route::post('dropdown_cancel', 'Backend\CourseCheckController@update_cancel');
 
 Route::get('course_return', function () {
     return view('frontend.course_return');
 })->name('course_return');
-
-Route::get('course_check', function () {
-    return view('frontend.course_check');
-})->name('course_check');
 
 /*** 現場人員報名 ***/
 Route::get('ots_check', function () {
@@ -82,4 +95,4 @@ Route::get('ots_return', function () {
 // })->name('student_list');
 
 /* Rocky (2020/01/14) */
-Route::get('student_list', 'StudentListController@show')->name('student_list');
+Route::get('student_list', 'Frontend\StudentListController@show')->name('student_list');

@@ -25,9 +25,13 @@
                       <form class="form" action="{{url('course')}}" method="POST" enctype="multipart/form-data">
                           @csrf
                           <div class="form-group">
+                            <label for="import_name" class="col-form-label">課程名稱</label>
+                            <input type="text" class="form-control" name="import_name" id="import_name" required>
+                          </div>
+                          <div class="form-group">
                             <label for="import_teacher" class="col-form-label">講師</label>
-                            <select class="custom-select" name="import_teacher" id="import_teacher">
-                              <option selected>選擇講師</option>
+                            <select class="custom-select" name="import_teacher" id="import_teacher" p required>
+                              <option selected disabled value="">選擇講師</option>
                               <option value="1">Julia</option>
                               <option value="2">Jack</option>
                               <option value="3">Mark</option>
@@ -38,7 +42,7 @@
                             {{-- <textarea class="form-control" id="message-text"></textarea> --}}
                             <div class="custom-file">
                               <label class="custom-file-label" for="import_flie">瀏覽檔案</label>
-                              <input type="file" class="custom-file-input" id="import_flie" name="import_flie" aria-describedby="inputGroupFileAddon01"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                              <input type="file" class="custom-file-input" id="import_flie" name="import_flie" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required/>
                             </div>
                           </div>
                           <div class="modal-footer">
@@ -131,7 +135,7 @@
               </div>
             </div>
             <div class="table-responsive">
-              <table class="table table-striped table-sm class_table">
+              <table class="table table-striped table-sm text-center">
                 <thead>
                   <tr>
                     <th>日期</th>
@@ -142,37 +146,21 @@
                   </tr>
                 </thead>
                 <tbody>
+                @foreach($courses as $key => $course )
+                {{-- @foreach(array_combine($courses, $salesregistrations) as $course => $salesregistration) --}}
                   <tr>
-                    <td>2019/11/20(三)</td>
-                    <td>零秒成交數</td>
-                    <td>台北下午場</td>
-                    <td>56/3</td>
+                    <td>{{ date('Y-m-d', strtotime($course->course_start_at)) }}</td>
+                    <td>{{ $course->name }}</td>
+                    <td>{{ $course->Events }}</td>
+                    <td>{{ $courses_apply[$key] }} / <span style="color:red">{{ $courses_cancel[$key] }}</span></td>
                     <td>
-                      <a href="{{ route('course_apply') }}"><button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button></a>
+                      <a href="{{ route('course_apply', ['id'=>$course->id]) }}"><button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button></a>
                     <a href="{{ route('course_form') }}">
                       <button type="button" class="btn btn-secondary btn-sm mr-3">產生表單</button>
                     </a>
                     </td>
                   </tr>
-                  <tr>
-                    <td>2019/11/20(三)</td>
-                    <td>零秒成交數</td>
-                    <td>台北晚上場</td>
-                    <td>98/5</td>
-                    <td>
-                      <button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button>
-                      <button type="button" class="btn btn-secondary btn-sm mr-3">產生表單</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2019/11/26(二)</td>
-                    <td>零秒成交數</td>
-                    <td>台北晚上場</td>
-                    <td>47</td>
-                    <td><button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button>
-                      <button type="button" class="btn btn-secondary btn-sm mr-3">產生表單</button></td>
-                  </tr>
-
+                @endforeach
                 </tbody>
               </table>
             </div>
@@ -180,14 +168,14 @@
         </div>
         <!-- Rocky(2020/01/11) -->
         @if (session('status') == "匯入成功")
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
           {{ session('status') }}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         @elseif (session('status') == "匯入失敗" || session('status') == "請選檔案/填講師姓名")  
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
           {{ session('status') }}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>

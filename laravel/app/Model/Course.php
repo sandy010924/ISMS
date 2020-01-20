@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,4 +19,5 @@ class Course extends Model
         'course_start_at',
         'course_end_at',
     ];
+
 }

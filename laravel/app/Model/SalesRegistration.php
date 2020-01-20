@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,4 +16,5 @@ class SalesRegistration extends Model
         'account',          // 帳號/卡號後四碼
         'course_content',   // 想聽到的課程有哪些
     ];
+    
 }

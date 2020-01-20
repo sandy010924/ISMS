@@ -1,6 +1,3 @@
-// window.onload = function () {
-//     var import_check = document.getElementById('import_check');
-//     import_check.onclick = function (event) {
-
-//     }
-// }
+window.setTimeout(function () {
+    $(".alert_fadeout").fadeTo(500, 0);
+}, 3000);

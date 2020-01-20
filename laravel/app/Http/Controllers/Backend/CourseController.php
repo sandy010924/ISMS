@@ -1,31 +1,27 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Course;
-use App\Student;
-use App\SalesRegistration;
+use App\Model\Course;
+use App\Model\Student;
+use App\Model\SalesRegistration;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CourseController extends Controller
 {
-    public function uploadPage()
-    {
-        return view('frontend.course');
-    }
-
     // Rocky (2019/12/29)
     public function upload(Request $request)
     {
         // 前端資料
         $path = $request->file('import_flie');
+        $name = $request->get('import_name');
         $id_teacher = $request->get('import_teacher');
 
         //如果檔案是空的 -> rturn
-        if ($path == "" || $id_teacher == "") {
-            return redirect('course')->with('status', '請選檔案/填講師姓名');
+        if ($path == "" || $id_teacher == "" || $name == "") {
+            return redirect('course')->with('status', '請選檔案/填、課程講師姓名');
         }
 
         $excel_data = Excel::toCollection(null, $path);
@@ -87,7 +83,7 @@ class CourseController extends Controller
             // 新增課程資料(只新增一筆資料)
             if ($key == "1") {
                 $course->id_teacher       = $id_teacher;     // 講師ID
-                $course->name             = '';             // 課程名稱
+                $course->name             = $name;             // 課程名稱
                 $course->location         = $str_sec[3];    // 課程地點
                 $course->events           = $events;    // 課程場次
                 $course->course_start_at  = $time_start;    // 課程開始時間

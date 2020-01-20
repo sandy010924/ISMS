@@ -30,20 +30,20 @@ window.onload = function () {
     // }
 }
 function change_apply(apply_id, apply_value) {
-    if (apply_value == '0') {
-        document.getElementById(apply_id).value = '3';
+    if (apply_value == '1') {
+        document.getElementById(apply_id).value = '5';
     }
     else {
-        document.getElementById(apply_id).value = '0';
+        document.getElementById(apply_id).value = '1';
     }
     return document.getElementById(apply_id).value;
 }
 function change_check(check_id, check_value) {
-    if (check_value == '1') {
-        document.getElementById(check_id).value = '2';
+    if (check_value == '4') {
+        document.getElementById(check_id).value = '3';
     }
     else {
-        document.getElementById(check_id).value = '1';
+        document.getElementById(check_id).value = '4';
     }
     return document.getElementById(check_id).value;
 }
@@ -66,35 +66,32 @@ function status_more() {
 // }
 function status_style(status_id, status_value) {
     switch (status_value) {
-        case '0':
+        case '1':  //已報名
             // document.getElementById(status_id).className = 'btn btn-sm absent apply_btn';
             document.getElementById(status_id).style.backgroundColor = '#6c757d';
             document.getElementById(status_id).style.borderColor = '#6c757d';
-            document.getElementById(status_id).innerHTML = '已報名';
+            // document.getElementById(status_id).innerHTML = '已報名';
             break;
-        case '1':
-            // document.getElementById(status_id).className = 'btn btn-sm present apply_btn';
+        case '3':  //未到
+            // document.getElementById(status_id).className = 'btn btn-sm absent apply_btn';
+            document.getElementById(status_id).style.backgroundColor = '#6c757d';
+            document.getElementById(status_id).style.borderColor = '#6c757d';
+            // document.getElementById(status_id).innerHTML = '未到';
+            break;
+        case '4':  //報到
+            // document.getElementById(status_id).className = 'btn btn-sm absent apply_btn';
             document.getElementById(status_id).style.backgroundColor = '#4CAF50';
             document.getElementById(status_id).style.borderColor = '#4CAF50';
-            document.getElementById(status_id).innerHTML = '報到';
             break;
-        case '2':
-            // document.getElementById(status_id).className = 'btn btn-sm absent apply_btn';
-            document.getElementById(status_id).style.backgroundColor = '#6c757d';
-            document.getElementById(status_id).style.borderColor = '#6c757d';
-            document.getElementById(status_id).innerHTML = '未到';
-            break;
-        case '3':
+        case '5':  //取消
             // document.getElementById(status_id).className = 'btn btn-sm cancel apply_btn';
             document.getElementById(status_id).style.backgroundColor = '#E43D40';
             document.getElementById(status_id).style.borderColor = '#E43D40';
-            document.getElementById(status_id).innerHTML = '取消';
             break;
         default:
             // document.getElementById(status_id).className = 'btn btn-sm absent apply_btn';
             document.getElementById(status_id).style.backgroundColor = '#6c757d';
             document.getElementById(status_id).style.borderColor = '#6c757d';
-            document.getElementById(status_id).textContent = '未到';
             break;
     }
 }
@@ -103,17 +100,17 @@ function status_style(status_id, status_value) {
 function check(status_id) {
     document.getElementById(status_id).style.backgroundColor = '#4CAF50';
     document.getElementById(status_id).style.borderColor = '#4CAF50';
-    document.getElementById(status_id).textContent = '報到';
+    // document.getElementById(status_id).textContent = '報到';
 }
 function absent(status_id) {
     document.getElementById(status_id).style.backgroundColor = '#6c757d';
     document.getElementById(status_id).style.borderColor = '#6c757d';
-    document.getElementById(status_id).textContent = '未到';
+    // document.getElementById(status_id).textContent = '未到';
 }
 function cancel(status_id) {
     document.getElementById(status_id).style.backgroundColor = '#E43D40';
     document.getElementById(status_id).style.borderColor = '#E43D40';
-    document.getElementById(status_id).textContent = '取消';
+    // document.getElementById(status_id).textContent = '取消';
 }
 // function present(status_id) {
 //     document.getElementById(status_id).style.backgroundColor = '#4CAF50';
