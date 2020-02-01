@@ -23,11 +23,18 @@ Route::get('/', function () {
 // Route::get('course', function () {
 //     return view('frontend.course');
 // })->name('course');
+/* Sandy (2020/01/14) */
+// Route::get('course', 'Frontend\CourseController@')->name('course');
+// Route::get('course', function () {
+//     return view('frontend.course');
+// })->name('course');
+Route::get('course', 'Frontend\CourseController@show')->name('course');
+// Route::get('course_show', 'Frontend\CourseController@show');
+/* Sandy(2020/01/31)*/
+Route::post('course_search', 'Frontend\CourseController@search');
 /* Rocky(2019/12/29)*/
 Route::post('course', 'Backend\CourseController@upload');
 // Route::get('course', 'CourseController@uploadPage')->name('course');
-/* Sandy (2020/01/14) */
-Route::get('course', 'Frontend\CourseController@show')->name('course');
 
 Route::get('course_form', function () {
     return view('frontend.course_form');
@@ -47,6 +54,14 @@ Route::get('course_list', function () {
 Route::get('course_list_data', function () {
     return view('frontend.course_list_data');
 })->name('course_list_data');
+
+Route::get('course_list_apply', function () {
+    return view('frontend.course_list_apply');
+})->name('course_list_apply');
+
+Route::get('course_list_refund', function () {
+    return view('frontend.course_list_refund');
+})->name('course_list_refund');
 
 Route::get('course_list_view', function () {
     return view('frontend.course_list_view');
