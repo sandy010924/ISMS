@@ -31,7 +31,7 @@ Route::get('/', function () {
 Route::get('course', 'Frontend\CourseController@show')->name('course');
 // Route::get('course_show', 'Frontend\CourseController@show');
 /* Sandy(2020/01/31)*/
-Route::post('course_search', 'Frontend\CourseController@search');
+// Route::post('course_search', 'Frontend\CourseController@search');
 /* Rocky(2019/12/29)*/
 Route::post('course', 'Backend\CourseController@upload');
 // Route::get('course', 'CourseController@uploadPage')->name('course');
