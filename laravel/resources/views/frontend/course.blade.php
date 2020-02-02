@@ -23,7 +23,8 @@
                       </div>
                       <div class="modal-body">
                       <form class="form" action="{{url('course')}}" method="POST" enctype="multipart/form-data">
-                          @csrf
+                      {{-- <form class="form" action="#" method="POST" enctype="multipart/form-data"> --}}
+                        @csrf
                           <div class="form-group">
                             <label for="import_name" class="col-form-label">課程名稱</label>
                             <input type="text" class="form-control" name="import_name" id="import_name" required>
@@ -125,10 +126,10 @@
               </div>
               <div class="col"></div>
               <div class="col-3">
-                <input type="date" class="form-control" id="newclass_date">
+                <input type="date" class="form-control" id="search_date">
               </div>
               <div class="col-3">
-                <input type="search" class="form-control" placeholder="搜尋課程" aria-label="Class's name" aria-describedby="btn_search">
+                <input type="search" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name">
               </div>
               <div class="col-2">
                 <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button> 
@@ -142,12 +143,31 @@
                     <th>課程名稱</th>
                     <th>場次</th>
                     <th>報名筆數</th>
+                    <th>實到筆數</th>
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
-                @foreach($courses as $key => $course )
+                <tbody id="course_list">
                 {{-- @foreach(array_combine($courses, $salesregistrations) as $course => $salesregistration) --}}
+                @foreach($courses as $key => $course )
+                  <tr>
+                    <td>{{ $course['date'] }}</td>
+                    <td>{{ $course['name'] }}</td>
+                    <td>{{ $course['event'] }}</td>
+                    <td>{{ $course['count_apply'] }} / <span style="color:red">{{ $course['count_cancel'] }}</span></td>
+                    <td>{{ $course['count_check'] }}</span></td>
+                    <td>
+                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mr-3">開始報名</button></a>
+                      <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button></a>
+                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mr-3" disabled="ture">查看進階填單名單</button></a>
+                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mr-3" disabled="ture">本日報表</button></a>
+                      {{-- <a href="{{ $course['href_form'] }}">
+                        <button type="button" class="btn btn-secondary btn-sm mr-3">產生表單</button>
+                      </a> --}}
+                    </td>
+                  </tr>
+                @endforeach
+                {{-- @foreach($courses as $key => $course )
                   <tr>
                     <td>{{ date('Y-m-d', strtotime($course->course_start_at)) }}</td>
                     <td>{{ $course->name }}</td>
@@ -160,7 +180,7 @@
                     </a>
                     </td>
                   </tr>
-                @endforeach
+                @endforeach --}}
                 </tbody>
               </table>
             </div>
@@ -185,13 +205,59 @@
 <!-- Content End -->
 
 <script>
-  // Rocky(2020/01/06)
-$("document").ready(function(){
-  $("#import_flie").change(function(){
-    var i = $(this).prev('label').clone();
-    var file = $('#import_flie')[0].files[0].name;
-    $(this).prev('label').text(file);
-  }); 
-});
+  $("document").ready(function(){
+    // Rocky(2020/01/06)
+    $("#import_flie").change(function(){
+      var i = $(this).prev('label').clone();
+      var file = $('#import_flie')[0].files[0].name;
+      $(this).prev('label').text(file);
+    }); 
+  });
+
+  // Sandy(2020/01/31) 列表搜尋
+  $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+  $("#btn_search").click(function(e){
+      e.preventDefault();
+      var search_date = $("#search_date").val();
+      var search_name = $("#search_name").val();
+      $.ajax({
+          type : 'GET',
+          url:'course_search', 
+          dataType: 'json',    
+          data:{
+            // '_token':"{{ csrf_token() }}",
+            search_date: search_date,
+            search_name: search_name
+          },
+          success:function(data){
+            // console.log(data);
+            var res = '';
+            $.each (data, function (key, value) {
+              res +=
+              '<tr>'+
+                  '<td>' + value.date + '</td>'+
+                  '<td>' + value.name + '</td>'+
+                  '<td>' + value.event + '</td>'+
+                  '<td>' + value.count_apply + ' / <span style="color:red">'+ value.count_cancel +'</span></td>'+
+                  '<td>' + value.count_check + '</td>'+
+                  '<td>' + '<a href="' + value.href_list + '"><button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button></a>'+
+                    '<a href="'+ value.href_form +'"><button type="button" class="btn btn-secondary btn-sm mr-3">產生表單</button></td>'+
+                  // '<td>'+value.event+'</td>'+
+              '</tr>';
+            });
+
+            $('#course_list').html(res);
+          },
+          error: function(jqXHR){
+            //  alert(JSON.stringify(jqXHR));
+            // $("main").append('<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">報名狀態修改失敗<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+          }
+      });
+  });
 </script>
 @endsection
