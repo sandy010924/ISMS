@@ -214,7 +214,7 @@
     }); 
   });
 
-  // Sandy(2020/01/31) 列表搜尋
+  // Sandy(2020/01/31) 列表搜尋start
   $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -222,7 +222,6 @@
     });
 
   $("#btn_search").click(function(e){
-      e.preventDefault();
       var search_date = $("#search_date").val();
       var search_name = $("#search_name").val();
       $.ajax({
@@ -235,7 +234,7 @@
             search_name: search_name
           },
           success:function(data){
-            // console.log(data);
+            console.log(data);
             var res = '';
             $.each (data, function (key, value) {
               res +=
@@ -259,5 +258,7 @@
           }
       });
   });
+  // Sandy(2020/01/31) 列表搜尋end
+
 </script>
 @endsection
