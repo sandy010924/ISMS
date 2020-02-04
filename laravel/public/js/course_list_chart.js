@@ -6,28 +6,22 @@ Chart.defaults.global.defaultFontFamily = '微軟正黑體';
 var turnover_rate_config = {
   type: 'pie',
   data: {
-    labels: ["成交數", "未成交數"], // 成交數、未成交數 下方呈現 實到人數
+    labels: ["追完款數", "完款數","實到人數"],
     datasets: [{
-      backgroundColor: ["#F9A03F", "#D45113"],
-      data: [3,25]
+      backgroundColor: ["#F9A03F", "#D45113", "#f24"],
+      data: [4,3,25]
     }]
   },
   options: {
-  //   layout: {
-  //     padding: {
-  //         left: 0,
-  //         right: 0,
-  //         top: 0,
-  //         bottom: 0
-  //     }
-  // },
     title: {
       display: true,
-      text: '成交率: 0.12%',
-      fontSize: '26'
+      text: ['成交率: 0.12%','追款率: 16%','完款率: 12%'],
+      fontSize: '20'
     },
     legend: {
-      display: true,
+      display: false,
+      width: 300,
+      height: 300,
       labels: {
         generateLabels: function (chart) {
             var data = chart.data;
@@ -69,20 +63,22 @@ const pie_chart_turnover_rate = new Chart(ctx_turnover_rate, turnover_rate_confi
 var check_in_rate_config = {
   type: 'pie',
   data: {
-    labels: ["實到人數","未到人數", "取消人數"], // 實到、未到、取消 下方呈現 報名比數
+    labels: ["實到人數","報名筆數"], // 實到、未到、取消 下方呈現 報名比數
     datasets: [{
-      backgroundColor: ["#16F4D0","#429EA6","#153B50"],
-      data: [25,7,67]
+      backgroundColor: ["#16F4D0","#153B50"],
+      data: [25,67]
     }]
   },
   options: {
     title: {
       display: true,
-      text: '報到率: 41.6%',
-      fontSize: '26'
+      text: ['','報到率: 41.6%',''],
+      fontSize: '20'
     },
     legend: {
-      display: true,
+      display: false,
+      width: 300,
+      height: 300,
       labels: {
         generateLabels: function (chart) {
             var data = chart.data;
