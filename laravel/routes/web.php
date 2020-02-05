@@ -12,11 +12,27 @@
 */
 
 
-/*** 登入 ***/
+
+/*
+------------
+|
+| 登入 
+|
+------------
+*/
 Route::get('/', function () {
     return view('frontend.login');
 })->name('login');
 
+
+
+/*
+------------
+|
+| 課程管理 
+|
+------------
+*/
 
 /*** [課程管理] ***/
 // Route::get('course', function () {
@@ -55,6 +71,12 @@ Route::get('course_apply','Frontend\CourseApplyController@show')->name('course_a
 Route::post('course_apply', 'Backend\CourseApplyController@update');
 // Sandy (2020/02/03)
 Route::get('course_apply_search','Frontend\CourseApplyController@search');
+
+
+/*** [課程管理] 進階填單名單 ***/
+Route::get('course_advanced', function () {
+    return view('frontend.course_advanced');
+})->name('course_advanced');
 
 
 /*** [課程管理] 課程總覽 ***/
@@ -103,6 +125,9 @@ Route::post('dropdown_check', 'Backend\CourseCheckController@update_check');
 Route::post('dropdown_absent', 'Backend\CourseCheckController@update_absent');
 Route::post('dropdown_cancel', 'Backend\CourseCheckController@update_cancel');
 
+//Sandy (2020/02/05)
+Route::get('course_check_search','Frontend\CourseCheckController@search');
+
 
 /*** [課程管理] 回報表單 ***/
 Route::get('course_return', function () {
@@ -124,10 +149,29 @@ Route::get('ots_return', function () {
 })->name('ots_return');
 
 
-/*** 學員管理 ***/
+
+/*
+------------
+|
+| 學員管理 
+|
+------------
+*/
+
 // Route::get('student_list', function () {
 //     return view('frontend.student_list');
 // })->name('student_list');
 
+/*** [學員管理] 學員列表 ***/
 /* Rocky (2020/01/14) */
 Route::get('student_list', 'Frontend\StudentListController@show')->name('student_list');
+
+/*** [學員管理] 黑名單 ***/
+Route::get('student_blacklist', function () {
+    return view('frontend.student_blacklist');
+})->name('student_blacklist');
+
+/*** [學員管理] 細分組 ***/
+Route::get('student_group', function () {
+    return view('frontend.student_group');
+})->name('student_group');

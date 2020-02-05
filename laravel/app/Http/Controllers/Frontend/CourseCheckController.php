@@ -46,4 +46,22 @@ class CourseCheckController extends Controller
 
         return view('frontend.course_check', compact('coursechecks', 'course', 'week', 'count_apply', 'count_check'));
     }
+
+    // Sandy (2020/02/05)
+    public function search(Request $request)
+    {
+        $id = $request->get('course_id');
+        $search_phone = $request->get('search_phone');
+        
+        //報名資訊
+        $coursechecks = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+            ->join('student', 'student.id', '=', 'sales_registration.id_student')
+            ->select('sales_registration.id as apply_id' ,'student.*', 'sales_registration.id_status as apply_status_val', 'isms_status.name as apply_status_name')
+            ->Where('id_course','=', $id)
+            ->Where('id_status','<>', 2)
+            ->Where('phone', 'like', '%'.$search_phone)
+            ->get();
+            
+        return Response($coursechecks);
+    }
 }

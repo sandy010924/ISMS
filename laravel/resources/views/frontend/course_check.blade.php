@@ -8,9 +8,10 @@
         <!--開始報到內容-->
         <div class="card m-3">
           <div class="card-body">
-            <div class="row mb-3">
-              <div class="col-8">
-                <h5>
+            <div class="row mb-3 align-items-center">
+              <div class="col-6">
+                <input type="hidden" id="course_id" value="{{ $course->id }}">
+                <h5 class="mb-0">
                   {{ $course->name }}&nbsp;&nbsp;
                   {{ date('Y-m-d', strtotime($course->course_start_at)) }}
                   ( {{ $week }} )&nbsp;&nbsp;
@@ -18,133 +19,166 @@
                 </h5>
               </div>
               <div class="col-2 text-right">
-                <h5 id="count_apply">報名筆數 : {{ $count_apply }}</h5>
+                <h5 id="count_apply" class="mb-0">報名筆數 : {{ $count_apply }}</h5>
               </div>
               <div class="col-2 text-right">
-                <h5 id="count_check">報到筆數 : {{ $count_check }}</h5>
+                <h5 id="count_check" class="mb-0">報到筆數 : {{ $count_check }}</h5>
+              </div>
+              <div class="col-2 text-right">
+                <a href="{{ route('course_return') }}"><button type="button" class="btn btn-primary" >本日表單</button></a>
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
-                <p class="form_text">主持 : <input type="text" class="form_input"></p>
+              <div class="col">
+                {{-- <p class="form_text">主持開場 : <input type="text" class="form_input"></p> --}}
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">主持開場</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#">
+                </div>
               </div>
-              <div class="col-2">
-                <p class="form_text">開收 : <input type="text" class="form_input"></p>
+              <div class="col">
+                {{-- <p class="form_text">結束收單 : <input type="text" class="form_input"></p> --}}
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">結束收單</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#">
+                </div>
               </div>
               <div class="col-3">
-                <p class="form_text">工作人員 : <input type="text" class="form_input"></p>
-              </div>
-              <div class="col-3">
-                <p class="form_text">講座地點 : <input type="text" class="form_input"></p>  
-              </div>
-              <div class="col-2">
-                <p class="form_text">天氣 : <input type="text" class="form_input"></p>
+                {{-- <p class="form_text">天氣 : <input type="text" class="form_input"></p> --}}
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">天氣</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#">
+                </div>
               </div>
             </div>
             <div class="row">
+              <div class="col">
+                {{-- <p class="form_text">工作人員 : <input type="text" class="form_input"></p> --}}
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">工作人員</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#">
+                </div>
+              </div>
+              {{-- <div class="col">
+                <button type="button" class="btn btn-secondary btn-block">儲存</button>
+              </div> --}}
+            </div>
+            {{-- <div class="row">
               <div class="col-3 mx-auto">
-                <button type="button" class="btn btn-secondary  btn-block">儲存</button>
+                <button type="button" class="btn btn-secondary btn-block">儲存</button>
               </div>
-            </div>
+            </div> --}}
           </div>
         </div>
         <div class="card m-3">
             <div class="card-body">  
-                <div class="row mb-3 mx-5">
-                    <div class="col-4 mx-auto text-center">
+                <div class="row mb-3">
+                    <div class="col-4 mx-auto">
                        <div class="input-group">
-                          <input type="search" class="form-control" placeholder="電話末三碼" aria-describedby="btn_search">
+                          <input type="number" class="form-control" placeholder="電話末三碼" id="search_phone" max="999">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
                           </div>
                       </div>
                     </div>
-                    <div class="col-6 mx-auto text-center">
-                        <button type="button" class="btn btn-outline-secondary mr-3" data-toggle="modal" data-target="#presentApply">現場報名</button>
-                        <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a>
+                    <div class="col-3 text-right">
+                      <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#presentApply">現場報名</button>
+                      <button type="button" class="btn btn-outline-secondary mx-1">二階報名表</button>
+                      {{-- <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a> --}}
                     </div>
+
+                    <!-- 現場報名 modal -->
                     <div class="modal fade" id="presentApply" tabindex="-1" role="dialog" aria-labelledby="presentApplyLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="presentApplyLabel">現場報名</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="presentApplyLabel">現場報名</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form>
+                              <div class="form-group">
+                                <label for="newcheck_name" class="col-form-label">姓名</label>
+                                <input type="text" class="form-control" id="newcheck_name" required>
+                                <div class="invalid-feedback">
+                                  請輸入姓名
+                                </div>
                               </div>
-                              <div class="modal-body">
-                                <form>
-                                  <div class="form-group">
-                                    <label for="newcheck_name" class="col-form-label">姓名</label>
-                                    <input type="text" class="form-control" id="newcheck_name" required>
-                                    <div class="invalid-feedback">
-                                      請輸入姓名
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="newcheck_phone" class="col-form-label">連絡電話</label>
-                                    <input type="text" class="form-control" id="newcheck_phone" required>
-                                    <div class="invalid-feedback">
-                                      請輸入電話
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="newcheck_email" class="col-form-label">電子郵件</label>
-                                    <input type="text" class="form-control" id="newcheck_email" required>
-                                    <div class="invalid-feedback">
-                                      請輸入電話
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="newcheck_address" class="col-form-label">居住地</label>
-                                    <input type="text" class="form-control" id="newcheck_address">
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="newcheck_profession" class="col-form-label">目前職業</label>
-                                    <input type="text" class="form-control" id="newcheck_profession" required>
-                                    <div class="invalid-feedback">
-                                      請輸入電話
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="newcheck_paymodel" class="col-form-label">付款方式</label>
-                                    <input type="text" class="form-control" id="newcheck_paymodel">
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="newcheck_account" class="col-form-label">帳號/卡號後五碼</label>
-                                    <input type="text" class="form-control" id="newcheck_account">
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="newcheck_content" class="col-form-label">我想在講座中瞭解到的內容？</label>
-                                    <input type="text" class="form-control" id="newcheck_content">
-                                  </div>
-                                </form>
+                              <div class="form-group">
+                                <label for="newcheck_phone" class="col-form-label">連絡電話</label>
+                                <input type="text" class="form-control" id="newcheck_phone" required>
+                                <div class="invalid-feedback">
+                                  請輸入電話
+                                </div>
                               </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                <button type="button" class="btn btn-primary">確認報名</button>
+                              <div class="form-group">
+                                <label for="newcheck_email" class="col-form-label">電子郵件</label>
+                                <input type="text" class="form-control" id="newcheck_email" required>
+                                <div class="invalid-feedback">
+                                  請輸入電話
+                                </div>
                               </div>
-                            </div>
+                              <div class="form-group">
+                                <label for="newcheck_address" class="col-form-label">居住地</label>
+                                <input type="text" class="form-control" id="newcheck_address">
+                              </div>
+                              <div class="form-group">
+                                <label for="newcheck_profession" class="col-form-label">目前職業</label>
+                                <input type="text" class="form-control" id="newcheck_profession" required>
+                                <div class="invalid-feedback">
+                                  請輸入電話
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label for="newcheck_paymodel" class="col-form-label">付款方式</label>
+                                <input type="text" class="form-control" id="newcheck_paymodel">
+                              </div>
+                              <div class="form-group">
+                                <label for="newcheck_account" class="col-form-label">帳號/卡號後五碼</label>
+                                <input type="text" class="form-control" id="newcheck_account">
+                              </div>
+                              <div class="form-group">
+                                <label for="newcheck_content" class="col-form-label">我想在講座中瞭解到的內容？</label>
+                                <input type="text" class="form-control" id="newcheck_content">
+                              </div>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary">確認報名</button>
                           </div>
                         </div>
+                      </div>
+                    </div>
                 </div>
                 <div class="table-responsive">
                   <table class="table table-striped table-sm text-center">
                     <thead>
                       <tr>
-                        <th>姓名</th>
-                        <th>連絡電話</th>
-                        <th>電子郵件</th>
-                        <th>狀態</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">聯絡電話</th>
+                        <th scope="col">電子郵件</th>
+                        <th scope="col">報到</th>
+                        <th scope="col" width="20%">報到備註</th>
                       </tr>
                     </thead>
                     <tbody>
                       @foreach($coursechecks as $coursecheck)
                         <tr>
-                          <td>{{ $coursecheck->name }}</td>
-                          <td>{{ $coursecheck->phone }}</td>
-                          <td>{{ $coursecheck->email }}</td>
-                          <td>
+                          <td scope="row" class="align-middle">{{ $coursecheck->name }}</td>
+                          <td class="align-middle">{{ $coursecheck->phone }}</td>
+                          <td class="align-middle">{{ $coursecheck->email }}</td>
+                          <td class="align-middle">
                             <button type="button" class="btn btn-sm text-white check_btn" id="{{ $coursecheck->check_id }}" value="{{ $coursecheck->check_status_val }}">{{ $coursecheck->check_status_name }}</button>
                             <div class="btn-group">
                               <button class="btn btn-sm" type="button" data-toggle="dropdown">
@@ -157,6 +191,10 @@
                               </div>
                             </div>
                           </td>
+                          <td class="align-middle">
+                            <!-- 報到備註 -->
+                            <input type="text" class="form-control input-sm">
+                          </td>
                         </tr>
                       @endforeach
                     </tbody>
@@ -168,7 +206,6 @@
           <!-- Content End -->
           
   <script>
-    // Sandy(2020/01/16)
     
     $.ajaxSetup({
       headers: {
@@ -176,7 +213,32 @@
       }
     });
 
+    // Sandy(2020/02/05)
+    //列表搜尋start
+    $("#btn_search").click(function(e){
+      var search_phone = $("#search_phone").val();
+      var course_id = $("#course_id").val();
+      $.ajax({
+          type : 'GET',
+          url:'course_check_search', 
+          dataType: 'json',    
+          data:{
+            // '_token':"{{ csrf_token() }}",
+            search_phone: search_phone,
+            course_id: course_id
+          },
+          success:function(data){
+            console.log(data);
+          },
+          error: function(jqXHR){
+            //  alert(JSON.stringify(jqXHR));
+            // $("main").append('<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">報名狀態修改失敗<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+          }
+        });
+    });
+    //列表搜尋end
 
+    // Sandy(2020/01/16)
     $(".check_btn").click(function(e){
         e.preventDefault();
         var check_id = this.id;
@@ -225,7 +287,10 @@
         $.ajax({
            type:'POST',
            url:'dropdown_absent',    
-           data:{'_token':"{{ csrf_token() }}",check_id:check_id},
+           data:{
+             '_token':"{{ csrf_token() }}",
+             check_id:check_id
+           },
            success:function(data){
               $("#"+data[0].check_id).html(data[0].check_status_name);
               $("#"+data[0].check_id).val(data[0].check_status_val);

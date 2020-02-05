@@ -8,10 +8,9 @@
        <!--搜尋課程頁面內容-->
         <div class="card m-3">
           <div class="card-body">
-            {{-- <div class="row menu_search"> --}}
             <div class="row mb-3">
               <div class="col-3 mx-3">
-                <button type="button" class="btn btn-outline-secondary btn_date float-left mr-3" data-toggle="modal" data-target="#form_import">匯入表單</button>              
+                <button type="button" class="btn btn-outline-secondary btn_date float-left mx-1" data-toggle="modal" data-target="#form_import">匯入表單</button>              
                 <div class="modal fade" id="form_import" tabindex="-1" role="dialog" aria-labelledby="form_importLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -57,7 +56,7 @@
                   </div>
                 </div>
 
-                <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#form_newclass">新增課程</button>
+                <button type="button" class="btn btn-outline-secondary btn_date mx-1" data-toggle="modal" data-target="#form_newclass">新增課程</button>
                 <div class="modal fade" id="form_newclass" tabindex="-1" role="dialog" aria-labelledby="form_newclassLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -148,7 +147,6 @@
                   </tr>
                 </thead>
                 <tbody id="course_list">
-                {{-- @foreach(array_combine($courses, $salesregistrations) as $course => $salesregistration) --}}
                 @foreach($courses as $key => $course )
                   <tr>
                     <td>{{ $course['date'] }}</td>
@@ -157,30 +155,13 @@
                     <td>{{ $course['count_apply'] }} / <span style="color:red">{{ $course['count_cancel'] }}</span></td>
                     <td>{{ $course['count_check'] }}</span></td>
                     <td>
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mr-3">開始報名</button></a>
-                      <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button></a>
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mr-3" disabled="ture">查看進階填單名單</button></a>
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mr-3" disabled="ture">本日報表</button></a>
-                      {{-- <a href="{{ $course['href_form'] }}">
-                        <button type="button" class="btn btn-secondary btn-sm mr-3">產生表單</button>
-                      </a> --}}
+                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>
+                      <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
                     </td>
                   </tr>
                 @endforeach
-                {{-- @foreach($courses as $key => $course )
-                  <tr>
-                    <td>{{ date('Y-m-d', strtotime($course->course_start_at)) }}</td>
-                    <td>{{ $course->name }}</td>
-                    <td>{{ $course->Events }}</td>
-                    <td>{{ $courses_apply[$key] }} / <span style="color:red">{{ $courses_cancel[$key] }}</span></td>
-                    <td>
-                      <a href="{{ route('course_apply', ['id'=>$course->id]) }}"><button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button></a>
-                    <a href="{{ route('course_form') }}">
-                      <button type="button" class="btn btn-secondary btn-sm mr-3">產生表單</button>
-                    </a>
-                    </td>
-                  </tr>
-                @endforeach --}}
                 </tbody>
               </table>
             </div>
@@ -244,9 +225,11 @@
                   '<td>' + value.event + '</td>'+
                   '<td>' + value.count_apply + ' / <span style="color:red">'+ value.count_cancel +'</span></td>'+
                   '<td>' + value.count_check + '</td>'+
-                  '<td>' + '<a href="' + value.href_list + '"><button type="button" class="btn btn-secondary btn-sm mr-3">查看名單</button></a>'+
-                    '<a href="'+ value.href_form +'"><button type="button" class="btn btn-secondary btn-sm mr-3">產生表單</button></td>'+
-                  // '<td>'+value.event+'</td>'+
+                  '<td>' + 
+                    '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>'+
+                    '<a href="' + value.href_list + '"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>'+
+                    '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>'+
+                    '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>'+
               '</tr>';
             });
 

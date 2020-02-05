@@ -38,39 +38,12 @@
                       <td>{{ $course->name }}</td>
                       <td>{{ $course->Events }}</td>
                       <td>{{ $courses_apply[$key] }} / <span style="color:red">{{ $courses_cancel[$key] }}</span></td>
+                      <td>{{ $courses_check[$key] }}</td>
                       <td>
                         <a href="{{ route('course_check', ['id'=>$course->id]) }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
                       </td>
                     </tr>
                   @endforeach
-                  {{-- <tr>
-                    <td>2019/11/20(三)</td>
-                    <td>零秒成交數</td>
-                    <td>台北下午場</td>
-                    <td>56/3</td>
-                    <td></td>
-                    <td><a href="{{ route('course_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2019/11/20(三)</td>
-                    <td>零秒成交數</td>
-                    <td>台北晚上場</td>
-                    <td>98/5</td>
-                    <td></td>
-                    <td><a href="{{ route('course_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2019/11/20(二)</td>
-                    <td>黑心外匯交易員的告白</td>
-                    <td>台北晚上場</td>
-                    <td>47</td>
-                    <td></td>
-                    <td><a href="{{ route('course_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
-                    </td>
-                  </tr> --}}
-
                 </tbody>
               </table>
             </div>
