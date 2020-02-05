@@ -27,11 +27,11 @@
                         @csrf
                           <div class="form-group">
                             <label for="import_name" class="col-form-label">課程名稱</label>
-                            <input type="text" class="form-control" name="import_name" id="import_name" required>
+                            <input type="text" class="form-control" name="import_name" id="import_name" >
                           </div>
                           <div class="form-group">
                             <label for="import_teacher" class="col-form-label">講師</label>
-                            <select class="custom-select" name="import_teacher" id="import_teacher" p required>
+                            <select class="custom-select" name="import_teacher" id="import_teacher" p >
                               <option selected disabled value="">選擇講師</option>
                               <option value="1">Julia</option>
                               <option value="2">Jack</option>
@@ -71,11 +71,11 @@
                         <form>
                           <div class="form-group">
                             <label for="newclass_name" class="col-form-label">課程名稱</label>
-                            <input type="text" class="form-control" id="newclass_name">
+                            <input type="text" class="form-control" id="newclass_name" required>
                           </div>
                           <div class="form-group">
                             <label for="newclass_teacher" class="col-form-label">講師</label>
-                            <select class="custom-select" id="newclass_teacher">
+                            <select class="custom-select" id="newclass_teacher" required>
                               <option selected>選擇講師</option>
                               <option value="1">Julia</option>
                               <option value="2">Jack</option>

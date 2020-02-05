@@ -9,6 +9,8 @@ class SalesRegistration extends Model
     protected $table = 'sales_registration';
 
     protected $fillable = [
+        'submissiondate',   // Submission Date
+        'datasource',       // 表單來源
         'id_student',       // 學員ID
         'id_course',        // 課程ID
         'id_status',        // 報名狀態ID
