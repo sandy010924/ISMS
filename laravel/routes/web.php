@@ -103,6 +103,9 @@ Route::get('course_list_view', function () {
 Route::get('course_list_chart', function () {
     return view('frontend.course_list_chart');
 })->name('course_list_chart');
+Route::get('course_list_edit', function () {
+    return view('frontend.course_list_edit');
+})->name('course_list_edit');
 
 
 /*** [課程管理] 今日課程 ***/
