@@ -197,8 +197,13 @@ class CourseController extends Controller
                         } elseif (count($str_sec) == 4) {
                             $SalesRegistration->id_status       = 1;                            // 報名狀態ID
                         }
-                        $SalesRegistration->pay_model       = $data[$int_pay];                  // 付款方式
-                        $SalesRegistration->account         = $data[$int_account];              // 帳號/卡號後五碼
+
+                        if ($int_pay != 0) {
+                            $SalesRegistration->pay_model       = $data[$int_pay];                  // 付款方式
+                        }
+                        if ($int_account != 0) {
+                            $SalesRegistration->account         = $data[$int_account];              // 帳號/卡號後五碼
+                        }
                         $SalesRegistration->course_content  = $data[$int_text];                 // 想聽到的課程有哪些
                         
                         $SalesRegistration->save();
