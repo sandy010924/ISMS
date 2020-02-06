@@ -11,7 +11,7 @@
             <div class="row mb-3">
               <div class="col-6 mx-auto">
                 <div class="input-group">
-                  <input type="search" class="form-control" placeholder="搜尋課程" aria-describedby="btn_search">
+                  <input type="search" id="search_name" class="form-control" placeholder="搜尋課程" aria-label="Course's name" aria-describedby="btn_search">
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
                   </div>
@@ -50,4 +50,33 @@
           </div>
         </div>
       <!-- Content End -->
+      
+<script>
+  // Sandy(2020/02/07) 列表搜尋start
+  $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+  $("#btn_search").click(function(e){
+      var search_name = $("#search_name").val();
+      $.ajax({
+          type : 'GET',
+          url:'course_today_search', 
+          dataType: 'json',    
+          data:{
+            // '_token':"{{ csrf_token() }}",
+            search_name: search_name
+          },
+          success:function(data){
+            console.log(data);
+          }
+          // error: function(jqXHR){
+          //    alert(JSON.stringify(jqXHR));
+          // }
+      });
+  });
+  // Sandy(2020/02/07) 列表搜尋end
+</script>
 @endsection

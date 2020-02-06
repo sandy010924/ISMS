@@ -2,23 +2,25 @@
 <nav class="col-md-2 d-none d-md-block bg-dark sidebar">
     <div class="text-center nav-logo">
         <a href="#">
-        <img src="./img/logo.png" width="60" class="rounded" alt="logo">
+          <img src="./img/logo.png" width="60" class="rounded" alt="logo">
         </a>
     </div>
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
             <li class="nav-item border-top">
-              <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="feather feather-file">
-                  <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                  <polyline points="13 2 13 9 20 9"></polyline>
-                </svg>
-                &nbsp;學員管理
-              </h6>
-              <a class="nav-link nav-sub-item" href="{{ route('student_list') }}">學員列表</a>
-              <a class="nav-link nav-sub-item" href="#">黑名單</a>
+              <a href="{{ route('student') }}">
+                <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-file">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                  </svg>
+                  &nbsp;學員管理
+                </h6>
+              </a>
+              <a class="nav-link nav-sub-item" href="{{ route('student_blacklist') }}">黑名單</a>
+              <a class="nav-link nav-sub-item" href="{{ route('student_group') }}">細分組</a>
             </li>
             <li class="nav-item border-top">
               <a href="{{ route('course') }}">

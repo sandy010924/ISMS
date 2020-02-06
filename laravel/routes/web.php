@@ -103,6 +103,7 @@ Route::get('course_list_view', function () {
 Route::get('course_list_chart', function () {
     return view('frontend.course_list_chart');
 })->name('course_list_chart');
+
 Route::get('course_list_edit', function () {
     return view('frontend.course_list_edit');
 })->name('course_list_edit');
@@ -114,6 +115,7 @@ Route::get('course_list_edit', function () {
 //     return view('frontend.course_today');
 // })->name('course_today');
 Route::get('course_today', 'Frontend\CourseTodayController@show')->name('course_today');
+Route::get('course_today_search', 'Frontend\CourseTodayController@search');
 
 
 /*** [課程管理] 報到 ***/
@@ -167,7 +169,8 @@ Route::get('ots_return', function () {
 
 /*** [學員管理] 學員列表 ***/
 /* Rocky (2020/01/14) */
-Route::get('student_list', 'Frontend\StudentListController@show')->name('student_list');
+// Route::get('student_list', 'Frontend\StudentListController@show')->name('student_list');
+Route::get('student', 'Frontend\StudentController@show')->name('student');
 
 /*** [學員管理] 黑名單 ***/
 Route::get('student_blacklist', function () {
