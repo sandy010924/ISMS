@@ -137,22 +137,31 @@ class CourseController extends Controller
                 $SalesRegistration = new SalesRegistration;
                 $check_student = $student::where('phone', $data[$int_phone])->get();
                 $location = "";
-
+                $check = 0;
                 $str_sec = explode(" ", $data[$int_coursedata]);
 
                 if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || count($str_sec) == "1") {
                     // 好遺憾系列、空值
-                    // switch (count($str_sec)) {
-                    //     case 1:
-                        // $events='';
-                    //         break;
-                    //     case 2:
-                    //         $events =  mb_substr($str_sec[1], 0, -1, 'utf8');
-                    //         break;
-                    //     case 3:
-                    //         $events = mb_substr($str_sec[2], 0, -1, 'utf8');
-                    //         break;
-                    // }
+                    $check = 1;
+                    switch (count($str_sec)) {
+                        case 1:
+                            $events = '';
+                            break;
+                        case 2:
+                            if (strlen($str_sec[1]) == 15) {
+                                $events =  mb_substr($str_sec[1], 0, -1, 'utf8');
+                            } else {
+                                $events =  $str_sec[1];
+                            }
+                            break;
+                        case 3:
+                            if (strlen($str_sec[1]) == 15) {
+                                $events = mb_substr($str_sec[2], 0, -1, 'utf8');
+                            } else {
+                                $events =  $str_sec[2];
+                            }
+                            break;
+                    }
                 } else {
                     /*有報名課程*/
 
@@ -209,7 +218,7 @@ class CourseController extends Controller
                     foreach ($check_course as $data_course) {
                         $id_course = $data_course ->id;
                     }
-                } else {
+                } elseif ($check != 1) {
                     $course->id_teacher       = $id_teacher;    // 講師ID
                     $course->name             = $name;          // 課程名稱
                     $course->location         = $address;       // 課程地點
@@ -264,20 +273,20 @@ class CourseController extends Controller
                         $SalesRegistration->submissiondate   = $date;                           // Submission Date
                         $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
                         $SalesRegistration->id_student      = $id_student;                      // 學員ID
-                        $SalesRegistration->id_course       = $id_course;                       // 課程ID
-                        if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || count($str_sec) == "1") {
+                        if ($check == 1) {
                             // 我很遺憾
-                            $SalesRegistration->id_status       = 2;                            // 報名狀態ID
+                            $SalesRegistration->id_status    = 2;                               // 報名狀態ID
+                            $SalesRegistration->events       = $events;                         // 追蹤場次
                         } else {
                             // 報名成功
+                            $SalesRegistration->id_course       = $id_course;                   // 課程ID
                             $SalesRegistration->id_status       = 1;                            // 報名狀態ID
                         }
-
                         if ($int_pay != 0) {
-                            $SalesRegistration->pay_model       = $data[$int_pay];                  // 付款方式
+                            $SalesRegistration->pay_model       = $data[$int_pay];              // 付款方式
                         }
                         if ($int_account != 0) {
-                            $SalesRegistration->account         = $data[$int_account];              // 帳號/卡號後五碼
+                            $SalesRegistration->account         = $data[$int_account];          // 帳號/卡號後五碼
                         }
                         $SalesRegistration->course_content  = $data[$int_text];                 // 想聽到的課程有哪些
                         

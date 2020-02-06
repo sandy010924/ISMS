@@ -17,6 +17,6 @@ class SalesRegistration extends Model
         'pay_model',        // 付款方式
         'account',          // 帳號/卡號後四碼
         'course_content',   // 想聽到的課程有哪些
+        'events',           // 追蹤場次(給我很遺憾用)
     ];
-    
 }
