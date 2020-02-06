@@ -36,7 +36,8 @@ class CourseController extends Controller
             $events = "";               // 場次
             $location = "";             // 場次+地址
             $address = "";              // 地址
-
+            $time_start = "";           // 課程開始
+            $time_end = "";           // 課程結束
             // 宣告縣市變數
             $city = array(
                 '0' => '基隆',
@@ -108,7 +109,7 @@ class CourseController extends Controller
                     case "居住區域":
                         $int_address = $i;
                         break;
-                    case ($value == "課程名稱報名時間地點" || $value == "場次報名時間地點"):
+                    case ($value == "課程名稱報名時間地點" || $value == "場次報名時間地點" || $value == "百萬狙擊操盤手報名時間地點" || $value == "黑心外匯交易員的告白場次報名時間"):
                         $int_coursedata = $i;
                         break;
                     case "目前職業":
@@ -127,12 +128,6 @@ class CourseController extends Controller
             }
             /* 依照Excel欄位標題新增資料 Rocky (2020/02/05) - E */
 
-            
-
-            $text = "2019/12/6（四）1900-2130  台北晚上場 (台北市金山南路一段17號5樓)(博宇藝享空間)";
-            $text2 = "2020/02/11 ( 二 ) 1900-2200(免費入場)  高雄晚上場(高雄市苓雅區中正二路175號13樓)";
-            $text3 = "";
-            $text4 = "好遺憾我沒辦法參加這幾場, 我會持續追蹤 台北場次。";
 
             foreach ($excel_data as $key => $data) {
                 $submissiondate = intval(($data[$int_submissiondate] - 25569) * 3600 * 24);     // Submission Date
@@ -142,40 +137,9 @@ class CourseController extends Controller
                 $SalesRegistration = new SalesRegistration;
                 $check_student = $student::where('phone', $data[$int_phone])->get();
                 $location = "";
-      
-                
-                // // 從日期+時間+場次+地點欄位切割
-                // $str_sec = explode(" ", $data[$int_coursedata]);
-            
-                // if (count($str_sec) == 4) {
-                //     // 切割日期
-                //     $str_date = explode("（", $str_sec[0]);
-                    
-                //     //切割時間(開始時間、結束時間)
-                //     $str_time = explode("）", $str_sec[0]);
-                    
-                //     //場次
-                //     $events = $str_sec[2];
-                //     // $time[0] -> 開始時間,$time[1] -> 結束時間
-                //     $time = explode("-", $str_time[1]);
-                //     $time_start = date('Y-m-d H:i:s', strtotime($str_date[0].$time[0])).PHP_EOL;
-                //     $time_end = date('Y-m-d H:i:s', strtotime($str_date[0].$time[1])).PHP_EOL;
-                // } else {
-                //     switch (count($str_sec)) {
-                //         case 1:
-                //             $events = '';
-                //             break;
-                //         case 2:
-                //             $events = $str_sec[1];
-                //             break;
-                //         case 3:
-                //             $events = $str_sec[2];
-                //             break;
-                //     }
-                // }
 
                 $str_sec = explode(" ", $data[$int_coursedata]);
-         
+
                 if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || count($str_sec) == "1") {
                     // 好遺憾系列、空值
                     // switch (count($str_sec)) {
@@ -220,8 +184,16 @@ class CourseController extends Controller
                     
                     // 課程開始時間
                     $time_start = date('Y-m-d H:i:s', strtotime($date.mb_substr($stime[0], -4, 4, 'utf8'))).PHP_EOL;
-                    // 課程結束時間
-                    $time_end = date('Y-m-d H:i:s', strtotime($date.mb_substr($etime, 1, 5, 'utf8'))).PHP_EOL;
+
+                     // 課程結束時間
+                     $str_time_end = $date.mb_substr($etime, 1, 5, 'utf8');
+                     $time_end = date('Y-m-d H:i:s', strtotime($str_time_end)).PHP_EOL;
+                    
+
+                    if (strpos($str_time_end, '（') != false || strpos($str_time_end, '(') != false) {
+                        // 包含(
+                        $time_end = date('Y-m-d H:i:s', strtotime($date.mb_substr($etime, 1, 4, 'utf8'))).PHP_EOL;
+                    }
                 }
 
                 /*課程資料 - S*/
@@ -232,6 +204,7 @@ class CourseController extends Controller
                                     ->where('events', $events)
                                     ->where('course_start_at', $time_start)
                                     ->get();
+               
                 if (count($check_course) != 0) {
                     foreach ($check_course as $data_course) {
                         $id_course = $data_course ->id;
