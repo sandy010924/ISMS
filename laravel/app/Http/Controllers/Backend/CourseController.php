@@ -29,6 +29,42 @@ class CourseController extends Controller
             $int_account = 0;           // 卡號
             $int_text = 0;              // 想聽到...內容
             
+            // 宣告變數
+            $id_course = "";            // 課程ID
+            $id_student = "";           // 學員ID
+            $id_SalesRegistration = ""; // 銷講ID
+            $events = "";               // 場次
+            $location = "";             // 場次+地址
+            $address = "";              // 地址
+
+            // 宣告縣市變數
+            $city = array(
+                '0' => '基隆',
+                '1' => '台北',
+                '2' => '新北',
+                '3' => '宜蘭',
+                '4' => '桃園',
+                '5' => '新竹',
+                '6' => '新竹',
+                '7' => '苗栗',
+                '8' => '台中',
+                '9' => '彰化',
+                '10' => '南投',
+                '11' => '雲林',
+                '12' => '嘉義',
+                '13' => '嘉義',
+                '14' => '台南',
+                '15' => '高雄',
+                '16' => '屏東',
+                '17' => '花蓮',
+                '18' => '台東',
+                '19' => '澎湖',
+                '20' => '金門',
+                '21' => '馬祖',
+                '22' => '離島地區',
+                '23' => '臺北',
+                );
+
             // 前端資料
             $path = $request->file('import_flie');
             $name = $request->get('import_name');
@@ -89,14 +125,14 @@ class CourseController extends Controller
                         break;
                 }
             }
-
-           
             /* 依照Excel欄位標題新增資料 Rocky (2020/02/05) - E */
 
-            $id_course = "";
-            $id_student = "";
-            $id_SalesRegistration = "";
-            $events = "";
+            
+
+            $text = "2019/12/6（四）1900-2130  台北晚上場 (台北市金山南路一段17號5樓)(博宇藝享空間)";
+            $text2 = "2020/02/11 ( 二 ) 1900-2200(免費入場)  高雄晚上場(高雄市苓雅區中正二路175號13樓)";
+            $text3 = "";
+            $text4 = "好遺憾我沒辦法參加這幾場, 我會持續追蹤 台北場次。";
 
             foreach ($excel_data as $key => $data) {
                 $submissiondate = intval(($data[$int_submissiondate] - 25569) * 3600 * 24);     // Submission Date
@@ -105,46 +141,105 @@ class CourseController extends Controller
                 $student = new Student;
                 $SalesRegistration = new SalesRegistration;
                 $check_student = $student::where('phone', $data[$int_phone])->get();
-               
+                $location = "";
       
                 
-                // 從日期+時間+場次+地點欄位切割
-                $str_sec = explode(" ", $data[$int_coursedata]);
+                // // 從日期+時間+場次+地點欄位切割
+                // $str_sec = explode(" ", $data[$int_coursedata]);
             
-                if (count($str_sec) == 4) {
-                    // 切割日期
-                    $str_date = explode("（", $str_sec[0]);
+                // if (count($str_sec) == 4) {
+                //     // 切割日期
+                //     $str_date = explode("（", $str_sec[0]);
                     
-                    //切割時間(開始時間、結束時間)
-                    $str_time = explode("）", $str_sec[0]);
+                //     //切割時間(開始時間、結束時間)
+                //     $str_time = explode("）", $str_sec[0]);
                     
-                    //場次
-                    $events = $str_sec[2];
-                    // $time[0] -> 開始時間,$time[1] -> 結束時間
-                    $time = explode("-", $str_time[1]);
-                    $time_start = date('Y-m-d H:i:s', strtotime($str_date[0].$time[0])).PHP_EOL;
-                    $time_end = date('Y-m-d H:i:s', strtotime($str_date[0].$time[1])).PHP_EOL;
+                //     //場次
+                //     $events = $str_sec[2];
+                //     // $time[0] -> 開始時間,$time[1] -> 結束時間
+                //     $time = explode("-", $str_time[1]);
+                //     $time_start = date('Y-m-d H:i:s', strtotime($str_date[0].$time[0])).PHP_EOL;
+                //     $time_end = date('Y-m-d H:i:s', strtotime($str_date[0].$time[1])).PHP_EOL;
+                // } else {
+                //     switch (count($str_sec)) {
+                //         case 1:
+                //             $events = '';
+                //             break;
+                //         case 2:
+                //             $events = $str_sec[1];
+                //             break;
+                //         case 3:
+                //             $events = $str_sec[2];
+                //             break;
+                //     }
+                // }
+
+                $str_sec = explode(" ", $data[$int_coursedata]);
+         
+                if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || count($str_sec) == "1") {
+                    // 好遺憾系列、空值
+                    // switch (count($str_sec)) {
+                    //     case 1:
+                        // $events='';
+                    //         break;
+                    //     case 2:
+                    //         $events =  mb_substr($str_sec[1], 0, -1, 'utf8');
+                    //         break;
+                    //     case 3:
+                    //         $events = mb_substr($str_sec[2], 0, -1, 'utf8');
+                    //         break;
+                    // }
                 } else {
-                    switch (count($str_sec)) {
-                        case 1:
-                            $events = '';
+                    /*有報名課程*/
+
+                    // 課程場次 + 地點
+                    for ($i = 0; $i < count($city); $i++) {
+                        if ($location == "") {
+                            $location = strchr($data[$int_coursedata], $city[$i]);
+                        }
+                        if ($location != "") {
                             break;
-                        case 2:
-                            $events = $str_sec[1];
-                            break;
-                        case 3:
-                            $events = $str_sec[2];
-                            break;
+                        }
                     }
+                    // 場次
+                    $events = mb_substr($location, 0, 5, 'utf8');
+                    // 地址
+                    $address = mb_substr($location, 5, strlen($location), 'utf8');
+
+                    $stime = str_replace(" ", "", explode("-", $data[$int_coursedata]));
+                    $etime = strchr($data[$int_coursedata], "-");
+                    
+                    // 課程日期
+                    $date = mb_substr($stime[0], 0, 10, 'utf8');
+                    
+                    // 判斷課程日期要抓到哪個位置
+                    if (strpos($date, '（') != false || strpos($date, '(') != false) {
+                        // 包含(
+                        $date = mb_substr($stime[0], 0, 9, 'utf8');
+                    }
+                    
+                    // 課程開始時間
+                    $time_start = date('Y-m-d H:i:s', strtotime($date.mb_substr($stime[0], -4, 4, 'utf8'))).PHP_EOL;
+                    // 課程結束時間
+                    $time_end = date('Y-m-d H:i:s', strtotime($date.mb_substr($etime, 1, 5, 'utf8'))).PHP_EOL;
                 }
 
                 /*課程資料 - S*/
 
                 // 新增課程資料(只新增一筆資料)
-                if ($key == "1") {
+                $check_course = $course::where('name', $name)
+                                    ->where('location', $address)
+                                    ->where('events', $events)
+                                    ->where('course_start_at', $time_start)
+                                    ->get();
+                if (count($check_course) != 0) {
+                    foreach ($check_course as $data_course) {
+                        $id_course = $data_course ->id;
+                    }
+                } else {
                     $course->id_teacher       = $id_teacher;    // 講師ID
                     $course->name             = $name;          // 課程名稱
-                    $course->location         = $str_sec[3];    // 課程地點
+                    $course->location         = $address;       // 課程地點
                     $course->events           = $events;        // 課程場次
                     $course->course_start_at  = $time_start;    // 課程開始時間
                     $course->course_end_at    = $time_end;      // 課程結束時間
@@ -159,21 +254,24 @@ class CourseController extends Controller
                 /*學員報名資料 - S*/
                 
                 // 檢查學生資料
-                if (count($check_student) != 0 ) {
+                if (count($check_student) != 0) {
                     foreach ($check_student as $data_student) {
                         $id_student = $data_student ->id;
                     }
                 } elseif ($data[$int_phone] != "") {
                     // 新增學員資料
-                    $student->name          = $data[$int_name];     // 學員姓名
-                    $student->sex           = '';                   // 性別
-                    $student->id_identity   = '';                   // 身分證
-                    $student->phone         = $data[$int_phone];    // 電話
-                    $student->email         = $data[$int_email];    // email
-                    $student->birthday      = '';                   // 生日
-                    $student->company       = '';                   // 公司
-                    $student->profession    = $data[$int_job];      // 職業
-                    $student->address       = $data[$int_address];  // 居住地
+                    $student->name          = $data[$int_name];         // 學員姓名
+                    $student->sex           = '';                       // 性別
+                    $student->id_identity   = '';                       // 身分證
+                    $student->phone         = $data[$int_phone];        // 電話
+                    $student->email         = $data[$int_email];        // email
+                    $student->birthday      = '';                       // 生日
+                    $student->company       = '';                       // 公司
+                    $student->profession    = $data[$int_job];          // 職業
+                    if ($int_address != "0") {
+                        $student->address       = $data[$int_address];  // 居住地
+                    }
+                    
                     $student->save();
                     $id_student = $student->id;
                 }
@@ -181,7 +279,9 @@ class CourseController extends Controller
 
                 /*銷售講座報名資料 - S*/
 
-                $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)->get();
+                $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
+                                                                -> where('id_course', $id_course)
+                                                                ->get();
          
                 // 檢查是否報名過
                 if (count($check_SalesRegistration) == 0 && $id_student != "") {
@@ -192,9 +292,11 @@ class CourseController extends Controller
                         $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
                         $SalesRegistration->id_student      = $id_student;                      // 學員ID
                         $SalesRegistration->id_course       = $id_course;                       // 課程ID
-                        if (count($str_sec) != 4) {
+                        if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || count($str_sec) == "1") {
+                            // 我很遺憾
                             $SalesRegistration->id_status       = 2;                            // 報名狀態ID
-                        } elseif (count($str_sec) == 4) {
+                        } else {
+                            // 報名成功
                             $SalesRegistration->id_status       = 1;                            // 報名狀態ID
                         }
 
