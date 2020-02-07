@@ -83,7 +83,7 @@
                 <div class="row mb-3">
                     <div class="col-4 mx-auto">
                        <div class="input-group">
-                          <input type="number" class="form-control" placeholder="電話末三碼" id="search_phone" max="999">
+                          <input type="text" class="form-control" placeholder="電話末三碼" id="search_phone" max="999" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')" />
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
                           </div>
@@ -232,7 +232,6 @@
             $('#courseCheckContent').children().remove();
             var res = '';
             $.each (data, function (key, value) {
-              console.log(value);
               res +=`
               <tr>
                 <td scope="row" class="align-middle">${value.name}</td>
@@ -257,7 +256,6 @@
             });
 
             $('#courseCheckContent').html(res);
-
           },
           error: function(jqXHR){
             //  alert(JSON.stringify(jqXHR));
