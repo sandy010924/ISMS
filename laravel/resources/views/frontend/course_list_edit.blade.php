@@ -18,8 +18,44 @@
                 <div class="col-3">
                   
                 </div>
-                <div class="col-3 text-right"> 
-                    <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#form_newclass">編輯報名表</button>
+                <div class="col-3 align-middle"> 
+                    <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#form_newregistrationform">新增報名表</button>
+                    <div class="modal fade" id="form_newregistrationform" tabindex="-1" role="dialog" aria-labelledby="form_newregistrationformLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">新增報名表</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form>
+                          <div class="form-group">
+                            <label for="correspond_class" class="col-form-label">對應課程</label>
+                            <input type="text" class="form-control" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="class_name" class="col-form-label">課程名稱</label>
+                            <input type="text" class="form-control" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="class_servicecontent" class="col-form-label">課程服務內容</label>
+                            <textarea rows="4" cols="50" class="form-control"></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="class_price" class="col-form-label">課程一般定價</label>
+                            <input type="number" class="form-control" required>
+                          </div>  
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary">確認</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 </div>
               </div>
               <div class="table-responsive">
