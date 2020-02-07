@@ -79,7 +79,7 @@
           </div>
         </div>
         <div class="card m-3">
-            <div class="card-body">  
+            <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-4 mx-auto">
                        <div class="input-group">
@@ -172,7 +172,7 @@
                         <th scope="col" width="20%">報到備註</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="courseCheckContent">
                       @foreach($coursechecks as $coursecheck)
                         <tr>
                           <td scope="row" class="align-middle">{{ $coursecheck->name }}</td>
@@ -199,14 +199,14 @@
                       @endforeach
                     </tbody>
                   </table>
-                
+
                 </div>
               </div>
             </div>
           <!-- Content End -->
-          
+
   <script>
-    
+
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -220,8 +220,8 @@
       var course_id = $("#course_id").val();
       $.ajax({
           type : 'GET',
-          url:'course_check_search', 
-          dataType: 'json',    
+          url:'course_check_search',
+          dataType: 'json',
           data:{
             // '_token':"{{ csrf_token() }}",
             search_phone: search_phone,
@@ -229,6 +229,35 @@
           },
           success:function(data){
             console.log(data);
+            $('#courseCheckContent').children().remove();
+            var res = '';
+            $.each (data, function (key, value) {
+              console.log(value);
+              res +=`
+              <tr>
+                <td scope="row" class="align-middle">${value.name}</td>
+                <td scope="row" class="align-middle">${value.phone}</td>
+                <td scope="row" class="align-middle">${value.email}</td>
+                <td scope="row" class="align-middle">
+                  <button type="button" class="btn btn-sm text-white check_btn" id="${value.id}" value="${value.apply_status_val}" style="background-color: rgb(108, 117, 125); border-color: rgb(108, 117, 125);">${value.apply_status_name}</button>
+                  <div class="btn-group">
+                    <button class="btn btn-sm" type="button" data-toggle="dropdown">•••</button>
+                    <div class="dropdown-menu">
+                      <button class="dropdown-item dropdown_check" value="${value.id}" type="button" onclick="check(${value.id})">報到</button>
+                      <button class="dropdown-item dropdown_absent" value="${value.id}" type="button" onclick="absent(${value.id})">未到</button>
+                      <button class="dropdown-item dropdown_cancel" value="${value.id}" type="button" onclick="cancel(${value.id})">取消</button>
+                    </div>
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <!-- 報到備註 -->
+                  <input type="text" class="form-control input-sm">
+                </td>
+              </tr>`
+            });
+
+            $('#courseCheckContent').html(res);
+
           },
           error: function(jqXHR){
             //  alert(JSON.stringify(jqXHR));
@@ -245,7 +274,7 @@
         var check_status = this.value;
         $.ajax({
            type:'POST',
-           url:'course_check',     
+           url:'course_check',
            data:{'_token':"{{ csrf_token() }}",check_id:check_id, check_status:check_status},
            success:function(data){
             //  alert(JSON.stringify(data));
@@ -267,7 +296,7 @@
         var check_id = this.value;
         $.ajax({
            type:'POST',
-           url:'dropdown_check',    
+           url:'dropdown_check',
            data:{'_token':"{{ csrf_token() }}",check_id:check_id},
            success:function(data){
               $("#"+data[0].check_id).html(data[0].check_status_name);
@@ -286,7 +315,7 @@
         var check_id = this.value;
         $.ajax({
            type:'POST',
-           url:'dropdown_absent',    
+           url:'dropdown_absent',
            data:{
              '_token':"{{ csrf_token() }}",
              check_id:check_id
@@ -308,7 +337,7 @@
         var check_id = this.value;
         $.ajax({
            type:'POST',
-           url:'dropdown_cancel',    
+           url:'dropdown_cancel',
            data:{'_token':"{{ csrf_token() }}",check_id:check_id},
            success:function(data){
               $("#"+data[0].check_id).html(data[0].check_status_name);
