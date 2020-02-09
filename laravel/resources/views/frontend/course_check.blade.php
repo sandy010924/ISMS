@@ -35,7 +35,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">主持開場</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#">
+                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="host">
                 </div>
               </div>
               <div class="col">
@@ -44,7 +44,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">結束收單</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#">
+                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="closeOrder">
                 </div>
               </div>
               <div class="col-3">
@@ -53,7 +53,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">天氣</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#">
+                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="weather">
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">工作人員</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#">
+                  <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="staff">
                 </div>
               </div>
               {{-- <div class="col">
@@ -230,7 +230,7 @@
           success:function(data){
             console.log(data);
             $('#courseCheckContent').children().remove();
-            var res = '';
+            var res = ``;
             $.each (data, function (key, value) {
               res +=`
               <tr>
@@ -347,6 +347,26 @@
               $("main").append('<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">報名狀態修改失敗<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
            }
         });
+    });
+
+    // 主持開場
+    $('#host').on('blur', function() {
+      console.log(`host: ${$(this).val()}`);
+    });
+
+    // 結束收單
+    $('#closeOrder').on('blur', function() {
+      console.log(`closeOrder: ${$(this).val()}`);
+    });
+
+    // 天氣
+    $('#weather').on('blur', function() {
+      console.log(`weather: ${$(this).val()}`);
+    });
+
+    // 工作人員
+    $('#staff').on('blur', function() {
+      console.log(`staff: ${$(this).val()}`);
     });
   </script>
 @endsection
