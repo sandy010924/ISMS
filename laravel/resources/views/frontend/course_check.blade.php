@@ -193,7 +193,7 @@
                           </td>
                           <td class="align-middle">
                             <!-- 報到備註 -->
-                            <input type="text" class="form-control input-sm">
+                            <input type="text" class="form-control input-sm checkNote" id="{{ $coursecheck->check_id }}">
                           </td>
                         </tr>
                       @endforeach
@@ -250,12 +250,17 @@
                 </td>
                 <td class="align-middle">
                   <!-- 報到備註 -->
-                  <input type="text" class="form-control input-sm">
+                  <input type="text" class="form-control input-sm checkNote" id="${value.id}">
                 </td>
               </tr>`
             });
 
             $('#courseCheckContent').html(res);
+
+            // 查詢後報到備註 event
+            $('.checkNote').on('blur',function() {
+              console.log(`${$(this).attr('id')}: ${$(this).val()}`);
+            });
           },
           error: function(jqXHR){
             //  alert(JSON.stringify(jqXHR));
@@ -367,6 +372,11 @@
     // 工作人員
     $('#staff').on('blur', function() {
       console.log(`staff: ${$(this).val()}`);
+    });
+
+    // 查詢前報到備註 event
+    $('.checkNote').on('blur',function() {
+      console.log(`${$(this).attr('id')}: ${$(this).val()}`);
     });
   </script>
 @endsection
