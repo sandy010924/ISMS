@@ -242,15 +242,15 @@
                   <div class="btn-group">
                     <button class="btn btn-sm" type="button" data-toggle="dropdown">•••</button>
                     <div class="dropdown-menu">
-                      <button class="dropdown-item dropdown_check" value="${value.id}" type="button" onclick="check(${value.id})">報到</button>
-                      <button class="dropdown-item dropdown_absent" value="${value.id}" type="button" onclick="absent(${value.id})">未到</button>
-                      <button class="dropdown-item dropdown_cancel" value="${value.id}" type="button" onclick="cancel(${value.id})">取消</button>
+                      <button class="dropdown-item dropdown_check" value="${value.apply_id}" type="button" onclick="check(${value.apply_id})">報到</button>
+                      <button class="dropdown-item dropdown_absent" value="${value.apply_id}" type="button" onclick="absent(${value.apply_id})">未到</button>
+                      <button class="dropdown-item dropdown_cancel" value="${value.apply_id}" type="button" onclick="cancel(${value.apply_id})">取消</button>
                     </div>
                   </div>
                 </td>
                 <td class="align-middle">
                   <!-- 報到備註 -->
-                  <input type="text" class="form-control input-sm checkNote" id="${value.id}">
+                  <input type="text" class="form-control input-sm checkNote" id="${value.apply_id}">
                 </td>
               </tr>`
             });
