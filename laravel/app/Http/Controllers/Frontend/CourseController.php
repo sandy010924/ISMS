@@ -10,6 +10,8 @@ use App\Model\SalesRegistration;
 
 class CourseController extends Controller
 {
+   
+
     // Sandy (2020/01/14)
     public function show()
     {
@@ -45,7 +47,8 @@ class CourseController extends Controller
                 'count_cancel' =>$count_cancel,
                 'count_check' =>$count_check,
                 'href_list' => route('course_apply',["id"=> $data['id'] ]),
-                'href_form' => route('course_form',["id"=> $data['id'] ])
+                'href_form' => route('course_form',["id"=> $data['id'] ]),
+                'course_id' => $data['id']
             ];
         }
         // dd($courses);
@@ -100,4 +103,26 @@ class CourseController extends Controller
 
         return Response($courses);
     }
+
+     // Rocky (2020/02/11)
+     public function delete(Request $request)
+     {
+         $status = "";
+         $id_course = $request->get('id_course');
+ 
+         // 查詢是否有該筆資料
+         $course = Course::where('id',$id_course)->get();
+ 
+         $sales_registration = SalesRegistration::where('id_course',$id_course)->get();
+ 
+          // 刪除資料
+         if(!empty($course) && !empty($sales_registration)){
+             $sales_registration = SalesRegistration::where('id_course',$id_course)->delete();
+             $course = Course::where('id',$id_course)->delete();            
+            $status = "ok";
+         } else {
+             $status = "error";
+         }
+         return json_encode(array('data' => $status));
+     }
 }

@@ -154,11 +154,14 @@
                     <td>{{ $course['event'] }}</td>
                     <td>{{ $course['count_apply'] }} / <span style="color:red">{{ $course['count_cancel'] }}</span></td>
                     <td>{{ $course['count_check'] }}</span></td>
+                    <td>{{ $course['course_id'] }}</span></td>
                     <td>
                       <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                       <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                       <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
+                      <input type="hidden" name="_charset_">
+                      <button id="{{ $course['course_id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $course['course_id'] }});" value="{{ $course['course_id'] }}" >刪除</button>
                     </td>
                   </tr>
                 @endforeach
@@ -242,6 +245,34 @@
       });
   });
   // Sandy(2020/01/31) 列表搜尋end
+
+  // 刪除 Rocky(2020/02/11)
+  function btn_delete(id_course){
+    var msg = "是否刪除";
+    if (confirm(msg)==true){
+      $.ajax({
+          type : 'POST',
+          url:'course_delete', 
+          dataType: 'json',    
+          data:{
+            id_course: id_course
+          },
+          success:function(data){
+            if (data['data'] == "ok") {                           
+              alert('刪除成功！！')
+              location.reload();
+            }　else {
+              alert('刪除失敗！！')
+            }           
+          },
+          error: function(error){
+            console.log(JSON.stringify(error));          
+          }
+      });
+    }else{
+    return false;
+    }    
+  }
 
 </script>
 @endsection
