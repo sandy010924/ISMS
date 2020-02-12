@@ -154,13 +154,11 @@
                     <td>{{ $course['event'] }}</td>
                     <td>{{ $course['count_apply'] }} / <span style="color:red">{{ $course['count_cancel'] }}</span></td>
                     <td>{{ $course['count_check'] }}</span></td>
-                    <td>{{ $course['course_id'] }}</span></td>
                     <td>
                       <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                       <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                       <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
-                      <input type="hidden" name="_charset_">
                       <button id="{{ $course['course_id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $course['course_id'] }});" value="{{ $course['course_id'] }}" >刪除</button>
                     </td>
                   </tr>
