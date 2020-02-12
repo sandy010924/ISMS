@@ -56,6 +56,16 @@
     width: 60%;
     
 }
+.input_width{
+    width: 100% !important;
+    white-space: nowrap;
+    vertical-align: top;
+    padding:0;
+}
+.return_table {
+    table-layout: fixed; 
+    min-width: 2500px; 
+  }
 /*現場人員今日課程*/
 .main_body{
     flex: 0 0 100%;
