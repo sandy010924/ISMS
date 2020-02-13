@@ -174,3 +174,8 @@ Route::get('student_blacklist', function () {
 Route::get('student_group', function () {
     return view('frontend.student_group');
 })->name('student_group');
+
+/*** [學員管理] 細分組編輯 ***/
+Route::get('student_group_edit', function () {
+    return view('frontend.student_group_edit');
+})->name('student_group_edit');
