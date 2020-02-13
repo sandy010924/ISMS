@@ -75,3 +75,6 @@
   <!-- <input id="refresh" type="button" value="更新圖表"></button> -->
 </div>
 <!-- Content End -->
+
+<script src="/js/Chart.min.js"></script>
+<script src="/js/course_list_chart.js"></script>

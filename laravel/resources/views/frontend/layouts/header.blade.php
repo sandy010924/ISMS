@@ -1,23 +1,28 @@
 <!-- Header Start -->
-{{-- <div class="card header-card mb-3">
-    <div class="card-body">
-        <div class="d-flex flex-wrap flex-md-nowrap align-items-center">
-            <h5 class="h5 font-weight-bold">@yield('header')</h5>
-            <h6 class="h6 float-right"><span class="far fa-user"></span> 王小明</h6>
-            <i class="fas fa-sign-out-alt float-right"></i>
-        </div>
-    </div>
-</div> --}}
-
-<div class="header container shadow px-4 py-3 bg-white">
+<div class="header shadow px-4 py-3 bg-white">
   <div class="row">
-    <div class="col">
-      <span class="h5 font-weight-bold">@yield('header')</span>
+    <div class="col d-flex align-content-lg-center flex-wrap" id="header_title">
+      {{-- <a href="javascript:history.go(-1)"><span class="fas fa-2x fa-angle-left"></span></a>&nbsp; --}}
+      <span class="h5 font-weight-bold" id="header_text">@yield('header')</span>
     </div>
     <div class="col text-right">
-      <span class="h6 mr-3 align-middle"><li class="far fa-user"></li> 王小明</span>
+      <span class="h6 mr-3 align-middle"><li class="far fa-user"></li> 無極限</span>
       <a href="#" class="logout"><span class="h6 align-middle"><li class="fas fa-sign-out-alt"></li> 登出</span></a>
     </div>
   </div>
 </div>
 <!-- Header End -->
+
+<script>
+  var index = [ '課程管理', '學員管理', '財務管理', '訊息推播', '數據報表', '權限管理' ];
+  var back = 0;
+  for( var i = 0 ; i < index.length ; i++ ){
+    if( $("#header_title").text().indexOf(index[i]) >= 0 ){
+        back++;
+        break;
+    }
+  }
+  if( back == 0 ){
+    $("#header_title").prepend('<a href="javascript:history.go(-1)"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
+  }
+</script>

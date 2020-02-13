@@ -56,10 +56,11 @@
   {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> --}}
   <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/feather.min.js') }}"></script>
-  <script src="{{ asset('js/Chart.min.js') }}"></script>
-  <script src="{{ asset('js/course_list_chart.js') }}"></script>
   <script src="{{ asset('js/style.js') }}"></script>
   <script src="{{ asset('js/otd.js') }}"></script>
+  <!-- Sandy(2020/02/07) -->
+  {{-- <script src="{{ asset('js/Chart.min.js') }}"></script> --}}
+  {{-- <script src="{{ asset('js/course_list_chart.js') }}"></script> --}}
 </body>
 
 </html>

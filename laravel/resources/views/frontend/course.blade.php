@@ -184,6 +184,22 @@
           </button>
         </div>
         @endif
+
+      <!-- alert Start-->
+      <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+        <span id="success_alert_text"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+        <span id="error_alert_text"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- alert End -->
+
 <!-- Content End -->
 
 <script>
@@ -231,14 +247,16 @@
                     '<a href="' + value.href_list + '"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>'+
                     '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>'+
                     '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>'+
+                    '<input type="hidden" name="_charset_">'+
+                    '<button id="' + value.id + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + value.id + ');" value="' + value.id + '" >刪除</button>'+
               '</tr>';
             });
 
             $('#course_list').html(res);
           },
           error: function(jqXHR){
-             alert(JSON.stringify(jqXHR));
-            $("main").append('<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">報名狀態修改失敗<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+             console.log('error: ' + JSON.stringify(jqXHR));
+            // $("main").append('<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">報名狀態修改失敗<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
           }
       });
   });
@@ -246,7 +264,7 @@
 
   // 刪除 Rocky(2020/02/11)
   function btn_delete(id_course){
-    var msg = "是否刪除";
+    var msg = "是否刪除此課程?";
     if (confirm(msg)==true){
       $.ajax({
           type : 'POST',
@@ -257,14 +275,26 @@
           },
           success:function(data){
             if (data['data'] == "ok") {                           
-              alert('刪除成功！！')
+              // alert('刪除成功！！')
+              /** alert **/
+              $("#success_alert_text").html("刪除課程成功");
+              fade($("#success_alert"));
+
               location.reload();
             }　else {
-              alert('刪除失敗！！')
+              // alert('刪除失敗！！')
+
+              /** alert **/ 
+              $("#error_alert_text").html("刪除課程失敗");
+              fade($("#error_alert"));       
             }           
           },
           error: function(error){
-            console.log(JSON.stringify(error));          
+            console.log(JSON.stringify(error));   
+
+            /** alert **/ 
+            $("#error_alert_text").html("刪除課程失敗");
+            fade($("#error_alert"));       
           }
       });
     }else{

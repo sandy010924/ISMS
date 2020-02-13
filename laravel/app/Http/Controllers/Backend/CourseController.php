@@ -310,4 +310,26 @@ class CourseController extends Controller
             return redirect('course')->with('status', '匯入失敗');
         }
     }
+
+     // Rocky (2020/02/11)
+     public function delete(Request $request)
+     {
+         $status = "";
+         $id_course = $request->get('id_course');
+ 
+         // 查詢是否有該筆資料
+         $course = Course::where('id',$id_course)->get();
+ 
+         $sales_registration = SalesRegistration::where('id_course',$id_course)->get();
+ 
+          // 刪除資料
+         if(!empty($course) && !empty($sales_registration)){
+             $sales_registration = SalesRegistration::where('id_course',$id_course)->delete();
+             $course = Course::where('id',$id_course)->delete();            
+            $status = "ok";
+         } else {
+             $status = "error";
+         }
+         return json_encode(array('data' => $status));
+     }
 }
