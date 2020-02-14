@@ -92,7 +92,7 @@
                   &nbsp;系統設定
                 {{-- </h6> --}}
               </a>
-              <a class="nav-link nav-sub-item" href="#">權限管理</a>
+              <a class="nav-link nav-sub-item" href="{{ route('authority') }}">權限管理</a>
             </li>
             {{-- <li class="nav-item border-top">
               <a class="nav-link" href="#">

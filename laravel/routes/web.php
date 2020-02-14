@@ -237,3 +237,8 @@ Route::get('report', function () {
 Route::get('system', function () {
     return view('frontend.system');
 })->name('system');
+
+/*** [系統設定] 權限管理 ***/
+Route::get('authority', function () {
+    return view('frontend.authority');
+})->name('authority');
