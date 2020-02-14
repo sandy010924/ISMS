@@ -8,8 +8,8 @@
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
             <li class="nav-item border-top">
-              <a href="{{ route('student') }}">
-                <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted">
+              <a class="nav-link" href="{{ route('student') }}">
+                {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-file">
@@ -17,14 +17,14 @@
                     <polyline points="13 2 13 9 20 9"></polyline>
                   </svg>
                   &nbsp;學員管理
-                </h6>
+                {{-- </h6> --}}
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('student_blacklist') }}">黑名單</a>
               <a class="nav-link nav-sub-item" href="{{ route('student_group') }}">細分組</a>
             </li>
             <li class="nav-item border-top">
-              <a href="{{ route('course') }}">
-                <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted">
+              <a class="nav-link" href="{{ route('course') }}">
+                {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-shopping-cart">
@@ -33,13 +33,13 @@
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                   </svg>
                   &nbsp;課程管理
-                </h6>
+                {{-- </h6> --}}
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('course_list') }}">課程總覽</a>
               <a class="nav-link nav-sub-item" href="{{ route('course_today') }}">今日課程</a>
             </li>
             <li class="nav-item border-top">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="{{ route('finance') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                   class="feather feather-users">
@@ -52,21 +52,23 @@
               </a>
             </li>
             <li class="nav-item border-top">
-              <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="feather feather-bar-chart-2">
-                  <line x1="18" y1="20" x2="18" y2="10"></line>
-                  <line x1="12" y1="20" x2="12" y2="4"></line>
-                  <line x1="6" y1="20" x2="6" y2="14"></line>
-                </svg>
-                &nbsp;訊息推播
-              </h6>
+              <a class="nav-link" href="{{ route('message') }}">
+                {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-bar-chart-2">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
+                  &nbsp;訊息推播
+                {{-- </h6> --}}
+              </a>
               <a class="nav-link nav-sub-item" href="#">內容管理</a>
               <a class="nav-link nav-sub-item" href="#">推播排程</a>
             </li>
             <li class="nav-item border-top">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="{{ route('report') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                   class="feather feather-bar-chart-2">
@@ -78,16 +80,18 @@
               </a>
             </li>
             <li class="nav-item border-top">
-              <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="feather feather-layers">
-                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                  <polyline points="2 17 12 22 22 17"></polyline>
-                  <polyline points="2 12 12 17 22 12"></polyline>
-                </svg>
-                &nbsp;系統設定
-              </h6>
+              <a class="nav-link" href="{{ route('system') }}">
+                {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-layers">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                  </svg>
+                  &nbsp;系統設定
+                {{-- </h6> --}}
+              </a>
               <a class="nav-link nav-sub-item" href="#">權限管理</a>
             </li>
             {{-- <li class="nav-item border-top">

@@ -14,7 +14,7 @@
 <!-- Header End -->
 
 <script>
-  var index = [ '課程管理', '學員管理', '財務管理', '訊息推播', '數據報表', '權限管理' ];
+  var index = [ '課程管理', '學員管理', '財務管理', '訊息推播', '數據報表', '系統設定' ];
   var back = 0;
   for( var i = 0 ; i < index.length ; i++ ){
     if( $("#header_title").text().indexOf(index[i]) >= 0 ){

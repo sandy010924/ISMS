@@ -118,10 +118,11 @@ Route::get('course_today_search', 'Frontend\CourseTodayController@search');
 
 //Sandy (2020/01/17)
 Route::get('course_check','Frontend\CourseCheckController@show')->name('course_check');
-Route::post('course_check', 'Backend\CourseCheckController@update');
-Route::post('dropdown_check', 'Backend\CourseCheckController@update_check');
-Route::post('dropdown_absent', 'Backend\CourseCheckController@update_absent');
-Route::post('dropdown_cancel', 'Backend\CourseCheckController@update_cancel');
+Route::post('course_check_status', 'Backend\CourseCheckController@update_status');
+Route::post('course_check_data', 'Backend\CourseCheckController@update_data');
+// Route::post('dropdown_check', 'Backend\CourseCheckController@update_check');
+// Route::post('dropdown_absent', 'Backend\CourseCheckController@update_absent');
+// Route::post('dropdown_cancel', 'Backend\CourseCheckController@update_cancel');
 
 //Sandy (2020/02/05)
 Route::get('course_check_search','Frontend\CourseCheckController@search');
@@ -179,3 +180,60 @@ Route::get('student_group', function () {
 Route::get('student_group_edit', function () {
     return view('frontend.student_group_edit');
 })->name('student_group_edit');
+
+
+
+/*
+------------
+|
+| 財務管理
+|
+------------
+*/
+/*** [財務管理] ***/
+Route::get('finance', function () {
+    return view('frontend.finance');
+})->name('finance');
+
+
+
+/*
+------------
+|
+| 訊息推播
+|
+------------
+*/
+/*** [訊息推播] ***/
+Route::get('message', function () {
+    return view('frontend.message');
+})->name('message');
+
+
+
+/*
+------------
+|
+| 數據報表
+|
+------------
+*/
+/*** [數據報表] ***/
+Route::get('report', function () {
+    return view('frontend.report');
+})->name('report');
+
+
+
+
+/*
+------------
+|
+| 系統設定
+|
+------------
+*/
+/*** [系統設定] ***/
+Route::get('system', function () {
+    return view('frontend.system');
+})->name('system');
