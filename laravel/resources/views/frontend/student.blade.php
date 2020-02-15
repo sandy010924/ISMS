@@ -10,7 +10,8 @@
           <div class="card-body">
             <div class="row mb-3">
               <div class="col-5 mx-auto">
-                  <input type="search" class="form-control" placeholder="輸入電話或email" aria-label="Student's Phone or Email" id="search_input">
+                  <input type="search" class="form-control" placeholder="輸入電話或email" aria-label="Student's Phone or Email"
+                    id="search_input" onkeyup="value=value.replace(/[^\w_.@]/g,'')">
                 </div>
               </div>
             </div>
@@ -32,7 +33,7 @@
                       <td class="align-middle">{{ $student->phone }}</td>
                       <td class="align-middle">{{ $student->email }}</td>
                       <td class="align-middle">
-                        
+
                       </td>
                       <td class="align-middle">
                           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#student_information">完整內容</button>
@@ -53,20 +54,20 @@
                                 </div>
                                 <div class="row">
                                   <div class="col-3 py-2">
-                                    <h6>標記 : 
+                                    <h6>標記 :
                                       <span class="bg-dark p-1 text-light">
                                         <small>JC學員</small>
                                       </span>&nbsp;
                                       <span class="bg-dark p-1 text-light">
                                         <small>黑心學員</small>
                                       </span>
-                                    </h6>   
+                                    </h6>
                                   </div>
                                   <div class="col-5">
                                   </div>
                                   <div class="col-4 align-right">
                                     <button type="button" class="btn btn-primary float-right">刪除聯絡人</button>
-                                  </div>   
+                                  </div>
                                 </div>
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                                   <li class="nav-item">
@@ -163,7 +164,7 @@
                                         <h7>銷講取消率 : 20%</h7>
                                       </div>
                                     </div>
-                                  </div>                                  
+                                  </div>
                                   <div class="tab-pane fade" id="history_data" role="tabpanel" aria-labelledby="history-tab">
                                     <div class="table-responsive">
                                       <table class="table table-striped table-sm text-center">
@@ -178,12 +179,12 @@
                                           <tr>
                                             <td>2019年05月19日 19:50:39</td>
                                             <td>參與</td>
-                                            <td>60天財富計畫課後第一次線上輔導</td> 
+                                            <td>60天財富計畫課後第一次線上輔導</td>
                                           </tr>
                                           <tr>
                                             <td>2019年05月19日 19:50:39</td>
                                             <td>參與</td>
-                                            <td>60天財富計畫課後第一次線上輔導</td>  
+                                            <td>60天財富計畫課後第一次線上輔導</td>
                                           </tr>
                                         </tbody>
                                       </table>
@@ -236,7 +237,7 @@
                                               </div>
                                             </td>
                                             <td class="align-middle"></td>
-                                            <td class="align-middle"></td>  
+                                            <td class="align-middle"></td>
                                           </tr>
                                           <tr>
                                             <td></td>
@@ -246,7 +247,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td></td>  
+                                            <td></td>
                                           </tr>
                                         </tbody>
                                       </table>
@@ -256,10 +257,10 @@
                               </div>
                             </div>
                           </div>
-                        
+
                         <button type="button" class="btn btn-secondary btn-sm mx-1">列入黑名單</button>
                         <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#form_finished">已填表單</button>
-                        
+
                         <div class="modal fade bd-example-modal-lg" id="form_finished" tabindex="-1" role="dialog" aria-labelledby="save_newgroupTitle" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content">
@@ -300,8 +301,17 @@
           </div>
         </div>
 <!-- Content End -->
-@endsection
+
+
 <script>
-$(".demo2").tooltip();
+$("document").ready(function(){
+  $(".demo2").tooltip();
+
+  // 學員管理搜尋 (只能輸入數字、字母、_、.、@)
+  $('#search_input').on('blur', function() {
+      console.log(`search_input: ${$(this).val()}`);
+  });
+});
 </script>
-     
+
+@endsection
