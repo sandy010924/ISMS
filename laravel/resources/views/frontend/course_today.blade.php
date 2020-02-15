@@ -30,7 +30,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="courseTodayContent">
                   @foreach($courses as $key => $course )
                   {{-- @foreach(array_combine($courses, $salesregistrations) as $course => $salesregistration) --}}
                     <tr>
@@ -50,7 +50,7 @@
           </div>
         </div>
       <!-- Content End -->
-      
+
 <script>
   // Sandy(2020/02/07) 列表搜尋start
   $.ajaxSetup({
@@ -63,14 +63,32 @@
       var search_name = $("#search_name").val();
       $.ajax({
           type : 'GET',
-          url:'course_today_search', 
-          dataType: 'json',    
+          url:'course_today_search',
+          dataType: 'json',
           data:{
             // '_token':"{{ csrf_token() }}",
             search_name: search_name
           },
           success:function(data){
             console.log(data);
+
+            $('#courseTodayContent').children().remove();
+            var res = ``;
+            $.each (data, function (key, value) {
+              res +=`
+              <tr>
+                <td>${ value.date }</td>
+                <td>${ value.name }</td>
+                <td>${ value.event }</td>
+                <td>${ value.count_apply } / <span style="color:red">${ value.count_cancel }</span></td>
+                <td>${ value.count_check }</td>
+                <td>
+                  <a href="${ value.href_check }"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+                </td>
+              </tr>`
+            });
+
+            $('#courseTodayContent').html(res);
           }
           // error: function(jqXHR){
           //    alert(JSON.stringify(jqXHR));
@@ -80,3 +98,4 @@
   // Sandy(2020/02/07) 列表搜尋end
 </script>
 @endsection
+
