@@ -13,7 +13,9 @@ class CourseApplyController extends Controller
     {
         //課程資訊
         $id = $request->get('id');
-        $course = Course::Where('id','=', $id)
+        $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+            ->select('teacher.name as teacher_name', 'course.*')
+            ->Where('course.id','=', $id)
             ->first();
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($course->course_start_at))];
@@ -21,36 +23,54 @@ class CourseApplyController extends Controller
         //報名資訊
         $courseapplys = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
             ->join('student', 'student.id', '=', 'sales_registration.id_student')
-            ->select('sales_registration.id as apply_id' ,'student.*', 'sales_registration.id_status as apply_status_val', 'isms_status.name as apply_status_name')
+            ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'sales_registration.*', 'isms_status.name as status_name')
+            // ->select('student.*', 'sales_registration.submissiondate as apply_submissiondate', 'sales_registration.id as apply_id', 'sales_registration.id_status as apply_status_val', 'isms_status.name as status_name')
             ->Where('id_course','=', $id)
             ->Where('id_status','<>', 2)
+            
             // ->where(function($q) { 
             //     $q->where('id_status', 1)
             //         ->orWhere('id_status', 5);
             // })
             ->get();
             
-        //報名比數
-        $count = count($courseapplys);
+        //報名筆數
+        $count_apply = count($courseapplys);
 
-        return view('frontend.course_apply', compact('courseapplys', 'course', 'week', 'count'));
+        //取消筆數
+        $count_cancel = count(SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+                                              ->join('student', 'student.id', '=', 'sales_registration.id_student')
+                                              ->Where('id_course','=', $id)
+                                              ->Where('id_status', 2)
+                                              ->get());
+
+        return view('frontend.course_apply', compact('courseapplys', 'course', 'week', 'count_apply', 'count_cancel'));
     }
     
     // Sandy (2020/02/03)
     public function search(Request $request)
     {
         $id = $request->get('course_id');
-        $search_phone = $request->get('search_phone');
+        $search_keyword = $request->get('search_keyword');
         
         //報名資訊
         $courseapplys = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
             ->join('student', 'student.id', '=', 'sales_registration.id_student')
-            ->select('sales_registration.id as apply_id' ,'student.*', 'sales_registration.id_status as apply_status_val', 'isms_status.name as apply_status_name')
+            // ->select('sales_registration.id as apply_id' ,'student.*', 'sales_registration.id_status as apply_status_val', 'isms_status.name as status_name')
+            ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'sales_registration.*', 'isms_status.name as status_name')
             ->Where('id_course','=', $id)
             ->Where('id_status','<>', 2)
-            ->Where('phone', 'like', '%'.$search_phone)
+            // ->Where('profession', 'like', '%'.$search_keyword.'%')
+            ->where(function($q) use ($search_keyword) { 
+                $q->orWhere('datasource', 'like', '%'.$search_keyword.'%')
+                  ->orWhere('student.name', 'like', '%'.$search_keyword.'%')
+                  ->orWhere('student.phone', 'like', '%'.$search_keyword.'%')
+                  ->orWhere('student.email', 'like', '%'.$search_keyword.'%')
+                  ->orWhere('student.profession', 'like', '%'.$search_keyword.'%');
+            })
             ->get();
             
+
         return Response($courseapplys);
     }
 }
