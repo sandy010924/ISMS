@@ -90,7 +90,7 @@
                                               <div class="input-group-prepend">
                                                 <span class="input-group-text">最新來源</span>
                                               </div>
-                                              <input type="text" class="form-control bg-white basic-inf" id="#" aria-label="# input" aria-describedby="#" readonly>
+                                              <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
                                             </div>
                                           </div>
                                           <div class="col-6">
@@ -312,6 +312,28 @@ $("document").ready(function(){
       console.log(`search_input: ${$(this).val()}`);
   });
 });
+
+
+/*學員修改基本資料button*/
+var basic_input = document.getElementsByClassName("basic-inf");
+var i;
+document.getElementById('update-inf').onclick = function() {
+    for (i = 0; i < basic_input.length; i++) {
+        basic_input[i].removeAttribute('readonly');
+    }
+    document.getElementById("save-inf").style.display = "block";
+    document.getElementById("update-inf").style.display = "none";
+};
+
+document.getElementById('save-inf').onclick = function() {
+    for (i = 0; i < basic_input.length; i++) {
+        basic_input[i].setAttribute('readonly','readonly');
+    }
+    /*document.getElementById('basic-inf').setAttribute('readonly','readonly');*/
+    document.getElementById("save-inf").style.display = "none";
+    document.getElementById("update-inf").style.display = "block";
+};
+
 </script>
 
 @endsection
