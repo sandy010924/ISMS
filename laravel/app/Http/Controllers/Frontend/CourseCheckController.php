@@ -28,7 +28,7 @@ class CourseCheckController extends Controller
         //報名資訊
         $coursechecks = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
             ->join('student', 'student.id', '=', 'sales_registration.id_student')
-            ->select('sales_registration.id as check_id' ,'student.*', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
+            ->select('sales_registration.id as check_id' ,'student.*', 'sales_registration.id_status as check_status_val', 'sales_registration.memo as memo', 'isms_status.name as check_status_name')
             ->Where('id_course','=', $id)
             ->where(function($q) { 
                 $q->where('id_status', 3)
@@ -51,15 +51,18 @@ class CourseCheckController extends Controller
     public function search(Request $request)
     {
         $id = $request->get('course_id');
-        $search_phone = $request->get('search_phone');
+        $search_keyword = $request->get('search_keyword');
         
         //報名資訊
         $coursechecks = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
             ->join('student', 'student.id', '=', 'sales_registration.id_student')
-            ->select('sales_registration.id as apply_id' ,'student.*', 'sales_registration.id_status as apply_status_val', 'isms_status.name as apply_status_name')
+            ->select('sales_registration.id as check_id' ,'student.*', 'sales_registration.id_status as check_status_val', 'sales_registration.memo as memo', 'isms_status.name as check_status_name')
             ->Where('id_course','=', $id)
             ->Where('id_status','<>', 2)
-            ->Where('phone', 'like', '%'.$search_phone)
+            ->where(function($q) use ($search_keyword) { 
+                $q->orWhere('student.phone', 'like', '%'.$search_keyword)
+                  ->orWhere('student.name', 'like', '%'.$search_keyword.'%');
+            })
             ->get();
             
         return Response($coursechecks);
