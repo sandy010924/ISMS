@@ -194,7 +194,10 @@ Route::get('student_group_edit', function () {
 Route::get('finance', function () {
     return view('frontend.finance');
 })->name('finance');
-
+/*** [財務管理] 查看報表 ***/
+Route::get('finance_return', function () {
+    return view('frontend.finance_return');
+})->name('finance_return');
 
 
 /*
