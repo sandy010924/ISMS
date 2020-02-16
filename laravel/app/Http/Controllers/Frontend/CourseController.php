@@ -16,7 +16,8 @@ class CourseController extends Controller
     public function show()
     {
         // $view_array=array();
-        $courses = Course::all();
+        $courses = Course::orderBy('course_start_at', 'desc')
+                         ->get();
         // $courses_apply = array();
         // $courses_cancel = array();
 
@@ -46,7 +47,10 @@ class CourseController extends Controller
                 'count_apply' => $count_apply,
                 'count_cancel' =>$count_cancel,
                 'count_check' =>$count_check,
+                'href_check' => route('course_check',["id"=> $data['id'] ]),
                 'href_list' => route('course_apply',["id"=> $data['id'] ]),
+                'href_adv' => route('course_advanced',["id"=> $data['id'] ]),
+                'href_return' => route('course_return',["id"=> $data['id'] ]),
                 'href_form' => route('course_form',["id"=> $data['id'] ]),
                 'course_id' => $data['id']
             ];
@@ -64,11 +68,13 @@ class CourseController extends Controller
         
         if(empty($search_date)){
             $data_course = Course::Where('course.name', 'like', '%' .$search_name. '%')   
-                            ->get();
+                                 ->orderBy('course_start_at', 'desc')                
+                                 ->get();
         }else{
             $data_course = Course::Where('course.name', 'like', '%' .$search_name. '%')
-                            ->Where('course.course_start_at', 'like', '%' . $search_date. '%')    
-                            ->get();
+                                 ->Where('course.course_start_at', 'like', '%' . $search_date. '%')    
+                                 ->orderBy('course_start_at', 'desc') 
+                                 ->get();
         }
 
         $courses = array();
@@ -97,7 +103,10 @@ class CourseController extends Controller
                 'count_apply' => $count_apply,
                 'count_cancel' => $count_cancel,
                 'count_check' => $count_check,
+                'href_check' => route('course_check',["id"=> $data['id'] ]),
                 'href_list' => route('course_apply',["id"=> $data['id'] ]),
+                'href_adv' => route('course_advanced',["id"=> $data['id'] ]),
+                'href_return' => route('course_return',["id"=> $data['id'] ]),
                 'href_form' => route('course_form',["id"=> $data['id'] ])
             ];
         }

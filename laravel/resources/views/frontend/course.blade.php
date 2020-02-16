@@ -155,10 +155,25 @@
                     <td>{{ $course['count_apply'] }} / <span style="color:red">{{ $course['count_cancel'] }}</span></td>
                     <td>{{ $course['count_check'] }}</span></td>
                     <td>
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>
+                      @if( strtotime($course['date']) == strtotime(date("Y-m-d")) )
+                      <!-- 今日場次 -->
+                      <a href="{{ $course['href_check'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">開始報名</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
+                      @elseif( strtotime($course['date']) > strtotime(date("Y-m-d")) )
+                      <!-- 未過場次 -->
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>
+                      <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
+                      @elseif( strtotime($course['date']) < strtotime(date("Y-m-d")) )
+                      <!-- 已過場次 -->
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>
+                      <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                      <a href="{{ $course['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
+                      <a href="{{ $course['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">本日報表</button></a>
+                      @endif
                       <button id="{{ $course['course_id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $course['course_id'] }});" value="{{ $course['course_id'] }}" >刪除</button>
                     </td>
                   </tr>
