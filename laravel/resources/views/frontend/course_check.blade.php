@@ -194,7 +194,7 @@
                 </td>
                 <td class="align-middle">
                   <!-- 報到備註 -->
-                  <input type="text" class="form-control input-sm checkNote" id="{{ $coursecheck->check_id }}" value="{{ $coursecheck->memo }}">
+                  <input type="text" class="form-control input-sm checkNote" id="{{ $coursecheck->check_id }}" value="{{ ($coursecheck->memo == 'null')? '':$coursecheck->memo }}">
                 </td>
               </tr>
             @endforeach
@@ -267,7 +267,7 @@
                 </td>
                 <td class="align-middle">
                   <!-- 報到備註 -->
-                  <input type="text" class="form-control input-sm checkNote" id="${value.check_id}" value="${value.memo}">
+                  <input type="text" class="form-control input-sm checkNote" id="${value.check_id}" value="${(value.memo == null)?'':value.memo}">
                 </td>
               </tr>`
             });

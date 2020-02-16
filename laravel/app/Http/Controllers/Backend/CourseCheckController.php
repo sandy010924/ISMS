@@ -54,7 +54,7 @@ class CourseCheckController extends Controller
             
             $new_check = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                                         ->join('student', 'student.id', '=', 'sales_registration.id_student')
-                                        ->select('sales_registration.id_course as ','sales_registration.id as check_id', 'student.name as check_name', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
+                                        ->select('sales_registration.id as check_id', 'student.name as check_name', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
                                         ->Where('sales_registration.id','=', $check_id)
                                         ->get();
 
