@@ -255,7 +255,7 @@
                 <td scope="row" class="align-middle">${phone}</td>
                 <td scope="row" class="align-middle">${email}</td>
                 <td scope="row" class="align-middle">
-                  <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="${value.id}" value="${value.check_status_val}">${value.check_status_name}</button>
+                  <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="${value.check_id}" value="${value.check_status_val}">${value.check_status_name}</button>
                   <div class="btn-group">
                     <button class="btn btn-sm" type="button" data-toggle="dropdown">•••</button>
                     <div class="dropdown-menu">
