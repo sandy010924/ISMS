@@ -11,6 +11,103 @@ use App\Model\Course;
 
 class CourseCheckController extends Controller
 {
+    public function apply(Request $request)
+    {
+        try{
+            //讀取data
+            $id_course = $request->get('form_course_id');
+            $new_name = $request->get('new_name');
+            $new_phone = $request->get('new_phone');
+            $new_email = $request->get('new_email');
+            $new_address = $request->get('new_address');
+            $new_profession = $request->get('new_profession');
+            $new_pay = $request->get('new_paymodel');
+            $new_account = $request->get('new_account');
+
+            $course = new Course;
+            $student = new Student;
+            $SalesRegistration = new SalesRegistration;
+
+            //判斷系統是否已有該學員資料
+            $check_student = $student::where('phone', $new_phone)->get();
+
+
+            /*學員報名資料 - S*/
+
+            // 檢查學生資料
+            if (count($check_student) != 0) {
+                foreach ($check_student as $data_student) {
+                    $id_student = $data_student ->id;
+                }
+            } else{
+                // 新增學員資料
+                $student->name          = $new_name;         // 學員姓名
+                $student->sex           = '';                // 性別
+                $student->id_identity   = '';                // 身分證
+                $student->phone         = $new_phone;        // 電話
+                $student->email         = $new_email;        // email
+                $student->birthday      = '';                // 生日
+                $student->company       = '';                // 公司
+                $student->profession    = $new_profession;   // 職業
+                if ($new_address != "") {
+                    $student->address       = $new_address;  // 居住地
+                }
+                
+                $student->save();
+                $id_student = $student->id;
+            }
+            /*學員報名資料 - E*/
+
+
+            /*銷售講座報名資料 - S*/
+
+            $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
+                                                            ->where('id_course', $id_course)
+                                                            ->get();
+        
+            // 檢查是否報名過
+            if (count($check_SalesRegistration) == 0 && $id_student != "") {
+                // 新增銷售講座報名資料
+                if ($id_course != "" && $id_student != "") {
+                    $date = date('Y-m-d H:i:s');
+                    $SalesRegistration->submissiondate   = $date;                           // Submission Date
+                    $SalesRegistration->datasource       = 'site';                          // 表單來源
+                    $SalesRegistration->id_student      = $id_student;                      // 學員ID
+                    $SalesRegistration->id_course       = $id_course;                       // 課程ID
+                    $SalesRegistration->id_status       = 4;                                // 報名狀態ID
+                    
+                    if ($new_pay != '') {
+                        $SalesRegistration->pay_model       = $new_pay;              // 付款方式
+                    }
+                    if ($new_account != '') {
+                        $SalesRegistration->account         = $new_account;          // 帳號/卡號後五碼
+                    }
+                    $SalesRegistration->course_content  = '';                 // 想聽到的課程有哪些
+                    
+                    $SalesRegistration->save();
+                    $id_SalesRegistration = $SalesRegistration->id;
+                }
+            } else {
+                foreach ($check_SalesRegistration as $data_SalesRegistration) {
+                    $id_SalesRegistration = $data_SalesRegistration ->id;
+                }
+            }
+            
+            /*銷售講座報名資料 - E*/
+            if ($id_student != "" && $id_course != "" && $id_SalesRegistration != "") {
+                return redirect()->route('course_check', ['id' => $id_course])->with('status', '報名成功');
+            } else {
+                return redirect()->route('course_check', ['id' => $id_course])->with('status', '報名失敗');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('course_check', ['id' => $id_course])->with('status', '報名失敗');
+            // return json_encode(array(
+            //     'errorMsg' => '儲存失敗'
+            // ));
+        }
+
+    }
+
     public function update_status(Request $request)
     {
         //取回data

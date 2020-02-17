@@ -23,6 +23,11 @@ body {
     display: none;
 }
 
+.form-group.required .col-form-label:after { 
+   content:"*";
+   color:red;
+}
+
 /* main */
 main{
     top: 0;

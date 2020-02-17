@@ -128,7 +128,9 @@ Route::get('logout', 'Frontend\LoginController@logout')->name('logout');
     // })->name('course_check');
 
     //Sandy (2020/01/17)
-    Route::get('course_check', 'Frontend\CourseCheckController@show')->name('course_check');
+    Route::get('course_check','Frontend\CourseCheckController@show')->name('course_check');
+    Route::get('course_check_search','Frontend\CourseCheckController@search');
+    Route::post('course_check', 'Backend\CourseCheckController@apply');
     Route::post('course_check_status', 'Backend\CourseCheckController@update_status');
     Route::post('course_check_data', 'Backend\CourseCheckController@update_data');
     // Route::post('dropdown_check', 'Backend\CourseCheckController@update_check');
@@ -136,7 +138,7 @@ Route::get('logout', 'Frontend\LoginController@logout')->name('logout');
     // Route::post('dropdown_cancel', 'Backend\CourseCheckController@update_cancel');
 
     //Sandy (2020/02/05)
-    Route::get('course_check_search', 'Frontend\CourseCheckController@search');
+    Route::get('course_check_search','Frontend\CourseCheckController@search');
 
 
     /*** [課程管理] 回報表單 ***/

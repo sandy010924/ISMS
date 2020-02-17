@@ -20,6 +20,18 @@ class CourseApplyController extends Controller
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($course->course_start_at))];
 
+        //未過場次 狀態預設改為已報名
+        if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d"))){
+            $courseapplys = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+            ->join('student', 'student.id', '=', 'sales_registration.id_student')
+            ->Where('id_course','=', $id)
+            ->where(function($q) { 
+                $q->orWhere('id_status', 3)
+                  ->orWhere('id_status', 4);
+            })
+            ->update(['id_status' => 1]);
+        }
+
         //報名資訊
         $courseapplys = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
             ->join('student', 'student.id', '=', 'sales_registration.id_student')
@@ -27,7 +39,6 @@ class CourseApplyController extends Controller
             // ->select('student.*', 'sales_registration.submissiondate as apply_submissiondate', 'sales_registration.id as apply_id', 'sales_registration.id_status as apply_status_val', 'isms_status.name as status_name')
             ->Where('id_course','=', $id)
             ->Where('id_status','<>', 2)
-            
             // ->where(function($q) { 
             //     $q->where('id_status', 1)
             //         ->orWhere('id_status', 5);

@@ -10,7 +10,8 @@
           <div class="card-body">
             <div class="row mb-3">
               <div class="col-3 mx-3">
-                <button type="button" class="btn btn-outline-secondary btn_date float-left mx-1" data-toggle="modal" data-target="#form_import">匯入表單</button>              
+                <button type="button" class="btn btn-outline-secondary btn_date float-left mx-1" data-toggle="modal" data-target="#form_import">匯入表單</button>  
+                <!-- 匯入表單 modal -->     
                 <div class="modal fade" id="form_import" tabindex="-1" role="dialog" aria-labelledby="form_importLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -22,22 +23,21 @@
                       </div>
                       <div class="modal-body">
                       <form class="form" action="{{url('course')}}" method="POST" enctype="multipart/form-data">
-                      {{-- <form class="form" action="#" method="POST" enctype="multipart/form-data"> --}}
                         @csrf
-                          <div class="form-group">
+                          <div class="form-group required">
                             <label for="import_name" class="col-form-label">課程名稱</label>
-                            <input type="text" class="form-control" name="import_name" id="import_name" >
+                            <input type="text" class="form-control" name="import_name" id="import_name" required/>
                           </div>
-                          <div class="form-group">
+                          <div class="form-group required">
                             <label for="import_teacher" class="col-form-label">講師</label>
-                            <select class="custom-select" name="import_teacher" id="import_teacher" p >
+                            <select class="custom-select" name="import_teacher" id="import_teacher" required>
                               <option selected disabled value="">選擇講師</option>
                               <option value="1">Julia</option>
                               <option value="2">Jack</option>
                               <option value="3">Mark</option>
                             </select>
                           </div>
-                          <div class="form-group">
+                          <div class="form-group required">
                             <label for="import_flie" class="col-form-label">上傳檔案</label>
                             {{-- <textarea class="form-control" id="message-text"></textarea> --}}
                             <div class="custom-file">
@@ -55,8 +55,7 @@
                     </div>
                   </div>
                 </div>
-
-                <button type="button" class="btn btn-outline-secondary btn_date mx-1" data-toggle="modal" data-target="#form_newclass">新增課程</button>
+                {{-- <button type="button" class="btn btn-outline-secondary btn_date mx-1" data-toggle="modal" data-target="#form_newclass">新增課程</button>
                 <div class="modal fade" id="form_newclass" tabindex="-1" role="dialog" aria-labelledby="form_newclassLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -121,7 +120,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> --}}
               </div>
               <div class="col"></div>
               <div class="col-3">
@@ -157,19 +156,19 @@
                     <td>
                       @if( strtotime($course['date']) == strtotime(date("Y-m-d")) )
                       <!-- 今日場次 -->
-                      <a href="{{ $course['href_check'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">開始報名</button></a>
+                      <a href="{{ $course['href_check'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">開始報到</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                       <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                       <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
                       @elseif( strtotime($course['date']) > strtotime(date("Y-m-d")) )
                       <!-- 未過場次 -->
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報到</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                       <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                       <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
                       @elseif( strtotime($course['date']) < strtotime(date("Y-m-d")) )
                       <!-- 已過場次 -->
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報到</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                       <a href="{{ $course['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
                       <a href="{{ $course['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">本日報表</button></a>
