@@ -49,18 +49,16 @@
     <div class="row">
       <main role="main" class="col-md-9 col-lg-10 px-4 main_body ">
         <div class="card mb-3 login_back">
-          <div class="card-body">
+          <div class="card-body">         
           <form class="login_form">
             <img src="./img/logo.png" width="150" alt="logo" style="display:block; margin:3% auto;">
             <div class="container">
               <label for="uname"><b>帳號</b></label>
-              <input type="text" placeholder="Enter Username" name="uname" required class="login_input">
-          
+              <input type="text" placeholder="Enter Username" name="uname" id="uname" required class="login_input">          
               <label for="psw"><b>密碼</b></label>
-              <input type="password" placeholder="Enter Password" name="psw" required class="login_input">
-          
-            <a href="{{ route('course') }}"><input type="button" class="login_button" value="登入"></a>
-              
+              <input type="password" placeholder="Enter Password" name="psw" id="psw" required class="login_input">          
+              <!-- Rocky 2020/02/05 -->
+              <button type="button"  class="login_button" id="login_button" value="登入">登入</button>                            
             </div>
           </form>
           </div>
@@ -71,15 +69,40 @@
   </div>
 
 
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
   <script src="https://getbootstrap.com/docs/4.4/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-
+  
+  <!-- Rocky (2020/02/05) -->
+  <script>
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $("#login_button").click(function(e){
+      var uname = $("#uname").val();
+      var psw = $("#psw").val();
+      $.ajax({
+           type:'POST',
+           url:'login',                
+           data:{'_token':"{{ csrf_token() }}",uname:uname, psw:psw},
+           success:function(data){
+             if(data == "1") {
+              window.location.href = "./course";
+             } else {
+               alert('請確認帳號 / 密碼')
+             }
+           },
+           error: function(data){ 
+             console.log(data)
+           }
+        });
+    });
+  </script>
 </body>
 
 </html>

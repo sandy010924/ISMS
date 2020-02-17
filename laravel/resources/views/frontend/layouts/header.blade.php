@@ -6,8 +6,8 @@
       <span class="h5 font-weight-bold" id="header_text">@yield('header')</span>
     </div>
     <div class="col text-right">
-      <span class="h6 mr-3 align-middle"><li class="far fa-user"></li> 無極限</span>
-      <a href="#" class="logout"><span class="h6 align-middle"><li class="fas fa-sign-out-alt"></li> 登出</span></a>
+      <span id="user_name" class="h6 mr-3 align-middle"></span>   
+      <a href="{{ route('logout') }}" class="logout"><span class="h6 align-middle"><li class="fas fa-sign-out-alt"></li> 登出</span></a>
     </div>
   </div>
 </div>
@@ -25,4 +25,19 @@
   if( back == 0 ){
     $("#header_title").prepend('<a href="javascript:history.go(-1)"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
   }
+  
+  //  Rocky (2020/02/17)     
+    $("document").ready(function(){
+      $.ajax({
+           type:'POST',
+           url:'user',                
+           data:{'_token':"{{ csrf_token() }}"},
+           success:function(data){
+             $("#user_name").html("<li class='far fa-user'></li>" + data)
+           },
+           error: function(data){ 
+             console.log(data)
+           }
+        });    
+    });
 </script>
