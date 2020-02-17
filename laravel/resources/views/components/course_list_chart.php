@@ -61,13 +61,14 @@
           </div>
         </div>
       </div>
-      <div style="width: 400px; height: 400px">
+      <div>
         <div class="pie_box"><canvas id="pie_chart_turnover_rate" width="200px" height="200px"></canvas></div>
         <div style="text-align: center">實到人數: 25</div>
+        <!-- <div style="text-align: center">取消筆數: 07</div> -->
       </div>
-      <div style="width: 400px; height: 400px">
+      <div>
         <div class="pie_box"><canvas id="pie-chart_check_in_rate" width="200px" height="200px"></canvas></div>
-        <div style="text-align: center">實到人數: 25</div>
+        <!-- <div style="text-align: center">報名比數: 67</div> -->
         <div style="text-align: center">取消筆數: 07</div>
       </div>
     </div>
