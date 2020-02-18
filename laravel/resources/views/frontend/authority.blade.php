@@ -5,10 +5,11 @@
 
 @section('content')
 <!-- Content Start -->
-       <!--搜尋課程頁面內容-->
+       <!--權限管理頁面內容-->
+      
         <div class="card m-3">
-          <div class="card-body">
-            <div class="row mb-3">
+          <div class="card-body">            
+            <div class="row mb-4">
               <div class="col-4">
                 <button type="button" class="btn btn-outline-secondary btn_date mx-1" data-toggle="modal" data-target="#form_newuser">新增</button>
                 <div class="modal fade" id="form_newuser" tabindex="-1" role="dialog" aria-labelledby="form_newuserLabel" aria-hidden="true">
@@ -21,55 +22,72 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                        <form data-toggle="validator">
+                        <form action="{{url('authority_insert')}}" name="insert" method="POST" >
+                          @csrf
                           <div class="form-group">
                             <label for="newuser_account" class="col-form-label">帳號</label>
-                            <input type="text" class="form-control" id="newuser_account" required>
+                            <input type="text" class="form-control" id="newuser_account" name="account" required>
                           </div>
                           <div class="form-group">
                                 <label for="newuser_password" class="col-form-label">密碼</label>
-                                <input type="password" class="form-control" id="newuser_password" required>
+                                <input type="password" class="form-control" id="newuser_password" name="password" required>
                               </div>
                               <div class="form-group">
                                 <label for="newuser_password2" class="col-form-label">確認密碼</label>
-                                <input type="password" class="form-control" id="newuser_password2" data-match="#newuser_password" required>
+                                <input type="password" class="form-control" id="newuser_password2" name="password_check" data-match="#newuser_password" required>
                               </div>
                           <div class="form-group">
                             <label for="newuser_name" class="col-form-label">姓名</label>
-                            <input type="text" class="form-control" id="newuser_name" required>
+                            <input type="text" class="form-control" id="newuser_name" name="name" required>
                           </div>
                           <div class="form-group">
                             <label for="newuser_persona" class="col-form-label">角色</label>
-                            <select class="custom-select form-control" id="newuser_persona" required>
-                              <option value="1">講師</option>
-                              <option value="2">現場人員</option>
-                              <option value="3">財會人員</option>
-                              <option value="4">行銷人員</option>
-                              <option value="5">數據分析人員</option>
-                              <option value="6">管理員</option>
+                            <select class="custom-select form-control" id="newuser_persona" name="newuser_persona" required>
+                              <option value="teacher">講師</option>
+                              <option value="staff">現場人員</option>
+                              <option value="accountant">財會人員</option>
+                              <option value="marketer">行銷人員</option>
+                              <option value="dataanalysis">數據分析人員</option>
+                              <option value="admin">管理員</option>
                             </select>
                           </div>                          
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                          <button type="submit" id="import_check" class="btn btn-primary">確認</button>
+                          <button type="submit" id="import_check" class="btn btn-primary" onclick="CheckPassword(document.insert.password,document.insert.password_check)">確認</button>
                         </div>
                       </form>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-5">
-                <div class="input-group">
-                  <input type="search" class="form-control" placeholder="搜尋姓名、角色" aria-describedby="btn_search">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
+              <div class="col-7">
+                <form action="{{url('authority_search')}}" method="GET" role="search">
+                  @csrf
+                  <div class="input-group">
+                    <div class="col-md-4">
+                      <input type="search" class="form-control" name="name" placeholder="搜尋姓名、帳號" aria-describedby="btn_search">
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <select class="custom-select form-control" id="role" name="role">
+                          <option value="">請選擇</option>
+                          <option value="teacher">講師</option>
+                          <option value="staff">現場人員</option>
+                          <option value="accountant">財會人員</option>
+                          <option value="marketer">行銷人員</option>
+                          <option value="dataanalysis">數據分析人員</option>
+                          <option value="admin">管理員</option>
+                        </select>
+                      </div> 
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-outline-secondary" type="submit" id="btn_search">搜尋</button>
+                    </div>
                   </div>
-                </div>
+                </form>
               </div>
-            </div>
-              
-            
+            </div>                          
             <div class="table-responsive">
               <table class="table table-striped table-sm text-center">
                 <thead>
@@ -80,67 +98,152 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody id="course_list">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>
-                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#form_updateuser">修改</button>
-                    <div class="modal fade text-left" id="form_updateuser" tabindex="-1" role="dialog" aria-labelledby="form_updateuserLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="form_newclassLabel">修改資料</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
+                <tbody id="authority_list">                  
+                @foreach($datas as $data)
+                  <tr>
+                    <td>{{ $data->account }}</td> 
+                    <td>{{ $data->name }}</td>
+                    <td>{{ $data->role }}</td>
+                    <td>
+                      <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#e{{ $data->id}}">修改</button>
+                      <div class="modal fade text-left" id="e{{ $data->id}}" tabindex="-1" role="dialog" aria-labelledby="form_updateuserLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="form_newclassLabel">修改資料</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{url('authority_update')}}" method="POST" role="update" data-toggle="validator">
+                                @csrf
+                                  <input type="hidden" name="id" value="{{ $data->id }}">
+                                  <div class="form-group">
+                                    <label for="updateuser_account" class="col-form-label">帳號</label>
+                                    <input type="text" class="form-control" name="account" value="{{ $data->account }}" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="updateuser_password" class="col-form-label">密碼</label>
+                                    <input type="password" class="form-control"  name="password">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="updateuser_password2" class="col-form-label">確認密碼</label>
+                                    <input type="password" class="form-control"  name="password_check"  data-match="#updateuser_password" >
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="updateuser_name" class="col-form-label">姓名</label>
+                                    <input type="text" class="form-control"  name="name" value="{{ $data->name }}" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label  class="col-form-label">角色</label>    
+                                                                  
+                                    <select class="custom-select form-control"  name="updateuser_persona" required="required">
+                                      <option @if($data->role == 'teacher') selected  @endif value="teacher">講師</option>
+                                      <option @if($data->role == 'staff') selected  @endif value="staff">現場人員</option>
+                                      <option @if($data->role == 'accountant') selected  @endif value="accountant">財會人員</option>
+                                      <option @if($data->role == 'marketer') selected  @endif value="marketer">行銷人員</option>
+                                      <option @if($data->role == 'dataanalysis') selected  @endif value="dataanalysis">數據分析人員</option>
+                                      <option @if($data->role == 'admin') selected  @endif value="admin" >管理員</option>
+                                    </select>
+                                  </div>  
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                    <button type="submit"  class="btn btn-primary">確認</button>
+                                  </div>
+                                </form>
+                              </div>
+                            
                           </div>
-                          <div class="modal-body">
-                            <form data-toggle="validator">
-                              <div class="form-group">
-                                <label for="updateuser_account" class="col-form-label">帳號</label>
-                                <input type="text" class="form-control" id="updateuser_account" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="updateuser_password" class="col-form-label">密碼</label>
-                                <input type="password" class="form-control" id="updateuser_password" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="updateuser_password2" class="col-form-label">確認密碼</label>
-                                <input type="password" class="form-control" id="updateuser_password2" data-match="#updateuser_password" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="updateuser_name" class="col-form-label">姓名</label>
-                                <input type="text" class="form-control" id="updateuser_name" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="updateuser_persona" class="col-form-label">角色</label>
-                                <select class="custom-select form-control" id="updateuser_persona" required="required">
-                                  <option value="1">講師</option>
-                                  <option value="2">現場人員</option>
-                                  <option value="3">財會人員</option>
-                                  <option value="4">行銷人員</option>
-                                  <option value="5">數據分析人員</option>
-                                  <option value="6">管理員</option>
-                                </select>
-                              </div>  
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                              <button type="submit" id="import_check" class="btn btn-primary">確認</button>
-                            </div>
-                          </form>
                         </div>
                       </div>
-                    </div>
-                    <button type="button" class="btn btn-secondary btn-sm">刪除</button>
-                  </td>
+                      <!-- <button type="button" class="btn btn-secondary btn-sm">刪除</button> -->
+                      <button id="{{ $data->id }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data->id }});" value="{{ $data->id }}" >刪除</button>
+                    </td>
+                  </tr>
+                @endforeach
                 </tbody>
               </table>
             </div>
+            <div class="row">
+              <div class="col-md-5">
+              </div>
+              <div class="col-md-4">
+                <div class="pull-right">
+                  {!! $datas->appends(Request::except('page'))->render() !!} 
+                </div>
+              </div>
+            </div>  
           </div>
-        </div>
-
+        </div>  
 <!-- Content End -->
 
+ <!-- alert Start-->
+ <div class="alert alert-success alert-dismissible  m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+        <span id="success_alert_text"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+  </div>
+  <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+    <span id="error_alert_text"></span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- alert End -->
+
+<script>
+    // 確認密碼 Rocky(2020/02/18)
+    function CheckPassword(pwd,pwd_check) 
+    { 
+      console.log(pwd.value + "\n") 
+      console.log(pwd_check.value)
+      if (pwd.value != pwd_check.value) {
+        alert('請確認密碼！！！');
+        window.event.returnValue = false
+      } else {
+        window.event.returnValue = true
+      }
+    }
+    // 刪除 Rocky(2020/02/18)
+    function btn_delete(id){
+    var msg = "是否刪除此筆資料?";
+    if (confirm(msg)==true){
+      $.ajax({
+          type : 'POST',
+          url:'authority_delete', 
+          dataType: 'json',    
+          data:{
+            id: id
+          },
+          success:function(data){
+            if (data['data'] == "ok") {                           
+              // alert('刪除成功！！')
+              /** alert **/
+              $("#success_alert_text").html("刪除課程成功");
+              fade($("#success_alert"));
+
+              location.reload();
+            }　else {
+              // alert('刪除失敗！！')
+
+              /** alert **/ 
+              $("#error_alert_text").html("刪除課程失敗");
+              fade($("#error_alert"));       
+            }           
+          },
+          error: function(error){
+            console.log(JSON.stringify(error));   
+
+            /** alert **/ 
+            $("#error_alert_text").html("刪除課程失敗");
+            fade($("#error_alert"));       
+          }
+      });
+    }else{
+    return false;
+    }    
+  }
+</script>
 @endsection

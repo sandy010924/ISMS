@@ -281,7 +281,18 @@ Route::get('system', function () {
     return view('frontend.system');
 })->name('system');
 
-/*** [系統設定] 權限管理 ***/
-Route::get('authority', function () {
-    return view('frontend.authority');
-})->name('authority');
+/*
+|--------------------------------------------------------------------------
+| 權限管理
+|--------------------------------------------------------------------------
+*/
+/*** 顯示資料 Rocky(2020/02/17) ***/
+Route::get('authority', 'Frontend\AuthorityController@show')->name('authority');
+/*** 搜尋資料 Rocky(2020/02/17) ***/
+Route::get('authority_search', 'Frontend\AuthorityController@search');
+/*** 更新資料 Rocky(2020/02/17) ***/
+Route::post('authority_update', 'Backend\AuthorityController@update');
+/*** 新增資料 Rocky(2020/02/17) ***/
+Route::post('authority_insert', 'Backend\AuthorityController@insert');
+/*** 刪除資料 Rocky(2020/02/17) ***/
+Route::post('authority_delete', 'Backend\AuthorityController@delete');
