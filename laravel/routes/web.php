@@ -251,6 +251,16 @@ Route::get('report', function () {
     return view('frontend.report');
 })->name('report');
 
+/*** [數據報表] 場次數據 ***/
+Route::get('report_data', function () {
+    return view('frontend.report_data');
+})->name('report_data');
+
+/*** [數據報表] 完整內容 ***/
+Route::get('report_chart', function () {
+    return view('frontend.report_chart');
+})->name('report_chart');
+
 
 
 
