@@ -187,11 +187,9 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <img/>
-                    </div>
-                  </form>
+                  <a href="{{ route('course_form') }}">
+                    <img class="img-thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/QRcode_image.svg/1200px-QRcode_image.svg.png"/>
+                  </a>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>

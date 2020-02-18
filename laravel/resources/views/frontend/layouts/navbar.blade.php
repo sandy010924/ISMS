@@ -64,7 +64,7 @@
                   &nbsp;訊息推播
                 {{-- </h6> --}}
               </a>
-              <a class="nav-link nav-sub-item" href="{{ route('message_content') }}">內容管理</a>
+              <a class="nav-link nav-sub-item" href="{{ route('message_history') }}">歷史訊息</a>
               <a class="nav-link nav-sub-item" href="{{ route('message_schedule') }}">推播排程</a>
             </li>
             <li class="nav-item border-top">

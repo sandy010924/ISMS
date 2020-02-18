@@ -227,10 +227,15 @@ Route::get('message', function () {
     return view('frontend.message');
 })->name('message');
 
-/*** [訊息推播] 內容管理 ***/
-Route::get('message_content', function () {
-    return view('frontend.message_content');
-})->name('message_content');
+/*** [訊息推播] 歷史訊息 ***/
+Route::get('message_history', function () {
+    return view('frontend.message_history');
+})->name('message_history');
+
+/*** [訊息推播] 詳細內容 ***/
+Route::get('message_data', function () {
+    return view('frontend.message_data');
+})->name('message_data');
 
 /*** [訊息推播] 推播排程 ***/
 Route::get('message_schedule', function () {

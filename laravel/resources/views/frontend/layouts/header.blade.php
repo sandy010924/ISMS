@@ -14,6 +14,7 @@
 <!-- Header End -->
 
 <script>
+  //回上一頁按鈕，主頁不會出現按鈕
   var index = [ '課程管理', '學員管理', '財務管理', '訊息推播', '數據報表', '系統設定' ];
   var back = 0;
   for( var i = 0 ; i < index.length ; i++ ){
@@ -23,7 +24,7 @@
     }
   }
   if( back == 0 ){
-    $("#header_title").prepend('<a href="javascript:history.go(-1)"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
+    $("#header_title").prepend('<a href="javascript:self.location=document.referrer;"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
   }
   
   //  Rocky (2020/02/17)     
@@ -33,7 +34,7 @@
            url:'user',                
            data:{'_token':"{{ csrf_token() }}"},
            success:function(data){
-             $("#user_name").html("<li class='far fa-user'></li>" + data)
+             $("#user_name").html("<li class='far fa-user'></li> " + data)
            },
            error: function(data){ 
              console.log(data)
