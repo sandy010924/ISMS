@@ -1,3 +1,17 @@
+
+$("document").ready(function () {
+    var d = new Date();
+
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+
+    var output = d.getFullYear() + '-' +
+        (month < 10 ? '0' : '') + month + '-' +
+        (day < 10 ? '0' : '') + day;
+
+    $("#rdate").val(output);
+});
+
 function firstnext() {
     var firstpage = document.getElementById("firstpage");
     var secondpage = document.getElementById("secondpage");
@@ -45,14 +59,14 @@ function sixthlast() {
     fifthpage.style.display = "block";
     sixthpage.style.display = "none";
 }
-function sixthnext() {
-    sixthpage.style.display = "none";
-    seventhpage.style.display = "block";
-}
-function seventhlast() {
-    sixthpage.style.display = "block";
-    seventhpage.style.display = "none";
-}
+// function sixthnext() {
+//     sixthpage.style.display = "none";
+//     seventhpage.style.display = "block";
+// }
+// function seventhlast() {
+//     sixthpage.style.display = "block";
+//     seventhpage.style.display = "none";
+// }
 function check() {
     if (document.course_form.agree.checked) {
         document.course_form.Submit.disabled = false;
@@ -65,7 +79,6 @@ function topFunction() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 }
-
 
 function ShowData() {
     var show_data = document.getElementById("contact_num").value;
