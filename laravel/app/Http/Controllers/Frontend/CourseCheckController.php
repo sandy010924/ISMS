@@ -18,12 +18,15 @@ class CourseCheckController extends Controller
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($course->course_start_at))];
 
-        SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
-            ->join('student', 'student.id', '=', 'sales_registration.id_student')
-            ->select('sales_registration.id as check_id' ,'student.*', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
-            ->Where('id_course','=', $id)
-            ->Where('id_status','=', 1)
-            ->update(['id_status' => 3]);
+        //已過場次 狀態預設改為未到
+        if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d"))){
+            SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+                ->join('student', 'student.id', '=', 'sales_registration.id_student')
+                ->select('sales_registration.id as check_id' ,'student.*', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
+                ->Where('id_course','=', $id)
+                ->Where('id_status', 1)
+                ->update(['id_status' => 3]);
+        }
 
         //報名資訊
         $coursechecks = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')

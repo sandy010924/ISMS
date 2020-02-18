@@ -60,12 +60,13 @@
       <div class="row">
         <div class="col">
           {{-- <p class="form_text">工作人員 : <input type="text" class="form_input"></p> --}}
-          <div class="input-group mb-3">
+          <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text">工作人員</span>
             </div>
             <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="staff" value="{{ $course->staff }}">
           </div>
+          <label class="text-secondary px-2 py-1"><small>※ 若有多位工作人員，請以「、」做區隔。</small></label>
         </div>
         {{-- <div class="col">
           <button type="button" class="btn btn-secondary btn-block">儲存</button>
@@ -92,75 +93,114 @@
         </div>
         <div class="col-3 text-right">
           <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#presentApply">現場報名</button>
-          <button type="button" class="btn btn-outline-secondary mx-1">二階報名表</button>
-          {{-- <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a> --}}
-        </div>
+          <!-- 現場報名 modal -->
+          <div class="modal fade" id="presentApply" tabindex="-1" role="dialog" aria-labelledby="presentApplyLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="presentApplyLabel">現場報名</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-left">
+                  <form class="form" action="{{ route('course_check') }}" method="POST">
+                    @csrf
+                      <input type="hidden" name="form_course_id" id="form_course_id" value="{{ $course->id }}">
+                      <div class="form-group required">
+                        <label for="new_name" class="col-form-label">姓名</label>
+                        <input type="text" class="form-control" name="new_name" id="new_name" required>
+                      </div>
+                      <div class="form-group required">
+                        <label for="new_phone" class="col-form-label">聯絡電話</label>
+                        <input type="text" class="form-control" name="new_phone" id="new_phone" required>
+                        <label class="text-secondary"><small>聯繫方式</small></label>
+                      </div>
+                      <div class="form-group required">
+                        <label for="new_email" class="col-form-label">電子郵件</label>
+                        <input type="text" class="form-control" name="new_email" id="new_email" required>
+                        <label class="text-secondary"><small>example@example.com</small></label>
+                      </div>
+                      <div class="form-group">
+                        <label for="new_address" class="col-form-label">居住區域</label>
+                        <select class="custom-select form-control" name="new_address" id="new_address">
+                          <option selected disabled>請選擇居住區域</option>
+                          <option>宜蘭</option>
+                          <option>基隆</option>
+                          <option>台北</option>
+                          <option>新北</option>
+                          <option>桃園</option>
+                          <option>新竹</option>
+                          <option>苗栗</option>
+                          <option>台中</option>
+                          <option>彰化</option>
+                          <option>南投</option>
+                          <option>雲林</option>
+                          <option>嘉義</option>
+                          <option>台南</option>
+                          <option>高雄</option>
+                          <option>屏東</option>
+                          <option>台東</option>
+                          <option>花蓮</option>
+                        </select>
+                      </div>
+                      <div class="form-group required">
+                        <label for="new_profession" class="col-form-label">目前職業</label>
+                        <input type="text" class="form-control" name="new_profession" id="new_profession" required>
+                        <label class="text-secondary"><small>目前的工作職稱</small></label>
+                      </div>
+                      <div class="form-group">
+                        <label for="new_paymodel" class="col-form-label">付款方式</label>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" class="custom-control-input" id="new_paymodel1" name="new_paymodel" value="刷卡">
+                          <label class="custom-control-label" for="new_paymodel1">刷卡</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" class="custom-control-input" id="new_paymodel2" name="new_paymodel" value="匯款">
+                          <label class="custom-control-label" for="new_paymodel2">匯款</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="new_account" class="col-form-label">帳號/卡號後五碼</label>
+                        <input type="text" class="form-control" name="new_account" id="new_account">
+                      </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">確認報名</button>
+                      </div>
+                  </form>
+              </div>
+            </div>
+          </div>
 
-        <!-- 現場報名 modal -->
-        <div class="modal fade" id="presentApply" tabindex="-1" role="dialog" aria-labelledby="presentApplyLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="presentApplyLabel">現場報名</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="form-group">
-                    <label for="newcheck_name" class="col-form-label">姓名</label>
-                    <input type="text" class="form-control" id="newcheck_name" required>
-                    <div class="invalid-feedback">
-                      請輸入姓名
+          <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">二階報名表</button>
+          {{-- <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a> --}}
+          <!-- 二階報名表 modal -->
+          <div class="modal fade" id="nextForm" tabindex="-1" role="dialog" aria-labelledby="nextFormLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="nextFormLabel">二階報名表</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="form-group">
+                      <img/>
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="newcheck_phone" class="col-form-label">連絡電話</label>
-                    <input type="text" class="form-control" id="newcheck_phone" required>
-                    <div class="invalid-feedback">
-                      請輸入電話
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="newcheck_email" class="col-form-label">電子郵件</label>
-                    <input type="text" class="form-control" id="newcheck_email" required>
-                    <div class="invalid-feedback">
-                      請輸入電話
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="newcheck_address" class="col-form-label">居住地</label>
-                    <input type="text" class="form-control" id="newcheck_address">
-                  </div>
-                  <div class="form-group">
-                    <label for="newcheck_profession" class="col-form-label">目前職業</label>
-                    <input type="text" class="form-control" id="newcheck_profession" required>
-                    <div class="invalid-feedback">
-                      請輸入電話
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="newcheck_paymodel" class="col-form-label">付款方式</label>
-                    <input type="text" class="form-control" id="newcheck_paymodel">
-                  </div>
-                  <div class="form-group">
-                    <label for="newcheck_account" class="col-form-label">帳號/卡號後五碼</label>
-                    <input type="text" class="form-control" id="newcheck_account">
-                  </div>
-                  <div class="form-group">
-                    <label for="newcheck_content" class="col-form-label">我想在講座中瞭解到的內容？</label>
-                    <input type="text" class="form-control" id="newcheck_content">
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">確認報名</button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
       <div class="table-responsive">
         <table class="table table-striped table-sm text-center">
@@ -205,6 +245,23 @@
     </div>
   </div>
       
+  <!-- 現場報名alert -->
+  @if (session('status') == "報名成功")
+  <div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
+    {{ session('status') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  @elseif (session('status') == "報名失敗")  
+  <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
+    {{ session('status') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  @endif
+
   <!-- alert Start-->
   <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
     <span id="success_alert_text"></span>

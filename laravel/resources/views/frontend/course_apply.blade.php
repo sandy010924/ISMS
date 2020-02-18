@@ -71,9 +71,14 @@
                   <th>電子郵件</th>
                   <th>目前職業</th>
                   <th>我想在講座中了解的內容</th>
-                  {{-- <th>報到</th>
-                  <th>付款狀態</th> --}}
+                  @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
+                  <!-- 未過場次 -->
                   <th></th>
+                  @elseif( strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d")) )
+                  <!-- 已過場次 -->
+                  <th>報到</th>
+                  <th>付款狀態</th>
+                  @endif
                 </tr>
               </thead>
               <tbody id="table_list">
@@ -88,11 +93,16 @@
                     <td>{{ substr_replace($courseapply->email, '***', strrpos($courseapply->email, '@')) }}</td>
                     <td>{{ $courseapply->profession }}</td>
                     <td>{{ $courseapply->course_content }}</td>
-                    {{-- <td></td>
-                    <td></td> --}}
+                    @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
+                    <!-- 未過場次 -->
                     <td>
                       <button type="button" name="apply_btn" class="btn btn-sm text-white update_status" id="{{ $courseapply->id }}" value="{{ $courseapply->id_status }}">{{ $courseapply->status_name }}</button>
                     </td>
+                    @elseif( strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d")) )
+                    <!-- 已過場次 -->
+                    <td>{{ $courseapply->status_name }}</td>
+                    <td></td>
+                    @endif
                   </tr>
                 @endforeach
               </tbody>
