@@ -7,6 +7,8 @@
     </div>
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
+            <!-- 學員管理 -->
+            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer')
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('student') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
@@ -22,6 +24,11 @@
               <a class="nav-link nav-sub-item" href="{{ route('student_blacklist') }}">黑名單</a>
               <a class="nav-link nav-sub-item" href="{{ route('student_group') }}">細分組</a>
             </li>
+            @endif
+             <!-- 學員管理 -->
+
+            <!-- 課程管理 -->          
+            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher')
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('course') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
@@ -37,7 +44,12 @@
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('course_list') }}">課程總覽</a>
               <a class="nav-link nav-sub-item" href="{{ route('course_today') }}">今日課程</a>
-            </li>
+            </li>           
+            @endif
+            <!-- 課程管理 -->
+
+            <!-- 財務管理 -->
+            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant')
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('finance') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -51,6 +63,11 @@
                 財務管理
               </a>
             </li>
+            @endif
+            <!-- 財務管理 -->
+
+            <!-- 訊息推播 -->
+            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer')
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('message') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
@@ -67,6 +84,11 @@
               <a class="nav-link nav-sub-item" href="{{ route('message_history') }}">歷史訊息</a>
               <a class="nav-link nav-sub-item" href="{{ route('message_schedule') }}">推播排程</a>
             </li>
+            @endif
+            <!-- 訊息推播 -->
+
+            <!-- 數據報表 -->
+            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'dataanalysis')
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('report') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -79,6 +101,11 @@
                 數據報表
               </a>
             </li>
+            @endif   
+             <!-- 數據報表 -->
+
+            <!-- 系統設定 -->
+            @can('admin') 
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('system') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
@@ -94,7 +121,10 @@
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('authority') }}">權限管理</a>
             </li>
-            {{-- <li class="nav-item border-top">
+            @endcan
+            <!-- 系統設定 -->
+
+            <!-- {{-- <li class="nav-item border-top">
               <a class="nav-link" href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -106,7 +136,7 @@
                 </svg>
                 成本管理
               </a>
-            </li> --}}
+            </li> --}} -->
           </ul>
     </div>
 </nav>
