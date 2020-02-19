@@ -42,7 +42,7 @@
               <label for="psw"><b>密碼</b></label>
               <input type="password" placeholder="Enter Password" name="psw" id="psw" required class="login_input">          
               <!-- Rocky 2020/02/05 -->
-              <button type="button"  class="login_button" id="login_button" value="登入">登入</button>                            
+              <button type="button"  class="login_button" id="login_button"  value="登入">登入</button>                            
             </div>
           </form>
           </div>
@@ -65,11 +65,20 @@
   
   <!-- Rocky (2020/02/05) -->
   <script>
+
+    // 輸入框
+    $('#psw').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+          $('#login_button').click();
+      }
+    });
+
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
+    // 登入
     $("#login_button").click(function(e){
       var uname = $("#uname").val();
       var psw = $("#psw").val();

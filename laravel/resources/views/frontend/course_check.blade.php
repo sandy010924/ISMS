@@ -117,8 +117,8 @@
                         <label class="text-secondary"><small>聯繫方式</small></label>
                       </div>
                       <div class="form-group required">
-                        <label for="new_email" class="col-form-label">電子郵件</label>
-                        <input type="text" class="form-control" name="new_email" id="new_email" required>
+                        <label for="new_email">電子郵件</label>
+                        <input type="text" class="form-control" name="new_email" id="new_email">
                         <label class="text-secondary"><small>example@example.com</small></label>
                       </div>
                       <div class="form-group">
@@ -145,8 +145,8 @@
                         </select>
                       </div>
                       <div class="form-group required">
-                        <label for="new_profession" class="col-form-label">目前職業</label>
-                        <input type="text" class="form-control" name="new_profession" id="new_profession" required>
+                        <label for="new_profession">目前職業</label>
+                        <input type="text" class="form-control" name="new_profession" id="new_profession">
                         <label class="text-secondary"><small>目前的工作職稱</small></label>
                       </div>
                       <div class="form-group">
@@ -277,6 +277,13 @@
   <!-- Content End -->
 
   <script>
+    // 輸入框 Rocky(2020/02/19)
+    $('#search_keyword').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+          $('#btn_search').click();
+      }
+    });
+
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -301,9 +308,12 @@
             // console.log(data);
             $('#courseCheckContent').children().remove();
             var res = ``;
+            var email = '';
             $.each (data, function (key, value) {
               var phone = value.phone.replace((value.phone).substr(4,3), '***');
-              var email = value.email.replace((value.email).substr(value.email.indexOf('@')), '*****');
+              if (value.email != null) {
+                email = value.email.replace((value.email).substr(value.email.indexOf('@')), '*****');
+              }
               res +=`
               <tr>
                 <td scope="row" class="align-middle">${value.name}</td>

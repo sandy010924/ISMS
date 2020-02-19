@@ -183,16 +183,30 @@
           url:'course_apply_search', 
           dataType: 'json',    
           data:{
-            // '_token':"{{ csrf_token() }}",
             search_keyword: search_keyword,
             course_id: course_id
           },
           success:function(data){
-            console.log(data);
+            var res = '';
+            $.each (data, function (key, value) {
+              res +=
+              '<tr>'+
+                  '<td>' + value.submissiondate + '</td>'+
+                  '<td>' + value.datasource + '</td>'+                  
+                  '<td>' + value.name + '</td>'+
+                  '<td>' + value.phone + '</td>'+
+                  '<td>' + value.email + '</td>'+
+                  '<td>' + value.profession + '</td>'+
+                  '<td>' + value.course_content + '</td>'+
+                  '<td>' + value.status_name + '</td>'+
+                  '<td>' + '' + '</td>'+
+              '</tr>';
+            });
+
+            $('#table_list').html(res);
           },
           error: function(jqXHR){
             console.log("error: "+ JSON.stringify(jqXHR));
-            // $("main").append('<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">報名狀態修改失敗<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
           }
         });
     });

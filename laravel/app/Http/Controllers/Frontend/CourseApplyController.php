@@ -52,7 +52,7 @@ class CourseApplyController extends Controller
         $count_cancel = count(SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                                               ->join('student', 'student.id', '=', 'sales_registration.id_student')
                                               ->Where('id_course','=', $id)
-                                              ->Where('id_status', 2)
+                                              ->Where('id_status', 5)
                                               ->get());
 
         return view('frontend.course_apply', compact('courseapplys', 'course', 'week', 'count_apply', 'count_cancel'));
