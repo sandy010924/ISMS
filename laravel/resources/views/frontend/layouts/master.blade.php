@@ -62,6 +62,11 @@
   <!-- Sandy(2020/02/07) -->
   {{-- <script src="{{ asset('js/Chart.min.js') }}"></script> --}}
   {{-- <script src="{{ asset('js/course_list_chart.js') }}"></script> --}}
+  
+  <!-- feather icon -->
+  <script>
+    feather.replace()
+  </script>
 </body>
 
 </html>

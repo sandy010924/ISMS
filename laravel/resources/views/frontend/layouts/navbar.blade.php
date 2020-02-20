@@ -12,13 +12,8 @@
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('student') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-file">
-                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                    <polyline points="13 2 13 9 20 9"></polyline>
-                  </svg>
-                  &nbsp;學員管理
+                  <i data-feather="users"></i>
+                  學員管理
                 {{-- </h6> --}}
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('student_blacklist') }}">黑名單</a>
@@ -32,14 +27,8 @@
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('course') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-shopping-cart">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                  </svg>
-                  &nbsp;課程管理
+                  <i data-feather="book-open"></i>
+                  課程管理
                 {{-- </h6> --}}
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('course_list') }}">課程總覽</a>
@@ -52,14 +41,7 @@
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant')
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('finance') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="feather feather-users">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
+                <i data-feather="dollar-sign"></i>
                 財務管理
               </a>
             </li>
@@ -71,18 +53,11 @@
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('message') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-bar-chart-2">
-                    <line x1="18" y1="20" x2="18" y2="10"></line>
-                    <line x1="12" y1="20" x2="12" y2="4"></line>
-                    <line x1="6" y1="20" x2="6" y2="14"></line>
-                  </svg>
-                  &nbsp;訊息推播
+                  <i data-feather="mail"></i>
+                  訊息推播
                 {{-- </h6> --}}
               </a>
-              <a class="nav-link nav-sub-item" href="{{ route('message_history') }}">歷史訊息</a>
-              <a class="nav-link nav-sub-item" href="{{ route('message_schedule') }}">推播排程</a>
+              <a class="nav-link nav-sub-item" href="{{ route('message_list') }}">訊息列表</a>
             </li>
             @endif
             <!-- 訊息推播 -->
@@ -91,13 +66,7 @@
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'dataanalysis')
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('report') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="feather feather-bar-chart-2">
-                  <line x1="18" y1="20" x2="18" y2="10"></line>
-                  <line x1="12" y1="20" x2="12" y2="4"></line>
-                  <line x1="6" y1="20" x2="6" y2="14"></line>
-                </svg>
+                <i data-feather="pie-chart"></i>
                 數據報表
               </a>
             </li>
@@ -107,16 +76,11 @@
             <!-- 系統設定 -->
             @can('admin') 
             <li class="nav-item border-top">
-              <a class="nav-link" href="{{ route('system') }}">
+              {{-- <a class="nav-link" href="{{ route('system') }}"> --}}
+              <a class="nav-link" href="#">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-layers">
-                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                    <polyline points="2 17 12 22 22 17"></polyline>
-                    <polyline points="2 12 12 17 22 12"></polyline>
-                  </svg>
-                  &nbsp;系統設定
+                  <i data-feather="settings"></i>
+                  系統設定
                 {{-- </h6> --}}
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('authority') }}">權限管理</a>

@@ -227,20 +227,15 @@ Route::get('message', function () {
     return view('frontend.message');
 })->name('message');
 
-/*** [訊息推播] 歷史訊息 ***/
-Route::get('message_history', function () {
-    return view('frontend.message_history');
-})->name('message_history');
+/*** [訊息推播] 訊息列表 ***/
+Route::get('message_list', function () {
+    return view('frontend.message_list');
+})->name('message_list');
 
 /*** [訊息推播] 詳細內容 ***/
 Route::get('message_data', function () {
     return view('frontend.message_data');
 })->name('message_data');
-
-/*** [訊息推播] 推播排程 ***/
-Route::get('message_schedule', function () {
-    return view('frontend.message_schedule');
-})->name('message_schedule');
 
 
 
@@ -277,9 +272,9 @@ Route::get('report_chart', function () {
 ------------
 */
 /*** [系統設定] ***/
-Route::get('system', function () {
-    return view('frontend.system');
-})->name('system');
+// Route::get('system', function () {
+//     return view('frontend.system');
+// })->name('system');
 
 /*
 |--------------------------------------------------------------------------
