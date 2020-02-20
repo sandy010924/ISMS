@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 
 @section('title', '訊息推播')
-@section('header', '歷史訊息')
+@section('header', '訊息列表')
 
 @section('content')
 <!-- Content Start -->
@@ -30,6 +30,7 @@
                     </td>
                     <td>
                       <a href="{{ route("message_data")}}"><button type="button" class="btn btn-secondary btn-sm mx-1">詳細內容</button></a>
+                      <a href="{{ route("message")}}"><button type="button" class="btn btn-secondary btn-sm mx-1">Clone</button></a>
                     </td>
                   </tr>
                   <tr>
@@ -40,6 +41,7 @@
                     </td>
                     <td>
                       <a href="{{ route("message_data")}}"><button type="button" class="btn btn-secondary btn-sm mx-1">詳細內容</button></a>
+                      <a href="{{ route("message")}}"><button type="button" class="btn btn-secondary btn-sm mx-1">Clone</button></a>
                     </td>
                   </tr>
                   <tr>
@@ -50,6 +52,7 @@
                     </td>
                     <td>
                       <a href="{{ route("message_data")}}"><button type="button" class="btn btn-secondary btn-sm mx-1">詳細內容</button></a>
+                      <a href="{{ route("message")}}"><button type="button" class="btn btn-secondary btn-sm mx-1">Clone</button></a>
                     </td>
                   </tr>
                 </tbody>
