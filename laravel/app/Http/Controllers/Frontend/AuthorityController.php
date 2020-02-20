@@ -16,6 +16,39 @@ class AuthorityController extends Controller
 
         $datas = User::paginate($pagesize);
 
+        foreach ($datas as $key => $data) {
+            $role_name = "";
+            switch ($data['role']) {
+                case 'admin':
+                    $role_name = "管理員";
+                    break;
+                case 'dataanalysis':
+                    $role_name = "數據分析人員";
+                    break;
+                case 'marketer':
+                    $role_name = "行銷人員";
+                    break;
+                case 'accountant':
+                    $role_name = "財會人員";
+                    break;
+                case 'staff':
+                    $role_name = "現場人員";
+                    break;
+                case 'teacher':
+                    $role_name = "講師";
+                    break;
+            }
+
+            $datas[$key] = [
+                'id' => $data['id'],
+                'account' => $data['account'],
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'role' => $data['role'],
+                'role_name' => $role_name
+            ];
+        }
+
         return view('frontend.authority', compact('datas'));
     }
 
@@ -38,6 +71,39 @@ class AuthorityController extends Controller
             $datas = User::paginate($pagesize);
         }
        
+        foreach ($datas as $key => $data) {
+            $role_name = "";
+            switch ($data['role']) {
+                case 'admin':
+                    $role_name = "管理員";
+                    break;
+                case 'dataanalysis':
+                    $role_name = "數據分析人員";
+                    break;
+                case 'marketer':
+                    $role_name = "行銷人員";
+                    break;
+                case 'accountant':
+                    $role_name = "財會人員";
+                    break;
+                case 'staff':
+                    $role_name = "現場人員";
+                    break;
+                case 'teacher':
+                    $role_name = "講師";
+                    break;
+            }
+
+            $datas[$key] = [
+                'id' => $data['id'],
+                'account' => $data['account'],
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'role' => $data['role'],
+                'role_name' => $role_name
+            ];
+        }
+        
         return view('frontend.authority', compact('datas'));
     }
 }

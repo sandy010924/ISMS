@@ -99,14 +99,14 @@
                   </tr>
                 </thead>
                 <tbody id="authority_list">                  
-                @foreach($datas as $data)
+                @foreach($datas as $key => $data )
                   <tr>
-                    <td>{{ $data->account }}</td> 
-                    <td>{{ $data->name }}</td>
-                    <td>{{ $data->role }}</td>
+                    <td>{{ $data['account'] }}</td> 
+                    <td>{{ $data['name'] }}</td>
+                    <td>{{ $data['role_name'] }}</td>
                     <td>
-                      <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#e{{ $data->id}}">修改</button>
-                      <div class="modal fade text-left" id="e{{ $data->id}}" tabindex="-1" role="dialog" aria-labelledby="form_updateuserLabel" aria-hidden="true">
+                      <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#e{{ $data['id'] }}">修改</button>
+                      <div class="modal fade text-left" id="e{{ $data['id'] }}" tabindex="-1" role="dialog" aria-labelledby="form_updateuserLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -118,10 +118,10 @@
                             <div class="modal-body">
                                 <form action="{{url('authority_update')}}" method="POST" role="update" data-toggle="validator">
                                 @csrf
-                                  <input type="hidden" name="id" value="{{ $data->id }}">
+                                  <input type="hidden" name="id" value="{{ $data['id'] }}">
                                   <div class="form-group">
                                     <label for="updateuser_account" class="col-form-label">帳號</label>
-                                    <input type="text" class="form-control" name="account" value="{{ $data->account }}" required>
+                                    <input type="text" class="form-control" name="account" value="{{ $data['account'] }}" required>
                                   </div>
                                   <div class="form-group">
                                     <label for="updateuser_password" class="col-form-label">密碼</label>
@@ -133,18 +133,18 @@
                                   </div>
                                   <div class="form-group">
                                     <label for="updateuser_name" class="col-form-label">姓名</label>
-                                    <input type="text" class="form-control"  name="name" value="{{ $data->name }}" required>
+                                    <input type="text" class="form-control"  name="name" value="{{ $data['name'] }}" required>
                                   </div>
                                   <div class="form-group">
                                     <label  class="col-form-label">角色</label>    
                                                                   
                                     <select class="custom-select form-control"  name="updateuser_persona" required="required">
-                                      <option @if($data->role == 'teacher') selected  @endif value="teacher">講師</option>
-                                      <option @if($data->role == 'staff') selected  @endif value="staff">現場人員</option>
-                                      <option @if($data->role == 'accountant') selected  @endif value="accountant">財會人員</option>
-                                      <option @if($data->role == 'marketer') selected  @endif value="marketer">行銷人員</option>
-                                      <option @if($data->role == 'dataanalysis') selected  @endif value="dataanalysis">數據分析人員</option>
-                                      <option @if($data->role == 'admin') selected  @endif value="admin" >管理員</option>
+                                      <option @if($data['role'] == 'teacher') selected  @endif value="teacher">講師</option>
+                                      <option @if($data['role'] == 'staff') selected  @endif value="staff">現場人員</option>
+                                      <option @if($data['role'] == 'accountant') selected  @endif value="accountant">財會人員</option>
+                                      <option @if($data['role'] == 'marketer') selected  @endif value="marketer">行銷人員</option>
+                                      <option @if($data['role'] == 'dataanalysis') selected  @endif value="dataanalysis">數據分析人員</option>
+                                      <option @if($data['role'] == 'admin') selected  @endif value="admin" >管理員</option>
                                     </select>
                                   </div>  
                                   <div class="modal-footer">
@@ -158,7 +158,7 @@
                         </div>
                       </div>
                       <!-- <button type="button" class="btn btn-secondary btn-sm">刪除</button> -->
-                      <button id="{{ $data->id }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data->id }});" value="{{ $data->id }}" >刪除</button>
+                      <button id="{{ $data['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data['id'] }});" value="{{ $data['id'] }}" >刪除</button>
                     </td>
                   </tr>
                 @endforeach
