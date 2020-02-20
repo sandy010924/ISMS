@@ -87,11 +87,34 @@
            url:'login',                
            data:{'_token':"{{ csrf_token() }}",uname:uname, psw:psw},
            success:function(data){
-             if(data == "1") {
-              window.location.href = "./course";
-             } else {
-               alert('請確認帳號 / 密碼')
-             }
+             console.log(data);
+             switch(data) {
+                case 'admin':
+                  window.location.href = "./course";
+                  break;
+                case 'dataanalysis':
+                  window.location.href = "./report";
+                  break;
+                case 'marketer':
+                  window.location.href = "./student";
+                break;
+                case 'accountant':
+                  window.location.href = "./finance";
+                break;
+                case 'staff':
+                  window.location.href = "./ots_course_today";
+                break;
+                case 'teacher':
+                  window.location.href = "./course";
+                break;
+                default:
+                alert('請確認帳號 / 密碼')
+              }
+            //  if(data == "1") {
+            //   window.location.href = "./course";
+            //  } else {
+            //    alert('請確認帳號 / 密碼')
+            //  }
            },
            error: function(data){ 
              console.log(data)

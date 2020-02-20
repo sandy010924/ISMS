@@ -127,7 +127,7 @@
       <!-- alert End -->
 
   <!-- Content End -->
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
     // Sandy(2020/01/16)
     $.ajaxSetup({
@@ -188,7 +188,20 @@
           },
           success:function(data){
             var res = '';
+            var buttons = "";
+            var d = new Date();
+            var nowdate = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
             $.each (data, function (key, value) {
+              course_date = moment(value.course_start_at).format('Y/M/D');
+             
+              if (course_date > nowdate) {
+                buttons =
+                '<td>' +
+                  '<button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="' + value.id +'" value="' +value.id_status + '">' + value.status_name + '</button>' + 
+                '</td>'
+              } else if (course_date <= nowdate) {
+                buttons = '<td>' + value.status_name + '</td>'
+              }
               res +=
               '<tr>'+
                   '<td>' + value.submissiondate + '</td>'+
@@ -197,13 +210,13 @@
                   '<td>' + value.phone + '</td>'+
                   '<td>' + value.email + '</td>'+
                   '<td>' + value.profession + '</td>'+
-                  '<td>' + value.course_content + '</td>'+
-                  '<td>' + value.status_name + '</td>'+
+                  '<td>' + value.course_content + '</td>'+                                    
+                  buttons +
                   '<td>' + '' + '</td>'+
               '</tr>';
-            });
-
+            });           
             $('#table_list').html(res);
+            status_onload();
           },
           error: function(jqXHR){
             console.log("error: "+ JSON.stringify(jqXHR));
@@ -213,6 +226,4 @@
     //列表搜尋end
 
   </script>
-
-
 @endsection

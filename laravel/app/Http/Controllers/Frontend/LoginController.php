@@ -21,7 +21,7 @@ class LoginController extends Controller
         $psw = $request->get('psw');
         
         if (Auth::attempt(['account' => $account, 'password' => $psw])) {
-            return "1";
+            return Auth::user()->role;
         } else {
             return "0";
         }

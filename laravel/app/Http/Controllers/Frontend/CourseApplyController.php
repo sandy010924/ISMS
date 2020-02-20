@@ -67,10 +67,11 @@ class CourseApplyController extends Controller
         //報名資訊
         $courseapplys = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
             ->join('student', 'student.id', '=', 'sales_registration.id_student')
+            ->join('course', 'course.id', '=', 'sales_registration.id_course')
             // ->select('sales_registration.id as apply_id' ,'student.*', 'sales_registration.id_status as apply_status_val', 'isms_status.name as status_name')
-            ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'sales_registration.*', 'isms_status.name as status_name')
-            ->Where('id_course','=', $id)
-            ->Where('id_status','<>', 2)
+            ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'sales_registration.*', 'isms_status.name as status_name', 'course.course_start_at' )
+            ->Where('id_course', '=', $id)
+            ->Where('id_status', '<>', 2)
             // ->Where('profession', 'like', '%'.$search_keyword.'%')
             ->where(function($q) use ($search_keyword) { 
                 $q->orWhere('datasource', 'like', '%'.$search_keyword.'%')
