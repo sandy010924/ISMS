@@ -99,10 +99,10 @@ Route::get('course_advanced', function () {
 
 
 /*** [課程管理] 場次總覽 ***/
-Route::get('course_list', 'Frontend\CourseListController@show')->name('course_list');
-// Route::get('course_list', function () {
-//     return view('frontend.course_list');
-// })->name('course_list');
+// Route::get('course_list', 'Frontend\CourseListController@show')->name('course_list');
+Route::get('course_list', function () {
+    return view('frontend.course_list');
+})->name('course_list');
 
 Route::get('course_list_data', function () {
     return view('frontend.course_list_data');
