@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 
 @section('title', '課程管理')
-@section('header', '本日報表')
+@section('header', '場次報表')
 
 @section('content')
 <!-- Content Start -->

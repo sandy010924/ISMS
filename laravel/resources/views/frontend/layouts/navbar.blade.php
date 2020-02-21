@@ -25,13 +25,13 @@
             <!-- 課程管理 -->          
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher')
             <li class="nav-item border-top">
-              <a class="nav-link" href="{{ route('course') }}">
+              <a class="nav-link" href="{{ route('course_list') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
                   <i data-feather="book-open"></i>
                   課程管理
                 {{-- </h6> --}}
               </a>
-              <a class="nav-link nav-sub-item" href="{{ route('course_list') }}">課程總覽</a>
+              <a class="nav-link nav-sub-item" href="{{ route('course') }}">場次總覽</a>
               <a class="nav-link nav-sub-item" href="{{ route('course_today') }}">今日課程</a>
             </li>           
             @endif

@@ -11,6 +11,7 @@ use App\Model\Course;
 
 class CourseCheckController extends Controller
 {
+    /*** 現場報名 ***/
     public function apply(Request $request)
     {
         try{
@@ -83,6 +84,7 @@ class CourseCheckController extends Controller
                         $SalesRegistration->account         = $new_account;          // 帳號/卡號後五碼
                     }
                     $SalesRegistration->course_content  = '';                 // 想聽到的課程有哪些
+                    $SalesRegistration->memo  = '現場報名';                 // 報名備註
                     
                     $SalesRegistration->save();
                     $id_SalesRegistration = $SalesRegistration->id;
@@ -108,6 +110,7 @@ class CourseCheckController extends Controller
 
     }
 
+    /*** 報到狀態改寫 ***/
     public function update_status(Request $request)
     {
         //取回data
@@ -185,6 +188,7 @@ class CourseCheckController extends Controller
 
     }
 
+    /*** 課程資料儲存 ***/
     public function update_data(Request $request)
     {
         //取回data
