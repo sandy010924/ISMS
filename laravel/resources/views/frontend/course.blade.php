@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 
 @section('title', '課程管理')
-@section('header', '課程管理')
+@section('header', '場次總覽')
 
 @section('content')
 <!-- Content Start -->
@@ -140,12 +140,12 @@
                     <th>日期</th>
                     <th>課程名稱</th>
                     <th>場次</th>
-                    <th>報名筆數</th>
+                    <th>報名/取消筆數</th>
                     <th>實到筆數</th>
                     <th></th>
                   </tr>
                 </thead>
-                <tbody id="course_list">
+                <tbody id="table_list">
                 @foreach($courses as $key => $course )
                   <tr>
                     <td>{{ $course['date'] }}</td>
@@ -159,19 +159,19 @@
                       <a href="{{ $course['href_check'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">開始報到</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                       <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
                       @elseif( strtotime($course['date']) > strtotime(date("Y-m-d")) )
                       <!-- 未過場次 -->
                       <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報到</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                       <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
                       @elseif( strtotime($course['date']) < strtotime(date("Y-m-d")) )
                       <!-- 已過場次 -->
                       <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報到</button></a>
                       <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                       <a href="{{ $course['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
-                      <a href="{{ $course['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">本日報表</button></a>
+                      <a href="{{ $course['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
                       @endif
                       <button id="{{ $course['course_id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $course['course_id'] }});" value="{{ $course['course_id'] }}" >刪除</button>
                     </td>
@@ -260,13 +260,13 @@
                     '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>'+
                     '<a href="' + value.href_list + '"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>'+
                     '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>'+
-                    '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">本日報表</button></a>'+
+                    '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>'+
                     '<input type="hidden" name="_charset_">'+
                     '<button id="' + value.id + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + value.id + ');" value="' + value.id + '" >刪除</button>'+
               '</tr>';
             });
 
-            $('#course_list').html(res);
+            $('#table_list').html(res);
           },
           error: function(jqXHR){
              console.log('error: ' + JSON.stringify(jqXHR));

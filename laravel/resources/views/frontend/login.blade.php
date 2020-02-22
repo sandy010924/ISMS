@@ -90,7 +90,7 @@
              console.log(data);
              switch(data) {
                 case 'admin':
-                  window.location.href = "./course";
+                  window.location.href = "./course_list";
                   break;
                 case 'dataanalysis':
                   window.location.href = "./report";
@@ -105,7 +105,7 @@
                   window.location.href = "./ots_course_today";
                 break;
                 case 'teacher':
-                  window.location.href = "./course";
+                  window.location.href = "./course_list";
                 break;
                 default:
                 alert('請確認帳號 / 密碼')

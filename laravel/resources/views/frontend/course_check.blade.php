@@ -11,20 +11,23 @@
       <div class="row mb-3 align-items-center">
         <div class="col-6">
           <input type="hidden" id="course_id" value="{{ $course->id }}">
-          <h5 class="mb-0">
+          <h6 class="mb-0">
             {{ $course->name }}&nbsp;&nbsp;
             {{ date('Y-m-d', strtotime($course->course_start_at)) }}
             ( {{ $week }} )&nbsp;&nbsp;
             {{ $course->Events }}
-          </h5>
+          </h6>
         </div>
-        <div class="col-2 text-right">
-          <h5 id="count_apply" class="mb-0">報名筆數 : {{ $count_apply }}</h5>
+        <div class="col text-right">
+          <h6 id="count_apply" class="mb-0">報名筆數 : {{ $count_apply }}</h6>
         </div>
-        <div class="col-2 text-right">
-          <h5 id="count_check" class="mb-0">報到筆數 : {{ $count_check }}</h5>
+        <div class="col text-right">
+          <h6 id="count_check" class="mb-0">報到筆數 : {{ $count_check }}</h6>
         </div>
-        <div class="col-2 text-right">
+        <div class="col text-right">
+          <h6 id="count_cancel" class="mb-0">取消筆數 : {{ $count_cancel }}</h6>
+        </div>
+        <div class="col text-right">
           <a href="{{ route('course_return') }}"><button type="button" class="btn btn-primary" >本日表單</button></a>
         </div>
       </div>
@@ -68,15 +71,7 @@
           </div>
           <label class="text-secondary px-2 py-1"><small>※ 若有多位工作人員，請以「、」做區隔。</small></label>
         </div>
-        {{-- <div class="col">
-          <button type="button" class="btn btn-secondary btn-block">儲存</button>
-        </div> --}}
       </div>
-      {{-- <div class="row">
-        <div class="col-3 mx-auto">
-          <button type="button" class="btn btn-secondary btn-block">儲存</button>
-        </div>
-      </div> --}}
     </div>
   </div>
   <div class="card m-3">
@@ -204,6 +199,7 @@
         <table class="table table-striped table-sm text-center">
           <thead>
             <tr>
+              <th scope="col">編號</th>
               <th scope="col">姓名</th>
               <th scope="col">聯絡電話</th>
               <th scope="col">電子郵件</th>
@@ -212,8 +208,9 @@
             </tr>
           </thead>
           <tbody id="courseCheckContent">
-            @foreach($coursechecks as $coursecheck)
+            {{-- @foreach($coursechecks as $key => $coursecheck)
               <tr>
+                <td>{{ $key+1  }}</td>
                 <td scope="row" class="align-middle">{{ $coursecheck->name }}</td>
                 <td class="align-middle">{{ substr_replace($coursecheck->phone, '***', 4, 3) }}</td>
                 <td class="align-middle">{{ substr_replace($coursecheck->email, '***', strrpos($coursecheck->email, '@')) }}</td>
@@ -233,6 +230,33 @@
                 <td class="align-middle">
                   <!-- 報到備註 -->
                   <input type="text" class="form-control input-sm checkNote" id="{{ $coursecheck->check_id }}" value="{{ ($coursecheck->memo == 'null')? '':$coursecheck->memo }}">
+                </td>
+              </tr>
+            @endforeach --}}
+
+
+            @foreach($coursechecks as $key => $coursecheck)
+              <tr>
+                <td>{{ $coursecheck['row']  }}</td>
+                <td scope="row" class="align-middle">{{ $coursecheck['name'] }}</td>
+                <td class="align-middle">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
+                <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
+                <td class="align-middle">
+                  <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck['check_id'] }}" value="{{ $coursecheck['check_status_val'] }}">{{ $coursecheck['check_status_name'] }}</button>
+                  <div class="btn-group">
+                    <button class="btn btn-sm" type="button" data-toggle="dropdown">
+                      •••
+                    </button>
+                    <div class="dropdown-menu">
+                      <button class="dropdown-item update_status" name="dropdown_check" value="{{ $coursecheck['check_id'] }}" type="button">報到</button>
+                      <button class="dropdown-item update_status" name="dropdown_absent" value="{{ $coursecheck['check_id'] }}" type="button">未到</button>
+                      <button class="dropdown-item update_status" name="dropdown_cancel" value="{{ $coursecheck['check_id'] }}" type="button">取消</button>
+                    </div>
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <!-- 報到備註 -->
+                  <input type="text" class="form-control input-sm checkNote" id="{{ $coursecheck['check_id'] }}" value="{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}">
                 </td>
               </tr>
             @endforeach
@@ -402,6 +426,8 @@
                 $("#"+data[0].check_id).val(data[0].check_status_val);
                 $("#"+data[0].check_id).html(data[0].check_status_name);
                 
+                // $("#count_cancel").html();
+
                 status_style(data[0].check_id ,data[0].check_status_val);
 
                 /** alert **/

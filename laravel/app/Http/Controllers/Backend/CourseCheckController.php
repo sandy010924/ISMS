@@ -11,6 +11,7 @@ use App\Model\Course;
 
 class CourseCheckController extends Controller
 {
+    /*** 現場報名 ***/
     public function apply(Request $request)
     {
         try{
@@ -83,6 +84,7 @@ class CourseCheckController extends Controller
                         $SalesRegistration->account         = $new_account;          // 帳號/卡號後五碼
                     }
                     $SalesRegistration->course_content  = '';                 // 想聽到的課程有哪些
+                    $SalesRegistration->memo  = '現場報名';                 // 報名備註
                     
                     $SalesRegistration->save();
                     $id_SalesRegistration = $SalesRegistration->id;
@@ -108,6 +110,7 @@ class CourseCheckController extends Controller
 
     }
 
+    /*** 報到狀態改寫 ***/
     public function update_status(Request $request)
     {
         //取回data
@@ -151,31 +154,24 @@ class CourseCheckController extends Controller
             
             $new_check = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                                         ->join('student', 'student.id', '=', 'sales_registration.id_student')
-                                        ->select('sales_registration.id as check_id', 'student.name as check_name', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
+                                        ->select('sales_registration.id as check_id', 'student.name as check_name', 'sales_registration.id_course as id_course', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
                                         ->Where('sales_registration.id','=', $check_id)
                                         ->get();
 
-            // $id_course = SalesRegistration::select('sales_registration.id_course')
-            //         ->Where('sales_registration.id','=', $check_id)
-            //         ->get();  
-
-            // //報名資訊
-            // $coursechecks = SalesRegistration::Where('id_course','=', $id_course[0])
-            //                                 ->where(function($q) { 
-            //                                     $q->where('id_status', 3)
-            //                                         ->orWhere('id_status', 4)
-            //                                         ->orWhere('id_status', 5);
-            //                                 })
-            //                                 ->get();
-            // //報名比數
-            // $count_apply = count($coursechecks);
-            // //報到比數
-            // $count_check = count(SalesRegistration::Where('id_course','=', $new_check[0].id_course)
-            //     ->Where('id_status','=', 4)
-            //     ->get());
+            
+            //報名筆數
+            $count_apply = count($new_check);
+            //報到筆數
+            $count_check = count(SalesRegistration::Where('id_course','=', $new_check[0]->id_course)
+                ->Where('id_status','=', 4)
+                ->get());
+            //取消筆數
+            $count_cancel = count(SalesRegistration::Where('id_course','=', $new_check[0]->id_course)
+                ->Where('id_status','=', 5)
+                ->get());
                 
-            return $new_check;
-
+            // return Response($new_check, $count_apply, $count_check, $count_cancel);
+            return Response($new_check);
 
         }catch (Exception $e) {
             return json_encode(array(
@@ -185,6 +181,7 @@ class CourseCheckController extends Controller
 
     }
 
+    /*** 課程資料儲存 ***/
     public function update_data(Request $request)
     {
         //取回data
