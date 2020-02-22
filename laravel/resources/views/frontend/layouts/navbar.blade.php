@@ -6,7 +6,14 @@
         </a>
     </div>
     <div class="sidebar-sticky">
-        <ul class="nav flex-column">
+      @if (Auth::user() == null)      
+        @php
+              header("Location: ./");
+              exit; 
+        @endphp                          
+      @endif
+
+      <ul class="nav flex-column">
             <!-- 學員管理 -->
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer')
             <li class="nav-item border-top">
