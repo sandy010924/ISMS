@@ -4,6 +4,8 @@
 @section('header', '訊息推播')
 
 @section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <!-- Content Start -->
        <!--搜尋課程頁面內容-->
         <div class="card m-3">
@@ -52,25 +54,35 @@
               </div>
               <!-- ckeditor -->
               <textarea name="content" id="content" rows="10" cols="80"></textarea>
-              <button id="sendMessageBtn" type="submit" class="btn btn-primary mt-5">立即傳送</button>
-              <button type="submit" class="btn btn-primary mt-5">排成設定</button>
+              <button id="sendMessageBtn"  class="btn btn-primary mt-5">立即傳送</button>
+              <input type="button" class="btn btn-primary mt-5"  value="排程設定" data-toggle="modal" data-target="#scheduleModal">
             </form>
             </div>
           </div>
         </div>
 
-        <!-- mailModal -->
-        <div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- 排成設定Modal -->
+        <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">排成設定</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                mailModal
+               <h4>選擇日期和時間</h4>
+
+                <div class="form-group">
+                <div class='input-group date' id='datetimepicker1' data-target-input='nearest'>
+                  <input type='text' class="form-control datetimepicker-input" data-target="#datetimepicker1" name="params['start_time']" />
+                  <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
+
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -80,7 +92,7 @@
           </div>
         </div>
 
-        <!-- messageModal -->
+        <!-- mail、手機Modal -->
         <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -133,7 +145,7 @@
 
               <div class="modal-footer">
                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                <button type="button" class="btn btn-primary" id="wndSaveChecked" data-dismiss="modal">Save changes</button>
+                <button type="button" class="btn btn-primary" id="wndSaveChecked" data-dismiss="modal">確定</button>
               </div>
 
             </div>
@@ -143,6 +155,11 @@
 <!-- Content End -->
 
 <script src="/js/ckeditor.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+
+
 <style>
 .ck-editor__editable {
     min-height: 350px;
@@ -152,9 +169,9 @@
 ClassicEditor.create(document.querySelector("#content"), {
 		// config
 	})
-		.then(editor => {
-			window.editor = editor;
-		})
+		.then( newEditor => {
+        editor = newEditor;
+    })
 		.catch(err => {
 			console.error(err.stack);
     });
@@ -165,6 +182,8 @@ $("document").ready(function() {
   $('#receiverEmail').attr('disabled', 'disabled');
   $('#receiverPhone').attr('disabled', 'disabled');
   $('#emailTitle').attr('disabled', 'disabled');
+
+  $('#datetimepicker1').datetimepicker();
 
       // 簡訊寄送方式被觸發時
     $('#messageCheckBox').on('click', function() {
@@ -236,11 +255,15 @@ $("document").ready(function() {
       });
 
     // 立即傳送
-    $('#sendMessageBtn').on('click', function() {
+    $('#sendMessageBtn').on('click', function(e) {
+      e.preventDefault();
       // 發ajax to send mail、message
       console.log(`標題 : ${$('#emailTitle').val()}`);
       console.log(`Email : ${$('#receiverEmail').val()}`);
       console.log(`Phone : ${$('#receiverPhone').val()}`);
+
+      console.log($(editor.getData()).text());
+
     });
 
   });
