@@ -144,8 +144,8 @@ Route::get('course_today_search', 'Frontend\CourseTodayController@search');
 // })->name('course_check');
 
 //Sandy (2020/01/17)
-Route::get('course_check','Frontend\CourseCheckController@show')->name('course_check');
-Route::get('course_check_search','Frontend\CourseCheckController@search');
+Route::get('course_check', 'Frontend\CourseCheckController@show')->name('course_check');
+Route::get('course_check_search', 'Frontend\CourseCheckController@search');
 Route::post('course_check', 'Backend\CourseCheckController@apply');
 Route::post('course_check_status', 'Backend\CourseCheckController@update_status');
 Route::post('course_check_data', 'Backend\CourseCheckController@update_data');
@@ -154,7 +154,7 @@ Route::post('course_check_data', 'Backend\CourseCheckController@update_data');
 // Route::post('dropdown_cancel', 'Backend\CourseCheckController@update_cancel');
 
 //Sandy (2020/02/05)
-Route::get('course_check_search','Frontend\CourseCheckController@search');
+Route::get('course_check_search', 'Frontend\CourseCheckController@search');
 
 
 /*** [課程管理] 回報表單 ***/
@@ -181,26 +181,30 @@ Route::get('ots_return', function () {
 
 
 /*
-------------
-|
-| 學員管理 
-|
-------------
+|--------------------------------------------------------------------------
+| 學員管理
+|--------------------------------------------------------------------------
 */
 
-// Route::get('student_list', function () {
-//     return view('frontend.student_list');
-// })->name('student_list');
 
-/*** [學員管理] 學員列表 ***/
-/* Rocky (2020/01/14) */
-// Route::get('student_list', 'Frontend\StudentListController@show')->name('student_list');
-Route::get('student', 'Frontend\StudentController@show')->name('student');
+/*** [學員管理] ***/
+    /*** 顯示資料 Rocky(2020/02/23) ***/
+    Route::get('student', 'Frontend\StudentController@show')->name('student');
+    /*** 搜尋資料 Rocky(2020/02/23) ***/
+    Route::get('student_search', 'Frontend\StudentController@search')->name('student_search');
+    /*** 刪除資料 Rocky(2020/02/23) ***/
+    Route::get('student_delete', 'Backend\StudentController@delete');
+    /*** 加入黑名單 Rocky(2020/02/23) ***/
+    Route::get('student_addblacklist', 'Backend\StudentController@blacklist');
+
 
 /*** [學員管理] 黑名單 ***/
-Route::get('student_blacklist', function () {
-    return view('frontend.student_blacklist');
-})->name('student_blacklist');
+    /*** 顯示資料 Rocky(2020/02/23) ***/
+    Route::get('student_blacklist', 'Frontend\BlacklistController@show')->name('student_blacklist');
+    /*** 搜尋資料 Rocky(2020/02/23) ***/
+    Route::get('blacklist_search', 'Frontend\BlacklistController@search')->name('blacklist_search');
+    /*** 取消黑名單 Rocky(2020/02/23) ***/
+    Route::get('blacklist_cancel', 'Backend\BlacklistController@cancel');
 
 /*** [學員管理] 細分組 ***/
 Route::get('student_group', function () {

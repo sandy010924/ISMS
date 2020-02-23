@@ -8,7 +8,7 @@
     <div class="sidebar-sticky">
       @if (Auth::user() == null)      
         @php
-              header("Location: ./");
+              header("Location: ./error_authority");
               exit; 
         @endphp                          
       @endif

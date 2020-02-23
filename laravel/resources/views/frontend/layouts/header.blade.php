@@ -34,7 +34,11 @@
            url:'user',                
            data:{'_token':"{{ csrf_token() }}"},
            success:function(data){
-             $("#user_name").html("<li class='far fa-user'></li> " + data)
+             if (data == "error") {
+              window.location.href = "./error_authority";
+             } else {
+              $("#user_name").html("<li class='far fa-user'></li> " + data)
+             }
            },
            error: function(data){ 
              console.log(data)

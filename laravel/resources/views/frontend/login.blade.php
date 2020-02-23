@@ -87,7 +87,7 @@
            url:'login',                
            data:{'_token':"{{ csrf_token() }}",uname:uname, psw:psw},
            success:function(data){
-             console.log(data);
+            //  console.log(data);
              switch(data) {
                 case 'admin':
                   window.location.href = "./course_list";
@@ -110,11 +110,6 @@
                 default:
                 alert('請確認帳號 / 密碼')
               }
-            //  if(data == "1") {
-            //   window.location.href = "./course";
-            //  } else {
-            //    alert('請確認帳號 / 密碼')
-            //  }
            },
            error: function(data){ 
              console.log(data)

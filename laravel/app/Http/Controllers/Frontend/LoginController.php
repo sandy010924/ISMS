@@ -11,7 +11,11 @@ class LoginController extends Controller
     // 顯示資訊
     public function show()
     {
-        return Auth::user()->name;
+        if (Auth::user() == null) {
+            return 'error';
+        } else {
+            return Auth::user()->name;
+        }
     }
 
     // 登入
