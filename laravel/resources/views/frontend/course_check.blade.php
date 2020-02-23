@@ -19,16 +19,22 @@
           </h6>
         </div>
         <div class="col text-right">
-          <h6 id="count_apply" class="mb-0">報名筆數 : {{ $count_apply }}</h6>
+          <h6 class="mb-0">報名筆數 : 
+            <span id="count_apply">{{ $count_apply }}</span>
+          </h6>
         </div>
         <div class="col text-right">
-          <h6 id="count_check" class="mb-0">報到筆數 : {{ $count_check }}</h6>
+          <h6 class="mb-0">報到筆數 : 
+            <span id="count_check">{{ $count_check }}</span>
+          </h6>
         </div>
         <div class="col text-right">
-          <h6 id="count_cancel" class="mb-0">取消筆數 : {{ $count_cancel }}</h6>
+          <h6 class="mb-0">取消筆數 : 
+            <span id="count_cancel">{{ $count_cancel }}</span>
+          </h6>
         </div>
         <div class="col text-right">
-          <a href="{{ route('course_return') }}"><button type="button" class="btn btn-primary" >本日表單</button></a>
+          <a href="{{ route('course_return') }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
         </div>
       </div>
       <div class="row">
@@ -238,8 +244,8 @@
             @foreach($coursechecks as $key => $coursecheck)
               <tr>
                 <td>{{ $coursecheck['row']  }}</td>
-                <td scope="row" class="align-middle">{{ $coursecheck['name'] }}</td>
-                <td class="align-middle">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
+                <td scope="row" class="align-middle" name="search_name">{{ $coursecheck['name'] }}</td>
+                <td class="align-middle" name="search_phone">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
                 <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
                 <td class="align-middle">
                   <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck['check_id'] }}" value="{{ $coursecheck['check_status_val'] }}">{{ $coursecheck['check_status_name'] }}</button>
@@ -316,64 +322,74 @@
 
     // Sandy(2020/02/05)
     // 列表搜尋start
-    $("#btn_search").click(function(e){
-      var search_keyword = $("#search_keyword").val();
-      var course_id = $("#course_id").val();
-      $.ajax({
-          type : 'GET',
-          url:'course_check_search',
-          dataType: 'json',
-          data:{
-            // '_token':"{{ csrf_token() }}",
-            search_keyword: search_keyword,
-            course_id: course_id
-          },
-          success:function(data){
-            // console.log(data);
-            $('#courseCheckContent').children().remove();
-            var res = ``;
-            var email = '';
-            $.each (data, function (key, value) {
-              var phone = value.phone.replace((value.phone).substr(4,3), '***');
-              if (value.email != null) {
-                email = value.email.replace((value.email).substr(value.email.indexOf('@')), '*****');
-              }
-              res +=`
-              <tr>
-                <td scope="row" class="align-middle">${value.name}</td>
-                <td scope="row" class="align-middle">${phone}</td>
-                <td scope="row" class="align-middle">${email}</td>
-                <td scope="row" class="align-middle">
-                  <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="${value.check_id}" value="${value.check_status_val}">${value.check_status_name}</button>
-                  <div class="btn-group">
-                    <button class="btn btn-sm" type="button" data-toggle="dropdown">•••</button>
-                    <div class="dropdown-menu">
-                      <button class="dropdown-item update_status" name="dropdown_check" value="${value.check_id}" type="button">報到</button>
-                      <button class="dropdown-item update_status" name="dropdown_absent" value="${value.check_id}" type="button">未到</button>
-                      <button class="dropdown-item update_status" name="dropdown_cancel" value="${value.check_id}" type="button">取消</button>
-                    </div>
-                  </div>
-                </td>
-                <td class="align-middle">
-                  <!-- 報到備註 -->
-                  <input type="text" class="form-control input-sm checkNote" id="${value.check_id}" value="${(value.memo == null)?'':value.memo}">
-                </td>
-              </tr>`
-            });
-
-            $('#courseCheckContent').html(res);
-            status_onload();
-
-            // 查詢後報到備註 event
-            // $('.checkNote').on('blur',function() {
-            //   console.log(`${$(this).attr('id')}: ${$(this).val()}`);
-            // });
-          },
-          error: function(jqXHR){
-            console.log('error: ' + JSON.stringify(jqXHR));
-          }
-        });
+    // $("#search_keyword").on("keyup", function() {
+    $('#btn_search').on('click',function(){
+      var keyword = $("#search_keyword").val();
+      $("#courseCheckContent tr").filter(function() {
+        var search_phone = $(this).children("td[name='search_phone']").text().toLowerCase();
+        var search_name = $(this).children("td[name='search_name']").text().toLowerCase();
+        $(this).toggle(search_name.indexOf(keyword) + search_phone.substr(7,3).indexOf(keyword) > -2)
+      });
     });
+    // $("#btn_search").click(function(e){
+    //   var search_keyword = $("#search_keyword").val();
+    //   var course_id = $("#course_id").val();
+    //   $.ajax({
+    //       type : 'GET',
+    //       url:'course_check_search',
+    //       dataType: 'json',
+    //       data:{
+    //         // '_token':"{{ csrf_token() }}",
+    //         search_keyword: search_keyword,
+    //         course_id: course_id
+    //       },
+    //       success:function(data){
+    //         console.log(data);
+    //         $('#courseCheckContent').children().remove();
+    //         var res = ``;
+    //         var email = '';
+    //         $.each (data, function (key, value) {
+    //           var phone = value.phone.replace((value.phone).substr(4,3), '***');
+    //           if (value.email != null) {
+    //             email = value.email.replace((value.email).substr(value.email.indexOf('@')), '*****');
+    //           }
+    //           res +=`
+    //           <tr>
+    //             <td scope="row" class="align-middle">${value.row}</td>
+    //             <td scope="row" class="align-middle">${value.name}</td>
+    //             <td scope="row" class="align-middle">${phone}</td>
+    //             <td scope="row" class="align-middle">${email}</td>
+    //             <td scope="row" class="align-middle">
+    //               <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="${value.check_id}" value="${value.check_status_val}">${value.check_status_name}</button>
+    //               <div class="btn-group">
+    //                 <button class="btn btn-sm" type="button" data-toggle="dropdown">•••</button>
+    //                 <div class="dropdown-menu">
+    //                   <button class="dropdown-item update_status" name="dropdown_check" value="${value.check_id}" type="button">報到</button>
+    //                   <button class="dropdown-item update_status" name="dropdown_absent" value="${value.check_id}" type="button">未到</button>
+    //                   <button class="dropdown-item update_status" name="dropdown_cancel" value="${value.check_id}" type="button">取消</button>
+    //                 </div>
+    //               </div>
+    //             </td>
+    //             <td class="align-middle">
+    //               <!-- 報到備註 -->
+    //               <input type="text" class="form-control input-sm checkNote" id="${value.check_id}" value="${(value.memo == null)?'':value.memo}">
+    //             </td>
+    //           </tr>`
+    //         });
+
+    //         $('#courseCheckContent').html(res);
+    //         status_onload();
+
+    //         // 查詢後報到備註 event
+    //         // $('.checkNote').on('blur',function() {
+    //         //   console.log(`${$(this).attr('id')}: ${$(this).val()}`);
+    //         // });
+    //       },
+    //       error: function(jqXHR){
+    //         console.log('error: ' + JSON.stringify(jqXHR));
+    //       }
+    //     });
+    // });
     // 列表搜尋end
 
     // Sandy(2020/01/16)
@@ -393,14 +409,17 @@
             },
             success:function(data){
                 // console.log(data);  
-
-                $("#"+data[0].check_id).val(data[0].check_status_val);
-                $("#"+data[0].check_id).html(data[0].check_status_name);
                 
-                status_style(data[0].check_id ,data[0].check_status_val);
+                $("#"+data["list"].check_id).val(data["list"].check_status_val);
+                $("#"+data["list"].check_id).html(data["list"].check_status_name);
+                
+                $("#count_check").html(data.count_check);
+                $("#count_cancel").html(data.count_cancel);
+
+                status_style(data["list"].check_id ,data["list"].check_status_val);
 
                 /** alert **/
-                $("#success_alert_text").html(data[0].check_name + "報名狀態修改成功");
+                $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
                 fade($("#success_alert"));
             },
             error: function(jqXHR){
@@ -423,15 +442,17 @@
             },
             success:function(data){
                 // console.log(data);  
-                $("#"+data[0].check_id).val(data[0].check_status_val);
-                $("#"+data[0].check_id).html(data[0].check_status_name);
-                
-                // $("#count_cancel").html();
 
-                status_style(data[0].check_id ,data[0].check_status_val);
+                $("#"+data["list"].check_id).val(data["list"].check_status_val);
+                $("#"+data["list"].check_id).html(data["list"].check_status_name);
+                
+                $("#count_check").html(data.count_check);
+                $("#count_cancel").html(data.count_cancel);
+
+                status_style(data["list"].check_id ,data["list"].check_status_val);
 
                 /** alert **/
-                $("#success_alert_text").html(data[0].check_name + "報名狀態修改成功");
+                $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
                 fade($("#success_alert"));
             },
             error: function(jqXHR){

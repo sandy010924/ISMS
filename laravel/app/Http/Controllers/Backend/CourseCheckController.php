@@ -11,7 +11,7 @@ use App\Model\Course;
 
 class CourseCheckController extends Controller
 {
-    /*** 現場報名 ***/
+    //現場報名
     public function apply(Request $request)
     {
         try{
@@ -152,26 +152,23 @@ class CourseCheckController extends Controller
                     break;
             }
             
-            $new_check = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+            $list = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                                         ->join('student', 'student.id', '=', 'sales_registration.id_student')
                                         ->select('sales_registration.id as check_id', 'student.name as check_name', 'sales_registration.id_course as id_course', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
                                         ->Where('sales_registration.id','=', $check_id)
-                                        ->get();
+                                        ->first();
 
             
-            //報名筆數
-            $count_apply = count($new_check);
             //報到筆數
-            $count_check = count(SalesRegistration::Where('id_course','=', $new_check[0]->id_course)
+            $count_check = count(SalesRegistration::Where('id_course','=', $list->id_course)
                 ->Where('id_status','=', 4)
                 ->get());
             //取消筆數
-            $count_cancel = count(SalesRegistration::Where('id_course','=', $new_check[0]->id_course)
+            $count_cancel = count(SalesRegistration::Where('id_course','=', $list->id_course)
                 ->Where('id_status','=', 5)
                 ->get());
                 
-            // return Response($new_check, $count_apply, $count_check, $count_cancel);
-            return Response($new_check);
+            return Response(array('list'=>$list, 'count_check'=>$count_check, 'count_cancel'=>$count_cancel));
 
         }catch (Exception $e) {
             return json_encode(array(
