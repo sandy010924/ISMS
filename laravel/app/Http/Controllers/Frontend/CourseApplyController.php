@@ -43,6 +43,8 @@ class CourseApplyController extends Controller
             //     $q->where('id_status', 1)
             //         ->orWhere('id_status', 5);
             // })
+            ->orderByRaw('FIELD(id_status, "4", "3", "5")')
+            ->orderBy('created_at')
             ->get();
             
         //報名筆數
@@ -80,6 +82,8 @@ class CourseApplyController extends Controller
                   ->orWhere('student.email', 'like', '%'.$search_keyword.'%')
                   ->orWhere('student.profession', 'like', '%'.$search_keyword.'%');
             })
+            ->orderByRaw('FIELD(id_status, "4", "3", "5")')
+            ->orderBy('created_at')
             ->get();
             
 
