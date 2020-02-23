@@ -10,3 +10,7 @@ function fade(alert_show) {
         alert_show.fadeOut(400);
     }
 }
+function lastpage()  
+{  
+    window.history.back();
+}

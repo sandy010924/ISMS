@@ -140,3 +140,17 @@
     table-layout: fixed; 
     min-width: 2500px; 
 }
+/*使用者權限不足RWD*/
+@media only screen and (max-width: 768px) {
+    .error{
+        width: 80% !important;
+        margin: 0 auto !important;
+        position: relative !important; 
+        transform:translateY(10%) !important;
+        
+    }
+    .error_img,.error_msg {
+      max-width: 100% !important;
+      flex:100% !important;
+    }
+  }

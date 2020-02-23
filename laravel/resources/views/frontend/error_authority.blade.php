@@ -23,17 +23,26 @@
 
 <body>
   
-<div class="container-fluid ">
-  
-  
-<!-- content -->
-
-
-</div>
+  <main role="main" class="px-4 main_body text-center">
+    <div class="row w-50 mx-auto error" style="position: relative; transform:translateY(100%);">
+      <div class="col-4 error_img">
+        <img src="./img/attention.png" width="80%"class=" mx-auto my-3" >
+      </div>
+      <div class="col-8 error_msg">
+        <div class="card mx-auto bg-transparent border-white my-5" >
+          <div class="card-body " >
+            <span class="h1 text-white"><b>使用者權限不足!</b></span><br>
+            <button type="button" class="btn btn-info my-auto" onclick="lastpage()" >返回上一頁</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
   <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
   <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/feather.min.js') }}"></script>
+  <script src="{{ asset('js/style.js') }}"></script>
   
 </body>
 
