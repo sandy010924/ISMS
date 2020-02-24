@@ -52,6 +52,13 @@
       <!-- Content End -->
 
 <script>
+    // 輸入框 Sandy(2020/02/25)
+    $('#search_name').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+          $('#btn_search').click();
+      }
+    });
+
   // Sandy(2020/02/07) 列表搜尋start
   $.ajaxSetup({
       headers: {
@@ -70,7 +77,7 @@
             search_name: search_name
           },
           success:function(data){
-            console.log(data);
+            // console.log(data);
 
             $('#courseTodayContent').children().remove();
             var res = ``;

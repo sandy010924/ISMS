@@ -21,7 +21,8 @@ class CourseTodayController extends Controller
 
         foreach ($courses as $key => $data) {
             $data_apply = count(Course::join('sales_registration', 'sales_registration.id_course', '=', 'course.id')
-                        ->Where('course.id', $data['id'])    
+                        ->Where('course.id', $data['id'])      
+                        ->Where('id_status', '<>', 2)    
                         ->get());
 
             $data_cancel = count(Course::join('sales_registration', 'sales_registration.id_course', '=', 'course.id')
@@ -48,6 +49,7 @@ class CourseTodayController extends Controller
         $search_name = $request->get('search_name');
         
         $data_course = Course::Where('course.name', 'like', '%' .$search_name. '%')   
+                             ->Where('course.course_start_at', 'like', '%'.date("Y-m-d").'%')                     
                              ->get();
 
         $courses = array();

@@ -44,7 +44,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">主持開場</span>
             </div>
-          <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="host" value="{{ $course->host }}">
+          <input type="text" class="form-control" aria-label="host input" aria-describedby="host" id="host" value="{{ $course->host }}">
           </div>
         </div>
         <div class="col">
@@ -53,7 +53,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">結束收單</span>
             </div>
-            <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="closeOrder" value="{{ $course->closeOrder }}">
+            <input type="text" class="form-control" aria-label="closeOrder input" aria-describedby="closeOrder" id="closeOrder" value="{{ $course->closeOrder }}">
           </div>
         </div>
         <div class="col-3">
@@ -62,7 +62,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">天氣</span>
             </div>
-            <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="weather" value="{{ $course->weather }}">
+            <input type="text" class="form-control" aria-label="weather input" aria-describedby="weather" id="weather" value="{{ $course->weather }}">
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">工作人員</span>
             </div>
-            <input type="text" class="form-control" aria-label="# input" aria-describedby="#" id="staff" value="{{ $course->staff }}">
+            <input type="text" class="form-control" aria-label="staff input" aria-describedby="staff" id="staff" value="{{ $course->staff }}">
           </div>
           <label class="text-secondary px-2 py-1"><small>※ 若有多位工作人員，請以「、」做區隔。</small></label>
         </div>
@@ -85,8 +85,7 @@
       <div class="row mb-3">
         <div class="col-4 mx-auto">
           <div class="input-group">
-            {{-- <input type="text" class="form-control" placeholder="電話末三碼" id="search_keyword" max="999" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')" /> --}}
-            <input type="text" class="form-control" placeholder="姓名或電話末三碼" id="search_keyword"/>
+            <input type="search" class="form-control" placeholder="姓名或電話末三碼" id="search_keyword"/>
             <div class="input-group-append">
               <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
             </div>
@@ -213,34 +212,7 @@
               <th scope="col" width="20%">報到備註</th>
             </tr>
           </thead>
-          <tbody id="courseCheckContent">
-            {{-- @foreach($coursechecks as $key => $coursecheck)
-              <tr>
-                <td>{{ $key+1  }}</td>
-                <td scope="row" class="align-middle">{{ $coursecheck->name }}</td>
-                <td class="align-middle">{{ substr_replace($coursecheck->phone, '***', 4, 3) }}</td>
-                <td class="align-middle">{{ substr_replace($coursecheck->email, '***', strrpos($coursecheck->email, '@')) }}</td>
-                <td class="align-middle">
-                  <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck->check_id }}" value="{{ $coursecheck->check_status_val }}">{{ $coursecheck->check_status_name }}</button>
-                  <div class="btn-group">
-                    <button class="btn btn-sm" type="button" data-toggle="dropdown">
-                      •••
-                    </button>
-                    <div class="dropdown-menu">
-                      <button class="dropdown-item update_status" name="dropdown_check" value="{{ $coursecheck->check_id }}" type="button">報到</button>
-                      <button class="dropdown-item update_status" name="dropdown_absent" value="{{ $coursecheck->check_id }}" type="button">未到</button>
-                      <button class="dropdown-item update_status" name="dropdown_cancel" value="{{ $coursecheck->check_id }}" type="button">取消</button>
-                    </div>
-                  </div>
-                </td>
-                <td class="align-middle">
-                  <!-- 報到備註 -->
-                  <input type="text" class="form-control input-sm checkNote" id="{{ $coursecheck->check_id }}" value="{{ ($coursecheck->memo == 'null')? '':$coursecheck->memo }}">
-                </td>
-              </tr>
-            @endforeach --}}
-
-
+          <tbody id="table_list">
             @foreach($coursechecks as $key => $coursecheck)
               <tr>
                 <td>{{ $coursecheck['row']  }}</td>
@@ -325,72 +297,12 @@
     // $("#search_keyword").on("keyup", function() {
     $('#btn_search').on('click',function(){
       var keyword = $("#search_keyword").val();
-      $("#courseCheckContent tr").filter(function() {
+      $("#table_list tr").filter(function() {
         var search_phone = $(this).children("td[name='search_phone']").text().toLowerCase();
         var search_name = $(this).children("td[name='search_name']").text().toLowerCase();
         $(this).toggle(search_name.indexOf(keyword) + search_phone.substr(7,3).indexOf(keyword) > -2)
       });
     });
-    // $("#btn_search").click(function(e){
-    //   var search_keyword = $("#search_keyword").val();
-    //   var course_id = $("#course_id").val();
-    //   $.ajax({
-    //       type : 'GET',
-    //       url:'course_check_search',
-    //       dataType: 'json',
-    //       data:{
-    //         // '_token':"{{ csrf_token() }}",
-    //         search_keyword: search_keyword,
-    //         course_id: course_id
-    //       },
-    //       success:function(data){
-    //         console.log(data);
-    //         $('#courseCheckContent').children().remove();
-    //         var res = ``;
-    //         var email = '';
-    //         $.each (data, function (key, value) {
-    //           var phone = value.phone.replace((value.phone).substr(4,3), '***');
-    //           if (value.email != null) {
-    //             email = value.email.replace((value.email).substr(value.email.indexOf('@')), '*****');
-    //           }
-    //           res +=`
-    //           <tr>
-    //             <td scope="row" class="align-middle">${value.row}</td>
-    //             <td scope="row" class="align-middle">${value.name}</td>
-    //             <td scope="row" class="align-middle">${phone}</td>
-    //             <td scope="row" class="align-middle">${email}</td>
-    //             <td scope="row" class="align-middle">
-    //               <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="${value.check_id}" value="${value.check_status_val}">${value.check_status_name}</button>
-    //               <div class="btn-group">
-    //                 <button class="btn btn-sm" type="button" data-toggle="dropdown">•••</button>
-    //                 <div class="dropdown-menu">
-    //                   <button class="dropdown-item update_status" name="dropdown_check" value="${value.check_id}" type="button">報到</button>
-    //                   <button class="dropdown-item update_status" name="dropdown_absent" value="${value.check_id}" type="button">未到</button>
-    //                   <button class="dropdown-item update_status" name="dropdown_cancel" value="${value.check_id}" type="button">取消</button>
-    //                 </div>
-    //               </div>
-    //             </td>
-    //             <td class="align-middle">
-    //               <!-- 報到備註 -->
-    //               <input type="text" class="form-control input-sm checkNote" id="${value.check_id}" value="${(value.memo == null)?'':value.memo}">
-    //             </td>
-    //           </tr>`
-    //         });
-
-    //         $('#courseCheckContent').html(res);
-    //         status_onload();
-
-    //         // 查詢後報到備註 event
-    //         // $('.checkNote').on('blur',function() {
-    //         //   console.log(`${$(this).attr('id')}: ${$(this).val()}`);
-    //         // });
-    //       },
-    //       error: function(jqXHR){
-    //         console.log('error: ' + JSON.stringify(jqXHR));
-    //       }
-    //     });
-    // });
-    // 列表搜尋end
 
     // Sandy(2020/01/16)
     // 報到狀態修改 start
@@ -467,109 +379,81 @@
     });
     // 報到狀態修改 End
 
+
     // 資料自動儲存 Start
     // 主持開場
     $('#host').on('blur', function() {
-      // console.log(`host: ${$(this).val()}`);
-      var course_id = $("#course_id").val();
-      var data_val = $(this).val();
-      $.ajax({
-        type:'POST',
-        url:'course_check_data',
-        data:{
-          course_id: course_id,
-          data_type:'host', 
-          data_val: data_val
-        },
-        success:function(data){
-          // console.log(JSON.stringify(data));
-
-          /** alert **/
-          $("#success_alert_text").html("資料儲存成功");
-          fade($("#success_alert"));
-        },
-        error: function(jqXHR){
-          console.log(JSON.stringify(jqXHR));  
-
-          /** alert **/ 
-          $("#error_alert_text").html("資料儲存失敗");
-          fade($("#error_alert"));      
-        }
-      });
+      var data_type = 'host';
+      save_data($(this), data_type);
+    });
+    $('#host').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        var data_type = 'host';
+        save_data($(this), data_type);
+      }
     });
 
     // 結束收單
     $('#closeOrder').on('blur', function() {
-      // console.log(`closeOrder: ${$(this).val()}`);
-      var course_id = $("#course_id").val();
-      var data_val = $(this).val();
-      $.ajax({
-        type:'POST',
-        url:'course_check_data',
-        data:{
-          course_id: course_id,
-          data_type:'closeOrder', 
-          data_val: data_val
-        },
-        success:function(data){
-          // console.log(JSON.stringify(data));
-
-          /** alert **/
-          $("#success_alert_text").html("資料儲存成功");
-          fade($("#success_alert"));
-        },
-        error: function(jqXHR){
-          console.log(JSON.stringify(jqXHR));  
-
-          /** alert **/ 
-          $("#error_alert_text").html("資料儲存失敗");
-          fade($("#error_alert"));      
-        }
-      });
+      var data_type = 'closeOrder';
+      save_data($(this), data_type);
+    });
+    $('#closeOrder').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        var data_type = 'closeOrder';
+        save_data($(this), data_type);
+      }
     });
 
     // 天氣
     $('#weather').on('blur', function() {
-      // console.log(`weather: ${$(this).val()}`);
-      var course_id = $("#course_id").val();
-      var data_val = $(this).val();
-      $.ajax({
-        type:'POST',
-        url:'course_check_data',
-        data:{
-          course_id: course_id,
-          data_type:'weather', 
-          data_val: data_val
-        },
-        success:function(data){
-          // console.log(JSON.stringify(data));
-
-          /** alert **/
-          $("#success_alert_text").html("資料儲存成功");
-          fade($("#success_alert"));
-        },
-        error: function(jqXHR){
-          console.log(JSON.stringify(jqXHR));  
-
-          /** alert **/ 
-          $("#error_alert_text").html("資料儲存失敗");
-          fade($("#error_alert"));      
-        }
-      });
+      var data_type = 'weather';
+      save_data($(this), data_type);
+    });
+    $('#weather').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        var data_type = 'weather';
+        save_data($(this), data_type);
+      }
     });
 
     // 工作人員
     $('#staff').on('blur', function() {
-      // console.log(`staff: ${$(this).val()}`);
+      var data_type = 'staff';
+      save_data($(this), data_type);
+    });
+    $('#staff').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        var data_type = 'staff';
+        save_data($(this), data_type);
+      }
+    });
+
+    // 查詢前報到備註 event
+    $('body').on('blur','.checkNote',function(){
+      var data_id = $(this).attr('id');
+      var data_type = 'checkNote';
+      save_data($(this), data_type, data_id);
+    });
+    $('body').on('keyup','.checkNote',function(e){
+      if (e.keyCode === 13) {
+        var data_id = $(this).attr('id');
+        var data_type = 'checkNote';
+        save_data($(this), data_type, data_id);
+      }
+    });
+
+    function save_data(data, data_type, data_id){
       var course_id = $("#course_id").val();
-      var data_val = $(this).val();
+      var data_val = data.val();
       $.ajax({
         type:'POST',
         url:'course_check_data',
         data:{
           course_id: course_id,
-          data_type:'staff', 
-          data_val: data_val
+          data_type: data_type, 
+          data_val: data_val,
+          data_id: data_id
         },
         success:function(data){
           // console.log(JSON.stringify(data));
@@ -586,46 +470,7 @@
           fade($("#error_alert"));      
         }
       });
-    });
-
-    // 查詢前報到備註 event
-    // $('.checkNote').on('blur',function() {
-    $('body').on('blur','.checkNote',function(){
-      // console.log(`${$(this).attr('id')}: ${$(this).val()}`);
-      var course_id = $("#course_id").val();
-      var data_id = $(this).attr('id');
-      var data_val = $(this).val();
-      $.ajax({
-        type:'POST',
-        url:'course_check_data',
-        data:{
-          course_id: course_id,
-          data_type:'checkNote', 
-          data_id: data_id,
-          data_val: data_val
-        },
-        success:function(data){
-          // console.log(JSON.stringify(data));
-
-          /** alert **/
-          if(data == 'success'){
-            $("#success_alert_text").html("資料儲存成功");
-            fade($("#success_alert"));
-          }
-          else if(data == 'error'){
-            $("#error_alert_text").html("資料儲存失敗");
-            fade($("#error_alert"));              
-          }
-        },
-        error: function(jqXHR){
-          console.log(JSON.stringify(jqXHR));  
-
-          /** alert **/ 
-          $("#error_alert_text").html("資料儲存失敗");
-          fade($("#error_alert"));      
-        }
-      });
-    });
+    }
     // 資料自動儲存 End
 
   </script>

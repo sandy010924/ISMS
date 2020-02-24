@@ -16,7 +16,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">講師名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $course->teacher_name }}" readonly>
+            <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $course->teacher_name }}" disabled readonly>
           </div>
           {{-- <h5>
             講師名稱 : <input type="text" class="mt-2" value="{{ $course->teacher_name }}" readonly>
@@ -27,7 +27,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">課程名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->name }}" readonly>
+            <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->name }}" disabled readonly>
           </div>
           {{-- <h5>
             課程名稱 : <input type="text" class="mt-2" value="{{ $course->name }}" readonly>
@@ -53,7 +53,7 @@
               </div> --}}
               <div class="col-4">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="關鍵字" id="search_keyword">
+                    <input type="search" class="form-control" placeholder="關鍵字" id="search_keyword">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
                     </div>
@@ -92,7 +92,7 @@
                     <td>{{ substr_replace($courseapply->phone, '***', 4, 3) }}</td>
                     <td>{{ substr_replace($courseapply->email, '***', strrpos($courseapply->email, '@')) }}</td>
                     <td>{{ $courseapply->profession }}</td>
-                    <td>{{ $courseapply->course_content }}</td>
+                    <td>{{ ($courseapply->course_content  == 'null')? '':$courseapply->course_content }}</td>
                     @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
                     <!-- 未過場次 -->
                     <td>
@@ -129,6 +129,13 @@
   <!-- Content End -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
+    // 輸入框 Sandy(2020/02/25)
+    $('#search_keyword').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+          $('#btn_search').click();
+      }
+    });
+
     // Sandy(2020/01/16)
     $.ajaxSetup({
       headers: {

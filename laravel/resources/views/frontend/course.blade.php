@@ -226,6 +226,18 @@
     }); 
   });
 
+  // 輸入框 Sandy(2020/02/25)
+  $('#search_name').on('keyup', function(e) {
+    if (e.keyCode === 13) {
+        $('#btn_search').click();
+    }
+  });
+  $('#search_date').on('keyup', function(e) {
+    if (e.keyCode === 13) {
+        $('#btn_search').click();
+    }
+  });
+
   // Sandy(2020/01/31) 列表搜尋start
   $.ajaxSetup({
       headers: {
@@ -246,7 +258,7 @@
             search_name: search_name
           },
           success:function(data){
-            console.log(data);
+            // console.log(data);
             var res = '';
             $.each (data, function (key, value) {
               res +=
@@ -289,10 +301,10 @@
           },
           success:function(data){
             if (data['data'] == "ok") {                           
-              // alert('刪除成功！！')
+              alert('刪除成功！！')
               /** alert **/
-              $("#success_alert_text").html("刪除課程成功");
-              fade($("#success_alert"));
+              // $("#success_alert_text").html("刪除課程成功");
+              // fade($("#success_alert"));
 
               location.reload();
             }　else {
@@ -312,7 +324,7 @@
           }
       });
     }else{
-    return false;
+      return false;
     }    
   }
 
