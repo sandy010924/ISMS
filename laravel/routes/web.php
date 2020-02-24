@@ -63,46 +63,48 @@ Route::get('error_authority', function () {
 */
 
 /*** [課程管理] ***/
-// Route::middleware('can:admin')-> middleware('can:teacher')->group(function () {
-Route::get('course', 'Frontend\CourseController@show')->name('course');
-/* Sandy(2020/01/31)*/
-Route::get('course_search', 'Frontend\CourseController@search');
-/* Rockyy(2020/02/11)*/
-Route::post('course_delete', 'Backend\CourseController@delete');
-/* Rocky(2019/12/29)*/
-Route::post('course', 'Backend\CourseController@upload');
-// Route::get('course', 'CourseController@uploadPage')->name('course');
+    /*** 顯示資料 ***/
+    Route::get('course', 'Frontend\CourseController@show')->name('course');
+    /*** 顯示資料 Sandy(2020/01/31) ***/
+    Route::get('course_search', 'Frontend\CourseController@search');
+    /*** 刪除資料 Rocky(2020/02/11) ***/
+    Route::post('course_delete', 'Backend\CourseController@delete');
+    /*** 匯入表單 Rocky(2019/12/29) ***/
+    Route::post('course', 'Backend\CourseController@upload');
+    // Route::get('course', 'CourseController@uploadPage')->name('course');
 
 
 /*** [課程管理]現場正課表單 ***/
-Route::get('course_form', function () {
-    return view('frontend.course_form');
-})->name('course_form');
+    /*** 顯示資料 ***/
+    Route::get('course_form', function () {
+        return view('frontend.course_form');
+    })->name('course_form');
 
 
 /*** [課程管理] 查看名單 ***/
-// Route::get('course_apply', function () {
-//     return view('frontend.course_apply');
-// })->name('course_apply');
-
-//Sandy (2020/01/15)
-Route::get('course_apply', 'Frontend\CourseApplyController@show')->name('course_apply');
-Route::post('course_apply', 'Backend\CourseApplyController@update');
-// Sandy (2020/02/03)
-Route::get('course_apply_search', 'Frontend\CourseApplyController@search');
+    /*** 顯示資料 Sandy (2020/01/15) ***/
+    Route::get('course_apply', 'Frontend\CourseApplyController@show')->name('course_apply');
+    /*** 更新狀態 Sandy (2020/01/15) ***/
+    Route::post('course_apply', 'Backend\CourseApplyController@update');
+    /*** 搜尋資料 Sandy (2020/02/03) ***/
+    Route::get('course_apply_search', 'Frontend\CourseApplyController@search');
 
 
 /*** [課程管理] 進階填單名單 ***/
-Route::get('course_advanced', function () {
-    return view('frontend.course_advanced');
-})->name('course_advanced');
+    /*** 顯示資料 ***/
+    Route::get('course_advanced', function () {
+        return view('frontend.course_advanced');
+    })->name('course_advanced');
 
 
 /*** [課程管理] 場次總覽 ***/
-// Route::get('course_list', 'Frontend\CourseListController@show')->name('course_list');
-Route::get('course_list', function () {
-    return view('frontend.course_list');
-})->name('course_list');
+    /*** 顯示資料 ***/
+    Route::get('course_list', 'Frontend\CourseListController@show')->name('course_list');
+    /*** 搜尋資料 Sandy(2020/02/25) ***/
+    Route::get('course_list_search', 'Frontend\CourseListController@search');
+    /*** 刪除資料 Sandy(2020/02/25) ***/
+    Route::post('course_list_delete', 'Backend\CourseListController@delete');
+
 
 Route::get('course_list_data', function () {
     return view('frontend.course_list_data');
@@ -130,53 +132,44 @@ Route::get('course_list_edit', function () {
 
 
 /*** [課程管理] 今日課程 ***/
-//Sandy (2020/01/17)
-// Route::get('course_today', function () {
-//     return view('frontend.course_today');
-// })->name('course_today');
-Route::get('course_today', 'Frontend\CourseTodayController@show')->name('course_today');
-Route::get('course_today_search', 'Frontend\CourseTodayController@search');
+    /*** 顯示資料 Sandy(2020/01/17) ***/
+    Route::get('course_today', 'Frontend\CourseTodayController@show')->name('course_today');
+    /*** 搜尋資料 Sandy(2020/01/17) ***/
+    Route::get('course_today_search', 'Frontend\CourseTodayController@search');
 
 
 /*** [課程管理] 報到 ***/
-// Route::get('course_check', function () {
-//     return view('frontend.course_check');
-// })->name('course_check');
-
-//Sandy (2020/01/17)
-Route::get('course_check', 'Frontend\CourseCheckController@show')->name('course_check');
-Route::get('course_check_search', 'Frontend\CourseCheckController@search');
-Route::post('course_check', 'Backend\CourseCheckController@apply');
-Route::post('course_check_status', 'Backend\CourseCheckController@update_status');
-Route::post('course_check_data', 'Backend\CourseCheckController@update_data');
-// Route::post('dropdown_check', 'Backend\CourseCheckController@update_check');
-// Route::post('dropdown_absent', 'Backend\CourseCheckController@update_absent');
-// Route::post('dropdown_cancel', 'Backend\CourseCheckController@update_cancel');
-
-//Sandy (2020/02/05)
-Route::get('course_check_search', 'Frontend\CourseCheckController@search');
+    /*** 顯示資料 Sandy(2020/01/17) ***/
+    Route::get('course_check', 'Frontend\CourseCheckController@show')->name('course_check');
+    /*** 搜尋資料 Sandy(2020/01/17) ***/
+    Route::get('course_check_search', 'Frontend\CourseCheckController@search');
+    /*** 現場報名 Sandy ***/
+    Route::post('course_check', 'Backend\CourseCheckController@apply');
+    /*** 狀態修改 Sandy ***/
+    Route::post('course_check_status', 'Backend\CourseCheckController@update_status');
+    /*** 課程資訊修改 Sandy ***/
+    Route::post('course_check_data', 'Backend\CourseCheckController@update_data');
 
 
-/*** [課程管理] 回報表單 ***/
-Route::get('course_return', function () {
-    return view('frontend.course_return');
-})->name('course_return');
-
-// });
+/*** [課程管理] 場次報表 ***/
+    /*** 顯示資料 ***/
+    Route::get('course_return', function () {
+        return view('frontend.course_return');
+    })->name('course_return');
 
 
 /*** [現場人員] 報到 ***/
-Route::get('ots_check', function () {
-    return view('frontend.ots_check');
-})->name('ots_check');
+    Route::get('ots_check', function () {
+        return view('frontend.ots_check');
+    })->name('ots_check');
 
-Route::get('ots_course_today', function () {
-    return view('frontend.ots_course_today');
-})->name('ots_course_today');
+    Route::get('ots_course_today', function () {
+        return view('frontend.ots_course_today');
+    })->name('ots_course_today');
 
-Route::get('ots_return', function () {
-    return view('frontend.ots_return');
-})->name('ots_return');
+    Route::get('ots_return', function () {
+        return view('frontend.ots_return');
+    })->name('ots_return');
 
 
 
