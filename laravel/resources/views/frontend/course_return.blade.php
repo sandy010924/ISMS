@@ -15,16 +15,16 @@
             </div>
               <div class="row">
                 <div class="col-3 mb-2">
-                  <h6>主持開場 : </h6>
+                  <h6>主持開場 : Ellen</h6>
                 </div>
                 <div class="col-3 mb-2">
                   <h6>結束收單 : </h6>
                 </div>
                 <div class="col-3 mb-2">
-                  <h6>工作人員 : </h6>
+                  <h6>工作人員 : Amy、Adam</h6>
                 </div>
                 <div class="col-3 mb-2">
-                  <h6>天氣 : </h6>
+                  <h6>天氣 : 晴</h6>
                 </div>
                 
                 
@@ -32,16 +32,16 @@
               <div class="row">
                 
                 <div class="col-3 mb-2">
-                  <h6>該場總金額 : </h6>
+                  <h6>該場總金額 : 59545</h6>
                 </div>
                 <div class="col-3">
-                  <h6>完款 : </h6>
+                  <h6>完款 : 35423</h6>
                 </div>
                 <div class="col-3">
-                  <h6>付訂 : </h6>
+                  <h6>付訂 : 13548</h6>
                 </div>
                 <div class="col-3">
-                  <h6>留單 : </h6>
+                  <h6>留單 : 2405</h6>
                 </div>
               </div>
               <div class="row">
@@ -94,15 +94,7 @@
                     <th class="text-nowrap">應付</th>
                     <th class="text-nowrap">已付</th>
                     <th class="text-nowrap">待付</th>
-                    <th class="text-nowrap">付款方式1</th>
-                    <th class="text-nowrap">金額1</th>
-                    <th class="text-nowrap">帳戶/卡號後四碼1</th>
-                    <th class="text-nowrap">付款方式2</th>
-                    <th class="text-nowrap">金額2</th>
-                    <th class="text-nowrap">帳戶/卡號後四碼2</th>
-                    <th class="text-nowrap">付款方式3</th>
-                    <th class="text-nowrap">金額3</th>
-                    <th class="text-nowrap">帳戶/卡號後四碼3</th>
+                    <th class="text-nowrap">付款方式</th>
                     <th class="text-nowrap" >付款日期</th>
                     <th class="text-nowrap">服務人員</th>
                     <th class="text-nowrap">備註</th>
@@ -110,105 +102,188 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="align-middle">王曉明</td>
-                    <td class="align-middle">0912345678</td>
-                    <td class="align-middle">
-                      <div class="form-group m-0">
-                        <select class="custom-select border-0 bg-transparent input_width" name="pay_state">
-                          <option selected disabled value="">付款狀態</option>
-                          <option value="1">完款</option>
-                          <option value="2">付訂</option>
-                          <option value="3">留單</option>
-                        </select>
-                      </div>
-                    </td>
-                    <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                    <td class="align-middle">1000</td>
-                    <td class="align-middle">500</td>
-                    <td class="align-middle">
-                      <div class="form-group m-0">
-                        <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
-                          <option selected disabled value="">付款方式</option>
-                          <option value="1">現金</option>
-                          <option value="2">匯款</option>
-                          <option value="3">輕鬆付</option>
-                          <option value="4">一次付</option>
-                        </select>
-                      </div>
-                    </td>
-                    <td class="align-middle">1500</td>
-                    <td class="align-middle">1234</td>
-                    <td class="align-middle">
-                      <div class="form-group m-0">
-                        <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
-                          <option selected disabled value="">付款方式</option>
-                          <option value="1">現金</option>
-                          <option value="2">匯款</option>
-                          <option value="3">輕鬆付</option>
-                          <option value="4">一次付</option>
-                        </select>
-                      </div>
-                    </td>
-                    <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                    <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                    <td class="align-middle">
-                      <div class="form-group m-0">
-                        <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
-                          <option selected disabled value="">付款方式</option>
-                          <option value="1">現金</option>
-                          <option value="2">匯款</option>
-                          <option value="3">輕鬆付</option>
-                          <option value="4">一次付</option>
-                        </select>
-                      </div>
-                    </td>
-                    <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                    <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                    <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                    <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                    <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                      <td class="align-middle">王曉明</td>
+                      <td class="align-middle">0912345678</td>
+                      <td class="align-middle">
+                        <div class="form-group m-0">
+                          <select class="custom-select border-0 bg-transparent input_width" name="pay_state">
+                            <option selected disabled value="">付款狀態</option>
+                            <option value="1">完款</option>
+                            <option value="2">付訂</option>
+                            <option value="3">留單</option>
+                          </select>
+                        </div>
+                      </td>
+                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                      <td class="align-middle">1000</td>
+                      <td class="align-middle">500</td>
+                      <td class="align-middle">
+                        <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="collapse" data-target="#multiCollapseExample1" aria-expanded="false" aria-controls="multiCollapseExample1">付款方式</button>
+                      </td>
+                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
                   </tr>
                   <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td colspan="10">
+                          <div class="collapse multi-collapse" id="multiCollapseExample1">
+                            <div class="card card-body p-1">
+                              <div class="table-responsive">
+                                <table class="table table-sm text-center mb-0 return_table">
+                                  <thead class="thead-dark" style="font-size:14px;">
+                                    <tr>
+                                      <th class="text-nowrap">付款方式1</th>
+                                      <th class="text-nowrap">金額1</th>
+                                      <th class="text-nowrap">帳戶/卡號後四碼1</th>
+                                      <th class="text-nowrap">付款方式2</th>
+                                      <th class="text-nowrap">金額2</th>
+                                      <th class="text-nowrap">帳戶/卡號後四碼2</th>
+                                      <th class="text-nowrap">付款方式3</th>
+                                      <th class="text-nowrap">金額3</th>
+                                      <th class="text-nowrap">帳戶/卡號後四碼3</th>  
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td class="align-middle">
+                                        <div class="form-group m-0">
+                                          <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
+                                            <option selected disabled value="">付款方式</option>
+                                            <option value="1">現金</option>
+                                            <option value="2">匯款</option>
+                                            <option value="3">輕鬆付</option>
+                                            <option value="4">一次付</option>
+                                          </select>
+                                        </div>
+                                      </td>
+                                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                      <td class="align-middle">
+                                        <div class="form-group m-0">
+                                          <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
+                                            <option selected disabled value="">付款方式</option>
+                                            <option value="1">現金</option>
+                                            <option value="2">匯款</option>
+                                            <option value="3">輕鬆付</option>
+                                            <option value="4">一次付</option>
+                                          </select>
+                                        </div>
+                                      </td>
+                                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                      <td class="align-middle">
+                                        <div class="form-group m-0">
+                                          <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
+                                            <option selected disabled value="">付款方式</option>
+                                            <option value="1">現金</option>
+                                            <option value="2">匯款</option>
+                                            <option value="3">輕鬆付</option>
+                                            <option value="4">一次付</option>
+                                          </select>
+                                        </div>
+                                      </td>
+                                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                    </tr> 
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>    
+                    </td>
                   </tr>
                   <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                      <td class="align-middle">陳美美</td>
+                      <td class="align-middle">0987654321</td>
+                      <td class="align-middle">
+                        <div class="form-group m-0">
+                          <select class="custom-select border-0 bg-transparent input_width" name="pay_state">
+                            <option selected disabled value="">付款狀態</option>
+                            <option value="1">完款</option>
+                            <option value="2">付訂</option>
+                            <option value="3">留單</option>
+                          </select>
+                        </div>
+                      </td>
+                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                      <td class="align-middle">1200</td>
+                      <td class="align-middle">100</td>
+                      <td class="align-middle">
+                        <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample1">付款方式</button>
+                      </td>
+                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
                   </tr>
-
+                  <tr>
+                      <td colspan="10">
+                            <div class="collapse multi-collapse" id="multiCollapseExample2">
+                              <div class="card card-body p-1">
+                                <div class="table-responsive">
+                                  <table class="table table-sm text-center mb-0 return_table">
+                                    <thead class="thead-dark" style="font-size:14px;">
+                                      <tr>
+                                        <th class="text-nowrap">付款方式1</th>
+                                        <th class="text-nowrap">金額1</th>
+                                        <th class="text-nowrap">帳戶/卡號後四碼1</th>
+                                        <th class="text-nowrap">付款方式2</th>
+                                        <th class="text-nowrap">金額2</th>
+                                        <th class="text-nowrap">帳戶/卡號後四碼2</th>
+                                        <th class="text-nowrap">付款方式3</th>
+                                        <th class="text-nowrap">金額3</th>
+                                        <th class="text-nowrap">帳戶/卡號後四碼3</th>  
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td class="align-middle">
+                                          <div class="form-group m-0">
+                                            <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
+                                              <option selected disabled value="">付款方式</option>
+                                              <option value="1">現金</option>
+                                              <option value="2">匯款</option>
+                                              <option value="3">輕鬆付</option>
+                                              <option value="4">一次付</option>
+                                            </select>
+                                          </div>
+                                        </td>
+                                        <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                        <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                        <td class="align-middle">
+                                          <div class="form-group m-0">
+                                            <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
+                                              <option selected disabled value="">付款方式</option>
+                                              <option value="1">現金</option>
+                                              <option value="2">匯款</option>
+                                              <option value="3">輕鬆付</option>
+                                              <option value="4">一次付</option>
+                                            </select>
+                                          </div>
+                                        </td>
+                                        <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                        <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                        <td class="align-middle">
+                                          <div class="form-group m-0">
+                                            <select class="custom-select border-0 bg-transparent input_width" name="pay_way">
+                                              <option selected disabled value="">付款方式</option>
+                                              <option value="1">現金</option>
+                                              <option value="2">匯款</option>
+                                              <option value="3">輕鬆付</option>
+                                              <option value="4">一次付</option>
+                                            </select>
+                                          </div>
+                                        </td>
+                                        <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                        <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                      </tr> 
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          
+                      </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
