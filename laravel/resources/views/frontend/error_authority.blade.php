@@ -32,7 +32,7 @@
         <div class="card mx-auto bg-transparent border-white my-5" >
           <div class="card-body " >
             <span class="h1 text-white"><b>使用者權限不足!</b></span><br>
-            <button type="button" class="btn btn-info my-auto" onclick="lastpage()" >返回上一頁</button>
+            <a href="{{ route('login') }}"><button type="button" class="btn btn-info my-auto">返回登入頁面</button></a>
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
   <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
   <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/feather.min.js') }}"></script>
-  <script src="{{ asset('js/style.js') }}"></script>
+  
   
 </body>
 
