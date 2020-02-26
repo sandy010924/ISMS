@@ -65,10 +65,46 @@
               </div>
             </div>
           </div>
-          
         </div>
         <div class="table-responsive">
-          <table class="table table-striped table-sm text-center">
+          <table id="table_list" class="table table-striped table-sm text-center">
+            <thead>
+                <tr>
+                    <th>講師姓名</th>
+                    <th>類別</th>
+                    <th>課程名稱</th>
+                    <th class="no-sort">表單上場次數</th>
+                    <th class="no-sort">總場次數</th>
+                    <th class="no-sort">累計名單</th>
+                    <th class="no-sort"></th>
+                </tr>
+            </thead>
+            <tbody>
+              @foreach($courses as $key => $course )
+              <tr>
+                <td>{{ $course['teacher'] }}</td>
+                <td>{{ $course['type'] }}</td>
+                <td>{{ $course['course'] }}</td>
+                <td>{{ $course['count_form'] }}</td>
+                <td>{{ $course['count_events'] }}</td>
+                <td>{{ $course['count_list'] }}</td>
+                <td>
+                    <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      名單
+                    </a>
+                    <div class="dropdown-menu dropdown_status" aria-labelledby="dropdownMenu2">
+                      <a role="button" class="dropdown-item" href="{{ route('course_list_apply') }}">報名名單</a>
+                      <a role="button" class="dropdown-item" href="{{ route('course_list_refund') }}">退費名單</a>
+                    </div>
+                    <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data') }}">場次數據</a>
+                    <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit') }}">編輯</a>
+                    <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['all_id'] }});" value="{{ $course['all_id'] }}" >刪除</a>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+          {{-- <table class="table table-striped table-sm text-center">
             <thead>
               <tr>
                 <th>講師姓名</th>
@@ -104,73 +140,85 @@
               </tr>
               @endforeach
             </tbody>
-          </table>
+          </table> --}}
         </div>
       </div>
     </div>
   <!-- Content End -->
 
   <script>
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
+
+    // Sandy(2020/02/26) dt列表搜尋 S
+    var table;
+
+    $(document).ready(function() {
+         table=$('#table_list').DataTable({
+          "dom": '<l<t>p>',
+          "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+          } ]
+      });
     });
 
-    // 輸入框 Sandy(2020/02/25)
     $('#search_name').on('keyup', function(e) {
       if (e.keyCode === 13) {
-          $('#btn_search').click();
+        $('#btn_search').click();
       }
     });
 
-    // Sandy(2020/02/25) 列表搜尋start
     $("#btn_search").click(function(){
-      var search_name = $("#search_name").val();
-      $.ajax({
-          type : 'GET',
-          url:'course_list_search', 
-          dataType: 'json',    
-          data:{
-            search_name: search_name
-          },
-          success:function(data){
-            console.log(data);
+      table.columns(2).search($("#search_name").val()).draw();
+    });
+    // Sandy(2020/02/26) dt列表搜尋 E
+
+    // Sandy(2020/02/25) 列表搜尋start
+    // $("#btn_search").click(function(){
+    //   var search_name = $("#search_name").val();
+    //   $.ajax({
+    //       type : 'GET',
+    //       url:'course_list_search', 
+    //       dataType: 'json',    
+    //       data:{
+    //         search_name: search_name
+    //       },
+    //       success:function(data){
+    //         // console.log(data);
             
-            $('#table_list').children().remove();
-            var res = ``;
-            $.each (data, function (key, value) {
-              res +=`
-              <tr>
-                <td>${ value.teacher }</td>
-                <td>${ value.type }</td>
-                <td>${ value.course }</td>
-                <td>${ value.count_form }</td>
-                <td>${ value.count_events }</td>
-                <td>${ value.count_list }</td>
-                <td>
-                    <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      名單
-                    </a>
-                    <div class="dropdown-menu dropdown_status" aria-labelledby="dropdownMenu2">
-                      <a role="button" class="dropdown-item" href="{{ route('course_list_apply') }}">報名名單</a>
-                      <a role="button" class="dropdown-item" href="{{ route('course_list_refund') }}">退費名單</a>
-                    </div>
-                    <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data') }}">場次數據</a>
-                    <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit') }}">編輯</a>
-                    <a role="button" id="${ value.course_id }" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete(${ value.course_id });" value="${ value.course_id }" >刪除</a>
-                </td>
-              </tr>`
-            });
+    //         $('#table_list').children().remove();
+    //         var res = ``;
+    //         $.each (data, function (key, value) {
+    //           res +=`
+    //           <tr>
+    //             <td>${ value.teacher }</td>
+    //             <td>${ value.type }</td>
+    //             <td>${ value.course }</td>
+    //             <td>${ value.count_form }</td>
+    //             <td>${ value.count_events }</td>
+    //             <td>${ value.count_list }</td>
+    //             <td>
+    //                 <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    //                   名單
+    //                 </a>
+    //                 <div class="dropdown-menu dropdown_status" aria-labelledby="dropdownMenu2">
+    //                   <a role="button" class="dropdown-item" href="{{ route('course_list_apply') }}">報名名單</a>
+    //                   <a role="button" class="dropdown-item" href="{{ route('course_list_refund') }}">退費名單</a>
+    //                 </div>
+    //                 <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data') }}">場次數據</a>
+    //                 <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit') }}">編輯</a>
+    //                 <a role="button" id="${ value.course_id }" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete(${ value.course_id });" value="${ value.course_id }" >刪除</a>
+    //             </td>
+    //           </tr>`
+    //         });
 
-            $('#table_list').html(res);
+    //         $('#table_list').html(res);
 
-          },
-          error: function(jqXHR){
-             console.log('error: ' + JSON.stringify(jqXHR));
-          }
-        });
-      });
+    //       },
+    //       error: function(jqXHR){
+    //          console.log('error: ' + JSON.stringify(jqXHR));
+    //       }
+    //     });
+    //   });
     // Sandy 列表搜尋end
 
     // 刪除 Sandy(2020/02/25) start

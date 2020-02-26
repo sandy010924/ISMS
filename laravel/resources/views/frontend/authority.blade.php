@@ -6,7 +6,6 @@
 @section('content')
 <!-- Content Start -->
        <!--權限管理頁面內容-->
-      
         <div class="card m-3">
           <div class="card-body">            
             <div class="row mb-4">
@@ -62,43 +61,43 @@
                 </div>
               </div>
               <div class="col-7">
-                <form action="{{url('authority_search')}}" method="GET" role="search">
-                  @csrf
+                {{-- <form action="{{url('authority_search')}}" method="GET" role="search">
+                  @csrf --}}
                   <div class="input-group">
                     <div class="col-md-4">
-                      <input type="search" class="form-control" name="name" placeholder="搜尋姓名、帳號" aria-describedby="btn_search">
+                      <input type="search" class="form-control" name="name" placeholder="搜尋姓名" aria-describedby="btn_search" id="search_keyword">
                     </div>
                     <div class="col-md-3">
                       <div class="form-group">
-                        <select class="custom-select form-control" id="role" name="role">
+                        <select class="custom-select form-control" id="search_role" name="search_role">
                           <option value="">請選擇</option>
-                          <option value="teacher">講師</option>
-                          <option value="staff">現場人員</option>
-                          <option value="accountant">財會人員</option>
-                          <option value="marketer">行銷人員</option>
-                          <option value="dataanalysis">數據分析人員</option>
-                          <option value="admin">管理員</option>
+                          <option value="講師">講師</option>
+                          <option value="現場人員">現場人員</option>
+                          <option value="財會人員">財會人員</option>
+                          <option value="行銷人員">行銷人員</option>
+                          <option value="數據分析人員">數據分析人員</option>
+                          <option value="管理員">管理員</option>
                         </select>
                       </div> 
                     </div>
                     <div class="col-md-3">
-                      <button class="btn btn-outline-secondary" type="submit" id="btn_search">搜尋</button>
+                      <button type="button" class="btn btn-outline-secondary" id="btn_search">搜尋</button>
                     </div>
                   </div>
-                </form>
+                {{-- </form> --}}
               </div>
             </div>                          
             <div class="table-responsive">
-              <table class="table table-striped table-sm text-center">
+              <table id="table_list" class="table table-striped table-sm text-center">
                 <thead>
                   <tr>
                     <th>帳號</th>
                     <th>姓名</th>
                     <th>角色</th>
-                    <th></th>
+                    <th class="no-sort"></th>
                   </tr>
                 </thead>
-                <tbody id="authority_list">                  
+                <tbody>                  
                 @foreach($datas as $key => $data )
                   <tr>
                     <td>{{ $data['account'] }}</td> 
@@ -194,20 +193,68 @@
   <!-- alert End -->
 
 <script>
-    // 確認密碼 Rocky(2020/02/18)
-    function CheckPassword(pwd,pwd_check) 
-    { 
-      console.log(pwd.value + "\n") 
-      console.log(pwd_check.value)
-      if (pwd.value != pwd_check.value) {
-        alert('請確認密碼！！！');
-        window.event.returnValue = false
-      } else {
-        window.event.returnValue = true
+  // Sandy(2020/02/26) dt列表搜尋 S
+  var table;
+  //針對姓名與角色搜尋 Sandy(2020/02/26)
+  $.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+      var keyword = $('#search_keyword').val();
+      var role = $('#search_role').val();
+      var tname = data[1]; 
+      var trole = data[2]; 
+
+      if ( (isNaN( keyword ) && isNaN( role )) || ( tname.includes(keyword) && isNaN( role ) ) || ( trole.includes(role) && isNaN( keyword ) ) || ( trole.includes(role) && tname.includes(keyword) ) ){
+        return true;
       }
+
+      return false;
     }
-    // 刪除 Rocky(2020/02/18)
-    function btn_delete(id){
+  );
+
+  $("document").ready(function(){
+    // Sandy (2020/02/26)
+    table = $('#table_list').DataTable({
+        "dom": '<l<t>p>',
+        "columnDefs": [ {
+          "targets": 'no-sort',
+          "orderable": false,
+        } ]
+        // "ordering": false,
+    });
+  });
+
+  // 輸入框 Sandy(2020/02/25)
+  $('#search_keyword').on('keyup', function(e) {
+    if (e.keyCode === 13) {
+        $('#btn_search').click();
+    }
+  });
+  $('#search_role').on('keyup', function(e) {
+    if (e.keyCode === 13) {
+        $('#btn_search').click();
+    }
+  });
+  
+  $("#btn_search").click(function(){
+    table.columns(1).search($('#search_keyword').val()).columns(2).search($("#search_role").val()).draw();
+  });
+  // Sandy(2020/02/26) dt列表搜尋 E
+
+
+  // 確認密碼 Rocky(2020/02/18)
+  function CheckPassword(pwd,pwd_check) 
+  { 
+    console.log(pwd.value + "\n") 
+    console.log(pwd_check.value)
+    if (pwd.value != pwd_check.value) {
+      alert('請確認密碼！！！');
+      window.event.returnValue = false
+    } else {
+      window.event.returnValue = true
+    }
+  }
+  // 刪除 Rocky(2020/02/18)
+  function btn_delete(id){
     var msg = "是否刪除此筆資料?";
     if (confirm(msg)==true){
       $.ajax({

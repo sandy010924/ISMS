@@ -15,10 +15,11 @@
 
 <script>
   //回上一頁按鈕，主頁不會出現按鈕
-  var index = [ '課程管理', '學員管理', '財務管理', '訊息推播', '數據報表', '系統設定' ];
+  var nav_text = $("#isms_nav").text().replace(/\s+/g, "");
+  var header_text = $("#header_title").text().replace(/\s+/g, "");
   var back = 0;
-  for( var i = 0 ; i < index.length ; i++ ){
-    if( $("#header_title").text().indexOf(index[i]) >= 0 ){
+  for( var i = 0 ; i < nav_text.length ; i++ ){
+    if( nav_text.includes(header_text) ){
         back++;
         break;
     }

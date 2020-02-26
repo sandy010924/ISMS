@@ -198,24 +198,23 @@
             </div>
           </div>
         </div>
-
       </div>
       <div class="table-responsive">
-        <table class="table table-striped table-sm text-center">
+        <table id="table_list" class="table table-striped table-sm text-center">
           <thead>
             <tr>
-              <th scope="col">編號</th>
-              <th scope="col">姓名</th>
-              <th scope="col">聯絡電話</th>
-              <th scope="col">電子郵件</th>
-              <th scope="col">報到</th>
-              <th scope="col" width="20%">報到備註</th>
+              <th>編號</th>
+              <th>姓名</th>
+              <th>聯絡電話</th>
+              <th>電子郵件</th>
+              <th>報到</th>
+              <th width="20%">報到備註</th>
             </tr>
           </thead>
-          <tbody id="table_list">
+          <tbody>
             @foreach($coursechecks as $key => $coursecheck)
               <tr>
-                <td>{{ $coursecheck['row']  }}</td>
+                <td class="align-middle">{{ $coursecheck['row']  }}</td>
                 <td scope="row" class="align-middle" name="search_name">{{ $coursecheck['name'] }}</td>
                 <td class="align-middle" name="search_phone">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
                 <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
@@ -279,30 +278,57 @@
   <!-- Content End -->
 
   <script>
+    var table;
+    //針對姓名與電話末三碼搜尋 Sandy(2020/02/26)
+    $.fn.dataTable.ext.search.push(
+        function( settings, data, dataIndex ) {
+          var keyword = $('#search_keyword').val();
+          var tname = data[1]; 
+          var tphone = data[2].substr(7,3); 
+          
+          if ( isNaN( keyword ) || tname.includes(keyword) || tphone.includes(keyword) ){
+            return true;
+          }
+          return false;
+        }
+    );
+
+    $("document").ready(function(){
+      // Sandy (2020/02/26)
+      table = $('#table_list').DataTable({
+          "dom": '<l<t>p>',
+          "ordering": false,
+          drawCallback: function(){
+            //換頁或切換每頁筆數按鈕觸發報到狀態樣式
+            $('.paginate_button, .dataTables_length', this.api().table().container())          .on('click', function(){
+                status_onload();
+            });       
+          }
+      });
+    });
+
     // 輸入框 Rocky(2020/02/19)
     $('#search_keyword').on('keyup', function(e) {
       if (e.keyCode === 13) {
           $('#btn_search').click();
       }
     });
-
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
+    
+    $("#btn_search").click(function(){
+      table.search($('#search_keyword').val()).draw();
     });
 
     // Sandy(2020/02/05)
     // 列表搜尋start
     // $("#search_keyword").on("keyup", function() {
-    $('#btn_search').on('click',function(){
-      var keyword = $("#search_keyword").val();
-      $("#table_list tr").filter(function() {
-        var search_phone = $(this).children("td[name='search_phone']").text().toLowerCase();
-        var search_name = $(this).children("td[name='search_name']").text().toLowerCase();
-        $(this).toggle(search_name.indexOf(keyword) + search_phone.substr(7,3).indexOf(keyword) > -2)
-      });
-    });
+    // $('#btn_search').on('click',function(){
+    //   var keyword = $("#search_keyword").val();
+    //   $("#table_list tr").filter(function() {
+    //     var search_phone = $(this).children("td[name='search_phone']").text().toLowerCase();
+    //     var search_name = $(this).children("td[name='search_name']").text().toLowerCase();
+    //     $(this).toggle(search_name.indexOf(keyword) + search_phone.substr(7,3).indexOf(keyword) > -2)
+    //   });
+    // });
 
     // Sandy(2020/01/16)
     // 報到狀態修改 start

@@ -19,10 +19,12 @@ body {
     margin: 0px;
 }
 
+/* alert */
 .alert{
     display: none;
 }
 
+/* 必填 */
 .form-group.required .col-form-label:after { 
    content:"*";
    color:red;
@@ -56,6 +58,7 @@ main > .header .logout:hover{
     text-decoration: none;
 }
 
+/* nav */
 .bg-dark{
     background-color: #222 !important;
 }
@@ -99,4 +102,13 @@ main > .header .logout:hover{
     flex-direction: column;
     display: flex;
     margin: 0;
+}
+
+/* datatable pagination */
+#table_list_paginate{
+    text-align: center;
+    margin-top: 1rem;
+}
+#table_list_paginate ul.pagination{
+    display: inline-flex;
 }

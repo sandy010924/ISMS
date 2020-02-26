@@ -61,7 +61,7 @@
               </div>
           </div>
           <div class="table-responsive">
-            <table class="table table-striped table-sm text-center" id="table_apply">
+            <table id="table_list" class="table table-striped table-sm text-center">
               <thead>
                 <tr>
                   <th>Submission Date</th>
@@ -81,7 +81,7 @@
                   @endif
                 </tr>
               </thead>
-              <tbody id="table_list">
+              <tbody>
                 @foreach($courseapplys as $courseapply)
                   <tr>
                     <td>{{ $courseapply->submissiondate }}</td>
@@ -129,19 +129,35 @@
   <!-- Content End -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
+    // Sandy(2020/02/26) dt列表搜尋 S
+    var table;
+    $("document").ready(function(){
+      // Sandy (2020/02/26)
+      table = $('#table_list').DataTable({
+          "dom": '<l<t>p>',
+          // "ordering": false,
+          drawCallback: function(){
+            //換頁或切換每頁筆數按鈕觸發報到狀態樣式
+            $('.paginate_button, .dataTables_length', this.api().table().container())          .on('click', function(){
+                status_onload();
+            });       
+          }
+      });
+    });
+
     // 輸入框 Sandy(2020/02/25)
+    $("#btn_search").click(function(){
+      table.search($('#search_keyword').val()).draw();
+    });
+
     $('#search_keyword').on('keyup', function(e) {
       if (e.keyCode === 13) {
           $('#btn_search').click();
       }
     });
 
-    // Sandy(2020/01/16)
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
+
+    // Sandy(2020/02/26) dt列表搜尋 S
 
     // 報到狀態修改 Start
     $('body').on('click','.update_status',function(){
@@ -182,54 +198,54 @@
     // 報到狀態修改 End
 
     //列表搜尋start
-    $("#btn_search").click(function(e){
-      var search_keyword = $("#search_keyword").val();
-      var course_id = $("#course_id").val();
-      $.ajax({
-          type : 'GET',
-          url:'course_apply_search', 
-          dataType: 'json',    
-          data:{
-            search_keyword: search_keyword,
-            course_id: course_id
-          },
-          success:function(data){
-            var res = '';
-            var buttons = "";
-            var d = new Date();
-            var nowdate = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
-            $.each (data, function (key, value) {
-              course_date = moment(value.course_start_at).format('Y/M/D');
+    // $("#btn_search").click(function(e){
+    //   var search_keyword = $("#search_keyword").val();
+    //   var course_id = $("#course_id").val();
+    //   $.ajax({
+    //       type : 'GET',
+    //       url:'course_apply_search', 
+    //       dataType: 'json',    
+    //       data:{
+    //         search_keyword: search_keyword,
+    //         course_id: course_id
+    //       },
+    //       success:function(data){
+    //         var res = '';
+    //         var buttons = "";
+    //         var d = new Date();
+    //         var nowdate = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
+    //         $.each (data, function (key, value) {
+    //           course_date = moment(value.course_start_at).format('Y/M/D');
              
-              if (course_date > nowdate) {
-                buttons =
-                '<td>' +
-                  '<button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="' + value.id +'" value="' +value.id_status + '">' + value.status_name + '</button>' + 
-                '</td>'
-              } else if (course_date <= nowdate) {
-                buttons = '<td>' + value.status_name + '</td>'
-              }
-              res +=
-              '<tr>'+
-                  '<td>' + value.submissiondate + '</td>'+
-                  '<td>' + value.datasource + '</td>'+                  
-                  '<td>' + value.name + '</td>'+
-                  '<td>' + value.phone + '</td>'+
-                  '<td>' + value.email + '</td>'+
-                  '<td>' + value.profession + '</td>'+
-                  '<td>' + value.course_content + '</td>'+                                    
-                  buttons +
-                  '<td>' + '' + '</td>'+
-              '</tr>';
-            });           
-            $('#table_list').html(res);
-            status_onload();
-          },
-          error: function(jqXHR){
-            console.log("error: "+ JSON.stringify(jqXHR));
-          }
-        });
-    });
+    //           if (course_date > nowdate) {
+    //             buttons =
+    //             '<td>' +
+    //               '<button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="' + value.id +'" value="' +value.id_status + '">' + value.status_name + '</button>' + 
+    //             '</td>'
+    //           } else if (course_date <= nowdate) {
+    //             buttons = '<td>' + value.status_name + '</td>'
+    //           }
+    //           res +=
+    //           '<tr>'+
+    //               '<td>' + value.submissiondate + '</td>'+
+    //               '<td>' + value.datasource + '</td>'+                  
+    //               '<td>' + value.name + '</td>'+
+    //               '<td>' + value.phone + '</td>'+
+    //               '<td>' + value.email + '</td>'+
+    //               '<td>' + value.profession + '</td>'+
+    //               '<td>' + value.course_content + '</td>'+                                    
+    //               buttons +
+    //               '<td>' + '' + '</td>'+
+    //           '</tr>';
+    //         });           
+    //         $('#table_list').html(res);
+    //         status_onload();
+    //       },
+    //       error: function(jqXHR){
+    //         console.log("error: "+ JSON.stringify(jqXHR));
+    //       }
+    //     });
+    // });
     //列表搜尋end
 
   </script>

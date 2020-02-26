@@ -19,7 +19,7 @@
               </div>
             </div>
             <div class="table-responsive">
-              <table class="table table-striped table-sm text-center">
+              <table id="table_list" class="table table-striped table-sm text-center">
                 <thead>
                   <tr>
                     <th>日期</th>
@@ -30,7 +30,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody id="courseTodayContent">
+                <tbody>
                   @foreach($courses as $key => $course )
                   {{-- @foreach(array_combine($courses, $salesregistrations) as $course => $salesregistration) --}}
                     <tr>
@@ -40,7 +40,7 @@
                       <td>{{ $courses_apply[$key] }} / <span style="color:red">{{ $courses_cancel[$key] }}</span></td>
                       <td>{{ $courses_check[$key] }}</td>
                       <td>
-                        <a href="{{ route('course_check', ['id'=>$course->id]) }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+                        <a href="{{ route('course_check', ['id'=>$course->id]) }}"><button type="button" class="btn btn-success btn-sm">開始報到</button></a>
                       </td>
                     </tr>
                   @endforeach
@@ -52,56 +52,69 @@
       <!-- Content End -->
 
 <script>
-    // 輸入框 Sandy(2020/02/25)
-    $('#search_name').on('keyup', function(e) {
-      if (e.keyCode === 13) {
-          $('#btn_search').click();
-      }
+    // Sandy(2020/02/26) dt列表搜尋 S
+  var table;
+
+  $(document).ready(function() {
+      table=$('#table_list').DataTable({
+      "dom": '<l<t>p>',
+      "ordering": false,
+      "columnDefs": [ {
+        "targets": 'no-sort',
+        "orderable": false,
+      } ]
     });
+  });
+
+  $('#search_name').on('keyup', function(e) {
+    if (e.keyCode === 13) {
+      $('#btn_search').click();
+    }
+  });
+
+  $("#btn_search").click(function(){
+    table.columns(1).search($("#search_name").val()).draw();
+  });
+  // Sandy(2020/02/26) dt列表搜尋 E
+
 
   // Sandy(2020/02/07) 列表搜尋start
-  $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
+  // $("#btn_search").click(function(e){
+  //     var search_name = $("#search_name").val();
+  //     $.ajax({
+  //         type : 'GET',
+  //         url:'course_today_search',
+  //         dataType: 'json',
+  //         data:{
+  //           // '_token':"{{ csrf_token() }}",
+  //           search_name: search_name
+  //         },
+  //         success:function(data){
+  //           // console.log(data);
 
-  $("#btn_search").click(function(e){
-      var search_name = $("#search_name").val();
-      $.ajax({
-          type : 'GET',
-          url:'course_today_search',
-          dataType: 'json',
-          data:{
-            // '_token':"{{ csrf_token() }}",
-            search_name: search_name
-          },
-          success:function(data){
-            // console.log(data);
+  //           $('#courseTodayContent').children().remove();
+  //           var res = ``;
+  //           $.each (data, function (key, value) {
+  //             res +=`
+  //             <tr>
+  //               <td>${ value.date }</td>
+  //               <td>${ value.name }</td>
+  //               <td>${ value.event }</td>
+  //               <td>${ value.count_apply } / <span style="color:red">${ value.count_cancel }</span></td>
+  //               <td>${ value.count_check }</td>
+  //               <td>
+  //                 <a href="${ value.href_check }"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+  //               </td>
+  //             </tr>`
+  //           });
 
-            $('#courseTodayContent').children().remove();
-            var res = ``;
-            $.each (data, function (key, value) {
-              res +=`
-              <tr>
-                <td>${ value.date }</td>
-                <td>${ value.name }</td>
-                <td>${ value.event }</td>
-                <td>${ value.count_apply } / <span style="color:red">${ value.count_cancel }</span></td>
-                <td>${ value.count_check }</td>
-                <td>
-                  <a href="${ value.href_check }"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
-                </td>
-              </tr>`
-            });
-
-            $('#courseTodayContent').html(res);
-          }
-          // error: function(jqXHR){
-          //    alert(JSON.stringify(jqXHR));
-          // }
-      });
-  });
+  //           $('#courseTodayContent').html(res);
+  //         }
+  //         // error: function(jqXHR){
+  //         //    alert(JSON.stringify(jqXHR));
+  //         // }
+  //     });
+  // });
   // Sandy(2020/02/07) 列表搜尋end
 </script>
 @endsection

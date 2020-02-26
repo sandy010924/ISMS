@@ -1,6 +1,6 @@
 <!-- Content Start -->
 <!--搜尋課程頁面內容-->
-<div class="card mt-3 mb-3 container">
+<div class="card m-3">
   <div class="card-body">
     <!-- content -->
     <div class="content_box">

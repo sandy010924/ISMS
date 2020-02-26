@@ -1,5 +1,5 @@
 <!-- Navbar Start -->
-<nav class="col-md-2 d-none d-md-block bg-dark sidebar">
+<nav class="col-md-2 d-none d-md-block bg-dark sidebar" id="isms_nav">
     <div class="text-center nav-logo">
         <a href="#">
           <img src="./img/logo.png" width="60" class="rounded" alt="logo">

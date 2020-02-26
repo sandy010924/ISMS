@@ -134,7 +134,7 @@
               </div>
             </div>
             <div class="table-responsive">
-              <table class="table table-striped table-sm text-center">
+              <table id="table_list" class="table table-striped table-sm text-center">
                 <thead>
                   <tr>
                     <th>日期</th>
@@ -145,38 +145,38 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody id="table_list">
-                @foreach($courses as $key => $course )
-                  <tr>
-                    <td>{{ $course['date'] }}</td>
-                    <td>{{ $course['name'] }}</td>
-                    <td>{{ $course['event'] }}</td>
-                    <td>{{ $course['count_apply'] }} / <span style="color:red">{{ $course['count_cancel'] }}</span></td>
-                    <td>{{ $course['count_check'] }}</span></td>
-                    <td>
-                      @if( strtotime($course['date']) == strtotime(date("Y-m-d")) )
-                      <!-- 今日場次 -->
-                      <a href="{{ $course['href_check'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">開始報到</button></a>
-                      <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
-                      @elseif( strtotime($course['date']) > strtotime(date("Y-m-d")) )
-                      <!-- 未過場次 -->
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報到</button></a>
-                      <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
-                      @elseif( strtotime($course['date']) < strtotime(date("Y-m-d")) )
-                      <!-- 已過場次 -->
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報到</button></a>
-                      <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                      <a href="{{ $course['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
-                      <a href="{{ $course['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
-                      @endif
-                      <button id="{{ $course['course_id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $course['course_id'] }});" value="{{ $course['course_id'] }}" >刪除</button>
-                    </td>
-                  </tr>
-                @endforeach
+                <tbody>
+                  @foreach($courses as $key => $course )
+                    <tr>
+                      <td>{{ $course['date'] }}</td>
+                      <td>{{ $course['name'] }}</td>
+                      <td>{{ $course['event'] }}</td>
+                      <td>{{ $course['count_apply'] }} / <span style="color:red">{{ $course['count_cancel'] }}</span></td>
+                      <td>{{ $course['count_check'] }}</span></td>
+                      <td>
+                        @if( strtotime($course['date']) == strtotime(date("Y-m-d")) )
+                        <!-- 今日場次 -->
+                        <a href="{{ $course['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">開始報到</button></a>
+                        <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                        <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                        <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
+                        @elseif( strtotime($course['date']) > strtotime(date("Y-m-d")) )
+                        <!-- 未過場次 -->
+                        <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
+                        <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                        <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                        <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
+                        @elseif( strtotime($course['date']) < strtotime(date("Y-m-d")) )
+                        <!-- 已過場次 -->
+                        <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
+                        <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                        <a href="{{ $course['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
+                        <a href="{{ $course['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
+                        @endif
+                        <button id="{{ $course['course_id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $course['course_id'] }});" value="{{ $course['course_id'] }}" >刪除</button>
+                      </td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
@@ -217,6 +217,24 @@
 <!-- Content End -->
 
 <script>
+  // Sandy(2020/02/26) dt列表搜尋 S
+  var table;
+  //針對日期與課程搜尋 Sandy(2020/02/26)
+  $.fn.dataTable.ext.search.push(
+      function( settings, data, dataIndex ) {
+          var date = $('#search_date').val();
+          var name = $('#search_name').val();
+          var tdate = data[0]; 
+          var tname = data[1]; 
+  
+        if ( (isNaN( date ) && isNaN( name )) || ( tdate.includes(date) && isNaN( name ) ) || ( tname.includes(name) && isNaN( date ) ) || ( tname.includes(name) && tname.includes(name) ) )
+          {
+              return true;
+          }
+          return false;
+      }
+  );
+
   $("document").ready(function(){
     // Rocky(2020/01/06)
     $("#import_flie").change(function(){
@@ -224,6 +242,13 @@
       var file = $('#import_flie')[0].files[0].name;
       $(this).prev('label').text(file);
     }); 
+
+    // Sandy (2020/02/26)
+    table = $('#table_list').DataTable({
+        "dom": '<l<t>p>',
+        "ordering": false
+    });
+
   });
 
   // 輸入框 Sandy(2020/02/25)
@@ -237,55 +262,60 @@
         $('#btn_search').click();
     }
   });
+  
+  $("#btn_search").click(function(){
+    table.columns(0).search($('#search_date').val()).columns(1).search($("#search_name").val()).draw();
+  });
+  // Sandy(2020/02/26) dt列表搜尋 E
 
   // Sandy(2020/01/31) 列表搜尋start
-  $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
+  // $.ajaxSetup({
+  //     headers: {
+  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //     }
+  //   });
 
-  $("#btn_search").click(function(e){
-      var search_date = $("#search_date").val();
-      var search_name = $("#search_name").val();
-      $.ajax({
-          type : 'GET',
-          url:'course_search', 
-          dataType: 'json',    
-          data:{
-            // '_token':"{{ csrf_token() }}",
-            search_date: search_date,
-            search_name: search_name
-          },
-          success:function(data){
-            // console.log(data);
-            var res = '';
-            $.each (data, function (key, value) {
-              res +=
-              '<tr>'+
-                  '<td>' + value.date + '</td>'+
-                  '<td>' + value.name + '</td>'+
-                  '<td>' + value.event + '</td>'+
-                  '<td>' + value.count_apply + ' / <span style="color:red">'+ value.count_cancel +'</span></td>'+
-                  '<td>' + value.count_check + '</td>'+
-                  '<td>' + 
-                    '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>'+
-                    '<a href="' + value.href_list + '"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>'+
-                    '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>'+
-                    '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>'+
-                    '<input type="hidden" name="_charset_">'+
-                    '<button id="' + value.id + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + value.id + ');" value="' + value.id + '" >刪除</button>'+
-              '</tr>';
-            });
+  // $("#btn_search").click(function(e){
+  //     var search_date = $("#search_date").val();
+  //     var search_name = $("#search_name").val();
+  //     $.ajax({
+  //         type : 'GET',
+  //         url:'course_search', 
+  //         dataType: 'json',    
+  //         data:{
+  //           // '_token':"{{ csrf_token() }}",
+  //           search_date: search_date,
+  //           search_name: search_name
+  //         },
+  //         success:function(data){
+  //           // console.log(data);
+  //           var res = '';
+  //           $.each (data, function (key, value) {
+  //             res +=
+  //             '<tr>'+
+  //                 '<td>' + value.date + '</td>'+
+  //                 '<td>' + value.name + '</td>'+
+  //                 '<td>' + value.event + '</td>'+
+  //                 '<td>' + value.count_apply + ' / <span style="color:red">'+ value.count_cancel +'</span></td>'+
+  //                 '<td>' + value.count_check + '</td>'+
+  //                 '<td>' + 
+  //                   '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">開始報名</button></a>'+
+  //                   '<a href="' + value.href_list + '"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>'+
+  //                   '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>'+
+  //                   '<a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>'+
+  //                   '<input type="hidden" name="_charset_">'+
+  //                   '<button id="' + value.id + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + value.id + ');" value="' + value.id + '" >刪除</button>'+
+  //             '</tr>';
+  //           });
 
-            $('#table_list').html(res);
-          },
-          error: function(jqXHR){
-             console.log('error: ' + JSON.stringify(jqXHR));
-            // $("main").append('<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">報名狀態修改失敗<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-          }
-      });
-  });
+  //           $('#table_list').html(res);
+  //         },
+  //         error: function(jqXHR){
+  //            console.log('error: ' + JSON.stringify(jqXHR));
+  //           // $("main").append('<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">報名狀態修改失敗<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+  //         }
+  //     });
+  // });
   // Sandy(2020/01/31) 列表搜尋end
 
   // 刪除 Rocky(2020/02/11)

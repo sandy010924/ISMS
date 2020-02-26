@@ -66,7 +66,7 @@ Route::get('error_authority', function () {
     /*** 顯示資料 ***/
     Route::get('course', 'Frontend\CourseController@show')->name('course');
     /*** 顯示資料 Sandy(2020/01/31) ***/
-    Route::get('course_search', 'Frontend\CourseController@search');
+    // Route::get('course_search', 'Frontend\CourseController@search');
     /*** 刪除資料 Rocky(2020/02/11) ***/
     Route::post('course_delete', 'Backend\CourseController@delete');
     /*** 匯入表單 Rocky(2019/12/29) ***/
@@ -81,13 +81,13 @@ Route::get('error_authority', function () {
     })->name('course_form');
 
 
-/*** [課程管理] 查看名單 ***/
+/*** [課程管理] 查詢名單 ***/
     /*** 顯示資料 Sandy (2020/01/15) ***/
     Route::get('course_apply', 'Frontend\CourseApplyController@show')->name('course_apply');
     /*** 更新狀態 Sandy (2020/01/15) ***/
     Route::post('course_apply', 'Backend\CourseApplyController@update');
     /*** 搜尋資料 Sandy (2020/02/03) ***/
-    Route::get('course_apply_search', 'Frontend\CourseApplyController@search');
+    // Route::get('course_apply_search', 'Frontend\CourseApplyController@search');
 
 
 /*** [課程管理] 進階填單名單 ***/
@@ -101,7 +101,7 @@ Route::get('error_authority', function () {
     /*** 顯示資料 ***/
     Route::get('course_list', 'Frontend\CourseListController@show')->name('course_list');
     /*** 搜尋資料 Sandy(2020/02/25) ***/
-    Route::get('course_list_search', 'Frontend\CourseListController@search');
+    // Route::get('course_list_search', 'Frontend\CourseListController@search');
     /*** 刪除資料 Sandy(2020/02/25) ***/
     Route::post('course_list_delete', 'Backend\CourseListController@delete');
 
@@ -135,7 +135,7 @@ Route::get('course_list_edit', function () {
     /*** 顯示資料 Sandy(2020/01/17) ***/
     Route::get('course_today', 'Frontend\CourseTodayController@show')->name('course_today');
     /*** 搜尋資料 Sandy(2020/01/17) ***/
-    Route::get('course_today_search', 'Frontend\CourseTodayController@search');
+    // Route::get('course_today_search', 'Frontend\CourseTodayController@search');
 
 
 /*** [課程管理] 報到 ***/
@@ -302,7 +302,7 @@ Route::get('report_chart', function () {
 /*** 顯示資料 Rocky(2020/02/17) ***/
 Route::get('authority', 'Frontend\AuthorityController@show')->name('authority');
 /*** 搜尋資料 Rocky(2020/02/17) ***/
-Route::get('authority_search', 'Frontend\AuthorityController@search');
+// Route::get('authority_search', 'Frontend\AuthorityController@search');
 /*** 更新資料 Rocky(2020/02/17) ***/
 Route::post('authority_update', 'Backend\AuthorityController@update');
 /*** 新增資料 Rocky(2020/02/17) ***/

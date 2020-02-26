@@ -43,8 +43,8 @@ class CourseApplyController extends Controller
             //     $q->where('id_status', 1)
             //         ->orWhere('id_status', 5);
             // })
-            ->orderByRaw('FIELD(id_status, "4", "3", "5")')
-            ->orderBy('created_at')
+            // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
+            // ->orderBy('created_at', 'DESC')
             ->get();
             
         //報名筆數
@@ -61,32 +61,32 @@ class CourseApplyController extends Controller
     }
     
     // Sandy (2020/02/03)
-    public function search(Request $request)
-    {
-        $id = $request->get('course_id');
-        $search_keyword = $request->get('search_keyword');
+    // public function search(Request $request)
+    // {
+    //     $id = $request->get('course_id');
+    //     $search_keyword = $request->get('search_keyword');
         
-        //報名資訊
-        $courseapplys = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
-            ->join('student', 'student.id', '=', 'sales_registration.id_student')
-            ->join('course', 'course.id', '=', 'sales_registration.id_course')
-            // ->select('sales_registration.id as apply_id' ,'student.*', 'sales_registration.id_status as apply_status_val', 'isms_status.name as status_name')
-            ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'sales_registration.*', 'isms_status.name as status_name', 'course.course_start_at' )
-            ->Where('id_course', '=', $id)
-            ->Where('id_status', '<>', 2)
-            // ->Where('profession', 'like', '%'.$search_keyword.'%')
-            ->where(function($q) use ($search_keyword) { 
-                $q->orWhere('datasource', 'like', '%'.$search_keyword.'%')
-                  ->orWhere('student.name', 'like', '%'.$search_keyword.'%')
-                  ->orWhere('student.phone', 'like', '%'.$search_keyword.'%')
-                  ->orWhere('student.email', 'like', '%'.$search_keyword.'%')
-                  ->orWhere('student.profession', 'like', '%'.$search_keyword.'%');
-            })
-            ->orderByRaw('FIELD(id_status, "4", "3", "5")')
-            ->orderBy('created_at')
-            ->get();
+    //     //報名資訊
+    //     $courseapplys = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+    //         ->join('student', 'student.id', '=', 'sales_registration.id_student')
+    //         ->join('course', 'course.id', '=', 'sales_registration.id_course')
+    //         // ->select('sales_registration.id as apply_id' ,'student.*', 'sales_registration.id_status as apply_status_val', 'isms_status.name as status_name')
+    //         ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'sales_registration.*', 'isms_status.name as status_name', 'course.course_start_at' )
+    //         ->Where('id_course', '=', $id)
+    //         ->Where('id_status', '<>', 2)
+    //         // ->Where('profession', 'like', '%'.$search_keyword.'%')
+    //         ->where(function($q) use ($search_keyword) { 
+    //             $q->orWhere('datasource', 'like', '%'.$search_keyword.'%')
+    //               ->orWhere('student.name', 'like', '%'.$search_keyword.'%')
+    //               ->orWhere('student.phone', 'like', '%'.$search_keyword.'%')
+    //               ->orWhere('student.email', 'like', '%'.$search_keyword.'%')
+    //               ->orWhere('student.profession', 'like', '%'.$search_keyword.'%');
+    //         })
+    //         ->orderByRaw('FIELD(id_status, "4", "3", "5")')
+    //         ->orderBy('created_at')
+    //         ->get();
             
 
-        return Response($courseapplys);
-    }
+    //     return Response($courseapplys);
+    // }
 }
