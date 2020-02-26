@@ -199,6 +199,11 @@ Route::get('course_list_edit', function () {
     /*** 取消黑名單 Rocky(2020/02/23) ***/
     Route::get('blacklist_cancel', 'Backend\BlacklistController@cancel');
 
+/*** [學員管理] 黑名單規則 ***/
+Route::get('blacklist_rule', function () {
+    return view('frontend.blacklist_rule');
+})->name('blacklist_rule');
+
 /*** [學員管理] 細分組 ***/
 Route::get('student_group', function () {
     return view('frontend.student_group');
