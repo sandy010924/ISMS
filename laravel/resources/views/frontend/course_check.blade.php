@@ -238,48 +238,6 @@
           @endforeach
         @endslot
       @endcomponent
-      {{-- <div class="table-responsive">
-        <table id="table_list" class="table table-striped table-sm text-center border rounded-lg">
-          <thead>
-            <tr>
-              <th>編號</th>
-              <th>姓名</th>
-              <th>聯絡電話</th>
-              <th>電子郵件</th>
-              <th>報到</th>
-              <th width="20%">報到備註</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($coursechecks as $key => $coursecheck)
-              <tr>
-                <td class="align-middle">{{ $coursecheck['row']  }}</td>
-                <td scope="row" class="align-middle" name="search_name">{{ $coursecheck['name'] }}</td>
-                <td class="align-middle" name="search_phone">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
-                <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
-                <td class="align-middle">
-                  <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck['check_id'] }}" value="{{ $coursecheck['check_status_val'] }}">{{ $coursecheck['check_status_name'] }}</button>
-                  <div class="btn-group">
-                    <button class="btn btn-sm" type="button" data-toggle="dropdown">
-                      •••
-                    </button>
-                    <div class="dropdown-menu">
-                      <button class="dropdown-item update_status" name="dropdown_check" value="{{ $coursecheck['check_id'] }}" type="button">報到</button>
-                      <button class="dropdown-item update_status" name="dropdown_absent" value="{{ $coursecheck['check_id'] }}" type="button">未到</button>
-                      <button class="dropdown-item update_status" name="dropdown_cancel" value="{{ $coursecheck['check_id'] }}" type="button">取消</button>
-                    </div>
-                  </div>
-                </td>
-                <td class="align-middle">
-                  <!-- 報到備註 -->
-                  <input type="text" class="form-control input-sm checkNote" id="{{ $coursecheck['check_id'] }}" value="{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}">
-                </td>
-              </tr>
-            @endforeach
-          </tbody>
-        </table>
-
-      </div> --}}
     </div>
   </div>
       
@@ -355,6 +313,7 @@
     
     $("#btn_search").click(function(){
       table.search($('#search_keyword').val()).draw();
+      status_onload();
     });
 
     // Sandy(2020/02/05)
