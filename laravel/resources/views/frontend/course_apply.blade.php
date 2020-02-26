@@ -60,7 +60,53 @@
                 </div>
               </div>
           </div>
-          <div class="table-responsive">
+          @component('components.datatable')
+            @slot('thead')
+              <tr>
+                <th>Submission Date</th>
+                <th>名單來源</th>
+                <th>姓名</th>
+                <th>聯絡電話</th>
+                <th>電子郵件</th>
+                <th>目前職業</th>
+                <th>我想在講座中了解的內容</th>
+                @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
+                <!-- 未過場次 -->
+                <th></th>
+                @elseif( strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d")) )
+                <!-- 已過場次 -->
+                <th>報到</th>
+                <th>付款狀態</th>
+                @endif
+              </tr>
+            @endslot
+            @slot('tbody')
+              @foreach($courseapplys as $courseapply)
+                <tr>
+                  <td>{{ $courseapply->submissiondate }}</td>
+                  <td>{{ $courseapply->datasource }}</td>
+                  <td>{{ $courseapply->name }}</td>
+                  {{-- <td>{{ $courseapply->phone }}</td>
+                  <td>{{ $courseapply->email }}</td> --}}
+                  <td>{{ substr_replace($courseapply->phone, '***', 4, 3) }}</td>
+                  <td>{{ substr_replace($courseapply->email, '***', strrpos($courseapply->email, '@')) }}</td>
+                  <td>{{ $courseapply->profession }}</td>
+                  <td>{{ ($courseapply->course_content  == 'null')? '':$courseapply->course_content }}</td>
+                  @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
+                  <!-- 未過場次 -->
+                  <td>
+                    <button type="button" name="apply_btn" class="btn btn-sm text-white update_status" id="{{ $courseapply->id }}" value="{{ $courseapply->id_status }}">{{ $courseapply->status_name }}</button>
+                  </td>
+                  @elseif( strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d")) )
+                  <!-- 已過場次 -->
+                  <td>{{ $courseapply->status_name }}</td>
+                  <td></td>
+                  @endif
+                </tr>
+              @endforeach
+            @endslot
+          @endcomponent
+          {{-- <div class="table-responsive">
             <table id="table_list" class="table table-striped table-sm text-center border rounded-lg">
               <thead>
                 <tr>
@@ -87,8 +133,6 @@
                     <td>{{ $courseapply->submissiondate }}</td>
                     <td>{{ $courseapply->datasource }}</td>
                     <td>{{ $courseapply->name }}</td>
-                    {{-- <td>{{ $courseapply->phone }}</td>
-                    <td>{{ $courseapply->email }}</td> --}}
                     <td>{{ substr_replace($courseapply->phone, '***', 4, 3) }}</td>
                     <td>{{ substr_replace($courseapply->email, '***', strrpos($courseapply->email, '@')) }}</td>
                     <td>{{ $courseapply->profession }}</td>
@@ -107,7 +151,7 @@
                 @endforeach
               </tbody>
             </table>
-          </div>
+          </div> --}}
         </div>
       </div>
 
@@ -138,10 +182,14 @@
           // "ordering": false,
           drawCallback: function(){
             //換頁或切換每頁筆數按鈕觸發報到狀態樣式
-            $('.paginate_button, .dataTables_length', this.api().table().container())          .on('click', function(){
+            $('.paginate_button, .dataTables_length', this.api().table().container()).on('click', function(){
                 status_onload();
             });       
           }
+      });
+      //排序按鈕觸發報到狀態樣式
+      $('#table_list').on( 'order.dt',  function () { 
+        status_onload();
       });
     });
 
