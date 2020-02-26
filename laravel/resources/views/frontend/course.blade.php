@@ -134,7 +134,7 @@
               </div>
             </div>
             <div class="table-responsive">
-              <table id="table_list" class="table table-striped table-sm text-center">
+              <table id="table_list" class="table table-striped table-sm text-center border rounded-lg">
                 <thead>
                   <tr>
                     <th>日期</th>
