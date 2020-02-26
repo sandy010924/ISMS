@@ -104,7 +104,7 @@
                   </button>
                 </div>
                 <div class="modal-body text-left">
-                  <form class="form" action="{{ route('course_check') }}" method="POST">
+                  <form action="{{ url('course_check_insert') }}" name="insert" method="POST" >
                     @csrf
                       <input type="hidden" name="form_course_id" id="form_course_id" value="{{ $course->id }}">
                       <div class="form-group required">

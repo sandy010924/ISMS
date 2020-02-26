@@ -12,7 +12,7 @@ use App\Model\Course;
 class CourseCheckController extends Controller
 {
     //現場報名
-    public function apply(Request $request)
+    public function insert(Request $request)
     {
         try{
             //讀取data

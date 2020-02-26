@@ -144,7 +144,7 @@ Route::get('course_list_edit', function () {
     /*** 搜尋資料 Sandy(2020/01/17) ***/
     Route::get('course_check_search', 'Frontend\CourseCheckController@search');
     /*** 現場報名 Sandy ***/
-    Route::post('course_check', 'Backend\CourseCheckController@apply');
+    Route::post('course_check_insert', 'Backend\CourseCheckController@insert');
     /*** 狀態修改 Sandy ***/
     Route::post('course_check_status', 'Backend\CourseCheckController@update_status');
     /*** 課程資訊修改 Sandy ***/

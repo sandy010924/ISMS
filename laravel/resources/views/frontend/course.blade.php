@@ -32,9 +32,9 @@
                             <label for="import_teacher" class="col-form-label">講師</label>
                             <select class="custom-select" name="import_teacher" id="import_teacher" required>
                               <option selected disabled value="">選擇講師</option>
-                              <option value="1">Julia</option>
-                              <option value="2">Jack</option>
-                              <option value="3">Mark</option>
+                              @foreach($teachers as $teacher)
+                                <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                              @endforeach
                             </select>
                           </div>
                           <div class="form-group required">
