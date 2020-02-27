@@ -75,10 +75,12 @@ Route::get('error_authority', function () {
 
 
 /*** [課程管理]現場正課表單 ***/
-    /*** 顯示資料 ***/
+    /*** 顯示頁面 ***/
     Route::get('course_form', function () {
         return view('frontend.course_form');
     })->name('course_form');
+    /*** 新增資料 Sandy(2020/02/28) ***/
+    Route::post('course_form_insert', 'Backend\CourseFormController@insert');
 
 
 /*** [課程管理] 查詢名單 ***/

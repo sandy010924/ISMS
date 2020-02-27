@@ -316,18 +316,6 @@
       status_onload();
     });
 
-    // Sandy(2020/02/05)
-    // 列表搜尋start
-    // $("#search_keyword").on("keyup", function() {
-    // $('#btn_search').on('click',function(){
-    //   var keyword = $("#search_keyword").val();
-    //   $("#table_list tr").filter(function() {
-    //     var search_phone = $(this).children("td[name='search_phone']").text().toLowerCase();
-    //     var search_name = $(this).children("td[name='search_name']").text().toLowerCase();
-    //     $(this).toggle(search_name.indexOf(keyword) + search_phone.substr(7,3).indexOf(keyword) > -2)
-    //   });
-    // });
-
     // Sandy(2020/01/16)
     // 報到狀態修改 start
     $('body').on('click','.update_status',function(){

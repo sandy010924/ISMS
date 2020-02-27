@@ -9,7 +9,7 @@ $("document").ready(function () {
         (month < 10 ? '0' : '') + month + '-' +
         (day < 10 ? '0' : '') + day;
 
-    $("#rdate").val(output);
+    $("#idate").val(output);
 });
 
 function firstnext() {

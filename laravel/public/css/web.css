@@ -100,8 +100,8 @@
     margin:0 auto;
     background-color: #ffffff;
 }
-#course_form{
-    font-size: 20px;
+#course_form,#course_form input{
+    font-size: 1.1rem;
     color: #000;
 }
 #course_form ul{
