@@ -27,25 +27,53 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-2">
-                <input type="text" class="m-1">                
+              <div class="col-2 ">
+                  <select multiple class="form-control m-1" id="">
+                    <option>60天財富計畫</option>
+                    <option>順勢成交數</option>
+                    <option>零秒成交數</option>
+                  </select>            
               </div>
-              <div class="col-2">
-                <input type="text" class="m-1">                
+              <div class="col-2 px-1">
+                <input type="text" class="m-1 w-100 form-control p-0" name="daterange">                
               </div>
-              <div class="col-2">
-                <input type="text" class="m-1">                
-              </div>
-              <div class="col-2">
-                <input type="text" class="m-1">                
-              </div>
-              <div class="col-2">
-                <input type="text" class="m-1">                
-              </div>
-              <div class="col-2">
-                <button type="button" class="btn btn-secondary btn-sm mx-1">確定</button>
-                <button type="button" class="btn btn-secondary btn-sm mx-1">取消</button>                
-              </div>
+             
+                <div class="col-2 pr-1">
+                  <select class="form-control m-1" id="condition">
+                    <option value="list-information">名單資料</option>
+                    <option value="list-action">名單動作</option>
+                    <option value="tag">標籤</option>
+                  </select>                
+                </div>
+                <div class="col-2 pr-1">
+                  <select class="form-control m-1" id="condition_option1">
+                    <option value="">請選擇</option>
+                    <option>原始來源</option>
+                    <option>最新來源</option>
+                    <option>報名場次</option>
+                    <option>目前職業</option>
+                    <option>居住地址</option>
+                    <option>銷講後最新狀態</option>
+                    <option>想了解的內容</option>
+                  </select>                
+                </div>
+                <div class="col-2 pr-1">
+                  <select class="form-control m-1" id="condition_option2">
+                    <option value="">請選擇</option>
+                    <option>是</option>
+                    <option>未</option>
+                    <option>包含</option>
+                    <option>不包含</option>
+                  </select>                
+                </div>
+                <div class="col-2 pr-3">
+                  <input type="text" class="m-1 form-control" style="display:none;" id="condition_input3">
+                  <select class="form-control m-1" id="condition_option3" style="display:none;">
+                    <option value="">請選擇</option>
+                    
+                  </select>
+                  <button type="button" class="btn btn-primary btn-sm mt-2 float-right ">確定</button>                
+                </div>
             </div>
             <h7 class="ml-1">添加另一條件+</h7>
           </div>
@@ -109,5 +137,64 @@
           </div>
         </div>
 <!-- Content End -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<script>
+//時間範圍
+$(function() {
+  $('input[name="daterange"]').daterangepicker({
+    opens: 'left'
+  }, function(start, end, label) {
+    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+  });
+});
+
+//條件類別判斷
+document.getElementById('condition').onchange=function(){
+  var condition_option1=document.getElementById('condition_option1')
+  ,condition_option2=document.getElementById('condition_option2')
+  ,condition_option3=document.getElementById('condition_option3')
+  ,condition_input3=document.getElementById('condition_input3');
+	
+	if(this.value=='list-information'){
+		condition_option1.innerHTML='<option value="">請選擇</option><option>原始來源</option><option>最新來源</option><option>報名場次</option><option>目前職業</option><option>居住地址</option><option>銷講後最新狀態</option><option>想了解的內容</option>';
+    condition_option2.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option><option>包含</option><option>不包含</option>';
+    condition_input3.style.display='block';
+    condition_option3.style.display='none';
+  }
+  else if(this.value=='list-action'){
+		condition_option1.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option>';
+    condition_option2.innerHTML='<option value="">請選擇</option><option value="present">報到</option><option value="cancel">取消</option><option value="absent">未到</option><option value="pay">交付</option><option value="participate">參與</option><option value="open-mail">打開郵件</option><option value="open-sms">打開簡訊</option>';
+    condition_option3.style.display='block';
+    condition_input3.style.display='none';
+	}
+  else if(this.value=='tag'){
+		condition_option1.innerHTML='<option value="">請選擇</option><option>已分配</option><option>未分配</option>';
+    condition_option2.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option><option>包含</option><option>不包含</option>';
+    condition_input3.style.display='block';
+    condition_option3.style.display='none';
+	}
+};
+
+document.getElementById('condition_option2').onchange=function(){
+if(this.value=='present'||this.value=='cancel'||this.value=='absent'||this.value=='pay'){
+      condition_option3.innerHTML='<option value="">請選擇</option><option>課程選項</option>';
+    }
+    else if(this.value=='participate'){
+      condition_option3.innerHTML='<option value="">請選擇</option><option>課程活動</option>';
+    }
+    else if(this.value=='open-mail'){
+      condition_option3.innerHTML='<option value="">請選擇</option><option>郵件名稱</option>';
+    }
+    else if(this.value=='open-sms'){
+      condition_option3.innerHTML='<option value="">請選擇</option><option>簡訊名稱</option>';
+    }
+}
+</script>
+
 @endsection
+
      
