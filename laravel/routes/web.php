@@ -107,7 +107,6 @@ Route::get('error_authority', function () {
     /*** 刪除資料 Sandy(2020/02/25) ***/
     Route::post('course_list_delete', 'Backend\CourseListController@delete');
 
-
 Route::get('course_list_data', function () {
     return view('frontend.course_list_data');
 })->name('course_list_data');
@@ -191,7 +190,11 @@ Route::get('course_list_edit', function () {
     Route::get('student_delete', 'Backend\StudentController@delete');
     /*** 加入黑名單 Rocky(2020/02/23) ***/
     Route::get('student_addblacklist', 'Backend\StudentController@blacklist');
-
+    /*** 已填表單 Rocky(2020/02/28) ***/
+    Route::post('view_form', 'Frontend\StudentController@viewform');
+    /*** 已填表單-詳細資料 Rocky(2020/02/28) ***/
+    Route::post('view_form_detail', 'Frontend\StudentController@formdetail');
+    
 
 /*** [學員管理] 黑名單 ***/
     /*** 顯示資料 Rocky(2020/02/23) ***/

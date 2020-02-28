@@ -87,7 +87,6 @@
            url:'login',                
            data:{'_token':"{{ csrf_token() }}",uname:uname, psw:psw},
            success:function(data){
-            //  console.log(data);
              switch(data) {
                 case 'admin':
                   window.location.href = "./course_list";

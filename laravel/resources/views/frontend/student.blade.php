@@ -32,9 +32,9 @@
                 <tbody>
                   @foreach($students as $student)
                     <tr>
-                      <td class="align-middle">{{ $student->name }}</td>
-                      <td class="align-middle">{{ $student->phone }}</td>
-                      <td class="align-middle">{{ $student->email }}</td>
+                      <td class="align-middle">{{ $student['name'] }}</td>
+                      <td class="align-middle">{{ $student['phone'] }}</td>
+                      <td class="align-middle">{{ $student['email'] }}</td>
                       <td class="align-middle">
                       </td>
                       <td class="align-middle">
@@ -44,8 +44,8 @@
                             <div class="modal-content p-3">
                               <div class="row">
                                 <div class="col-4 py-2">
-                                  <h5>王曉明</h5>
-                                  <h5>example@gmail.com</h5>
+                                  <h5>{{ $student['name'] }}</h5>
+                                  <h5>{{ $student['email'] }}</h5>
                                 </div>
                                 <div class="col-4">
                                 </div>
@@ -82,6 +82,7 @@
                                   <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_data" role="tab" aria-controls="contact_data" aria-selected="false">聯絡狀況</a>
                                 </li>
                               </ul>
+                              <!-- 完整內容 -->
                               <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active p-3" id="basic_data" role="tabpanel" aria-labelledby="basic-tab">
                                   <div class="row">
@@ -256,11 +257,14 @@
                                   </div>
                                 </div>
                               </div>
+                              <!-- 完整內容 -->
                             </div>
                           </div>
                         </div>
-                        <button id="{{ $student->id }}" class="btn btn-dark btn-sm mx-1" onclick="btn_blacklist({{ $student->id }});" value="{{ $student->id }}" ><i class="fa fa-bug"></i>列入黑名單</button>
-                        <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#form_finished">已填表單</button>
+                        <button id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}" ><i class="fa fa-bug"></i>列入黑名單</button>
+                        <!-- <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#form_finished">已填表單</button> -->
+                        <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
+                        <!-- 已填表單 -->
                         <div class="modal fade bd-example-modal-lg" id="form_finished" tabindex="-1" role="dialog" aria-labelledby="save_newgroupTitle" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content">
@@ -274,16 +278,20 @@
                                 <div class="row">
                                   <div class="col-4">
                                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                        <!-- 已填報名表課程詳細資料 -->
+                                         <!-- <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                                       <a class="nav-link active" id="form_finished1" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="form_finished_content1" aria-selected="true">60天財富計畫報名表</a>
                                       <a class="nav-link" id="form_finished2" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="form_finished_content2" aria-selected="false">自在交易工作坊報名表</a>
                                       <a class="nav-link" id="form_finished3" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="form_finished_content3" aria-selected="false">實戰課程退費表</a>
+                                    </div> -->
                                     </div>
                                   </div>
                                   <div class="col-8">
                                     <div class="tab-content" id="v-pills-tabContent">
-                                      <div class="tab-pane fade show active" id="form_finished_content1" role="tabpanel" aria-labelledby="form_finished1">...</div>
+                                      <!-- 已填報名表詳細資料 -->
+                                           <!-- <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="form_finished1">.fffff.</div>
                                       <div class="tab-pane fade" id="form_finished_content2" role="tabpanel" aria-labelledby="form_finished2">...</div>
-                                      <div class="tab-pane fade" id="form_finished_content3" role="tabpanel" aria-labelledby="form_finished3">...</div>
+                                      <div class="tab-pane fade" id="form_finished_content3" role="tabpanel" aria-labelledby="form_finished3">...</div> -->
                                     </div>
                                   </div>
                                 </div>
@@ -291,22 +299,16 @@
                             </div>
                           </div>
                         </div>
+                        <!-- 已填表單 -->
                         <!-- <button type="button" class="btn btn-secondary btn-sm mx-1">刪除</button> -->
-                        <button id="{{ $student->id }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student->id }});" value="{{ $student->id }}" >刪除</button>
+                        <button id="{{ $student['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student['id'] }});" value="{{ $student['id'] }}" >刪除</button>
                       </td>
                     </tr>
                   @endforeach  
                 </tbody>
               </table>
             </div>
-            <div class="row">
-              <div class="col-md-5"></div>
-              <div class="col-md-4">
-                <div class="pull-right">
-                  {!! $students->appends(Request::except('page'))->render() !!} 
-                </div>
-              </div>
-            </div>
+         
           </div>
         </div>
         <!-- alert Start-->
@@ -343,6 +345,61 @@ $('#search_input').on('keyup', function(e) {
   }
 });
 
+function view_form(id_student){
+  $.ajax({
+          type : 'POST',
+          url:'view_form', 
+          dataType: 'json',    
+          data:{
+            id_student: id_student
+          },
+          success:function(data){
+            var course = '';          
+            $.each(data, function(index,val) {             
+              if (typeof(val['id_payment']) != 'undefined') {
+                // 正課資料
+                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' +  val['id'] +',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
+              } else {
+                // 銷講資料
+                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' +  val['id'] +',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
+              }
+            }); 
+            $('#v-pills-tab').html(course);
+            $("#form_finished").modal('show');                    
+          },
+          error: function(error){
+            console.log(JSON.stringify(error));     
+          }
+      });
+}
+
+function view_form_detail(id,type){
+  $.ajax({
+          type : 'POST',
+          url:'view_form_detail', 
+          dataType: 'json',    
+          data:{
+            id: id,
+            type:type
+          },
+          success:function(data){
+            var detail = '',student = '';
+            console.log(data)
+            $.each(data, function(index,val) {
+              student = '<div style="text-align:left"><b>課程服務報名表</b>'  + '<br>' + '姓名:' + val['name'] + '<br>' + '性別:' + val['sex'] + '<br>' + '身分證字號:' + val['id_identity'] + '<br>' +  
+              '聯絡電話:' + val['phone'] + '<br>' + '電子郵件:' + val['email'] + '<br>' + '出生日期:' + val['birthday'] + '<br>' + 
+              '公司名稱:' + val['company'] + '<br>' + '職業:' + val['profession'] + '<br>' + '聯絡地址:' + val['address'] +
+              '</div>'
+
+              detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + '</div>'
+            }); 
+            $('#v-pills-tabContent').html(detail);       
+          },
+          error: function(error){
+            console.log(JSON.stringify(error));     
+          }
+      });
+}
 /*搜尋 Rocky(2020/02/23)*/
 $("#btn_search").click(function(e){
   var search_data = $("#search_input").val();
