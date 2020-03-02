@@ -161,7 +161,7 @@
                 @endforeach
               @endslot
             @endcomponent     
-            <div class="row">
+            {{-- <div class="row">
               <div class="col-md-5">
               </div>
               <div class="col-md-4">
@@ -169,7 +169,7 @@
                   {!! $datas->appends(Request::except('page'))->render() !!} 
                 </div>
               </div>
-            </div>  
+            </div>   --}}
           </div>
         </div>  
 <!-- Content End -->

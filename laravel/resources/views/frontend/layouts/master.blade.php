@@ -20,13 +20,30 @@
   <link href="{{ asset('css/form.css') }}" rel="stylesheet">
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
   <link href="{{ asset('css/course_list_chart.css') }}" rel="stylesheet">
+
+  <!-- DataTable styles Sandy(2020/02/25) -->
   {{-- <link href="{{ asset('css/dataTables.css') }}" rel="stylesheet"> --}}
-  <link href="{{ asset('css/dataTables.bootstrap4.css') }}" rel="stylesheet">
+  {{-- <link href="{{ asset('css/dataTables.bootstrap4.css') }}" rel="stylesheet"> --}}
   <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
-  <!-- Rocky(2020/01/11) --> <!-- Sandy(2020/01/31) -->
+  <!-- Rocky(2020/01/11) --> <!-- Sandy(2020/02/27) -->
   <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+  <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('js/feather.min.js') }}"></script>
+  
+  <!-- DataTable Sandy(2020/02/25) -->
   <script src="{{ asset('js/dataTables.js') }}"></script>
+  <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script>
+  {{-- <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script> --}}
+
+  <script src="{{ asset('js/popper.min.js') }}" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <!-- tempusdominus Sandy(2020/02/27) -->
+  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('js/moment.min.js') }}"></script>
+  <script src="{{ asset('js/zh-tw.js') }}"></script>
+  <script src="{{ asset('js/tempusdominus-bootstrap-4.js') }}"></script>
+  <link href="{{ asset('css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
+
 </head>
 
 <body>
@@ -51,13 +68,11 @@
       }
     });
   </script>
-  <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('js/feather.min.js') }}"></script>
+  
+  <!-- Web js -->
   <script src="{{ asset('js/style.js') }}"></script>
   <script src="{{ asset('js/otd.js') }}"></script>
-  <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script>
-  <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
-  
+
   <!-- feather icon -->
   <script>
     feather.replace()

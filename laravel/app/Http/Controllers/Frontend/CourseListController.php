@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\Student;
+use App\Model\Teacher;
 use App\Model\SalesRegistration;
 
 class CourseListController extends Controller
@@ -18,6 +19,8 @@ class CourseListController extends Controller
                          ->orderBy('id_teacher', 'desc')
                          ->distinct()
                          ->get();
+
+        $teachers = Teacher::all();
                          
         foreach ($courses as $key => $data) {
             //表單上場次
@@ -61,11 +64,11 @@ class CourseListController extends Controller
                     break;
                 case 3:
                     //三階課程A
-                    $type = '三階課程A';
+                    $type = '三階課程';
                     break;
                 case 4:
                     //三階課程B
-                    $type = '三階課程B';
+                    $type = '活動';
                     break;
                 // case 5:
                 //     //三階課程A+B
@@ -90,8 +93,7 @@ class CourseListController extends Controller
             ];
         }
         
-        return view('frontend.course_list', compact('courses'));
-        return view('frontend.course_list',Response($courses));
+        return view('frontend.course_list', compact('courses','teachers'));
     }
 
     // Sandy (2020/02/25)

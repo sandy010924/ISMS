@@ -106,6 +106,8 @@ Route::get('error_authority', function () {
     // Route::get('course_list_search', 'Frontend\CourseListController@search');
     /*** 刪除資料 Sandy(2020/02/25) ***/
     Route::post('course_list_delete', 'Backend\CourseListController@delete');
+    /*** 新增課程 Sandy(2020/02/27) ***/
+    Route::post('course_list_insert', 'Backend\CourseListController@insert');
 
 Route::get('course_list_data', function () {
     return view('frontend.course_list_data');
