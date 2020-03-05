@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Model\SalesRegistration;
 use App\Model\Student;
 use App\Model\ISMSStatus;
-use App\Model\Course;
 
 class CourseApplyController extends Controller
 {

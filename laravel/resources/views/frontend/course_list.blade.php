@@ -119,7 +119,6 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-secondary mr-3" data-toggle="modal" data-target="#form_new">新增報名表</button>
             </div>
             <div class="col-6 mx-3">
               <div class="input-group">
@@ -161,7 +160,8 @@
                       </div>
                       <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data') }}">場次數據</a>
                       <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit') }}">編輯</a>
-                      <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['all_id'] }});" value="{{ $course['all_id'] }}" >刪除</a>
+                      {{-- <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['all_id'] }});" value="{{ $course['all_id'] }}" >刪除</a> --}}
+                      <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['id'] }});">刪除</a>
                   </td>
                 </tr>
               @endforeach

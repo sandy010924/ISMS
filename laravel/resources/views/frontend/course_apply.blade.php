@@ -16,22 +16,16 @@
             <div class="input-group-prepend">
               <span class="input-group-text">講師名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $course->teacher_name }}" disabled readonly>
+            <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $course->teacher }}" disabled readonly>
           </div>
-          {{-- <h5>
-            講師名稱 : <input type="text" class="mt-2" value="{{ $course->teacher_name }}" readonly>
-          </h5> --}}
         </div>
         <div class="col-5">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text">課程名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->name }}" disabled readonly>
+            <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->course }}" disabled readonly>
           </div>
-          {{-- <h5>
-            課程名稱 : <input type="text" class="mt-2" value="{{ $course->name }}" readonly>
-          </h5> --}}
         </div>
         <hr/>
       </div>
@@ -43,9 +37,9 @@
               <div class="col-8 align-self-center">
                   <h6 class="mb-0">
                     {{ date('Y-m-d', strtotime($course->course_start_at)) }}
-                    ( {{ $week }} )&nbsp;&nbsp;
-                    {{ $course->Events }}&nbsp;
-                    報名筆數 : {{ $count_apply }}&nbsp;
+                    ( {{ $week }} )&nbsp;
+                    {{ $course->name }}&nbsp;&nbsp;
+                    報名筆數 : {{ $count_apply }}&nbsp;&nbsp;
                     取消筆數 : {{ $count_cancel }}
                   </h6>
               </div>

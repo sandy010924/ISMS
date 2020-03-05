@@ -10,12 +10,12 @@
     <div class="card-body">
       <div class="row mb-3 align-items-center">
         <div class="col-6">
-          <input type="hidden" id="course_id" value="{{ $course->id }}">
+          <input type="hidden" id="event_id" value="{{ $course->id }}">
           <h6 class="mb-0">
-            {{ $course->name }}&nbsp;&nbsp;
+            {{ $course->course }}&nbsp;&nbsp;
             {{ date('Y-m-d', strtotime($course->course_start_at)) }}
             ( {{ $week }} )&nbsp;&nbsp;
-            {{ $course->Events }}
+            {{ $course->name }}
           </h6>
         </div>
         <div class="col text-right">
@@ -106,7 +106,7 @@
                 <div class="modal-body text-left">
                   <form action="{{ url('course_check_insert') }}" name="insert" method="POST" >
                     @csrf
-                      <input type="hidden" name="form_course_id" id="form_course_id" value="{{ $course->id }}">
+                      <input type="hidden" name="form_event_id" id="form_event_id" value="{{ $course->id }}">
                       <div class="form-group required">
                         <label for="new_name" class="col-form-label">姓名</label>
                         <input type="text" class="form-control" name="new_name" id="new_name" required>
@@ -174,20 +174,20 @@
             </div>
           </div>
 
-          <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">二階報名表</button>
+          <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">下階報名表</button>
           {{-- <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a> --}}
           <!-- 二階報名表 modal -->
           <div class="modal fade" id="nextForm" tabindex="-1" role="dialog" aria-labelledby="nextFormLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="nextFormLabel">二階報名表</h5>
+                  <h5 class="modal-title" id="nextFormLabel">下階報名表</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <a href="{{ route('course_form') }}">
+                  <a href="{{ route('course_form',['id'=>$course->id]) }}">
                     <img class="img-thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/QRcode_image.svg/1200px-QRcode_image.svg.png"/>
                   </a>
                 </div>
@@ -456,13 +456,13 @@
     });
 
     function save_data(data, data_type, data_id){
-      var course_id = $("#course_id").val();
+      var event_id = $("#event_id").val();
       var data_val = data.val();
       $.ajax({
         type:'POST',
         url:'course_check_data',
         data:{
-          course_id: course_id,
+          event_id: event_id,
           data_type: data_type, 
           data_val: data_val,
           data_id: data_id

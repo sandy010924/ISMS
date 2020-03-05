@@ -332,17 +332,17 @@ class CourseController extends Controller
     public function delete(Request $request)
     {
         $status = "";
-        $id_course = $request->get('id_course');
+        $id_events = $request->get('id_events');
 
         // 查詢是否有該筆資料
-        $course = Course::where('id', $id_course)->get();
+        $course = EventsCourse::where('id', $id_events)->get();
 
-        $sales_registration = SalesRegistration::where('id_course', $id_course)->get();
+        $sales_registration = SalesRegistration::where('id_events', $id_events)->get();
 
         // 刪除資料
         if (!empty($course) && !empty($sales_registration)) {
-            $sales_registration = SalesRegistration::where('id_course', $id_course)->delete();
-            $course = Course::where('id', $id_course)->delete();
+            $sales_registration = SalesRegistration::where('id_events', $id_events)->delete();
+            $course = EventsCourse::where('id', $id_events)->delete();
             $status = "ok";
         } else {
             $status = "error";
