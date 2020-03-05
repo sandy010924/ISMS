@@ -23,11 +23,9 @@ Route::post('user', 'Frontend\LoginController@show');
 
 
 /*
-------------
-|
+|--------------------------------------------------------------------------
 | 登入
-|
-------------
+|--------------------------------------------------------------------------
 */
 Route::get('/', function () {
     return view('frontend.login');
@@ -41,11 +39,9 @@ Route::get('logout', 'Frontend\LoginController@logout')->name('logout');
 
 
 /*
-------------
-|
+|--------------------------------------------------------------------------
 | Error
-|
-------------
+|--------------------------------------------------------------------------
 */
 /*** 權限不足頁面 ***/
 Route::get('error_authority', function () {
@@ -55,11 +51,9 @@ Route::get('error_authority', function () {
 
 
 /*
-------------
-|
+|--------------------------------------------------------------------------
 | 課程管理
-|
-------------
+|--------------------------------------------------------------------------
 */
 
 /*** [課程管理] ***/
@@ -113,29 +107,29 @@ Route::get('error_authority', function () {
     /*** 新增課程 Sandy(2020/02/27) ***/
     Route::post('course_list_insert', 'Backend\CourseListController@insert');
 
-Route::get('course_list_data', function () {
-    return view('frontend.course_list_data');
-})->name('course_list_data');
+    Route::get('course_list_data', function () {
+        return view('frontend.course_list_data');
+    })->name('course_list_data');
 
-Route::get('course_list_apply', function () {
-    return view('frontend.course_list_apply');
-})->name('course_list_apply');
+    Route::get('course_list_apply', function () {
+        return view('frontend.course_list_apply');
+    })->name('course_list_apply');
 
-Route::get('course_list_refund', function () {
-    return view('frontend.course_list_refund');
-})->name('course_list_refund');
+    Route::get('course_list_refund', function () {
+        return view('frontend.course_list_refund');
+    })->name('course_list_refund');
 
-Route::get('course_list_view', function () {
-    return view('frontend.course_list_view');
-})->name('course_list_view');
+    Route::get('course_list_view', function () {
+        return view('frontend.course_list_view');
+    })->name('course_list_view');
 
-Route::get('course_list_chart', function () {
-    return view('frontend.course_list_chart');
-})->name('course_list_chart');
+    Route::get('course_list_chart', function () {
+        return view('frontend.course_list_chart');
+    })->name('course_list_chart');
 
-Route::get('course_list_edit', function () {
-    return view('frontend.course_list_edit');
-})->name('course_list_edit');
+    Route::get('course_list_edit', function () {
+        return view('frontend.course_list_edit');
+    })->name('course_list_edit');
 
 
 /*** [課程管理] 今日課程 ***/
@@ -200,30 +194,33 @@ Route::get('course_list_edit', function () {
     Route::post('view_form', 'Frontend\StudentController@viewform');
     /*** 已填表單-詳細資料 Rocky(2020/02/28) ***/
     Route::post('view_form_detail', 'Frontend\StudentController@formdetail');
+    /*** 完整內容-基本資料 Rocky(2020/02/29) ***/
+    Route::post('course_data', 'Frontend\StudentController@coursedata');
+    /*** 完整內容-聯絡狀況 Rocky(2020/03/01) ***/
+    Route::post('contact_data', 'Frontend\StudentController@contactdata');
+    
 
 
 /*** [學員管理] 黑名單 ***/
-    /*** 顯示資料 Rocky(2020/02/23) ***/
-    Route::get('student_blacklist', 'Frontend\BlacklistController@show')->name('student_blacklist');
-    /*** 搜尋資料 Rocky(2020/02/23) ***/
-    Route::get('blacklist_search', 'Frontend\BlacklistController@search')->name('blacklist_search');
-    /*** 取消黑名單 Rocky(2020/02/23) ***/
-    Route::get('blacklist_cancel', 'Backend\BlacklistController@cancel');
+     /*** 顯示資料 Rocky(2020/02/23) ***/
+     Route::get('student_blacklist', 'Frontend\BlacklistController@show')->name('student_blacklist');
+     /*** 搜尋資料 Rocky(2020/02/23) ***/
+     Route::get('blacklist_search', 'Frontend\BlacklistController@search')->name('blacklist_search');
+     /*** 取消黑名單 Rocky(2020/02/23) ***/
+     Route::get('blacklist_cancel', 'Backend\BlacklistController@cancel');
+     /*** 自動新增黑名單學員 Rocky(2020/02/23) ***/
+     Route::post('blacklist_add', 'Backend\BlacklistController@add');
 
-/*** [學員管理] 黑名單規則 ***/
-Route::get('blacklist_rule', function () {
-    return view('frontend.blacklist_rule');
-})->name('blacklist_rule');
 
-/*** [學員管理] 細分組 ***/
-Route::get('student_group', function () {
-    return view('frontend.student_group');
-})->name('student_group');
+    /*** [學員管理] 細分組 ***/
+    Route::get('student_group', function () {
+        return view('frontend.student_group');
+    })->name('student_group');
 
-/*** [學員管理] 細分組編輯 ***/
-Route::get('student_group_edit', function () {
-    return view('frontend.student_group_edit');
-})->name('student_group_edit');
+    /*** [學員管理] 細分組編輯 ***/
+    Route::get('student_group_edit', function () {
+        return view('frontend.student_group_edit');
+    })->name('student_group_edit');
 
 
 
@@ -234,14 +231,14 @@ Route::get('student_group_edit', function () {
 |
 ------------
 */
-/*** [財務管理] ***/
-Route::get('finance', function () {
-    return view('frontend.finance');
-})->name('finance');
-/*** [財務管理] 查看報表 ***/
-Route::get('finance_return', function () {
-    return view('frontend.finance_return');
-})->name('finance_return');
+    /*** [財務管理] ***/
+    Route::get('finance', function () {
+        return view('frontend.finance');
+    })->name('finance');
+    /*** [財務管理] 查看報表 ***/
+    Route::get('finance_return', function () {
+        return view('frontend.finance_return');
+    })->name('finance_return');
 
 
 /*
@@ -251,20 +248,20 @@ Route::get('finance_return', function () {
 |
 ------------
 */
-/*** [訊息推播] ***/
-Route::get('message', function () {
-    return view('frontend.message');
-})->name('message');
+    /*** [訊息推播] ***/
+    Route::get('message', function () {
+        return view('frontend.message');
+    })->name('message');
 
-/*** [訊息推播] 訊息列表 ***/
-Route::get('message_list', function () {
-    return view('frontend.message_list');
-})->name('message_list');
+    /*** [訊息推播] 訊息列表 ***/
+    Route::get('message_list', function () {
+        return view('frontend.message_list');
+    })->name('message_list');
 
-/*** [訊息推播] 詳細內容 ***/
-Route::get('message_data', function () {
-    return view('frontend.message_data');
-})->name('message_data');
+    /*** [訊息推播] 詳細內容 ***/
+    Route::get('message_data', function () {
+        return view('frontend.message_data');
+    })->name('message_data');
 
 
 
@@ -275,20 +272,20 @@ Route::get('message_data', function () {
 |
 ------------
 */
-/*** [數據報表] ***/
-Route::get('report', function () {
-    return view('frontend.report');
-})->name('report');
+    /*** [數據報表] ***/
+    Route::get('report', function () {
+        return view('frontend.report');
+    })->name('report');
 
-/*** [數據報表] 場次數據 ***/
-Route::get('report_data', function () {
-    return view('frontend.report_data');
-})->name('report_data');
+    /*** [數據報表] 場次數據 ***/
+    Route::get('report_data', function () {
+        return view('frontend.report_data');
+    })->name('report_data');
 
-/*** [數據報表] 完整內容 ***/
-Route::get('report_chart', function () {
-    return view('frontend.report_chart');
-})->name('report_chart');
+    /*** [數據報表] 完整內容 ***/
+    Route::get('report_chart', function () {
+        return view('frontend.report_chart');
+    })->name('report_chart');
 
 
 
@@ -310,13 +307,27 @@ Route::get('report_chart', function () {
 | 權限管理
 |--------------------------------------------------------------------------
 */
-/*** 顯示資料 Rocky(2020/02/17) ***/
-Route::get('authority', 'Frontend\AuthorityController@show')->name('authority');
-/*** 搜尋資料 Rocky(2020/02/17) ***/
-// Route::get('authority_search', 'Frontend\AuthorityController@search');
-/*** 更新資料 Rocky(2020/02/17) ***/
-Route::post('authority_update', 'Backend\AuthorityController@update');
-/*** 新增資料 Rocky(2020/02/17) ***/
-Route::post('authority_insert', 'Backend\AuthorityController@insert');
-/*** 刪除資料 Rocky(2020/02/17) ***/
-Route::post('authority_delete', 'Backend\AuthorityController@delete');
+    /*** 顯示資料 Rocky(2020/02/17) ***/
+    Route::get('authority', 'Frontend\AuthorityController@show')->name('authority');
+    /*** 搜尋資料 Rocky(2020/02/17) ***/
+    // Route::get('authority_search', 'Frontend\AuthorityController@search');
+    /*** 更新資料 Rocky(2020/02/17) ***/
+    Route::post('authority_update', 'Backend\AuthorityController@update');
+    /*** 新增資料 Rocky(2020/02/17) ***/
+    Route::post('authority_insert', 'Backend\AuthorityController@insert');
+    /*** 刪除資料 Rocky(2020/02/17) ***/
+    Route::post('authority_delete', 'Backend\AuthorityController@delete');
+
+
+/*
+|--------------------------------------------------------------------------
+| 黑名單規則
+|--------------------------------------------------------------------------
+*/
+    Route::get('blacklist_rule', function () {
+        return view('frontend.blacklist_rule');
+    })->name('blacklist_rule');
+    /*** 顯示資料 Rocky(2020/03/01) ***/
+    Route::post('blacklist_rule', 'Frontend\BlacklistRuleController@show');
+    /*** 更新資料 Rocky(2020/03/01) ***/
+    Route::post('blacklist_rule_update', 'Backend\BlacklistRuleController@update');

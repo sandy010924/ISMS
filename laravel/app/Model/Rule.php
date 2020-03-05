@@ -12,5 +12,7 @@ class Rule extends Model
         'type',
         'name',
         'regulation',
+        'rule_value',
+        'rule_status',
     ];
 }

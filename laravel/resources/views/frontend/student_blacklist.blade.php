@@ -66,6 +66,7 @@
 
 <script>
   $("document").ready(function(){
+    btn_blackadd();
   // 學員管理搜尋 (只能輸入數字、字母、_、.、@)
   $('#search_input').on('blur', function() {
       // console.log(`search_input: ${$(this).val()}`);
@@ -97,7 +98,7 @@ $("#btn_search").click(function(e){
   });
 });
 
-/*加入黑名單 Rocky(2020/02/23)*/
+/*取消黑名單 Rocky(2020/02/23)*/
 function btn_blacklist(id_blacklist){
   $.ajax({
       type : 'GET',
@@ -107,7 +108,6 @@ function btn_blacklist(id_blacklist){
         id_blacklist: id_blacklist
       },
       success:function(data){
-        console.log(data)
         if (data['data'] == "ok") {                           
           /** alert **/
           $("#success_alert_text").html("取消成功");
@@ -119,6 +119,36 @@ function btn_blacklist(id_blacklist){
           $("#error_alert_text").html("取消失敗");
           fade($("#error_alert"));       
         }           
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));   
+
+        /** alert **/ 
+        $("#error_alert_text").html("刪除資料失敗");
+        fade($("#error_alert"));       
+      }
+  });
+}
+
+/*新增黑名單 Rocky(2020/03/01)*/
+function btn_blackadd(){
+  $.ajax({
+      type : 'post',
+      url:'blacklist_add', 
+      dataType: 'json',    
+      success:function(data){
+        console.log(data)
+        // if (data['data'] == "ok") {                           
+        //   /** alert **/
+        //   $("#success_alert_text").html("取消成功");
+        //   fade($("#success_alert"));
+
+        //   location.reload();
+        // }　else {
+        //   /** alert **/ 
+        //   $("#error_alert_text").html("取消失敗");
+        //   fade($("#error_alert"));       
+        // }           
       },
       error: function(error){
         console.log(JSON.stringify(error));   

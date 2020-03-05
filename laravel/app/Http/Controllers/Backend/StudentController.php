@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\Model\Student;
 use App\Model\Blacklist;
 use App\Model\SalesRegistration;
+use App\Model\Payment;
+use App\Model\Registration;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,14 +20,19 @@ class StudentController extends Controller
 
         // 查詢是否有該筆資料
         $student = Student::where('id', $id_student)->get();
-
+        $registration = Registration::where('id_student', $id_student)->get();
         $sales_registration = SalesRegistration::where('id_student', $id_student)->get();
- 
-
+        $payment = Payment::where('id_student', $id_student)->get();
+        
+        
          // 刪除資料
-        if (!empty($student) && !empty($sales_registration)) {
+        
+        if (!empty($student) || !empty($sales_registration) || !empty($payment) || !empty($registration)) {
             $sales_registration = SalesRegistration::where('id_student', $id_student)->delete();
+            $registration= Registration::where('id_student', $id_student)->delete();
+            $payment= Payment::where('id_student', $id_student)->delete();
             $student = Student::where('id', $id_student)->delete();
+            
             $status = "ok";
         } else {
             $status = "error";
