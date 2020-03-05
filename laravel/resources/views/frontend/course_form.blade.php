@@ -8,7 +8,7 @@
 
   <!-- Bootstrap core CSS -->
   <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
- 
+
   <!-- Fontawesome Icon -->
   <link href="{{ asset('font-awesome/css/all.css') }}" rel="stylesheet">
 
@@ -19,7 +19,7 @@
 </head>
 
 <body>
-  
+
 {{-- <div class="container-fluid"> --}}
   <main role="main" class="mw-100">
     {{-- <form id=""> --}}
@@ -93,8 +93,8 @@
               <div class="form-group mb-5">
                 <label for="ibirthday">
                   <b>出生日期</b>
-                </label>           
-                <input type="date" id="ibirthday" name="ibirthday" class="form-control" required>                     
+                </label>
+                <input type="date" id="ibirthday" name="ibirthday" class="form-control" required>
               </div>
               <div class="form-group mb-5">
                 <label for="icompany">
@@ -167,7 +167,7 @@
                 </div>
                 <hr>
                 <p style="text-align: center;"> <strong><span style="font-size: 18pt;">自在交易工作坊</span></strong></p>
-                <p style="text-align: center;"><strong><span style="font-size: 18pt;">一般方案：998,00</span></strong></p>                    
+                <p style="text-align: center;"><strong><span style="font-size: 18pt;">一般方案：998,00</span></strong></p>
               </div>
               <div class="form-group mb-5">
                 <label for="ijoin">
@@ -325,12 +325,12 @@
                 <textarea readonly style="width: 100%; height: 200px; font-size: 18px;">
                   如您於繳交費用後無法參加課程，請保留此表單備分內容。(報名完成會寄到您填寫的email)
                   申請之退費方式、款項如下：
-                  ★5日內全額退費(繳費後隔日起算)  
-                  ★第6日起：課程費用80%(繳交費用未達20%者，恕不辦理退費) 
+                  ★5日內全額退費(繳費後隔日起算)
+                  ★第6日起：課程費用80%(繳交費用未達20%者，恕不辦理退費)
                   ★第31日起或開課後：恕不辦理退費。
                 </textarea>
               </div>
-              <hr>      
+              <hr>
               <div class="form-group mb-5">
                 <p>
                   <input type="checkbox" name="agree" id="agree_check3" onchange="check()" />
@@ -345,7 +345,13 @@
                 <p>
                   本人保證上述資料之真實性並願遵守本「課程服務合約」之內容(請簽中文正楷)
                 </p>
-                <textarea readonly style="width: 100%; height: 200px; font-size: 18px;">
+                <!-- 電子簽章 -->
+                <div>
+                  <canvas style="border:1px solid;" id="signature_pad" class="signature_pad" width=700 height=300></canvas>
+                </div>
+                <div>
+                  <button type="button" id="signature_pad_clear" style="margin:10px 0px;">清除</button>
+                </div>
                 </textarea>
               </div>
               {{-- <button type="button" class="btn btn-dark w-25 mt-3 float-left" onclick="fifthlast(),topFunction()">上一步</button>
@@ -400,56 +406,56 @@
                   <b>出生日期</b>
                 </label>
                 <br/>
-                <label id="rbirthday" name="rbirthday" readonly>1980-1-1</label>                         
+                <label id="rbirthday" name="rbirthday" readonly>1980-1-1</label>
               </div>
               <div class="form-group mb-5">
                 <label for="rcompany">
                   <b>公司名稱</b>
                 </label>
                 <br/>
-                <label id="rcompany" name="rcompany" readonly>無極限</label> 
+                <label id="rcompany" name="rcompany" readonly>無極限</label>
               </div>
               <div class="form-group mb-5">
                 <label for="rprofession">
                   <b>職業</b>
                 </label>
                 <br/>
-                <label id="rprofession" name="rprofession" readonly>資訊業</label> 
+                <label id="rprofession" name="rprofession" readonly>資訊業</label>
               </div>
               <div class="form-group mb-5">
                 <label for="raddress">
                   <b>聯絡地址</b>
                 </label>
                 <br/>
-                <label id="raddress" name="raddress" readonly>中壢</label> 
+                <label id="raddress" name="raddress" readonly>中壢</label>
               </div>
               <div class="form-group mb-5">
                 <label for="rjoin">
                   <b>我想參加課程</b>
                 </label>
                 <br/>
-                <label id="rjoin" name="rjoin" readonly>現場最優惠價格</label> 
+                <label id="rjoin" name="rjoin" readonly>現場最優惠價格</label>
               </div>
               <div class="form-group mb-5">
                 <label for="rpay">
                   <b>付款方式</b>
                 </label>
                 <br/>
-                <label id="rpay" name="rpay" readonly>現金</label> 
+                <label id="rpay" name="rpay" readonly>現金</label>
               </div>
               <div class="form-group mb-5">
                 <label for="rcash">
                   <b>付款金額</b>
                 </label>
                 <br/>
-                <label id="rcash" name="rcash" readonly>1000</label> 
+                <label id="rcash" name="rcash" readonly>1000</label>
               </div>
               <div class="form-group mb-5">
                 <label for="rnumber">
                   <b>匯款帳號/卡號後五碼</b>
                 </label>
                 <br/>
-                <label id="rnumber" name="rnumber" readonly>55332</label> 
+                <label id="rnumber" name="rnumber" readonly>55332</label>
               </div>
               <div class="form-group mb-5">
                 <label for="rinvoice">
@@ -458,24 +464,24 @@
                 <br/>
                 <label id="rinvoice" name="rinvoice" readonly>
                   二聯式
-                </label> 
+                </label>
               </div>
               <div class="form-group mb-5">
                 <label for="num">
                   <b>統編</b>
                 </label>
                 <br/>
-                <label id="num" name="num" readonly>38424596</label> 
+                <label id="num" name="num" readonly>38424596</label>
               </div>
               <div class="form-group mb-5">
                 <label for="rcompanytitle">
                   <b>抬頭</b>
                 </label>
                 <br/>
-                <label id="rcompanytitle" name="rcompanytitle" readonly>無極限</label> 
+                <label id="rcompanytitle" name="rcompanytitle" readonly>無極限</label>
               </div>
               <button type="button" class="btn btn-dark w-25 mt-3 float-left" onclick="sixthlast(),topFunction()">上一步</button>
-              <button type="submit" class="btn btn-dark w-25 mt-3 float-right" >確認報名</button>
+              <button id="confirmRegistration" type="submit" class="btn btn-dark w-25 mt-3 float-right" >確認報名</button>
             </div>   --}}
           </div>
         </form>
@@ -491,7 +497,7 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  @elseif (session('status') == "匯入失敗" || session('status') == "請選檔案/填講師姓名")  
+  @elseif (session('status') == "匯入失敗" || session('status') == "請選檔案/填講師姓名")
   <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
     {{ session('status') }}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -504,4 +510,40 @@
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('js/feather.min.js') }}"></script>
 <script src="{{ asset('js/form.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<script src="{{ asset('js/signature.js') }}"></script>
+
+<script>
+  /**
+   * 待改寫，submit會驗證require，然後不要直接送出!!
+   * 要驗證有無簽名 才可以送出
+   */
+
+  $('#confirmRegistration').on('click', function() {
+    // 驗證有無簽章
+    if(signaturePad.isEmpty()) {
+      alert("請中文正楷簽章!");
+      return false ;
+    } else {
+      var canvas = document.getElementById('signature_pad');
+      var dataURL = canvas.toDataURL();
+      $.ajax({
+        type: "POST",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "signature",
+        data: {
+          imgBase64: dataURL
+        }
+      }).done(function(res) {
+        console.log(res);
+      });
+    }
+
+
+  });
+
+</script>
+
 </html>

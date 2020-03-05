@@ -28,7 +28,7 @@ class CourseController extends Controller
             $int_pay = 0;               // 付款方式
             $int_account = 0;           // 卡號
             $int_text = 0;              // 想聽到...內容
-            
+
             // 宣告變數
             $id_course = "";            // 課程ID
             $id_student = "";           // 學員ID
@@ -86,7 +86,7 @@ class CourseController extends Controller
 
             // 取得標題
             $headings = (new HeadingRowImport)->toArray($path);
-            
+
             // 抓取欄位順序
             for ($i = 0; $i < count($headings[0][0]); $i++) {
                 $value = $headings[0][0][$i];
@@ -131,7 +131,7 @@ class CourseController extends Controller
 
             foreach ($excel_data as $key => $data) {
                 $submissiondate = intval(($data[$int_submissiondate] - 25569) * 3600 * 24);     // Submission Date
-               
+
                 $course = new Course;
                 $student = new Student;
                 $SalesRegistration = new SalesRegistration;
@@ -181,23 +181,23 @@ class CourseController extends Controller
 
                     $stime = str_replace(" ", "", explode("-", $data[$int_coursedata]));
                     $etime = strchr($data[$int_coursedata], "-");
-                    
+
                     // 課程日期
                     $date = mb_substr($stime[0], 0, 10, 'utf8');
-                    
+
                     // 判斷課程日期要抓到哪個位置
                     if (strpos($date, '（') != false || strpos($date, '(') != false) {
                         // 包含(
                         $date = mb_substr($stime[0], 0, 9, 'utf8');
                     }
-                    
+
                     // 課程開始時間
                     $time_start = date('Y-m-d H:i:s', strtotime($date.mb_substr($stime[0], -4, 4, 'utf8'))).PHP_EOL;
 
                      // 課程結束時間
                      $str_time_end = $date.mb_substr($etime, 1, 5, 'utf8');
                      $time_end = date('Y-m-d H:i:s', strtotime($str_time_end)).PHP_EOL;
-                    
+
 
                     if (strpos($str_time_end, '（') != false || strpos($str_time_end, '(') != false) {
                         // 包含(
@@ -213,7 +213,7 @@ class CourseController extends Controller
                                     ->where('events', $events)
                                     ->where('course_start_at', $time_start)
                                     ->get();
-               
+
                 if (count($check_course) != 0) {
                     foreach ($check_course as $data_course) {
                         $id_course = $data_course ->id;
@@ -234,7 +234,7 @@ class CourseController extends Controller
 
 
                 /*學員報名資料 - S*/
-                
+
                 // 檢查學生資料
                 if (count($check_student) != 0) {
                     foreach ($check_student as $data_student) {
@@ -253,7 +253,7 @@ class CourseController extends Controller
                     if ($int_address != "0") {
                         $student->address       = $data[$int_address];  // 居住地
                     }
-                    
+
                     $student->save();
                     $id_student = $student->id;
                 }
@@ -264,7 +264,7 @@ class CourseController extends Controller
                 $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
                                                                 -> where('id_course', $id_course)
                                                                 ->get();
-         
+
                 // 檢查是否報名過
                 if (count($check_SalesRegistration) == 0 && $id_student != "") {
                     // 新增銷售講座報名資料
@@ -289,7 +289,7 @@ class CourseController extends Controller
                             $SalesRegistration->account         = $data[$int_account];          // 帳號/卡號後五碼
                         }
                         $SalesRegistration->course_content  = $data[$int_text];                 // 想聽到的課程有哪些
-                        
+
                         $SalesRegistration->save();
                         $id_SalesRegistration = $SalesRegistration->id;
                     }
@@ -316,16 +316,16 @@ class CourseController extends Controller
      {
          $status = "";
          $id_course = $request->get('id_course');
- 
+
          // 查詢是否有該筆資料
          $course = Course::where('id',$id_course)->get();
- 
+
          $sales_registration = SalesRegistration::where('id_course',$id_course)->get();
- 
+
           // 刪除資料
          if(!empty($course) && !empty($sales_registration)){
              $sales_registration = SalesRegistration::where('id_course',$id_course)->delete();
-             $course = Course::where('id',$id_course)->delete();            
+             $course = Course::where('id',$id_course)->delete();
             $status = "ok";
          } else {
              $status = "error";

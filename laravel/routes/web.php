@@ -25,7 +25,7 @@ Route::post('user', 'Frontend\LoginController@show');
 /*
 ------------
 |
-| 登入 
+| 登入
 |
 ------------
 */
@@ -43,7 +43,7 @@ Route::get('logout', 'Frontend\LoginController@logout')->name('logout');
 /*
 ------------
 |
-| Error 
+| Error
 |
 ------------
 */
@@ -57,7 +57,7 @@ Route::get('error_authority', function () {
 /*
 ------------
 |
-| 課程管理 
+| 課程管理
 |
 ------------
 */
@@ -74,6 +74,7 @@ Route::get('error_authority', function () {
     // Route::get('course', 'CourseController@uploadPage')->name('course');
 
 
+
 /*** [課程管理]現場正課表單 ***/
     /*** 顯示頁面 ***/
     Route::get('course_form', function () {
@@ -81,6 +82,9 @@ Route::get('error_authority', function () {
     })->name('course_form');
     /*** 新增資料 Sandy(2020/02/28) ***/
     Route::post('course_form_insert', 'Backend\CourseFormController@insert');
+
+    /*** joanna 後端下載電子簽章圖片 ***/
+    Route::post('signature', 'Backend\CourseFormController@signature');
 
 
 /*** [課程管理] 查詢名單 ***/
@@ -196,7 +200,7 @@ Route::get('course_list_edit', function () {
     Route::post('view_form', 'Frontend\StudentController@viewform');
     /*** 已填表單-詳細資料 Rocky(2020/02/28) ***/
     Route::post('view_form_detail', 'Frontend\StudentController@formdetail');
-    
+
 
 /*** [學員管理] 黑名單 ***/
     /*** 顯示資料 Rocky(2020/02/23) ***/
