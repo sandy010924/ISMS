@@ -38,20 +38,20 @@
                       <td class="align-middle">
                       </td>
                       <td class="align-middle">
-                        <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#student_information">完整內容</button>
-                        <div class="modal fade bd-example-modal-lg text-left" id="student_information" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                        <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
+                        <div class="modal fade bd-example-modal-lg text-left" id="student_information_{{ $student['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                           <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content p-3">
                               <div class="row">
-                                <div class="col-4 py-2">
+                                <div class="col-5 py-2">
                                   <h5>{{ $student['name'] }}</h5>
                                   <h5>{{ $student['email'] }}</h5>
                                 </div>
                                 <div class="col-4">
                                 </div>
                                 <div class="col-4 py-3">
-                                    <h7>加入日期 : 2019年8月5日 15:21</h7><br>
-                                    <h7>原始來源 : ad</h7>
+                                    <h7>加入日期 : {{ $student['created_at']->format('yy/m/d') }}</h7><br>
+                                    <h7>原始來源 : {{ $student['datasource']}}</h7>
                                 </div>
                               </div>
                               <div class="row">
@@ -73,18 +73,18 @@
                               </div>
                               <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
-                                  <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic_data" role="tab" aria-controls="basic_data" aria-selected="true">基本訊息</a>
+                                  <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic_data_{{ $student['id'] }}" role="tab" aria-controls="basic_data" aria-selected="true">基本訊息</a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" id="history-tab" data-toggle="tab" href="#history_data" role="tab" aria-controls="history_data" aria-selected="false">歷史互動</a>
+                                  <a class="nav-link" id="history-tab" data-toggle="tab" href="#history_data_{{ $student['id'] }}" role="tab" aria-controls="history_data" aria-selected="false" onclick="history_data({{ $student['id'] }});">歷史互動</a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_data" role="tab" aria-controls="contact_data" aria-selected="false">聯絡狀況</a>
+                                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_data_{{ $student['id'] }}" role="tab" aria-controls="contact_data" aria-selected="false" onclick="contact_data({{ $student['id'] }});">聯絡狀況</a>
                                 </li>
                               </ul>
                               <!-- 完整內容 -->
                               <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active p-3" id="basic_data" role="tabpanel" aria-labelledby="basic-tab">
+                                <div class="tab-pane fade show active p-3" id="basic_data_{{ $student['id'] }}" role="tabpanel" aria-labelledby="basic-tab">
                                   <div class="row">
                                     <div class="col-6">
                                       <div class="row">
@@ -93,7 +93,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text">最新來源</span>
                                             </div>
-                                            <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                            <input type="text" name="new_datasource" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
                                           </div>
                                         </div>
                                         <div class="col-6">
@@ -101,7 +101,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text">職業</span>
                                             </div>
-                                            <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                            <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" value="{{ $student['profession'] }}" readonly>
                                           </div>
                                         </div>
                                       </div>
@@ -109,25 +109,25 @@
                                         <div class="input-group-prepend">
                                           <span class="input-group-text ">銷講報名場次</span>
                                         </div>
-                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                        <input type="text" name="course_sales_events" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
                                       </div>
                                       <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">想了解的內容</span>
                                         </div>
-                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                        <input type="text" name="course_content" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
                                       </div>
                                       <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">銷講後報名狀況</span>
                                         </div>
-                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                        <input type="text" name="course_sales_status" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
                                       </div>
                                       <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">居住地址</span>
                                         </div>
-                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" value="{{ $student['address'] }}" aria-describedby="#" readonly>
                                       </div>
                                     </div>
                                     <div class="col-6">
@@ -135,7 +135,7 @@
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">正課報名場次</span>
                                         </div>
-                                        <input type="text" class="form-control bg-white basic-inf demo2" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="60天財富計畫 自在交易-完成" readonly>
+                                        <input type="text" name="course_events" class="form-control bg-white basic-inf demo2" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="123" readonly>
                                       </div>
                                       <div class="input-group mb-3">
                                         <div class="input-group-prepend">
@@ -155,20 +155,21 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-3">
-                                      <h7>銷講報名次數 : 5</h7>
+                                      <h7 name="count_sales_ok"></h7>
                                     </div>
                                     <div class="col-3">
-                                      <h7>銷講報到率 : 50%</h7>
+                                      <h7 name="sales_successful_rate"> </h7>
                                     </div>
                                     <div class="col-3">
-                                      <h7>銷講取消次數 : 1</h7>
+                                      <h7 name="count_sales_no"></h7>
                                     </div>
                                     <div class="col-3">
-                                      <h7>銷講取消率 : 20%</h7>
+                                      <h7 name="sales_cancel_rate"></h7>
                                     </div>
                                   </div>
                                 </div>
-                                <div class="tab-pane fade" id="history_data" role="tabpanel" aria-labelledby="history-tab">
+                                <!-- 歷史互動 -->
+                                <div class="tab-pane fade" id="history_data_{{ $student['id'] }}" role="tabpanel" aria-labelledby="history-tab">
                                   <div class="table-responsive">
                                     <table class="table table-striped table-sm text-center">
                                       <thead>
@@ -193,7 +194,10 @@
                                     </table>
                                   </div>
                                 </div>
-                                <div class="tab-pane fade" id="contact_data" role="tabpanel" aria-labelledby="contact-tab">
+                                <!-- 歷史互動 -->
+
+                                <!-- 聯絡狀況 -->
+                                <div class="tab-pane fade" id="contact_data_{{ $student['id'] }}" role="tabpanel" aria-labelledby="contact-tab">
                                   <div class="table-responsive">
                                     <table class="table table-striped table-sm text-center">
                                       <thead>
@@ -256,6 +260,7 @@
                                     </table>
                                   </div>
                                 </div>
+                                 <!-- 聯絡狀況 -->
                               </div>
                               <!-- 完整內容 -->
                             </div>
@@ -345,61 +350,193 @@ $('#search_input').on('keyup', function(e) {
   }
 });
 
+/* 已填表單 -S Rocky(2020/02/29 */
+
+// 課程
 function view_form(id_student){
   $.ajax({
-          type : 'POST',
-          url:'view_form', 
-          dataType: 'json',    
-          data:{
-            id_student: id_student
-          },
-          success:function(data){
-            var course = '';          
-            $.each(data, function(index,val) {             
-              if (typeof(val['id_payment']) != 'undefined') {
-                // 正課資料
-                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' +  val['id'] +',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
-              } else {
-                // 銷講資料
-                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' +  val['id'] +',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
-              }
-            }); 
-            $('#v-pills-tab').html(course);
-            $("#form_finished").modal('show');                    
-          },
-          error: function(error){
-            console.log(JSON.stringify(error));     
+      type : 'POST',
+      url:'view_form', 
+      dataType: 'json',    
+      data:{
+        id_student: id_student
+      },
+      success:function(data){
+        var course = '';          
+        $.each(data, function(index,val) {             
+          if (typeof(val['id_payment']) != 'undefined') {
+            // 正課資料
+            course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' +  val['id'] +',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
+          } else {
+            // 銷講資料
+            course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' +  val['id'] +',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
           }
-      });
+        }); 
+        $('#v-pills-tab').html(course);
+        $("#form_finished").modal('show');                    
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));     
+      }
+  });
 }
 
+// 課程詳細資料
 function view_form_detail(id,type){
   $.ajax({
-          type : 'POST',
-          url:'view_form_detail', 
-          dataType: 'json',    
-          data:{
-            id: id,
-            type:type
-          },
-          success:function(data){
-            var detail = '',student = '';
-            console.log(data)
-            $.each(data, function(index,val) {
-              student = '<div style="text-align:left"><b>課程服務報名表</b>'  + '<br>' + '姓名:' + val['name'] + '<br>' + '性別:' + val['sex'] + '<br>' + '身分證字號:' + val['id_identity'] + '<br>' +  
-              '聯絡電話:' + val['phone'] + '<br>' + '電子郵件:' + val['email'] + '<br>' + '出生日期:' + val['birthday'] + '<br>' + 
-              '公司名稱:' + val['company'] + '<br>' + '職業:' + val['profession'] + '<br>' + '聯絡地址:' + val['address'] +
-              '</div>'
+    type : 'POST',
+    url:'view_form_detail', 
+    dataType: 'json',    
+    data:{
+      id: id,
+      type:type
+    },
+    success:function(data){
+      var detail = '',student = '',payment = '';
+      // console.log(data)
+      $.each(data, function(index,val) {
+        // 學員資料
+        student = '<div style="text-align:left"><b>課程服務報名表</b>'  + '<br>' + '姓名:' + val['name'] + '<br>' + '性別:' + val['sex'] + '<br>' + '身分證字號:' + val['id_identity'] + '<br>' +  
+        '聯絡電話:' + val['phone'] + '<br>' + '電子郵件:' + val['email'] + '<br>' + '出生日期:' + val['birthday'] + '<br>' + 
+        '公司名稱:' + val['company'] + '<br>' + '職業:' + val['profession'] + '<br>' + '聯絡地址:' + val['address'] +
+        '</div>'
 
-              detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + '</div>'
-            }); 
-            $('#v-pills-tabContent').html(detail);       
-          },
-          error: function(error){
-            console.log(JSON.stringify(error));     
+        if (type == 1) {
+          var pay_model = '';
+          // 正課
+
+          // 付款方式
+          switch(val['pay_model']) {
+            case '0':
+              pay_model = '現金'
+              break;
+            case '1':
+              pay_model = '匯款'
+              break;
+            case '2':
+              pay_model = '刷卡:輕鬆付'
+              break;
+            case '3':
+              pay_model = '刷卡:一次付'
+              break;
           }
-      });
+
+          // 繳款明細        
+          payment = '<hr/><div style="text-align:left;padding-top: 1%;"><b>繳款明細</b>'  + '<br>' + '付款金額:' + val['cash'] + '<br>' + '付款方式:' +   pay_model + '<br>' + '卡號後五碼:' + val['number'] + '<br>' +  
+          '服務人員:' + val['person'] + '<br>' + '統編:' + val['number_taxid'] + '<br>' + '抬頭:' + val['companytitle'] +
+          '</div>'          
+        }
+        
+        detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + payment + '</div>'
+      }); 
+      $('#v-pills-tabContent').html(detail);       
+    },
+    error: function(error){
+      console.log(JSON.stringify(error));     
+    }
+    });
 }
+/* 已填表單 -E Rocky(2020/02/29 */
+
+/* 完整內容 -S Rocky(2020/02/29 */
+
+// 基本訊息
+function course_data(id_student){
+  $.ajax({
+      type : 'POST',
+      url:'course_data', 
+      dataType: 'json',    
+      data:{
+        id_student: id_student
+      },
+      success:function(data){
+        console.log(data)
+        // 銷講報到率
+        var sales_successful_rate ='0',course_cancel_rate = '0';
+        if (data['count_sales_ok'] != 0) {
+          sales_successful_rate = (data['count_sales_ok'] / data['count_sales'] *100).toFixed(0)
+        }
+        
+        // 銷講取消率
+        if (data['count_sales_no'] != 0) {
+          course_cancel_rate = (data['count_sales_no'] / data['count_sales'] *100).toFixed(0)
+        } 
+
+        // 銷講      
+        $('input[name="new_datasource"]').val(data['datasource']);
+        $('input[name="course_sales_events"]').val(data['course_sales_events']);
+        $('input[name="course_content"]').val(data['course_content']);
+        $('input[name="course_sales_status"]').val(data['status']);
+        $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['count_sales_ok']);        
+        $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
+        $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['count_sales_no']);
+        $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
+        
+        // 正課
+        $('input[name="course_events"]').val(data['course_events']);
+        
+
+        $("#student_information_" + id_student ).modal('show');                    
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));     
+      }
+  });
+}
+
+// 歷史互動
+function history_data(id_student) {
+  console.log(id_student);
+}
+// 聯絡狀況
+function contact_data(id_student) {
+  console.log(id_student);
+
+  $.ajax({
+      type : 'POST',
+      url:'contact_data', 
+      dataType: 'json',    
+      data:{
+        id_student: id_student
+      },
+      success:function(data){
+        // console.log(data)
+        // // 銷講報到率
+        // var sales_successful_rate ='0',course_cancel_rate = '0';
+        // if (data['count_sales_ok'] != 0) {
+        //   sales_successful_rate = (data['count_sales_ok'] / data['count_sales'] *100).toFixed(0)
+        // }
+        
+        // // 銷講取消率
+        // if (data['count_sales_no'] != 0) {
+        //   course_cancel_rate = (data['count_sales_no'] / data['count_sales'] *100).toFixed(0)
+        // } 
+
+        // // 銷講      
+        // $('input[name="new_datasource"]').val(data['datasource']);
+        // $('input[name="course_sales_events"]').val(data['course_sales_events']);
+        // $('input[name="course_content"]').val(data['course_content']);
+        // $('input[name="course_sales_status"]').val(data['status']);
+        // $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['count_sales_ok']);        
+        // $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
+        // $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['count_sales_no']);
+        // $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
+        
+        // // 正課
+        // $('input[name="course_events"]').val(data['course_events']);
+        
+
+        // $("#student_information_" + id_student ).modal('show');                    
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));     
+      }
+  });
+  // $("#contact_data_" + id_student ).modal('show'); 
+}
+/* 完整內容 -E Rocky(2020/02/29 */
+
+
 /*搜尋 Rocky(2020/02/23)*/
 $("#btn_search").click(function(e){
   var search_data = $("#search_input").val();
