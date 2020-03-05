@@ -306,7 +306,7 @@ ALTER TABLE `rule` ADD COLUMN rule_value VARCHAR(40) NULL COMMENT '規則Value';
 ALTER TABLE `rule` ADD COLUMN rule_status VARCHAR(40) NULL COMMENT '狀態(0:關閉,1:啟動)';
 
 -- 規則資料表 - 新增資料(2020/03/01)
-INSERT INTO rule (`type`,`name`,`regulation`,`rule_value`,`rule_status`)  VALUES ('0','單一課程累積_未到幾次','0','0','1')
+INSERT INTO rule (`type`,`name`,`regulation`,`rule_value`,`rule_status`)  VALUES ('0','單一課程累積_未到幾次','0','0','1');
 INSERT INTO rule (`type`,`name`,`regulation`,`rule_value`,`rule_status`)  VALUES ('0','單一課程累積_取消幾次','0','1','1');
 INSERT INTO rule (`type`,`name`,`regulation`,`rule_value`,`rule_status`)  VALUES ('0','單一課程累積_未到+取消幾次','0','2','1');
 INSERT INTO rule (`type`,`name`,`regulation`,`rule_value`,`rule_status`)  VALUES ('0','單一課程累積_出席幾次但未留單','0','3','1');
@@ -316,7 +316,7 @@ INSERT INTO rule (`type`,`name`,`regulation`,`rule_value`,`rule_status`)  VALUES
 
 
 
-----------------------------------------大改版(2020/03/04)--------------------------------------------------
+-- 大改版(2020/03/04)--------------------------------------------------
 
 -- 修改student欄位大小 - email 
 ALTER TABLE student CHANGE COLUMN email email VARCHAR(150) null COMMENT 'email';
