@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\Student;
 use App\Model\SalesRegistration;
+use App\Model\EventsCourse;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
 
@@ -31,13 +32,16 @@ class CourseController extends Controller
 
             // 宣告變數
             $id_course = "";            // 課程ID
+            $id_events = "";            // 場次ID
             $id_student = "";           // 學員ID
             $id_SalesRegistration = ""; // 銷講ID
             $events = "";               // 場次
             $location = "";             // 場次+地址
             $address = "";              // 地址
             $time_start = "";           // 課程開始
-            $time_end = "";           // 課程結束
+            $time_end = "";             // 課程結束
+            $check_excel_status = "0";  // 檢查是不是第一次執行function
+            $check_course = "";         // 檢查是否有重複課程
             // 宣告縣市變數
             $city = array(
                 '0' => '基隆',
@@ -132,6 +136,7 @@ class CourseController extends Controller
             foreach ($excel_data as $key => $data) {
                 $submissiondate = intval(($data[$int_submissiondate] - 25569) * 3600 * 24);     // Submission Date
 
+                $events_course = new EventsCourse;
                 $course = new Course;
                 $student = new Student;
                 $SalesRegistration = new SalesRegistration;
@@ -194,9 +199,9 @@ class CourseController extends Controller
                     // 課程開始時間
                     $time_start = date('Y-m-d H:i:s', strtotime($date.mb_substr($stime[0], -4, 4, 'utf8'))).PHP_EOL;
 
-                     // 課程結束時間
-                     $str_time_end = $date.mb_substr($etime, 1, 5, 'utf8');
-                     $time_end = date('Y-m-d H:i:s', strtotime($str_time_end)).PHP_EOL;
+                    // 課程結束時間
+                    $str_time_end = $date.mb_substr($etime, 1, 5, 'utf8');
+                    $time_end = date('Y-m-d H:i:s', strtotime($str_time_end)).PHP_EOL;
 
 
                     if (strpos($str_time_end, '（') != false || strpos($str_time_end, '(') != false) {
@@ -207,13 +212,15 @@ class CourseController extends Controller
 
                 /*課程資料 - S*/
 
-                // 新增課程資料(只新增一筆資料)
-                $check_course = $course::where('name', $name)
-                                    ->where('location', $address)
-                                    ->where('events', $events)
-                                    ->where('course_start_at', $time_start)
+                // 新增課程資料(只新增一筆資料) 2020/03/05
+                if ($check_excel_status == "0") {
+                    $check_course = $course::where('name', $name)
+                                    // ->where('location', $address)
+                                    // ->where('events', $events)
+                                    // ->where('course_start_at', $time_start)
                                     ->get();
-
+                }
+                // 如果有此課程就新增一筆資料
                 if (count($check_course) != 0) {
                     foreach ($check_course as $data_course) {
                         $id_course = $data_course ->id;
@@ -221,16 +228,26 @@ class CourseController extends Controller
                 } elseif ($check != 1) {
                     $course->id_teacher       = $id_teacher;    // 講師ID
                     $course->name             = $name;          // 課程名稱
-                    $course->location         = $address;       // 課程地點
-                    $course->events           = $events;        // 課程場次
-                    $course->course_start_at  = $time_start;    // 課程開始時間
-                    $course->course_end_at    = $time_end;      // 課程結束時間
-                    $course->memo             = '';             // 課程備註
                     $course->type             = '1';            // 課程類型:(1:銷講,2:2階正課,3:3階正課)
                     $course->save();
                     $id_course = $course->id;
                 }
                 /*課程資料 - E*/
+
+                /* 場次資料 (2020/03/05) - S*/
+                if (!empty($id_course)) {
+                    $events_course->id_course        = $id_course;    // 課程ID
+                    $events_course->name             = $name;          // 場次名稱
+                    $events_course->location         = $address;       // 課程地點
+                    $events_course->events           = $events;        // 課程場次
+                    $events_course->course_start_at  = $time_start;    // 課程開始時間
+                    $events_course->course_end_at    = $time_end;      // 課程結束時間
+                    $events_course->memo             = '';             // 課程備註
+                    $events_course->save();
+                    $id_events = $events_course->id;
+                }
+                /* 場次資料 - E*/
+
 
 
                 /*學員報名資料 - S*/
@@ -272,7 +289,8 @@ class CourseController extends Controller
                         $date = gmdate('Y-m-d H:i:s', $submissiondate);
                         $SalesRegistration->submissiondate   = $date;                           // Submission Date
                         $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
-                        $SalesRegistration->id_student      = $id_student;                      // 學員ID
+                        $SalesRegistration->id_student       = $id_student;                     // 學員ID
+                        $SalesRegistration->id_events        =$id_events;                       // 場次ID
                         if ($check == 1) {
                             // 我很遺憾
                             $SalesRegistration->id_status    = 2;                               // 報名狀態ID
@@ -311,25 +329,25 @@ class CourseController extends Controller
         }
     }
 
-     // Rocky (2020/02/11)
-     public function delete(Request $request)
-     {
-         $status = "";
-         $id_course = $request->get('id_course');
+    // Rocky (2020/02/11)
+    public function delete(Request $request)
+    {
+        $status = "";
+        $id_course = $request->get('id_course');
 
-         // 查詢是否有該筆資料
-         $course = Course::where('id',$id_course)->get();
+        // 查詢是否有該筆資料
+        $course = Course::where('id', $id_course)->get();
 
-         $sales_registration = SalesRegistration::where('id_course',$id_course)->get();
+        $sales_registration = SalesRegistration::where('id_course', $id_course)->get();
 
-          // 刪除資料
-         if(!empty($course) && !empty($sales_registration)){
-             $sales_registration = SalesRegistration::where('id_course',$id_course)->delete();
-             $course = Course::where('id',$id_course)->delete();
+        // 刪除資料
+        if (!empty($course) && !empty($sales_registration)) {
+            $sales_registration = SalesRegistration::where('id_course', $id_course)->delete();
+            $course = Course::where('id', $id_course)->delete();
             $status = "ok";
-         } else {
-             $status = "error";
-         }
-         return json_encode(array('data' => $status));
-     }
+        } else {
+            $status = "error";
+        }
+        return json_encode(array('data' => $status));
+    }
 }
