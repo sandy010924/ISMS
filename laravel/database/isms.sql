@@ -419,5 +419,39 @@ ADD FOREIGN KEY (id_debt) REFERENCES debt(id);
 ALTER TABLE `registration` DROP COLUMN `person`;
 
 
+-- refund   退費資料表
+CREATE TABLE IF NOT EXISTS `refund`(
+   `id` INT  AUTO_INCREMENT COMMENT 'ID',
+   `id_registration` INT COMMENT '正課報名ID', 
+   `id_student` INT COMMENT '學員ID', 
+   `submissiondate` timestamp  NULL COMMENT 'SubmissionDate',
+   `refund_date` timestamp  NULL COMMENT '申請退費日期',
+   `name_student` VARCHAR(100)  NULL COMMENT '姓名',
+   `phone` VARCHAR(100)  NULL COMMENT '連絡電話',
+   `email` VARCHAR(100)  NULL COMMENT 'email',
+   `name_course` VARCHAR(150)  NULL COMMENT '申請退款課程',
+   `refund_reason` VARCHAR(65535)  NULL COMMENT '退費原因',
+   `pay_model` VARCHAR(50)  NULL COMMENT '當時付款方式',
+   `account` VARCHAR(30)  NULL COMMENT '帳號/卡號後五碼',
+   `created_at` timestamp not NULL default  CURRENT_TIMESTAMP	 COMMENT '創建日期',
+   `updated_at` timestamp not NULL default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
+   PRIMARY KEY ( `id` ),
+   FOREIGN KEY (id_student) REFERENCES student (id),
+   FOREIGN KEY (id_registration) REFERENCES registration (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- 新增狀態資料
+INSERT INTO isms_status (`name`,`type`)  VALUES ('留單','2');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('完款','2');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('付訂','2');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('退費','2');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('付訂','1');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('完款','1');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('待追','1');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('退款中','1');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('退款完成','1');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('無意願','1');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('推薦其他講師','1');
 
 

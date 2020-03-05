@@ -16,7 +16,7 @@ class CourseController extends Controller
     // Rocky (2019/12/29)
     public function upload(Request $request)
     {
-        try {
+        // try {
             // 宣告欄位順序變數 Rocky(2020/02/05)
             $int_submissiondate = 0;    // Submission Date
             $int_form = 0;              // 表單來源
@@ -239,7 +239,6 @@ class CourseController extends Controller
                     $events_course->id_course        = $id_course;    // 課程ID
                     $events_course->name             = $name;          // 場次名稱
                     $events_course->location         = $address;       // 課程地點
-                    $events_course->events           = $events;        // 課程場次
                     $events_course->course_start_at  = $time_start;    // 課程開始時間
                     $events_course->course_end_at    = $time_end;      // 課程結束時間
                     $events_course->memo             = '';             // 課程備註
@@ -324,9 +323,9 @@ class CourseController extends Controller
             } else {
                 return redirect('course')->with('status', '匯入失敗');
             }
-        } catch (\Exception $e) {
-            return redirect('course')->with('status', '匯入失敗');
-        }
+        // } catch (\Exception $e) {
+        //     return redirect('course')->with('status', '匯入失敗');
+        // }
     }
 
     // Rocky (2020/02/11)
