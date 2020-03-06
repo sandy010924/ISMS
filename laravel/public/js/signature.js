@@ -1,5 +1,5 @@
 var signaturePad = new SignaturePad(document.getElementById('signature_pad'), {
-  backgroundColor: '#EFD6AC',
+  backgroundColor: '#fff',
   penColor: 'black'
 });
 
@@ -8,7 +8,6 @@ var cancelButton = document.getElementById('signature_pad_clear');
 cancelButton.addEventListener('click', function (event) {
   signaturePad.clear();
 });
-
 
 /*
 

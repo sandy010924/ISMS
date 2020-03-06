@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Student;
 use App\Model\Course;
+use App\Model\EventsCourse;
 use App\Model\Payment;
 use App\Model\Registration;
 
@@ -35,10 +36,11 @@ class CourseFormController extends Controller
 
         $student = new Student;
         $course = new Course;
+        $events = new EventsCourse;
         $payment = new Payment;
         $registration = new Registration;
 
-
+        
         //判斷系統是否已有該學員資料
         $check_student = $student::where('phone', $phone)->get();
 
@@ -63,31 +65,26 @@ class CourseFormController extends Controller
             if ($address != "") {
                 $student->address       = $address;  // 居住地
             }
-
+            
             $student->save();
             $id_student = $student->id;
         }
         /*學員報名資料 - E*/
 
 
-        /*課程資料 - S*/
+        /*課程場次資料 - S*/
 
         // 新增課程資料(新增課程還沒好暫時用的)
         $check_course = $course::where('name', '60天財富計畫')
-                            ->where('location', '台北市中山區松江路131號7樓')
-                            ->where('events', '台北場')
-                            ->where('course_start_at', '2020-01-14 09:00:00')
+                            // ->where('location', '台北市中山區松江路131號7樓')
+                            // ->where('events', '台北場')
+                            // ->where('course_start_at', '2020-01-14 09:00:00')
                             ->get();
-
+        
         if (count($check_course) == 0) {
-            $course->id_teacher       = '1';    // 講師ID
+            $course->id_teacher       = '1';                    // 講師ID
             $course->name             = '60天財富計畫';          // 課程名稱
-            $course->location         = '台北市中山區松江路131號7樓';       // 課程地點
-            $course->events           = '台北場';        // 課程場次
-            $course->course_start_at  = '2020-01-14 09:00:00';    // 課程開始時間
-            $course->course_end_at    = '2020-01-14 12:00:00';      // 課程結束時間
-            $course->memo             = '';             // 課程備註
-            $course->type             = '2';            // 課程類型:(1:銷講,2:2階正課,3:3階正課)
+            $course->type             = '2';                    // 課程類型:(1:銷講,2:2階正課,3:3階正課)
             $course->save();
             $id_course = $course->id;
         }else {
@@ -95,6 +92,38 @@ class CourseFormController extends Controller
                 $id_course = $data_course ->id;
             }
         }
+
+        // 新增場次資料(新增課程還沒好暫時用的)
+        $check_events = $events::where('course_start_at', '2020-01-14 09:00:00')
+                            // ->where('location', '台北市中山區松江路131號7樓')
+                            // ->where('events', '台北場')
+                            // ->where('course_start_at', '2020-01-14 09:00:00')
+                            ->get();
+        
+        if (count($check_course) == 0) {
+            $events->id_course           = $id_course;        // 課程場次
+            $events->name             = '台北場';        // 課程場次
+            $events->location         = '台北市中山區松江路131號7樓';       // 課程地點
+            $events->money              = '';                // 現場完款
+            $events->money_fivedays     = '';                // 五日內完款
+            $events->money_installment  = '';                // 分期付款
+            $events->memo               = '';                // 課程備註
+            $events->host               = '';                // 主持開場
+            $events->closeorder         = '';                // 結束收單
+            $events->weather            = '';                // 天氣
+            $events->staff              = '';                // 工作人員
+            $events->course_start_at  = '2020-01-14 09:00:00';    // 課程開始時間
+            $events->course_end_at    = '2020-01-14 12:00:00';      // 課程結束時間
+            $events->memo             = '';             // 課程備註
+            $events->save();
+            $id_events = $events->id;
+        }else {
+            foreach ($check_events as $data_events) {
+                $id_events = $data_events ->id;
+            }
+        }
+        
+
         /*課程資料 - E*/
 
 
@@ -110,10 +139,10 @@ class CourseFormController extends Controller
         $payment->type_invoice   = $type_invoice;    // 統一發票
         $payment->number_taxid   = $number_taxid;    // 統編
         $payment->companytitle   = $companytitle;    // 抬頭
-
+        
         $payment->save();
         $id_payment = $payment->id;
-
+        
         /*繳款資料 - E*/
 
 
@@ -122,7 +151,7 @@ class CourseFormController extends Controller
         $check_registration = $registration::where('id_student', $id_student)
                                             ->where('id_course', $id_course)
                                             ->get();
-
+    
         // 檢查是否報名過
         if (count($check_registration) == 0 && $id_student != "") {
             // 新增正課報名資料
@@ -132,13 +161,14 @@ class CourseFormController extends Controller
                 $registration->id_course       = $id_course;           // 課程ID
                 $registration->id_status       = 1;                    // 報名狀態ID
                 $registration->id_payment      = $id_payment;          // 繳款明細ID
-
+                
                 $registration->amount_payable       = '';              // 應付金額
                 $registration->amount_paid          = '';              // 已付金額
-                $registration->person  = '';                           // 追單人員
                 $registration->memo  = '';                             // 備註
                 $registration->sign  = '';                             // 簽名檔案
-
+                $registration->status_payment  = 6;                             // 簽名檔案
+                $registration->id_events       = $id_events;           // 場次ID
+                
                 $registration->save();
                 $id_registration = $registration->id;
             }
@@ -147,16 +177,16 @@ class CourseFormController extends Controller
                 $id_registration = $data_registration ->id;
             }
         }
-
+        
         /*正課報名資料 - E*/
-        if ($id_student != "" && $id_course != "" && $id_registration != "") {
-            return redirect()->route('course_form', ['id' => $id_course])->with('status', '報名成功');
+        if ($id_student != "" && $id_course != " "&& $id_events != "" && $id_registration != "") {
+            // return redirect()->route('course_form', ['id' => $id_course])->with('status', '報名成功');
+            return 'success';
         } else {
-            return redirect()->route('course_form', ['id' => $id_course])->with('status', '報名失敗');
+            // return redirect()->route('course_form', ['id' => $id_course])->with('status', '報名失敗');
+            return 'error';
         }
     }
-
-
 
      // joanna 下載電子簽章圖片
      public function signature(Request $request) {
