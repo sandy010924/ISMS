@@ -236,8 +236,8 @@ class CourseController extends Controller
 
                 /* 場次資料 (2020/03/05) - S*/
                 if (!empty($id_course)) {
-                    $events_course->id_course        = $id_course;    // 課程ID
-                    $events_course->name             = $name;          // 場次名稱
+                    $events_course->id_course        = $id_course;     // 課程ID
+                    $events_course->name             = $events;        // 場次名稱
                     $events_course->location         = $address;       // 課程地點
                     $events_course->course_start_at  = $time_start;    // 課程開始時間
                     $events_course->course_end_at    = $time_end;      // 課程結束時間
