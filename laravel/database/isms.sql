@@ -412,8 +412,8 @@ CREATE TABLE IF NOT EXISTS `debt`(
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 增加正課資料表欄位 - 追單ID
-ALTER TABLE `registration` ADD COLUMN id_debt INT NOT NULL COMMENT '追單ID',
-ADD FOREIGN KEY (id_debt) REFERENCES debt(id);
+-- ALTER TABLE `registration` ADD COLUMN id_debt INT NOT NULL COMMENT '追單ID',
+-- ADD FOREIGN KEY (id_debt) REFERENCES debt(id);
 
 -- 刪除正課資料表欄位
 ALTER TABLE `registration` DROP COLUMN `person`;
@@ -455,3 +455,14 @@ INSERT INTO isms_status (`name`,`type`)  VALUES ('無意願','1');
 INSERT INTO isms_status (`name`,`type`)  VALUES ('推薦其他講師','1');
 
 
+-- 增加追單資料表欄位 - 正課報名ID
+ALTER TABLE `debt` ADD COLUMN id_registration INT NOT NULL COMMENT '正課報名ID',
+ADD FOREIGN KEY (id_registration) REFERENCES registration(id);
+
+
+-- 刪除正課資料表欄位
+-- ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_6`;
+-- ALTER TABLE `registration` DROP COLUMN `id_debt`;
+
+-- 新增正課表單資料欄位 - 我想參加課程
+ALTER TABLE `registration` ADD COLUMN join VARCHAR(20) NULL COMMENT '我想參加課程(0:現場最優惠價格,1:五日內優惠價格)';
