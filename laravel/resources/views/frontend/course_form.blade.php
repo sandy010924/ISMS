@@ -178,11 +178,11 @@
               </label>
               <div class="d-block my-2">
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ijoin1" name="ijoin" class="custom-control-input" value="現場最優惠價格" checked>
+                  <input type="radio" id="ijoin1" name="ijoin" class="custom-control-input" value="0" checked>
                   <label class="custom-control-label" for="ijoin1">現場最優惠價格</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ijoin2" name="ijoin" class="custom-control-input" value="五日內優惠價格">
+                  <input type="radio" id="ijoin2" name="ijoin" class="custom-control-input" value="1">
                   <label class="custom-control-label" for="ijoin2">五日內優惠價格</label>
                 </div>
               </div>
@@ -213,19 +213,19 @@
               </label>
               <div class="d-block my-2">
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ipay_model1" name="ipay_model" class="custom-control-input" value="現金" checked>
+                  <input type="radio" id="ipay_model1" name="ipay_model" class="custom-control-input" value="0" checked>
                   <label class="custom-control-label" for="ipay_model1">現金</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ipay_model2" name="ipay_model" class="custom-control-input" value="匯款">
+                  <input type="radio" id="ipay_model2" name="ipay_model" class="custom-control-input" value="1">
                   <label class="custom-control-label" for="ipay_model2">匯款</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ipay_model3" name="ipay_model" class="custom-control-input" value="刷卡：輕鬆付">
+                  <input type="radio" id="ipay_model3" name="ipay_model" class="custom-control-input" value="2">
                   <label class="custom-control-label" for="ipay_model3">刷卡：輕鬆付</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ipay_model4" name="ipay_model" class="custom-control-input" value="刷卡：一次付">
+                  <input type="radio" id="ipay_model4" name="ipay_model" class="custom-control-input" value="3">
                   <label class="custom-control-label" for="ipay_model4">刷卡：一次付</label>
                 </div>
               </div>
@@ -238,8 +238,8 @@
               <label class="text-secondary px-2 py-1"><small>（實際金額以財務確認為準）</small></label>
             </div>
             <hr>
-            <div style="margin:20px auto;">
-              <p style="text-align: center;"><span style="font-size: 18pt;">匯款資訊</span></p>
+            <div class="my-2 mx-auto">
+              <p style="text-align: center;"><h5>匯款資訊</h5></p>
               <p>中國信託商業銀行中壢分行(代碼822)</p>
               <p>戶名：無極限國際有限公司</p>
               <p>帳號：129541438753</p>
@@ -260,15 +260,15 @@
               </label>
               <div class="d-block my-2">
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="iinvoice1" name="iinvoice" class="custom-control-input" value="捐贈社會福利機構（由無極限國際公司另行辦理）">
+                  <input type="radio" id="iinvoice1" name="iinvoice" class="custom-control-input" value="0" checked>
                   <label class="custom-control-label" for="iinvoice1">捐贈社會福利機構（由無極限國際公司另行辦理）</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="iinvoice2" name="iinvoice" class="custom-control-input" value="二聯式">
+                  <input type="radio" id="iinvoice2" name="iinvoice" class="custom-control-input" value="1">
                   <label class="custom-control-label" for="iinvoice2">二聯式</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="iinvoice3" name="iinvoice" class="custom-control-input" value="三聯式">
+                  <input type="radio" id="iinvoice3" name="iinvoice" class="custom-control-input" value="2">
                   <label class="custom-control-label" for="iinvoice3">三聯式</label>
                 </div>
               </div>
@@ -285,8 +285,6 @@
               </label>
               <input type="text" id="icompanytitle" name="icompanytitle" class="form-control">
             </div>
-            {{-- <button type="button" class="btn btn-dark w-25 mt-3 float-left" onclick="forthlast(),topFunction()">上一步</button>
-            <button type="button" class="btn btn-dark w-25 mt-3 float-right" onclick="forthnext(),topFunction()">下一步</button> --}}
             <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
             <button type="button" name="next" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
           </form>
@@ -333,8 +331,6 @@
               {{-- </div> --}}
             </div>
             <div class="form-group my-5">
-            {{-- <button type="button" class="btn btn-dark w-25 mt-3 float-left" onclick="fifthlast(),topFunction()">上一步</button>
-            <button type="button" class="btn btn-dark w-25 mt-3 float-right" onclick="fifthnext(),topFunction()">預覽確認</button> --}}
               <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
               <button type="button" id="preview" class="btn btn-dark w-25 mt-3 float-right">預覽後完成報名</button>
             </div>
@@ -350,134 +346,6 @@
             <h1>報名完成！</h1>
           </div>
         </div>
-        {{-- <div id="step6" style="display:none;">
-          <div style="display:none;" id="sixthpage"></div>
-          <form id="course_form" action="{{ url('course_form_insert') }}" method="POST">
-          @csrf
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rdate">
-                <b>報名日期</b>
-              </label>
-              <br/>
-              <label id="rdate" name="rdate"></label>
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rname">
-                <b>姓名</b>
-              </label>
-              <br/>
-              <label id="rname" name="rname"></label>
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rsex">
-                <b>性別</b>
-              </label>
-              <br/>
-              <label id="rsex" name="rsex"></label>
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rid">
-                <b>身分證字號</b>
-              </label>
-              <br/>
-              <label id="rid" name="rid"></label>
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rphone">
-                <b>聯絡電話</b>
-              </label>
-              <br/>
-              <label id="rphone" name="rphone"></label>
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="remail">
-                <b>電子郵件</b>
-              </label>
-              <br/>
-              <label id="remail" name="remail"></label>
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rbirthday">
-                <b>出生日期</b>
-              </label>
-              <br/>
-              <label id="rbirthday" name="rbirthday"></label>                         
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rcompany">
-                <b>公司名稱</b>
-              </label>
-              <br/>
-              <label id="rcompany" name="rcompany"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rprofession">
-                <b>職業</b>
-              </label>
-              <br/>
-              <label id="rprofession" name="rprofession"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="raddress">
-                <b>聯絡地址</b>
-              </label>
-              <br/>
-              <label id="raddress" name="raddress"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rjoin">
-                <b>我想參加課程</b>
-              </label>
-              <br/>
-              <label id="rjoin" name="rjoin"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rpay">
-                <b>付款方式</b>
-              </label>
-              <br/>
-              <label id="rpay" name="rpay"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rcash">
-                <b>付款金額</b>
-              </label>
-              <br/>
-              <label id="rcash" name="rcash"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rnumber">
-                <b>匯款帳號/卡號後五碼</b>
-              </label>
-              <br/>
-              <label id="rnumber" name="rnumber"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rinvoice">
-                <b>統一發票</b>
-              </label>
-              <br/>
-              <label id="rinvoice" name="rinvoice"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="num">
-                <b>統編</b>
-              </label>
-              <br/>
-              <label id="num" name="num"></label> 
-            </div>
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="rcompanytitle">
-                <b>抬頭</b>
-              </label>
-              <br/>
-              <label id="rcompanytitle" name="rcompanytitle"></label> 
-            </div>
-            <button type="button" class="btn btn-dark w-25 mt-3 float-left" onclick="sixthlast(),topFunction()">上一步</button>
-            <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">編輯</button>
-            <button type="submit" class="btn btn-dark w-25 mt-3 float-right">確認報名</button>
-          </form>
-        </div>    --}}
       </div>
     </div>
   </main>
@@ -580,7 +448,7 @@
   $("#submit").click(function(){
     // var phone = $('#idate').val();
     var iname = $('#iname').val();
-    var isex = $('input[name="isex"]').val();
+    var isex = $('input[name="isex"]:checked').val();
     var iid = $('#iid').val();
     var iphone = $('#iphone').val();
     var iemail = $('#iemail').val();
@@ -588,11 +456,11 @@
     var icompany = $('#icompany').val();
     var iprofession = $('#iprofession').val();
     var iaddress = $('#iaddress').val();
-    var ijoin = $('#input[name="ijoin"]').val();
-    var ipay_model = $('input[name="ipay_model"]').val();
+    var ijoin = $('input[name="ijoin"]:checked').val();
+    var ipay_model = $('input[name="ipay_model"]:checked').val();
     var icash = $('#icash').val();
     var inumber = $('#inumber').val();
-    var iinvoice = $('input[name="iinvoice"]').val();
+    var iinvoice = $('input[name="iinvoice"]:checked').val();
     var inum = $('#inum').val();
     var icompanytitle = $('#icompanytitle').val();
 

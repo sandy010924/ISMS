@@ -9,6 +9,7 @@ use App\Model\EventsCourse;
 use App\Model\Student;
 use App\Model\Teacher;
 use App\Model\SalesRegistration;
+use App\User;
 
 class CourseController extends Controller
 {
@@ -20,7 +21,8 @@ class CourseController extends Controller
                               ->orderBy('events_course.course_start_at', 'desc')
                               ->get();
 
-        $teachers = Teacher::all();
+        $teachers = User::Where('role', 'teacher')   
+                        ->get();
 
         foreach ($events as $key => $data) {
             $count_apply = count(EventsCourse::join('sales_registration', 'sales_registration.id_events', '=', 'events_course.id')

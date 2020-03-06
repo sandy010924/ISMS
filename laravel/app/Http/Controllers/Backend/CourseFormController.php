@@ -9,6 +9,7 @@ use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Payment;
 use App\Model\Registration;
+use App\Model\Debt;
 
 class CourseFormController extends Controller
 {
@@ -39,6 +40,7 @@ class CourseFormController extends Controller
         $events = new EventsCourse;
         $payment = new Payment;
         $registration = new Registration;
+        $debt = new Debt;
 
         
         //判斷系統是否已有該學員資料
@@ -161,13 +163,13 @@ class CourseFormController extends Controller
                 $registration->id_course       = $id_course;           // 課程ID
                 $registration->id_status       = 1;                    // 報名狀態ID
                 $registration->id_payment      = $id_payment;          // 繳款明細ID
-                
                 $registration->amount_payable       = '';              // 應付金額
                 $registration->amount_paid          = '';              // 已付金額
                 $registration->memo  = '';                             // 備註
                 $registration->sign  = '';                             // 簽名檔案
                 $registration->status_payment  = 6;                             // 簽名檔案
                 $registration->id_events       = $id_events;           // 場次ID
+                $registration->registration_join       = $join;           // 我想參加課程
                 
                 $registration->save();
                 $id_registration = $registration->id;
@@ -179,7 +181,25 @@ class CourseFormController extends Controller
         }
         
         /*正課報名資料 - E*/
-        if ($id_student != "" && $id_course != " "&& $id_events != "" && $id_registration != "") {
+
+        /*追單資料 - S*/
+    
+            // 新增正課報名資料
+            $debt->id_student       = $id_student;          // 學員ID
+            $debt->id_status        = 1;                    // 最新狀態ID
+            $debt->name_course      = '60天財富計畫';        // 追款課程
+            $debt->status_payment   = '';                   // 付款狀態/日期
+            $debt->contact          = '';                   // 聯絡內容
+            $debt->person           = '';                   // 追單人員
+            $debt->remind_at        = '';                   // 提醒
+            $debt->id_registration  = $id_registration;     // 報名表ID
+            
+            $debt->save();
+            $id_debt = $debt->id;
+            
+        /*追單資料 - E*/
+
+        if ($id_student != "" && $id_course != " "&& $id_events != "" && $id_registration != "" && $id_debt != "") {
             // return redirect()->route('course_form', ['id' => $id_course])->with('status', '報名成功');
             return 'success';
         } else {
