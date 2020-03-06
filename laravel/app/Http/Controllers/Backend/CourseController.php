@@ -42,6 +42,7 @@ class CourseController extends Controller
             $time_end = "";             // 課程結束
             $check_excel_status = "0";  // 檢查是不是第一次執行function
             $check_course = "";         // 檢查是否有重複課程
+            $check_events = "";         // 檢查是否有重複場次
             // 宣告縣市變數
             $city = array(
                 '0' => '基隆',
@@ -219,23 +220,33 @@ class CourseController extends Controller
                                     // ->where('events', $events)
                                     // ->where('course_start_at', $time_start)
                                     ->get();
-                }
-                // 如果有此課程就新增一筆資料
-                if (count($check_course) != 0) {
-                    foreach ($check_course as $data_course) {
-                        $id_course = $data_course ->id;
+                
+                    // 如果有此課程就新增一筆資料
+                    if (count($check_course) != 0) {
+                        foreach ($check_course as $data_course) {
+                            $id_course = $data_course ->id;
+                        }
+                    } elseif ($check != 1) {
+                        $course->id_teacher       = $id_teacher;    // 講師ID
+                        $course->name             = $name;          // 課程名稱
+                        $course->type             = '1';            // 課程類型:(1:銷講,2:2階正課,3:3階正課)
+                        $course->save();
+                        $id_course = $course->id;
                     }
-                } elseif ($check != 1) {
-                    $course->id_teacher       = $id_teacher;    // 講師ID
-                    $course->name             = $name;          // 課程名稱
-                    $course->type             = '1';            // 課程類型:(1:銷講,2:2階正課,3:3階正課)
-                    $course->save();
-                    $id_course = $course->id;
                 }
                 /*課程資料 - E*/
 
                 /* 場次資料 (2020/03/05) - S*/
-                if (!empty($id_course)) {
+                $check_events = $events_course::where('name', $events)
+                ->where('location', $address)
+                ->where('course_start_at', $time_start)
+                ->where('course_end_at', $time_end)
+                ->get();
+                if (count($check_events) != 0) {
+                    foreach ($check_events as $data_events) {
+                        $id_events = $data_events ->id;
+                    }
+                } elseif (!empty($id_course) && $check != 1) {
                     $events_course->id_course        = $id_course;     // 課程ID
                     $events_course->name             = $events;        // 場次名稱
                     $events_course->location         = $address;       // 課程地點
@@ -278,7 +289,7 @@ class CourseController extends Controller
                 /*銷售講座報名資料 - S*/
 
                 $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
-                                                                -> where('id_course', $id_course)
+                                                                -> where('id_events', $id_events)
                                                                 ->get();
 
                 // 檢查是否報名過
