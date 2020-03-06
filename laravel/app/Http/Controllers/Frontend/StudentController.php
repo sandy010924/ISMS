@@ -22,21 +22,21 @@ class StudentController extends Controller
     }
 
    
-    public function getcourse($id_student, $type)
-    {
-        if ($type == "sales_registration") {
-            // 銷售講座
-            $datas = SalesRegistration::leftjoin('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
-                                ->leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
-                                ->select('sales_registration.*', 'isms_status.name as status', 'course.name as course')
-                                ->where('sales_registration.id_student', $id_student)
-                                ->get();
-        } elseif ($type == "registration") {
-            // 正課
-        }
+    // public function getcourse($id_student, $type)
+    // {
+    //     if ($type == "sales_registration") {
+    //         // 銷售講座
+    //         $datas = SalesRegistration::leftjoin('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+    //                             ->leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
+    //                             ->select('sales_registration.*', 'isms_status.name as status', 'course.name as course')
+    //                             ->where('sales_registration.id_student', $id_student)
+    //                             ->get();
+    //     } elseif ($type == "registration") {
+    //         // 正課
+    //     }
 
-        return $datas;
-    }
+    //     return $datas;
+    // }
 
     // 已填表單
     public function viewform(Request $request)
@@ -94,7 +94,8 @@ class StudentController extends Controller
         // 銷售講座
         $datas = SalesRegistration::leftjoin('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                             ->leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
-                            ->select('sales_registration.*', 'isms_status.name as status', 'course.name as course', 'course.Events as  course_sales_events')
+                            ->leftjoin('events_course', 'events_course.id', '=', 'sales_registration.id_events')
+                            ->select('sales_registration.*', 'isms_status.name as status', 'course.name as course', 'events_course.name as  course_sales_events')
                             ->selectRaw('sales_registration.*, COUNT(sales_registration.id) as count_sales')
                             ->selectRaw("SUM(CASE WHEN sales_registration.id_status = '4' THEN 1 ELSE 0 END) AS count_sales_ok")
                             ->selectRaw("SUM(CASE WHEN sales_registration.id_status = '5' THEN 1 ELSE 0 END) AS count_sales_no")
@@ -105,7 +106,8 @@ class StudentController extends Controller
         // 正課
         $data_registration = Registration::leftjoin('isms_status', 'isms_status.id', '=', 'registration.id_status')
                             ->leftjoin('course', 'course.id', '=', 'registration.id_course')
-                            ->select('registration.*', 'isms_status.name as status', 'course.name as course', 'course.Events as course_events')
+                            ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
+                            ->select('registration.*', 'isms_status.name as status', 'course.name as course', 'events_course.name as course_events')
                             ->where('registration.id_student', $id_student)
                             ->orderBy('registration.created_at', 'desc')
                             ->first();
