@@ -238,10 +238,11 @@ class CourseController extends Controller
 
                 /* 場次資料 (2020/03/05) - S*/
                 $check_events = $events_course::where('name', $events)
-                ->where('location', $address)
-                ->where('course_start_at', $time_start)
-                ->where('course_end_at', $time_end)
-                ->get();
+                                ->where('id_course', $id_course)
+                                ->where('location', $address)
+                                ->where('course_start_at', $time_start)
+                                ->where('course_end_at', $time_end)
+                                ->get();
                 if (count($check_events) != 0) {
                     foreach ($check_events as $data_events) {
                         $id_events = $data_events ->id;

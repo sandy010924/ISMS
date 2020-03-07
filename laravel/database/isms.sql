@@ -466,3 +466,6 @@ ADD FOREIGN KEY (id_registration) REFERENCES registration(id);
 
 -- 新增正課表單資料欄位 - 我想參加課程
 ALTER TABLE `registration` ADD COLUMN registration_join VARCHAR(20) NULL COMMENT '我想參加課程(0:現場最優惠價格,1:五日內優惠價格)';
+
+-- 修改課程資料表外部鍵
+ALTER TABLE course DROP FOREIGN KEY `course_ibfk_1`;
