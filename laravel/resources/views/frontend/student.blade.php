@@ -4,6 +4,12 @@
 @section('header', '學員管理')
 
 @section('content')
+<style>
+    input:read-only {
+      background-color: #e0e0e0 !important;
+    }
+  </style>
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <!-- Content Start -->
         <!--搜尋學員頁面內容-->
         <div class="card m-3">
@@ -39,233 +45,7 @@
                       </td>
                       <td class="align-middle">
                         <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
-                        <div class="modal fade bd-example-modal-lg text-left" id="student_information_{{ $student['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-                          <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content p-3">
-                              <div class="row">
-                                <div class="col-5 py-2">
-                                  <h5>{{ $student['name'] }}</h5>
-                                  <h5>{{ $student['email'] }}</h5>
-                                </div>
-                                <div class="col-4">
-                                </div>
-                                <div class="col-4 py-3">
-                                    <h7>加入日期 : {{ $student['created_at']->format('yy/m/d') }}</h7><br>
-                                    <h7>原始來源 : {{ $student['datasource']}}</h7>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-3 py-2">
-                                  <h6>標記 :
-                                    <span class="bg-dark p-1 text-light">
-                                      <small>JC學員</small>
-                                    </span>&nbsp;
-                                    <span class="bg-dark p-1 text-light">
-                                      <small>黑心學員</small>
-                                    </span>
-                                  </h6>
-                                </div>
-                                <div class="col-5">
-                                </div>
-                                <div class="col-4 align-right">
-                                  <button type="button" class="btn btn-primary float-right">刪除聯絡人</button>
-                                </div>
-                              </div>
-                              <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item">
-                                  <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic_data_{{ $student['id'] }}" role="tab" aria-controls="basic_data" aria-selected="true">基本訊息</a>
-                                </li>
-                                <li class="nav-item">
-                                  <a class="nav-link" id="history-tab" data-toggle="tab" href="#history_data_{{ $student['id'] }}" role="tab" aria-controls="history_data" aria-selected="false" onclick="history_data({{ $student['id'] }});">歷史互動</a>
-                                </li>
-                                <li class="nav-item">
-                                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_data_{{ $student['id'] }}" role="tab" aria-controls="contact_data" aria-selected="false" onclick="contact_data({{ $student['id'] }});">聯絡狀況</a>
-                                </li>
-                              </ul>
-                              <!-- 完整內容 -->
-                              <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active p-3" id="basic_data_{{ $student['id'] }}" role="tabpanel" aria-labelledby="basic-tab">
-                                  <div class="row">
-                                    <div class="col-6">
-                                      <div class="row">
-                                        <div class="col-6">
-                                          <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text">最新來源</span>
-                                            </div>
-                                            <input type="text" name="new_datasource" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
-                                          </div>
-                                        </div>
-                                        <div class="col-6">
-                                          <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text">職業</span>
-                                            </div>
-                                            <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" value="{{ $student['profession'] }}" readonly>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text ">銷講報名場次</span>
-                                        </div>
-                                        <input type="text" name="course_sales_events" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
-                                      </div>
-                                      <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text">想了解的內容</span>
-                                        </div>
-                                        <input type="text" name="course_content" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
-                                      </div>
-                                      <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text">銷講後報名狀況</span>
-                                        </div>
-                                        <input type="text" name="course_sales_status" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
-                                      </div>
-                                      <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text">居住地址</span>
-                                        </div>
-                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" value="{{ $student['address'] }}" aria-describedby="#" readonly>
-                                      </div>
-                                    </div>
-                                    <div class="col-6">
-                                      <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text">正課報名場次</span>
-                                        </div>
-                                        <input type="text" name="course_events" class="form-control bg-white basic-inf demo2" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="123" readonly>
-                                      </div>
-                                      <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text">參與活動</span>
-                                        </div>
-                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="參與活動 : 參與次數 : 參與度 : " readonly>
-                                      </div>
-                                      <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text bg-danger text-white">退款</span>
-                                        </div>
-                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
-                                      </div>
-                                      <button type="button" class="btn btn-primary float-right" id="save-inf" style="display:none;">儲存</button>
-                                      <button type="button" class="btn btn-primary float-right" id="update-inf" style="display:block;">修改資料</button>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-3">
-                                      <h7 name="count_sales_ok"></h7>
-                                    </div>
-                                    <div class="col-3">
-                                      <h7 name="sales_successful_rate"> </h7>
-                                    </div>
-                                    <div class="col-3">
-                                      <h7 name="count_sales_no"></h7>
-                                    </div>
-                                    <div class="col-3">
-                                      <h7 name="sales_cancel_rate"></h7>
-                                    </div>
-                                  </div>
-                                </div>
-                                <!-- 歷史互動 -->
-                                <div class="tab-pane fade" id="history_data_{{ $student['id'] }}" role="tabpanel" aria-labelledby="history-tab">
-                                  <div class="table-responsive">
-                                    <table class="table table-striped table-sm text-center">
-                                      <thead>
-                                        <tr>
-                                          <th>時間</th>
-                                          <th>動作</th>
-                                          <th>內容</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr>
-                                          <td>2019年05月19日 19:50:39</td>
-                                          <td>參與</td>
-                                          <td>60天財富計畫課後第一次線上輔導</td>
-                                        </tr>
-                                        <tr>
-                                          <td>2019年05月19日 19:50:39</td>
-                                          <td>參與</td>
-                                          <td>60天財富計畫課後第一次線上輔導</td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </div>
-                                <!-- 歷史互動 -->
-
-                                <!-- 聯絡狀況 -->
-                                <div class="tab-pane fade" id="contact_data_{{ $student['id'] }}" role="tabpanel" aria-labelledby="contact-tab">
-                                  <div class="table-responsive">
-                                    <table class="table table-striped table-sm text-center">
-                                      <thead>
-                                        <tr>
-                                          <th class="text-nowrap">日期</th>
-                                          <th class="text-nowrap">時間</th>
-                                          <th class="text-nowrap">追單課程</th>
-                                          <th class="text-nowrap">付款狀態/日期</th>
-                                          <th class="text-nowrap">聯絡內容</th>
-                                          <th class="text-nowrap">最新狀態</th>
-                                          <th class="text-nowrap">追單人員</th>
-                                          <th class="text-nowrap">設提醒</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr>
-                                          <td class="align-middle"></td>
-                                          <td class="align-middle"></td>
-                                          <td class="align-middle">
-                                            <div class="form-group m-0">
-                                              <select class="custom-select border-0 bg-transparent input_width">
-                                                <option selected disabled value=""></option>
-                                                <option value="1">現金</option>
-                                                <option value="2">匯款</option>
-                                                <option value="3">輕鬆付</option>
-                                                <option value="4">一次付</option>
-                                              </select>
-                                            </div>
-                                          </td>
-                                          <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                                          <td class="align-middle"></td>
-                                          <td class="align-middle">
-                                            <div class="form-group m-0">
-                                              <select class="custom-select border-0 bg-transparent input_width">
-                                                <option selected disabled value=""></option>
-                                                <option value="1">完款</option>
-                                                <option value="2">付訂</option>
-                                                <option value="3">待追</option>
-                                                <option value="4">退款中</option>
-                                                <option value="5">退款完成</option>
-                                                <option value="6">無意願</option>
-                                                <option value="7">推薦其他講師</option>
-                                              </select>
-                                            </div>
-                                          </td>
-                                          <td class="align-middle"></td>
-                                          <td class="align-middle"></td>
-                                        </tr>
-                                        <tr>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </div>
-                                 <!-- 聯絡狀況 -->
-                              </div>
-                              <!-- 完整內容 -->
-                            </div>
-                          </div>
-                        </div>
+                       
                         <button id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}" ><i class="fa fa-bug"></i>列入黑名單</button>
                         <!-- <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#form_finished">已填表單</button> -->
                         <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
@@ -313,7 +93,223 @@
                 </tbody>
               </table>
             </div>
-         
+            <div class="modal fade bd-example-modal-lg text-left" id="student_information" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content p-3">
+                              <div class="row">
+                                <div class="col-5 py-2">
+                                  <h5 id = "student_name"></h5>
+                                  <h5 id = "student_email"></h5>
+                                </div>
+                                <div class="col-4">
+                                </div>
+                                <div class="col-4 py-3">
+                                    <h7 id = "student_date"></h7><br>
+                                    <h7 id = "student_datasource"></h7>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-3 py-2">
+                                  <h6>標記 :
+                                    <span class="bg-dark p-1 text-light">
+                                      <small>JC學員</small>
+                                    </span>&nbsp;
+                                    <span class="bg-dark p-1 text-light">
+                                      <small>黑心學員</small>
+                                    </span>
+                                  </h6>
+                                </div>
+                                <div class="col-5">
+                                </div>
+                                <div class="col-4 align-right">
+                                  <button type="button" class="btn btn-primary float-right" onclick="btn_delete('','1');">刪除聯絡人</button>
+                                </div>
+                              </div>
+                              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                  <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic_data" role="tab" aria-controls="basic_data" aria-selected="true">基本訊息</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="history-tab" data-toggle="tab" href="#history_data" role="tab" aria-controls="history_data" aria-selected="false" onclick="history_data();">歷史互動</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_data" role="tab" aria-controls="contact_data" aria-selected="false" onclick="contact_data();">聯絡狀況</a>
+                                </li>
+                              </ul>
+                              <!-- 完整內容 -->
+                              <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active p-3" id="basic_data" role="tabpanel" aria-labelledby="basic-tab">
+                                  <div class="row">
+                                    <div class="col-6">
+                                      <div class="row">
+                                        <div class="col-6">
+                                          <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">最新來源</span>
+                                            </div>
+                                            <input type="text" name="new_datasource" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                          </div>
+                                        </div>
+                                        <div class="col-6">
+                                          <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">職業</span>
+                                            </div>
+                                            <input id="student_profession" type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#">
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text ">銷講報名場次</span>
+                                        </div>
+                                        <input type="text" name="course_sales_events" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                      </div>
+                                      <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">想了解的內容</span>
+                                        </div>
+                                        <input type="text" name="course_content" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                      </div>
+                                      <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">銷講後報名狀況</span>
+                                        </div>
+                                        <input type="text" name="course_sales_status" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                      </div>
+                                      <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">居住地址</span>
+                                        </div>
+                                        <input type="text" id="student_address" class="form-control bg-white basic-inf" aria-label="# input"  aria-describedby="#">
+                                      </div>
+                                    </div>
+                                    <div class="col-6">
+                                      <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">正課報名場次</span>
+                                        </div>
+                                        <input type="text" name="course_events" class="form-control bg-white basic-inf demo2" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="" readonly>
+                                      </div>
+                                      <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">參與活動</span>
+                                        </div>
+                                        <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="參與活動 : 參與次數 : 參與度 : " readonly>
+                                      </div>
+                                      <div class="input-group mb-3" id="dev_refund">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text bg-danger text-white">退款</span>
+                                        </div>
+                                        <input type="text" name="course_refund" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                                      </div>
+                                      <button type="button" class="btn btn-primary float-right" id="save-inf" style="display:block;"
+                                      onclick="save();">儲存</button>
+                                      <!-- <button type="button" class="btn btn-primary float-right" id="update-inf" style="display:block;">修改資料</button> -->
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-3">
+                                      <h7 name="count_sales_ok"></h7>
+                                    </div>
+                                    <div class="col-3">
+                                      <h7 name="sales_successful_rate"> </h7>
+                                    </div>
+                                    <div class="col-3">
+                                      <h7 name="count_sales_no"></h7>
+                                    </div>
+                                    <div class="col-3">
+                                      <h7 name="sales_cancel_rate"></h7>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- 歷史互動 -->
+                                <div class="tab-pane fade" id="history_data" role="tabpanel" aria-labelledby="history-tab">
+                                  <div class="table-responsive">
+                                    <table class="table table-striped table-sm text-center">
+                                      <thead>
+                                        <tr>
+                                          <th>時間</th>
+                                          <th>動作</th>
+                                          <th>內容</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id = "history_data_detail">
+                                        <!-- <tr>
+                                          <td>2019年05月19日 19:50:39</td>
+                                          <td>參與</td>
+                                          <td>60天財富計畫課後第一次線上輔導</td>
+                                        </tr>
+                                        <tr>
+                                          <td>2019年05月19日 19:50:39</td>
+                                          <td>參與</td>
+                                          <td>60天財富計畫課後第一次線上輔導</td>
+                                        </tr> -->
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <!-- 歷史互動 -->
+
+                                <!-- 聯絡狀況 -->
+                                <div class="tab-pane fade" id="contact_data" role="tabpanel" aria-labelledby="contact-tab">
+                                  <div class="table-responsive">
+                                    <table class="table table-striped table-sm text-center">
+                                      <thead>
+                                        <tr>
+                                          <th class="text-nowrap">日期</th>
+                                          <th class="text-nowrap">追單課程</th>
+                                          <th class="text-nowrap">付款狀態/日期</th>
+                                          <th class="text-nowrap">聯絡內容</th>
+                                          <th class="text-nowrap">最新狀態</th>
+                                          <th class="text-nowrap">追單人員</th>
+                                          <th class="text-nowrap">設提醒</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id = "contact_data_detail">
+                                        <tr>
+                                          <td class="align-middle"></td>
+                                          <td class="align-middle"></td>
+                                          <td class="align-middle">
+                                            <!-- <div class="form-group m-0">
+                                              <select class="custom-select border-0 bg-transparent input_width">
+                                                <option selected disabled value=""></option>
+                                                <option value="1">現金</option>
+                                                <option value="2">匯款</option>
+                                                <option value="3">輕鬆付</option>
+                                                <option value="4">一次付</option>
+                                              </select>
+                                            </div> -->
+                                          </td>
+                                          <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                          <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
+                                          <td class="align-middle">
+                                            <div class="form-group m-0">
+                                              <select class="custom-select border-0 bg-transparent input_width">
+                                                <option selected disabled value=""></option>
+                                                <option value="1">完款</option>
+                                                <option value="2">付訂</option>
+                                                <option value="3">待追</option>
+                                                <option value="4">退款中</option>
+                                                <option value="5">退款完成</option>
+                                                <option value="6">無意願</option>
+                                                <option value="7">推薦其他講師</option>
+                                              </select>
+                                            </div>
+                                          </td>
+                                          <td class="align-middle">追單人員</td>
+                                          <td class="align-middle">設提醒</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                 <!-- 聯絡狀況 -->
+                              </div>
+                              <!-- 完整內容 -->
+                            </div>
+                          </div>
+                        </div>
           </div>
         </div>
         <!-- alert Start-->
@@ -334,12 +330,19 @@
 
 
 <script>
+var id_student_old = '';
 $("document").ready(function(){
   $(".demo2").tooltip();
 
   // 學員管理搜尋 (只能輸入數字、字母、_、.、@)
   $('#search_input').on('blur', function() {
       // console.log(`search_input: ${$(this).val()}`);
+  });
+
+  $('#datetimepicker1').datetimepicker({
+    format: "YYYY-MM-DD HH:mm",
+    defaultDate:new Date(),
+    locale:"zh-tw"
   });
 });
 
@@ -442,6 +445,8 @@ function view_form_detail(id,type){
 
 // 基本訊息
 function course_data(id_student){
+  id_student_old = id_student
+  history_data();
   $.ajax({
       type : 'POST',
       url:'course_data', 
@@ -453,6 +458,7 @@ function course_data(id_student){
         console.log(data)
         // 銷講報到率
         var sales_successful_rate ='0',course_cancel_rate = '0';
+        var course_sales_status = '';
         if (data['count_sales_ok'] != 0) {
           sales_successful_rate = (data['count_sales_ok'] / data['count_sales'] *100).toFixed(0)
         }
@@ -461,22 +467,43 @@ function course_data(id_student){
         if (data['count_sales_no'] != 0) {
           course_cancel_rate = (data['count_sales_no'] / data['count_sales'] *100).toFixed(0)
         } 
-
+        // 學員資料
+        $('#student_name').text(data[0]['name']);
+        $('#student_email').text(data[0]['email']);
+        $('#student_date').text('加入日期 :' + data[0]['created_at']);
+        $('#student_profession').val(data[0]['profession']);
+        $('#student_address').val(data[0]['address']);
+        
+        
         // 銷講      
         $('input[name="new_datasource"]').val(data['datasource']);
-        $('input[name="course_sales_events"]').val(data['course_sales_events']);
+        $('input[name="course_sales_events"]').val(data['course_sales'] + data['course_sales_events']);
         $('input[name="course_content"]').val(data['course_content']);
-        $('input[name="course_sales_status"]').val(data['status']);
+        if (typeof(data['status_payment']) != 'undefined') {
+          course_sales_status = data['status_payment'] +'(' + data['course_registration'] + data['course_events'] + ')' 
+        }
+        $('input[name="course_sales_status"]').val(course_sales_status);
         $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['count_sales_ok']);        
         $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
         $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['count_sales_no']);
         $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
         
         // 正課
-        $('input[name="course_events"]').val(data['course_events']);
+        $('input[name="course_events"]').val('');
+        if (typeof(data['course_registration']) != 'undefined') {
+          $('input[name="course_events"]').val(data['course_registration'] + data['course_events']);
+        }
+                
+        // 退款
+        $('input[name="course_refund"]').val('');
+        if (typeof(data['refund_course']) != 'undefined') {
+          $('input[name="course_refund"]').val(data['refund_course'] + '(' +data['refund_reason'] + ')');
+        } else {
+          $('#dev_refund').hide();
+          
+        }
         
-
-        $("#student_information_" + id_student ).modal('show');                    
+        $("#student_information").modal('show');                    
       },
       error: function(error){
         console.log(JSON.stringify(error));     
@@ -485,56 +512,135 @@ function course_data(id_student){
 }
 
 // 歷史互動
-function history_data(id_student) {
-  console.log(id_student);
+function history_data() {
+  $('#history_data_detail').html(''); 
+  $.ajax({
+      type : 'POST',
+      url:'history_data', 
+      dataType: 'json',    
+      data:{
+        id_student: id_student_old
+      },
+      success:function(data){
+        var id_student = '';
+        // console.log(data)
+        $.each(data, function(index,val) {
+          id_student = val['id_student'];
+          data +=
+                '<tr>' +
+                '<td>' + val['created_at'] + '</td>' + 
+                '<td>' + val['status_sales'] + '</td>' +
+                '<td>' + val['course_sales'] + '</td>' +
+                '</tr>'
+        });
+        $('#history_data_detail').html(data);                          
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));     
+      }
+  });
 }
 // 聯絡狀況
-function contact_data(id_student) {
-  console.log(id_student);
+function contact_data() {
+  // console.log(id_student);
 
   $.ajax({
       type : 'POST',
       url:'contact_data', 
       dataType: 'json',    
       data:{
-        id_student: id_student
+        id_student: id_student_old
       },
       success:function(data){
-        // console.log(data)
-        // // 銷講報到率
-        // var sales_successful_rate ='0',course_cancel_rate = '0';
-        // if (data['count_sales_ok'] != 0) {
-        //   sales_successful_rate = (data['count_sales_ok'] / data['count_sales'] *100).toFixed(0)
-        // }
-        
-        // // 銷講取消率
-        // if (data['count_sales_no'] != 0) {
-        //   course_cancel_rate = (data['count_sales_no'] / data['count_sales'] *100).toFixed(0)
-        // } 
-
-        // // 銷講      
-        // $('input[name="new_datasource"]').val(data['datasource']);
-        // $('input[name="course_sales_events"]').val(data['course_sales_events']);
-        // $('input[name="course_content"]').val(data['course_content']);
-        // $('input[name="course_sales_status"]').val(data['status']);
-        // $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['count_sales_ok']);        
-        // $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
-        // $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['count_sales_no']);
-        // $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
-        
-        // // 正課
-        // $('input[name="course_events"]').val(data['course_events']);
-        
-
-        // $("#student_information_" + id_student ).modal('show');                    
+        console.log(data)
+        $.each(data, function(index,val) {
+          id = val['id'];
+          data +=
+                '<tr>' +
+                '<td>' + 
+                '<div class="form-group"><div class="input-group date" id="datetimepicker1" data-target-input="nearest"> ' +
+                ' <input type="text" id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker1" ' + 'name="params[start_time]" />' +
+                    ' <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker"> ' +
+                      ' <div class="input-group-text"><i class="fa fa-calendar"></i></div>'+
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+                + '</td>' + 
+                '<td>' + val['name_course'] + '</td>' + 
+                '<td>' + '<input type="text" onblur="tt('+id+');" id="' + id +'_status_payment" class="border-0 bg-transparent input_width">' + '</td>' + 
+                '<td>' + '<input type="text" id="' + id +'_contact"  class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<div class="form-group m-0"> <select id="' + id +'_status" class="custom-select border-0 bg-transparent input_width"> ' +
+                            '<option selected disabled value=""></option>' +
+                            '<option value="10">完款</option>' +
+                            '<option value="10">付訂</option>' +
+                            '<option value="12">待追</option>' +
+                            '<option value="13">退款中</option>' +
+                            '<option value="14">退款完成</option>' +
+                            '<option value="15">無意願</option>' +
+                            '<option value="16">推薦其他講師</option>' +
+                        '</select>' +
+                    '</div> </td>' +
+                '<td>' + val['person'] + '</td>' +
+                '<td>' + '設提醒' + '</td>' +
+                '</tr>'
+        });
+        $('#contact_data_detail').html(data);                                      
       },
       error: function(error){
         console.log(JSON.stringify(error));     
       }
   });
-  // $("#contact_data_" + id_student ).modal('show'); 
+}
+
+// 儲存
+function save() {
+  student_profession = $("#student_profession").val();
+  student_address = $("#student_address").val();
+ 
+  $.ajax({
+      type : 'POST',
+      url:'student_save',    
+      data:{
+        id_student: id_student_old,
+        profession:student_profession,
+        address:student_address
+      },
+      success:function(data){        
+        if (data = "更新成功") {
+          $("#success_alert_text").html("儲存成功");
+          fade($("#success_alert"));
+        } else {
+          $("#error_alert_text").html("儲存失敗");
+          fade($("#error_alert"));       
+          
+        }
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));     
+      }
+  });
 }
 /* 完整內容 -E Rocky(2020/02/29 */
+
+
+// 主持開場
+// $('input[name="new_datasource"]').val(data['datasource']);
+$('input[name="status_payment"]').on('blur', function() {
+      var data_type = 'host';
+      console.log('blur');
+      // save_data($(this), data_type);
+    });
+$('input[name="status_payment"]').on('keyup', function(e) {
+  if (e.keyCode === 13) {
+    var data_type = 'host';
+    console.log('keyup');
+    // save_data($(this), data_type);
+  }
+});
+function tt(id){
+  console.log(id);
+}
+
 
 
 /*搜尋 Rocky(2020/02/23)*/
@@ -556,9 +662,12 @@ $("#btn_search").click(function(e){
 });
 
  /*刪除 Rocky(2020/02/23)*/
- function btn_delete(id_student){
+ function btn_delete(id_student,type){   
     var msg = "是否刪除此筆資料?";
     if (confirm(msg)==true){
+      if (id_student == '' && type=='1') {
+        id_student = id_student_old;
+      }
       $.ajax({
           type : 'GET',
           url:'student_delete', 
@@ -632,22 +741,22 @@ function btn_blacklist(id_student){
 /*學員修改基本資料button*/
 var basic_input = document.getElementsByClassName("basic-inf");
 var i;
-document.getElementById('update-inf').onclick = function() {
-    for (i = 0; i < basic_input.length; i++) {
-        basic_input[i].removeAttribute('readonly');
-    }
-    document.getElementById("save-inf").style.display = "block";
-    document.getElementById("update-inf").style.display = "none";
-};
+// document.getElementById('update-inf').onclick = function() {
+//     for (i = 0; i < basic_input.length; i++) {
+//         basic_input[i].removeAttribute('readonly');
+//     }
+//     document.getElementById("save-inf").style.display = "block";
+//     document.getElementById("update-inf").style.display = "none";
+// };
 
-document.getElementById('save-inf').onclick = function() {
-    for (i = 0; i < basic_input.length; i++) {
-        basic_input[i].setAttribute('readonly','readonly');
-    }
-    /*document.getElementById('basic-inf').setAttribute('readonly','readonly');*/
-    document.getElementById("save-inf").style.display = "none";
-    document.getElementById("update-inf").style.display = "block";
-};
+// document.getElementById('save-inf').onclick = function() {
+//     for (i = 0; i < basic_input.length; i++) {
+//         basic_input[i].setAttribute('readonly','readonly');
+//     }
+//     /*document.getElementById('basic-inf').setAttribute('readonly','readonly');*/
+//     document.getElementById("save-inf").style.display = "none";
+//     document.getElementById("update-inf").style.display = "block";
+// };
 
 </script>
 

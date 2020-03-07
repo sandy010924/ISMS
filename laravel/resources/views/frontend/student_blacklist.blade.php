@@ -134,28 +134,13 @@ function btn_blacklist(id_blacklist){
 function btn_blackadd(){
   $.ajax({
       type : 'post',
-      url:'blacklist_add', 
-      dataType: 'json',    
+      url:'blacklist_add',
+      dataType: 'json',   
       success:function(data){
-        console.log(data)
-        // if (data['data'] == "ok") {                           
-        //   /** alert **/
-        //   $("#success_alert_text").html("取消成功");
-        //   fade($("#success_alert"));
-
-        //   location.reload();
-        // }　else {
-        //   /** alert **/ 
-        //   $("#error_alert_text").html("取消失敗");
-        //   fade($("#error_alert"));       
-        // }           
+        // console.log(data);
       },
       error: function(error){
         console.log(JSON.stringify(error));   
-
-        /** alert **/ 
-        $("#error_alert_text").html("刪除資料失敗");
-        fade($("#error_alert"));       
       }
   });
 }

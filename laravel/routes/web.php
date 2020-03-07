@@ -200,7 +200,10 @@ Route::get('error_authority', function () {
     Route::post('course_data', 'Frontend\StudentController@coursedata');
     /*** 完整內容-聯絡狀況 Rocky(2020/03/01) ***/
     Route::post('contact_data', 'Frontend\StudentController@contactdata');
-    
+    /*** 完整內容-歷史互動 Rocky(2020/03/06) ***/
+    Route::post('history_data', 'Frontend\StudentController@historydata');
+    /*** 完整內容-儲存 Rocky(2020/03/07) ***/
+    Route::post('student_save', 'Backend\StudentController@save');
 
 
 /*** [學員管理] 黑名單 ***/

@@ -69,4 +69,24 @@ class StudentController extends Controller
         }
         return json_encode(array('data' => $status));
     }
+
+    // 儲存 Rocky (2020/03/07)
+    public function save(Request $request)
+    {
+        $id = $request->get('id_student');
+        $profession = $request->get('profession');
+        $address = $request->get('address');
+
+
+        $data = Student::where('id', $id)
+        ->update(['profession' => $profession,'address' => $address]);
+        
+        if ($data) {
+            return '更新成功';
+        } else {
+            return '更新失敗';
+        }
+    }
+
+
 }
