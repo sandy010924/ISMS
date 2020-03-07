@@ -129,9 +129,12 @@ Route::get('error_authority', function () {
         return view('frontend.course_list_chart');
     })->name('course_list_chart');
 
-    Route::get('course_list_edit', function () {
-        return view('frontend.course_list_edit');
-    })->name('course_list_edit');
+/*** [課程管理] 編輯 ***/
+    /*** 顯示資料 ***/
+    Route::get('course_list_edit', 'Frontend\CourseListEditController@show')->name('course_list_edit');
+    /*** 串聯資料 ***/
+    Route::post('course_list_edit_insert', 'Backend\CourseListEditController@insert')->name('course_list_edit_insert');
+
 
 
 /*** [課程管理] 今日課程 ***/

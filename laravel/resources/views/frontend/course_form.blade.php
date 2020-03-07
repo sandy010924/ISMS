@@ -21,17 +21,20 @@
 <body>
 
   <main role="main" class="mw-100">
-    <img src="{{ asset('img/logo.png') }}" width="150" alt="logo" class="d-block mx-auto mt-5">
-    <h3 class="text-center text-white m-4">無極限國際有限公司</h3>
+    <img src="{{ asset('img/logo.png') }}" width="100" alt="logo" class="d-block mx-auto mt-5">
+    <h4 class="text-center text-white font-weight-bold m-4">無極限國際有限公司</h4>
     <div class="card mx-auto my-3 w-50">
       <div id="course_form" class="card-body container px-4 p-3">
         {{-- <div id="firstpage"> --}}
         <div id="step1">
           <form id="form1" name="verify">
             @csrf
+            <div class="form-group mb-5">
+                <h5 class="font-weight-bold text-center my-3">課程服務報名表</h5>
+            </div>
             <div class="form-group mb-5 required">
               <label class="col-form-label" for="iphone_verify">
-                <b>手機號碼</b>
+                <b>聯絡電話</b>
               </label>
               <input type="text" id="iphone_verify" name="iphone_verify" class="form-control" required>
             </div>
@@ -43,6 +46,9 @@
         <div id="step2" style="display:none;">
           <form id="form2">
             @csrf
+            <div class="form-group mb-5">
+                <h5 class="font-weight-bold text-center my-3">課程服務報名表</h5>
+            </div>
             <div class="form-group mb-5">
               <label class="col-form-label" for="idate">
                 <b>報名日期</b>
@@ -112,7 +118,7 @@
               </label>
               <input type="text" id="iaddress" name="iaddress" class="form-control">
             </div>
-            <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">重新輸入手機號碼</button>
+            <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
             <button type="button" name="next" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
           </form>
             {{-- <button type="button" class="btn btn-dark w-25 mt-3 float-left" onclick="secondlast(),topFunction()">上一步</button>
@@ -122,57 +128,15 @@
           <form id="form3">
             @csrf
             <div class="form-group mb-5">
-              <p style="text-align: center;"><span style="font-size: 14pt;"><strong>參加課程服務</strong></span></p>
+                <h5 class="font-weight-bold text-center my-3">參加課程服務</h5>
               <div>
-                <div style="text-align: left;">
-                  <span style="font-size: 14pt;">
-                    四組專屬交易策略
-                  </span>
-                </div>
-                <div style="text-align: left;">
-                  <span style="font-size: 14pt;">
-                    超過10組季節性交易資訊＜勝率超過7成＞
-                  </span>
-                </div>
-                <div style="text-align: left;">
-                  <span style="font-size: 14pt;">
-                    三項每日操盤策略＜每日20分鐘＞
-                  </span>
-                </div>
-                <div style="text-align: left;">
-                  <span style="font-size: 14pt;">
-                    操盤交易心理，風險控管
-                  </span>
-                </div>
+                {{ $course->courseservices }}
               </div>
               <hr>
-              <div>
-                <div style="text-align: left;">
-                  <span style="font-size: 14pt;">
-                    兩整天實體課程培訓/六個月諮詢輔導教練
-                  </span>
-                </div>
-                <div style="text-align: left;">
-                  <span style="font-size: 14pt;">
-                    終身免學費複訓(須酌收場地費)
-                  </span>
-                </div>
-                <div style="text-align: left;">
-                  <span style="font-size: 14pt;">
-                    刷卡零利率分期(限配合之銀行)
-                  </span>
-                </div>
-                <div style="text-align: left;">
-                  <span style="font-size: 14pt;">
-                    三天內完款-贈最少100支線上課程＜含：前導、課前、課後＞
-                  </span>
-                </div>
-              </div>
-              <hr>
-              <p style="text-align: center;"> <strong><span style="font-size: 18pt;">自在交易工作坊</span></strong></p>
-              <p style="text-align: center;"><strong><span style="font-size: 18pt;">一般方案：998,00</span></strong></p> 
+              <h3 class="font-weight-bold text-center my-3">{{ $course->name }}</h3>
+              <h4 class="font-weight-bold text-center my-3">一般方案：{{ $course->money }}</h4> 
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="ijoin">
                 <b>我想參加課程</b>
               </label>
@@ -198,16 +162,18 @@
             @csrf
             <div class="form-group mb-5">
               <label class="col-form-label" for="ievent">
-                <b>(......) 的場次</b>
+                <b>{{ $course->name }} 的場次</b>
               </label>
               <div class="d-block my-2">
-                <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ievent1" name="ievent" class="custom-control-input" checked>
-                  <label class="custom-control-label" for="ievent1">2020/01/14（二）0900-1700 台北場(台北市中山區松江路131號7樓)</label>
-                </div>
+                @foreach( $events as $data )
+                  <div class="custom-control custom-checkbox my-3">
+                    <input type="checkbox" id="ievent1" name="ievent" class="custom-control-input">
+                    <label class="custom-control-label h6" for="ievent1">{{$data}}</label>
+                  </div>
+                @endforeach
               </div>
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="ipay_model">
                 <b>付款方式</b>
               </label>
@@ -230,31 +196,31 @@
                 </div>
               </div>
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="icash">
                 <b>付款金額</b>
               </label>
-              <input type="text" id="icash" name="icash" class="form-control">
+              <input type="text" id="icash" name="icash" class="form-control" required>
               <label class="text-secondary px-2 py-1"><small>（實際金額以財務確認為準）</small></label>
             </div>
             <hr>
-            <div class="my-2 mx-auto">
-              <p style="text-align: center;"><h5>匯款資訊</h5></p>
+            <div class="form-group mb-5">
+              <h5 class="font-weight-bold text-center my-5">匯款資訊</h5>
               <p>中國信託商業銀行中壢分行(代碼822)</p>
               <p>戶名：無極限國際有限公司</p>
               <p>帳號：129541438753</p>
-              <p style="text-align: center;"><span style="font-size: 18pt;">刷卡連結（會再附上連結）</span></p>
+              <h5 class="font-weight-bold text-center my-5">刷卡連結（會再附上連結）</h5>
             </div>
             <hr>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="inumber">
                 <b>匯款帳號/卡號後五碼</b>
               </label>
-              <input type="text" id="inumber" name="inumber" class="form-control">
+              <input type="text" id="inumber" name="inumber" class="form-control" required>
               <label class="text-secondary px-2 py-1"><small>（付款完成請「截圖」回傳LINE@，謝謝）</small></label>
             </div>
             <hr style="border: 0;">
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="iinvoice">
                 <b>統一發票</b>
               </label>
@@ -286,7 +252,7 @@
               <input type="text" id="icompanytitle" name="icompanytitle" class="form-control">
             </div>
             <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
-            <button type="button" name="next" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
+            <button type="button" name="next" id="events_check" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
           </form>
         </div>
         <div id="step5" style="display:none;">
@@ -296,25 +262,25 @@
                 <h3 class="font-weight-bold text-center my-3">課程服務須知</h3>
                 <h5 class="font-weight-bold text-center my-3">請詳讀後勾選</h5>
             </div>
-            <div class="form-group my-5">
+            <div class="form-group my-5 required">
               <div class="custom-control custom-checkbox my-3">
-                <input type="checkbox" class="custom-control-input" id="agree_check1" name="agree">
+                <input type="checkbox" class="custom-control-input" id="agree_check1" name="agree" required>
                 <label class="custom-control-label" for="agree_check1">我同意</label>
               </div>
               <textarea class="form-control bg-white" disabled readonly>課程服務限本人使用，不得轉讓他人使用。</textarea>
             </div>
             <hr>
-            <div class="form-group my-5">
+            <div class="form-group my-5 required">
               <div class="custom-control custom-checkbox my-3">
-                <input type="checkbox" class="custom-control-input" id="agree_check2" name="agree">
+                <input type="checkbox" class="custom-control-input" id="agree_check2" name="agree" required>
                 <label class="custom-control-label" for="agree_check2">我同意</label>
               </div>
               <textarea rows="5" class="form-control bg-white" disabled readonly>如您於繳交費用後無法參加課程，請保留此表單備分內容。（報名完成會寄到您填寫的email）&#13;&#10;申請之退費方式、款項如下： &#13;&#10; 5日內全額退費（繳費後隔日起算）&#13;&#10;★第6日起：課程費用80%（繳交費用未達20%者，恕不辦理退費）&#13;&#10;★第31日起或開課後：恕不辦理退費。</textarea>
             </div>
             <hr>      
-            <div class="form-group my-5">
+            <div class="form-group my-5 required">
               <div class="custom-control custom-checkbox my-3">
-                <input type="checkbox" class="custom-control-input" id="agree_check3" name="agree">
+                <input type="checkbox" class="custom-control-input" id="agree_check3" name="agree" required>
                 <label class="custom-control-label" for="agree_check3">我同意</label>
               </div>
               <textarea class="form-control bg-white" disabled readonly>報名完成後1年內須參加課程服務，逾期則不得參加課程服務，亦不得要求退還已繳交之費用。</textarea>
@@ -330,10 +296,10 @@
                 <button type="button" id="signature_pad_clear" class="btn btn-secondary my-2">清除簽名</button>
               {{-- </div> --}}
             </div>
-            <div class="form-group my-5">
+            {{-- <div class="form-group my-5"> --}}
               <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
               <button type="button" id="preview" class="btn btn-dark w-25 mt-3 float-right">預覽後完成報名</button>
-            </div>
+            {{-- </div> --}}
           </form>
         </div>
         <div id="step6" style="display:none;">
@@ -404,6 +370,16 @@
     });
   });
 
+  // $("#events_check").submit(function(event){
+  //   event.preventDefault();
+  //   if($('.roles:checkbox:checked').length == 0){
+  //     alert("");
+  //     return false;
+  //   }
+  //     return true;
+  // });
+  
+
   //下一步按鈕觸發 Sandy (2020/03/05)
   $("button[name='next']").click(function(){
     var now = parseInt($(this).parent().attr("id").split("form").pop());
@@ -430,6 +406,7 @@
     $("form").parent().show()
     $("form").parent().find("button").hide()
     $("input").prop( "disabled" , true );
+    $("#step1").hide();
     $("#step6").show();
     $("body").scrollTop(0);
   });

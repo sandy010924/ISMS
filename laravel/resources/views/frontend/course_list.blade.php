@@ -98,12 +98,15 @@
                             <label for="new_event" class="col-form-label">場次</label><br/>
                             <input type="search" list="events" id="new_event" name="new_event" class="form-control" required />
                             <datalist class="w-100" id="events">
+                              <option value="台北場"></option>
                               <option value="台北上午場"></option>
                               <option value="台北下午場"></option>
                               <option value="台北晚上場"></option>
+                              <option value="台中場"></option>
                               <option value="台中上午場"></option>
                               <option value="台中下午場"></option>
                               <option value="台中晚上場"></option>
+                              <option value="高雄場"></option>
                               <option value="高雄上午場"></option>
                               <option value="高雄下午場"></option>
                               <option value="高雄晚上場"></option>
@@ -159,7 +162,7 @@
                         <a role="button" class="dropdown-item" href="{{ route('course_list_refund') }}">退費名單</a>
                       </div>
                       <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data') }}">場次數據</a>
-                      <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit') }}">編輯</a>
+                      <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit', [ 'id' => $course['id'] ] ) }}">編輯</a>
                       {{-- <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['all_id'] }});" value="{{ $course['all_id'] }}" >刪除</a> --}}
                       <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['id'] }});">刪除</a>
                   </td>

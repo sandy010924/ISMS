@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\SalesRegistration;
+use App\Model\Registration;
 use App\Model\Student;
 use App\Model\ISMSStatus;
 use App\Model\Course;
@@ -12,7 +13,7 @@ use App\Model\EventsCourse;
 
 class CourseCheckController extends Controller
 {
-    //現場報名
+    //現場報名(只限銷講)
     public function insert(Request $request)
     {
         try{
@@ -128,58 +129,85 @@ class CourseCheckController extends Controller
     {
         //取回data
         $check_id = $request->input('check_id');
+        $course_type = $request->input('course_type');
         $check_value = $request->input('check_value');
         $update_status = $request->input('update_status');
         try{
+            //判斷是銷講or正課
+            if($course_type == 1){
+                //銷講
+                $db_check = SalesRegistration::where('id', $check_id);
+            }else{
+                //正課
+                $db_check = Registration::where('id', $check_id);
+                
+            }
             switch($update_status){
                 case 'check_btn':
                     //報到/未到
                     if( $check_value == 4){
-                        SalesRegistration::where('id', '=', $check_id)
-                                        ->update(['id_status' => 3]);
+                        $db_check->update(['id_status' => 3]);
                     }
                     else{
-                        SalesRegistration::where('id', '=', $check_id)
-                                        ->update(['id_status' => 4]);
+                        $db_check->update(['id_status' => 4]);
                     }
                     break;
                 case 'dropdown_check':
                     //報到
-                    SalesRegistration::where('id', '=', $check_id)
-                                    ->update(['id_status' => 4]);
+                    $db_check->update(['id_status' => 4]);
                     break;
                 case 'dropdown_absent':
                     //未到
-                    SalesRegistration::where('id', '=', $check_id)
-                                    ->update(['id_status' => 3]);
+                    $db_check->update(['id_status' => 3]);
                     break;
                 case 'dropdown_cancel':
                     //取消
-                    SalesRegistration::where('id', '=', $check_id)
-                                    ->update(['id_status' => 5]);
+                    $db_check->update(['id_status' => 5]);
                     break;
                 default:
                     //報到
-                    SalesRegistration::where('id', '=', $check_id)
-                                    ->update(['id_status' => 4]);
+                    $db_check->update(['id_status' => 4]);
                     break;
             }
             
-            $list = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
-                                        ->join('student', 'student.id', '=', 'sales_registration.id_student')
-                                        ->select('sales_registration.id as check_id', 'student.name as check_name', 'sales_registration.id_events as id_events', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
-                                        ->Where('sales_registration.id','=', $check_id)
-                                        ->first();
-
             
-            //報到筆數
-            $count_check = count(SalesRegistration::Where('id_events', $list->id_events)
-                ->Where('id_status','=', 4)
-                ->get());
-            //取消筆數
-            $count_cancel = count(SalesRegistration::Where('id_events', $list->id_events)
-                ->Where('id_status','=', 5)
-                ->get());
+            //判斷是銷講or正課
+            if($course_type == 1){
+                //銷講
+                $list = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+                                            ->join('student', 'student.id', '=', 'sales_registration.id_student')
+                                            ->select('sales_registration.id as check_id', 'student.name as check_name', 'sales_registration.id_events as id_events', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
+                                            ->Where('sales_registration.id','=', $check_id)
+                                            ->first();
+
+                
+                //報到筆數
+                $count_check = count(SalesRegistration::Where('id_events', $list->id_events)
+                    ->Where('id_status','=', 4)
+                    ->get());
+                //取消筆數
+                $count_cancel = count(SalesRegistration::Where('id_events', $list->id_events)
+                    ->Where('id_status','=', 5)
+                    ->get());
+            }else{
+                //正課
+                $list = Registration::join('isms_status', 'isms_status.id', '=', 'registration.id_status')
+                                            ->join('student', 'student.id', '=', 'registration.id_student')
+                                            ->select('registration.id as check_id', 'student.name as check_name', 'registration.id_events as id_events', 'registration.id_status as check_status_val', 'isms_status.name as check_status_name')
+                                            ->Where('registration.id','=', $check_id)
+                                            ->first();
+
+                
+                //報到筆數
+                $count_check = count(Registration::Where('id_events', $list->id_events)
+                    ->Where('id_status','=', 4)
+                    ->get());
+                //取消筆數
+                $count_cancel = count(Registration::Where('id_events', $list->id_events)
+                    ->Where('id_status','=', 5)
+                    ->get());
+                
+            }
                 
             return Response(array('list'=>$list, 'count_check'=>$count_check, 'count_cancel'=>$count_cancel));
 
@@ -196,6 +224,7 @@ class CourseCheckController extends Controller
     {
         //取回data
         $event_id = $request->input('event_id');
+        $course_type = $request->input('course_type');
         $data_type = $request->input('data_type');
         $data_val = $request->input('data_val');
 
@@ -206,10 +235,10 @@ class CourseCheckController extends Controller
                     EventsCourse::where('id', $event_id)
                           ->update(['host' => $data_val]);
                     break;
-                case 'closeOrder':
+                case 'closeorder':
                     //結束收單
                     EventsCourse::where('id', $event_id)
-                          ->update(['closeOrder' => $data_val]);
+                          ->update(['closeorder' => $data_val]);
                     break;
                 case 'weather':
                     //天氣
@@ -224,9 +253,17 @@ class CourseCheckController extends Controller
                 case 'checkNote':
                     //報到備註
                     $data_id = $request->input('data_id');
-                    
-                    SalesRegistration::where('id', $data_id)
-                                     ->update(['memo' => $data_val]);
+
+                    //判斷是銷講or正課
+                    if( $course_type == 1 ){
+                        //銷講
+                        SalesRegistration::where('id', $data_id)
+                                         ->update(['memo' => $data_val]);
+                    }else {
+                        //正課
+                        Registration::where('id', $data_id)
+                                    ->update(['memo' => $data_val]);
+                    }
                     break;
                 default:
                     return 'error';

@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Student;
-use App\Model\SalesRegistration;
 
 class CourseTodayController extends Controller
 {

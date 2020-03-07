@@ -7,8 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Student;
-use App\Model\Teacher;
 use App\Model\SalesRegistration;
+use App\Model\Registration;
 use App\User;
 
 class CourseController extends Controller
@@ -16,26 +16,35 @@ class CourseController extends Controller
     // Sandy (2020/01/14)
     public function show()
     {
-        $events = EventsCourse::rightjoin('course', 'course.id', '=', 'events_course.id_course')
-                              ->select('events_course.*', 'course.name as course')
+        $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                              ->select('events_course.*', 'course.name as course', 'course.type as type')
                               ->orderBy('events_course.course_start_at', 'desc')
                               ->get();
-
+                              
         $teachers = User::Where('role', 'teacher')   
                         ->get();
 
         foreach ($events as $key => $data) {
-            $count_apply = count(EventsCourse::join('sales_registration', 'sales_registration.id_events', '=', 'events_course.id')
+            $type = "";
+            
+            //判斷是銷講or正課
+            if($data['type'] == 1){
+                $type = "sales_registration";
+            }else{
+                $type = "registration";
+            }
+
+            $count_apply = count(EventsCourse::join($type, $type.'.id_events', '=', 'events_course.id')
                         ->Where('events_course.id', $data['id'])       
                         ->Where('id_status', '<>', 2)   
                         ->get());
 
-            $count_cancel = count(EventsCourse::join('sales_registration', 'sales_registration.id_events', '=', 'events_course.id')
+            $count_cancel = count(EventsCourse::join($type, $type.'.id_events', '=', 'events_course.id')
                         ->Where('events_course.id', $data['id'])       
                         ->Where('id_status', 5)
                         ->get());
 
-            $count_check = count(EventsCourse::join('sales_registration', 'sales_registration.id_events', '=', 'events_course.id')
+            $count_check = count(EventsCourse::join($type, $type.'.id_events', '=', 'events_course.id')
                         ->Where('events_course.id', $data['id'])        
                         ->Where('id_status', 4)
                         ->get());

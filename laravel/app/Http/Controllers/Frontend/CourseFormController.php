@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Student;
-use App\Model\Teacher;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 
@@ -18,29 +17,34 @@ class CourseFormController extends Controller
         $id = $request->get('id');
         $name = $request->get('name');
         
-        $courses = Course::Where('id_type', $name)
-                      ->get();
+        $course = Course::Where('course.id_type', $id)
+                         ->first();
+
+        $events_all = EventsCourse::join('course', 'course.id' , '=', 'events_course.id_course')
+                                ->Where('course.id_type', $id)
+                                ->select('events_course.*')
+                                ->get();
         $id_group='';
+        
+        foreach( $events_all as $key => $data ){
+            // if($data['id_group'] == ""){
+            //     //日期
+            //     $date = date('Y-m-d', strtotime($data['course_start_at']));
+            //     //時間
+            //     $time_strat = date('H:i', strtotime($data['course_start_at']));
+            //     $time_end = date('H:i', strtotime($data['course_end_at']));
+            //     //星期
+            //     $weekarray = array("日","一","二","三","四","五","六");
+            //     $week = $weekarray[date('w', strtotime($data['course_start_at']))];
 
-        foreach( $courses as $key => $data ){
-            if($data['id_group'] == ""){
-                //日期
-                $date = date('Y-m-d', strtotime($data['course_start_at']));
-                //時間
-                $time_strat = date('H:i', strtotime($data['course_start_at']));
-                $time_end = date('H:i', strtotime($data['course_end_at']));
-                //星期
-                $weekarray = array("日","一","二","三","四","五","六");
-                $week = $weekarray[date('w', strtotime($data['course_start_at']))];
-
-                $events[$key] = $date . '（' . $week . '）' . ' ' . $time_strat . '-' . $time_end . ' ' . $data['Events'] . '（' . $data['location'] . '）';
-            }else {
+            //     $events[$key] = $date . '(' . $week . ')' . ' ' . $time_strat . '-' . $time_end . ' ' . $data['Events'] . '(' . $data['location'] . ')';
+            // }else {
                 if ($id_group == $data['id_group']){ 
                     continue;
                 }
 
-                $course_group = Course::Where('id_group', $data['id_group'])
-                                      ->get();
+                $course_group = EventsCourse::Where('id_group', $data['id_group'])
+                                            ->get();
                 $numItems = count($course_group);
                 $i = 0;
 
@@ -54,30 +58,23 @@ class CourseFormController extends Controller
                     $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
                     
                     if( ++$i === $numItems){
-                        $events_group .= $date . '（' . $week . '）';
+                        $events_group .= $date . '(' . $week . ')';
                     }else {
-                        $events_group .= $date . '（' . $week . '）' . '、';
+                        $events_group .= $date . '(' . $week . ')' . '、';
                     }
                 }
                 //時間
                 $time_strat = date('H:i', strtotime($data_group['course_start_at']));
                 $time_end = date('H:i', strtotime($data_group['course_end_at']));
 
-                $events[$key] = $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data['Events'] . '（' . $data['location'] . '）';
+                $events[$key] = $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data['name'] . '(' . $data['location'] . ')';
 
                 $id_group = $data['id_group'];
-            }
+            // }
         }
 
-        // dd($events);
-
-        //課程服務內容
-        // $courseservices =
-
-        //一般定價
-        // $price =
         
-        return view('frontend.course_form', compact('events'));
+        return view('frontend.course_form', compact('course', 'events'));
     }
 
     

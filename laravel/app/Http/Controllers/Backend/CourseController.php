@@ -248,12 +248,13 @@ class CourseController extends Controller
                         $id_events = $data_events ->id;
                     }
                 } elseif (!empty($id_course) && $check != 1) {
-                    $events_course->id_course        = $id_course;     // 課程ID
-                    $events_course->name             = $events;        // 場次名稱
-                    $events_course->location         = $address;       // 課程地點
-                    $events_course->course_start_at  = $time_start;    // 課程開始時間
-                    $events_course->course_end_at    = $time_end;      // 課程結束時間
-                    $events_course->memo             = '';             // 課程備註
+                    $events_course->id_course        = $id_course;           // 課程ID
+                    $events_course->name             = $events;              // 場次名稱
+                    $events_course->location         = $address;             // 課程地點
+                    $events_course->course_start_at  = $time_start;          // 課程開始時間
+                    $events_course->course_end_at    = $time_end;            // 課程結束時間
+                    $events_course->memo             = '';                   // 課程備註
+                    $events_course->id_group         = strtotime("now");     // 群組ID
                     $events_course->save();
                     $id_events = $events_course->id;
                 }
@@ -347,14 +348,15 @@ class CourseController extends Controller
         $id_events = $request->get('id_events');
 
         // 查詢是否有該筆資料
-        $course = EventsCourse::where('id', $id_events)->get();
-
+        $events = Course::where('id', $id_events)->get();
+        // $course = EventsCourse::where('id', $events->id_course)->get();
         $sales_registration = SalesRegistration::where('id_events', $id_events)->get();
 
         // 刪除資料
-        if (!empty($course) && !empty($sales_registration)) {
-            $sales_registration = SalesRegistration::where('id_events', $id_events)->delete();
-            $course = EventsCourse::where('id', $id_events)->delete();
+        if ( !empty($events) && !empty($sales_registration)) {
+            SalesRegistration::where('id_events', $id_events)->delete();
+            EventsCourse::where('id', $id_events)->delete();
+            // Course::where('id', $events->id_course)->delete();
             $status = "ok";
         } else {
             $status = "error";
