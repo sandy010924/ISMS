@@ -8,16 +8,12 @@
     input:read-only {
       background-color: #e0e0e0 !important;
     }
+    /* .datetimepicker-input {  margin-bottom: 100px;
+ z-index: 1000;} */
   </style>
-  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"> -->
-  <!-- <script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script> -->
-  <!-- <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
-
-  
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script> -->
-  <!-- <link rel="stylesheet" href="jqueryui/style.css"> -->
+  <!-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <!-- <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+  <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
 <!-- Content Start -->
         <!--搜尋學員頁面內容-->
         <div class="card m-3">
@@ -133,7 +129,7 @@
                                   <button type="button" class="btn btn-primary float-right" onclick="btn_delete('','1');">刪除聯絡人</button>
                                 </div>
                               </div>
-                              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                              <ul class="nav nav-tabs pb-3" id="myTab" role="tablist">
                                 <li class="nav-item">
                                   <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic_data" role="tab" aria-controls="basic_data" aria-selected="true">基本訊息</a>
                                 </li>
@@ -234,15 +230,15 @@
                                 <!-- 歷史互動 -->
                                 <div class="tab-pane fade" id="history_data" role="tabpanel" aria-labelledby="history-tab">
                                   <div class="table-responsive">
-                                    <table class="table table-striped table-sm text-center">
-                                      <thead>
-                                        <tr>
-                                          <th>時間</th>
-                                          <th>動作</th>
-                                          <th>內容</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody id = "history_data_detail">
+                                    <!-- <table class="table table-striped table-sm text-center"> -->
+                                    @component('components.datatable')
+                                      <!-- <thead> -->
+                                      @slot('thead')
+                                        
+                                        @endslot
+                                      <!-- </thead> -->
+                                      <!-- <tbody id = "history_data_detail"> -->
+                                      @slot('tbody')
                                         <!-- <tr>
                                           <td>2019年05月19日 19:50:39</td>
                                           <td>參與</td>
@@ -253,8 +249,9 @@
                                           <td>參與</td>
                                           <td>60天財富計畫課後第一次線上輔導</td>
                                         </tr> -->
-                                      </tbody>
-                                    </table>
+                                        @endslot
+                                      @endcomponent
+                                    <!-- </table> -->
                                   </div>
                                 </div>
                                 <!-- 歷史互動 -->
@@ -333,20 +330,48 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <!-- alert End -->         
+        <!-- alert End -->       
 <!-- Content End -->
 
 
 <script>
 var id_student_old = '';
 $("document").ready(function(){
-                
   $(".demo2").tooltip();
 
   // 學員管理搜尋 (只能輸入數字、字母、_、.、@)
   $('#search_input').on('blur', function() {
       // console.log(`search_input: ${$(this).val()}`);
   });
+  // table=$('#table_list').DataTable({
+  //   "dom": '<l<t>p>',
+  //   "searching" :true,
+  //   "destroy":true,
+  //   "orderable": false,
+  //   "columnDefs": [ {
+  //     "targets": 'no-sort',                
+  //   } ],
+  //   initComplete: function () {                                
+  //     this.api().columns().every( function () {
+  //         var column = this;
+  //         var select = ''
+  //         select = $('<select><option value=""></option></select>')
+  //             .appendTo( $(column.header())  )
+  //             .on( 'change', function () {
+  //                 var val = $.fn.dataTable.util.escapeRegex(
+  //                     $(this).val()
+  //                 );
+  //                 column
+  //                     .search( val ? '^'+val+'$' : '', true, false )
+  //                     .draw();
+  //             } );
+  //         column.data().unique().sort().each( function ( d, j ) {
+  //             select.append( '<option value="'+d+'">'+d+'</option>' )
+  //         } );
+  //     });              
+  //   }
+  // }); 
+
 });
 
 // 輸入框
@@ -448,8 +473,10 @@ function view_form_detail(id,type){
 
 // 基本訊息
 function course_data(id_student){
+  // console.log(id_student)
   id_student_old = id_student
-  history_data();
+  history_data('1');
+  contact_data();
   $.ajax({
       type : 'POST',
       url:'course_data', 
@@ -458,7 +485,7 @@ function course_data(id_student){
         id_student: id_student
       },
       success:function(data){
-        console.log(data)
+        // console.log(data)
         // 銷講報到率
         var sales_successful_rate ='0',course_cancel_rate = '0';
         var course_sales_status = '';
@@ -515,8 +542,10 @@ function course_data(id_student){
 }
 
 // 歷史互動
-function history_data() {
+function history_data(action) {
+
   $('#history_data_detail').html(''); 
+  $('#table_thead').html(''); 
   $.ajax({
       type : 'POST',
       url:'history_data', 
@@ -527,7 +556,7 @@ function history_data() {
       success:function(data){
         var id_student = '';
         // console.log(data)
-        $.each(data, function(index,val) {
+         $.each(data, function(index,val) {
           id_student = val['id_student'];
           data +=
                 '<tr>' +
@@ -536,7 +565,42 @@ function history_data() {
                 '<td>' + val['course_sales'] + '</td>' +
                 '</tr>'
         });
-        $('#history_data_detail').html(data);                          
+        data_thead =
+        '<tr>' +
+          '<th>時間</th>' +
+          '<th>動作</th>' +
+          '<th>內容</th>' +
+        '</tr>'
+         $('#history_data_detail').html(data);
+         $('#table_thead').html(data_thead);
+        table=$('#table_list').DataTable({
+            "dom": '<l<t>p>',
+            "searching" :true,
+            "destroy":true,
+            "orderable": false,
+            "columnDefs": [ {
+              "targets": 'no-sort',                
+            } ],
+            initComplete: function () {                                
+              this.api().columns().every( function () {
+                  var column = this;
+                  var select = ''
+                  select = $('<select class="form-control"><option value=""></option></select>')
+                      .appendTo( $(column.header())  )
+                      .on( 'change', function () {
+                          var val = $.fn.dataTable.util.escapeRegex(
+                              $(this).val()
+                          );
+                          column
+                              .search( val ? '^'+val+'$' : '', true, false )
+                              .draw();
+                      } );
+                  column.data().unique().sort().each( function ( d, j ) {
+                      select.append( '<option value="'+d+'">'+d+'</option>' )
+                  } );
+              });              
+            }
+          });                                    
       },
       error: function(error){
         console.log(JSON.stringify(error));     
@@ -545,7 +609,7 @@ function history_data() {
 }
 // 聯絡狀況
 function contact_data() {
-  
+  $('#contact_data_detail').html(''); 
   $.ajax({
       type : 'POST',
       url:'contact_data', 
@@ -587,10 +651,10 @@ function contact_data() {
           data +=
                 '<tr>' +
                 '<td>' + 
-                '<div class="input-group date" id="new_starttime'+ id +'" data-target-input="nearest"> ' +
-                    ' <input type="text" onblur="updatetime($(this),'+id+',0);"  value="' + val['updated_at'] +'"   name="new_starttime'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#new_starttime'+ id +'" required/> ' +
+                '<div class="input-group date"  id="new_starttime'+ id +'" data-target-input="nearest"> ' +
+                    ' <input type="text" onblur="update_time($(this),'+id+',0);" value="' + val['updated_at'] +'"   name="new_starttime'+ id +'" class="form-control datetimepicker-input " data-target="#new_starttime'+ id +'" required/> ' +
                     ' <div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> '+
-                        ' <div class="input-group-text"><i class="fa fa-clock"></i></div> '+
+                        ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
                     '</div> ' +
                 '</div>' +
                 + '</td>' + 
@@ -613,24 +677,38 @@ function contact_data() {
                   '<div class="input-group date" id="remind'+ id +'" data-target-input="nearest"> ' +
                       ' <input type="text" onblur="remind($(this),'+id+',4);"  value="' + val['remind_at'] +'"   name="remind'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#remind'+ id +'" required/> ' +
                       ' <div class="input-group-append" data-target="#remind'+ id +'" data-toggle="datetimepicker"> '+
-                          ' <div class="input-group-text"><i class="fa fa-clock"></i></div> '+
+                          ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
                       '</div> ' +
                   '</div>' +
                  + '</td>' +
-                '</tr>'                
-        
-        
+                '</tr>'
         });
         $('#contact_data_detail').html(data);  
         // 日期
+        var iconlist = {  time: 'fas fa-clock',
+                      date: 'fas fa-calendar',
+                      up: 'fas fa-arrow-up',
+                      down: 'fas fa-arrow-down',
+                      previous: 'fas fa-arrow-circle-left',
+                      next: 'fas fa-arrow-circle-right',
+                      today: 'far fa-calendar-check-o',
+                      clear: 'fas fa-trash',
+                      close: 'far fa-times' } 
         $(updatetime.substring(0, updatetime.length-1)).datetimepicker({
           format: "YYYY-MM-DD HH:mm:ss",
+          icons: iconlist, 
           defaultDate:new Date(),
+          pickerPosition: "bottom-left" 
         });
         $(remindtime.substring(0, remindtime.length-1)).datetimepicker({
           format: "YYYY-MM-DD HH:mm:ss",
+          icons: iconlist, 
           defaultDate:new Date(),
-        });        
+          pickerPosition: "bottom-left" 
+        });       
+
+        // $(".datepicker").datepicker();
+        // $('.ui-datepicker').addClass('notranslate'); 
       },
       error: function(error){
         console.log(JSON.stringify(error));     
@@ -671,7 +749,7 @@ function save() {
 /* 自動儲存 - S Rocky(2020/03/08) */
 
 // 日期
-function updatetime(data,id,type){
+function update_time(data,id,type){
   // console.log(data.val()) 
   save_data(data.val(),id,type)
 }
@@ -689,6 +767,7 @@ function contact(data,id,type){
 function status(data,id,type){    
     save_data(data.val(),id,type)
 }
+// 提醒
 function remind(data,id,type){    
     save_data(data.val(),id,type)
 }
