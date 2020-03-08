@@ -474,8 +474,8 @@ function view_form_detail(id,type){
 // 基本訊息
 function course_data(id_student){
   // console.log(id_student)
-  id_student_old = id_student
-  history_data('1');
+  id_student_old = id_student  
+  history_data();
   contact_data();
   $.ajax({
       type : 'POST',
@@ -542,10 +542,7 @@ function course_data(id_student){
 }
 
 // 歷史互動
-function history_data(action) {
-
-  $('#history_data_detail').html(''); 
-  $('#table_thead').html(''); 
+function history_data() {
   $.ajax({
       type : 'POST',
       url:'history_data', 
@@ -555,6 +552,8 @@ function history_data(action) {
       },
       success:function(data){
         var id_student = '';
+        $('#history_data_detail').html(''); 
+        $('#table_thead').html(''); 
         // console.log(data)
          $.each(data, function(index,val) {
           id_student = val['id_student'];
@@ -573,34 +572,34 @@ function history_data(action) {
         '</tr>'
          $('#history_data_detail').html(data);
          $('#table_thead').html(data_thead);
-        table=$('#table_list').DataTable({
-            "dom": '<l<t>p>',
-            "searching" :true,
-            "destroy":true,
-            "orderable": false,
-            "columnDefs": [ {
-              "targets": 'no-sort',                
-            } ],
-            initComplete: function () {                                
-              this.api().columns().every( function () {
-                  var column = this;
-                  var select = ''
-                  select = $('<select class="form-control"><option value=""></option></select>')
-                      .appendTo( $(column.header())  )
-                      .on( 'change', function () {
-                          var val = $.fn.dataTable.util.escapeRegex(
-                              $(this).val()
-                          );
-                          column
-                              .search( val ? '^'+val+'$' : '', true, false )
-                              .draw();
-                      } );
-                  column.data().unique().sort().each( function ( d, j ) {
-                      select.append( '<option value="'+d+'">'+d+'</option>' )
-                  } );
-              });              
-            }
-          });                                    
+        
+        //  table = $('#table_list').DataTable({
+        //     "dom": '<l<t>p>',
+        //     "destroy":true,
+        //     "columnDefs": [ {
+        //       "targets": 'no-sort',                
+        //     } ],
+        //     initComplete: function () {                                
+        //       this.api().columns().every( function () {
+        //           var column = this;
+        //           var select = ''
+        //           select = $('<select ><option value=""></option></select>')
+        //               .appendTo( $(column.header())  )
+        //               .on( 'change', function () {
+        //                   var val = $.fn.dataTable.util.escapeRegex(
+        //                       $(this).val()
+        //                   );
+        //                   column
+        //                       .search( val ? '^'+val+'$' : '', true, false )
+        //                       .draw();
+        //               } );
+        //           column.data().unique().sort().each( function ( d, j ) {
+        //               select.append( '<option value="'+d+'">'+d+'</option>' )
+        //           } );
+        //       });              
+        //     }
+        //   });                                    
+          
       },
       error: function(error){
         console.log(JSON.stringify(error));     
