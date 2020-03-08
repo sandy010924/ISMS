@@ -97,6 +97,10 @@ Route::get('error_authority', function () {
     Route::get('course_advanced', function () {
         return view('frontend.course_advanced');
     })->name('course_advanced');
+    // Route::get('course_advanced', function () {
+    //     return view('frontend.course_advanced');
+    // })->name('course_advanced');
+    Route::get('course_advanced', 'Frontend\CourseAdvancedController@show')->name('course_advanced');
 
 
 /*** [課程管理] 場次總覽 ***/
@@ -116,6 +120,15 @@ Route::get('error_authority', function () {
     Route::get('course_list_apply', function () {
         return view('frontend.course_list_apply');
     })->name('course_list_apply');
+
+/*** [課程管理] 報名名單 ***/
+    // Route::get('course_list_apply', function () {
+    //     return view('frontend.course_list_apply');
+    // })->name('course_list_apply');
+    /*** 顯示資料 ***/
+    Route::get('course_list_apply', 'Frontend\CourseListApplyController@show')->name('course_list_apply');
+    /*** 刪除資料 ***/
+    Route::post('course_list_apply_delete', 'Frontend\CourseListApplyController@delete');
 
     Route::get('course_list_refund', function () {
         return view('frontend.course_list_refund');
@@ -158,10 +171,11 @@ Route::get('error_authority', function () {
 
 
 /*** [課程管理] 場次報表 ***/
-    /*** 顯示資料 ***/
-    Route::get('course_return', function () {
-        return view('frontend.course_return');
-    })->name('course_return');
+    // Route::get('course_return', function () {
+    //     return view('frontend.course_return');
+    // })->name('course_return');
+    /*** 顯示資料 Sandy(2020/01/17) ***/
+    Route::get('course_return', 'Frontend\CourseReturnController@show')->name('course_return');
 
 
 /*** [現場人員] 報到 ***/

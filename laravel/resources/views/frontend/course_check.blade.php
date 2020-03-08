@@ -35,7 +35,7 @@
           </h6>
         </div>
         <div class="col text-right">
-          <a href="{{ route('course_return') }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
+          <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
         </div>
       </div>
       <div class="row">

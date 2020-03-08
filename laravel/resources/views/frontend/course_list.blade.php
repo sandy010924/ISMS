@@ -158,7 +158,7 @@
                         名單
                       </a>
                       <div class="dropdown-menu dropdown_status" aria-labelledby="dropdownMenu2">
-                        <a role="button" class="dropdown-item" href="{{ route('course_list_apply') }}">報名名單</a>
+                        <a role="button" class="dropdown-item" href="{{ route('course_list_apply', [ 'id' => $course['id'] ]) }}">報名名單</a>
                         <a role="button" class="dropdown-item" href="{{ route('course_list_refund') }}">退費名單</a>
                       </div>
                       <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data') }}">場次數據</a>
@@ -182,6 +182,8 @@
 
   <!-- Content End -->
   <script>
+    // Sandy(2020/02/26) dt列表搜尋 S
+    var table;
     $(document).ready(function() {
       //新增課程 選擇銷講/正課 Sandy (2020/02/26)
       $("select#new_type"). change(function(){
@@ -232,9 +234,6 @@
         } ]
       });
     });
-
-    // Sandy(2020/02/26) dt列表搜尋 S
-    var table;
 
     $('#search_name').on('keyup', function(e) {
       if (e.keyCode === 13) {

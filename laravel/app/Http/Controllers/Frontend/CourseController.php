@@ -34,6 +34,10 @@ class CourseController extends Controller
                 $type = "registration";
             }
 
+            //判斷是否有下一階
+            $nextLevel = count(Course::where('id_type', $data['id_course'])
+                               ->get());
+
             $count_apply = count(EventsCourse::join($type, $type.'.id_events', '=', 'events_course.id')
                         ->Where('events_course.id', $data['id'])       
                         ->Where('id_status', '<>', 2)   
@@ -61,7 +65,8 @@ class CourseController extends Controller
                 'href_adv' => route('course_advanced',["id"=> $data['id'] ]),
                 'href_return' => route('course_return',["id"=> $data['id'] ]),
                 'href_form' => route('course_form',["id"=> $data['id'] ]),
-                'id' => $data['id']
+                'id' => $data['id'],
+                'nextLevel' => $nextLevel
             ];
         }
         

@@ -55,11 +55,11 @@
               </label>
               <input type="text" id="idate" name="idate" class="form-control" disabled readonly>
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="iname">
                 <b>姓名</b>
               </label>
-              <input type="text" id="iname" name="iname" class="form-control" value="">
+              <input type="text" id="iname" name="iname" class="form-control" value="" required>
             </div>
             <div class="form-group mb-5">
               <label class="col-form-label" for="isex">
@@ -76,29 +76,29 @@
                 </div>
               </div>
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="iid">
                 <b>身分證字號</b>
               </label>
-              <input type="text" id="iid" name="iid" class="form-control">
+              <input type="text" id="iid" name="iid" class="form-control" required>
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="iphone">
                 <b>聯絡電話</b>
               </label>
-              <input type="text" id="iphone" name="iphone" class="form-control">
+              <input type="text" id="iphone" name="iphone" class="form-control" required>
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="iemail">
                 <b>電子郵件</b>
               </label>
-              <input type="text" id="iemail" name="iemail" class="form-control">
+              <input type="text" id="iemail" name="iemail" class="form-control" required>
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="ibirthday">
                 <b>出生日期</b>
               </label>           
-              <input type="date" id="ibirthday" name="ibirthday" class="form-control"> 
+              <input type="date" id="ibirthday" name="ibirthday" class="form-control" required> 
             </div>
             <div class="form-group mb-5">
               <label class="col-form-label" for="icompany">
@@ -112,11 +112,11 @@
               </label>
               <input type="text" id="iprofession" name="iprofession" class="form-control">
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="iaddress">
                 <b>聯絡地址</b>
               </label>
-              <input type="text" id="iaddress" name="iaddress" class="form-control">
+              <input type="text" id="iaddress" name="iaddress" class="form-control" required>
             </div>
             <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
             <button type="button" name="next" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
@@ -166,9 +166,9 @@
               </label>
               <div class="d-block my-2">
                 @foreach( $events as $data )
-                  <div class="custom-control custom-checkbox my-3">
-                    <input type="checkbox" id="ievent1" name="ievent" class="custom-control-input">
-                    <label class="custom-control-label h6" for="ievent1">{{$data}}</label>
+                  <div class="custom-control custom-radio my-3">
+                    <input type="radio" id="{{ $data['id_group'] }}" value="{{ $data['id_group'] }}" name="ievent" class="custom-control-input">
+                    <label class="custom-control-label h6" for="{{ $data['id_group'] }}">{{ $data['event'] }}</label>
                   </div>
                 @endforeach
               </div>
@@ -220,7 +220,7 @@
               <label class="text-secondary px-2 py-1"><small>（付款完成請「截圖」回傳LINE@，謝謝）</small></label>
             </div>
             <hr style="border: 0;">
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="iinvoice">
                 <b>統一發票</b>
               </label>
@@ -265,7 +265,7 @@
             <div class="form-group my-5 required">
               <div class="custom-control custom-checkbox my-3">
                 <input type="checkbox" class="custom-control-input" id="agree_check1" name="agree" required>
-                <label class="custom-control-label" for="agree_check1">我同意</label>
+                <label class="custom-control-label" for="agree_check1">我同意</label><span class="required_span"></span>
               </div>
               <textarea class="form-control bg-white" disabled readonly>課程服務限本人使用，不得轉讓他人使用。</textarea>
             </div>
@@ -273,7 +273,7 @@
             <div class="form-group my-5 required">
               <div class="custom-control custom-checkbox my-3">
                 <input type="checkbox" class="custom-control-input" id="agree_check2" name="agree" required>
-                <label class="custom-control-label" for="agree_check2">我同意</label>
+                <label class="custom-control-label" for="agree_check2">我同意</label><span class="required_span"></span>
               </div>
               <textarea rows="5" class="form-control bg-white" disabled readonly>如您於繳交費用後無法參加課程，請保留此表單備分內容。（報名完成會寄到您填寫的email）&#13;&#10;申請之退費方式、款項如下： &#13;&#10; 5日內全額退費（繳費後隔日起算）&#13;&#10;★第6日起：課程費用80%（繳交費用未達20%者，恕不辦理退費）&#13;&#10;★第31日起或開課後：恕不辦理退費。</textarea>
             </div>
@@ -281,12 +281,12 @@
             <div class="form-group my-5 required">
               <div class="custom-control custom-checkbox my-3">
                 <input type="checkbox" class="custom-control-input" id="agree_check3" name="agree" required>
-                <label class="custom-control-label" for="agree_check3">我同意</label>
+                <label class="custom-control-label" for="agree_check3">我同意</label><span class="required_span"></span>
               </div>
               <textarea class="form-control bg-white" disabled readonly>報名完成後1年內須參加課程服務，逾期則不得參加課程服務，亦不得要求退還已繳交之費用。</textarea>
             </div>
             <hr>
-            <div class="form-group my-5">
+            <div class="form-group my-5 required">
               <p>本人保證上述資料之真實性並願遵守本「課程服務合約」之內容（請簽中文正楷）</p>
               <!-- 電子簽章 -->
               {{-- <div> --}}
@@ -384,6 +384,14 @@
   $("button[name='next']").click(function(){
     var now = parseInt($(this).parent().attr("id").split("form").pop());
     next(now);
+
+    // alert($("#step" + now + " input[required='required']")[0]].val());
+    // if( $("#step" + now + " input[required='required']").val() == ""){
+    //   alert("請輸入完整內容")
+    //   return false;
+    // }else{
+    //   next(now);
+    // }
   });
 
   //下一步跳頁 Sandy (2020/03/05)
@@ -423,7 +431,7 @@
   
   //送出報名 Sandy (2020/03/05)
   $("#submit").click(function(){
-    // var phone = $('#idate').val();
+    //get data
     var iname = $('#iname').val();
     var isex = $('input[name="isex"]:checked').val();
     var iid = $('#iid').val();
@@ -440,6 +448,7 @@
     var iinvoice = $('input[name="iinvoice"]:checked').val();
     var inum = $('#inum').val();
     var icompanytitle = $('#icompanytitle').val();
+    var id_group = $('input[name="ievent"]:checked').val();
 
     $.ajax({
       type:'POST',
@@ -461,16 +470,20 @@
         inumber : inumber,
         iinvoice : iinvoice,
         inum : inum,
-        icompanytitle : icompanytitle
+        icompanytitle : icompanytitle,
+        id_group : id_group
       },
       success:function(data){
-        console.log(data);  
+        // console.log(data);  
 
-        // if( data == 'success' ){
-          
-        // }else{
+        if( data == 'success' ){
+          alert('報名成功');
+          location.reload();
+        }else{
+          alert('報名失敗');
+          location.reload();
+        }
 
-        // }
         // if( data == "nodata" ){          
         //   $("#iphone").val($('#iphone_verify').val());
         // }else{

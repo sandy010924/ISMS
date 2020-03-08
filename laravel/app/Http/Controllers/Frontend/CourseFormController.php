@@ -24,6 +24,7 @@ class CourseFormController extends Controller
                                 ->Where('course.id_type', $id)
                                 ->select('events_course.*')
                                 ->get();
+
         $id_group='';
         
         foreach( $events_all as $key => $data ){
@@ -59,20 +60,31 @@ class CourseFormController extends Controller
                     
                     if( ++$i === $numItems){
                         $events_group .= $date . '(' . $week . ')';
+                        // $$events_id .= (string)$data_group['id'];
                     }else {
                         $events_group .= $date . '(' . $week . ')' . '、';
+                        // $events_id .= (string)$data_group['id'];
                     }
+
                 }
                 //時間
                 $time_strat = date('H:i', strtotime($data_group['course_start_at']));
                 $time_end = date('H:i', strtotime($data_group['course_end_at']));
 
-                $events[$key] = $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data['name'] . '(' . $data['location'] . ')';
+                // $events[$key] = $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data['name'] . '(' . $data['location'] . ')';
+
+
+                $events[$key] = [
+                    'event' => $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data['name'] . '(' . $data['location'] . ')',
+                    'id_group' => $data['id_group']
+                ];
+
 
                 $id_group = $data['id_group'];
             // }
         }
 
+        // dd($events);
         
         return view('frontend.course_form', compact('course', 'events'));
     }

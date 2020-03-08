@@ -25,7 +25,12 @@
             <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->name }}" disabled readonly>
           </div>
         </div>
-        <div class="col-4 align-middle align-self-end"> 
+        <div class="col align-middle align-self-end">
+          @if( $course->id_type != "") 
+          <a role="button" href="{{ route('course_form',['id'=> $course->id_type]) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
+              預覽報名表
+            </a>
+          @endif
           <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#newform">    
             @if( $course->id_type == "")
               新增報名表

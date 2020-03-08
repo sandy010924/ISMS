@@ -103,7 +103,11 @@
                   <!-- 已過場次 -->
                   <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
                   <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                  <a href="{{ $event['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
+                  @if( $event['nextLevel'] > 0 )
+                    <a href="{{ $event['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
+                  @else
+                    <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                  @endif
                   <a href="{{ $event['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
                   @endif
                   <button id="{{ $event['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $event['id'] }});" value="{{ $event['id'] }}" >刪除</button>
