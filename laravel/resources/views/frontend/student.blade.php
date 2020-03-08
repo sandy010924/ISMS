@@ -9,7 +9,15 @@
       background-color: #e0e0e0 !important;
     }
   </style>
-  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"> -->
+  <!-- <script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script> -->
+  <!-- <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
+
+  
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="jqueryui/style.css"> -->
 <!-- Content Start -->
         <!--搜尋學員頁面內容-->
         <div class="card m-3">
@@ -93,8 +101,8 @@
                 </tbody>
               </table>
             </div>
-            <div class="modal fade bd-example-modal-lg text-left" id="student_information" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-                          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal fade bd-example-modal-xl text-left" id="student_information" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-xl" role="document">
                             <div class="modal-content p-3">
                               <div class="row">
                                 <div class="col-5 py-2">
@@ -325,24 +333,19 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <!-- alert End -->
+        <!-- alert End -->         
 <!-- Content End -->
 
 
 <script>
 var id_student_old = '';
 $("document").ready(function(){
+                
   $(".demo2").tooltip();
 
   // 學員管理搜尋 (只能輸入數字、字母、_、.、@)
   $('#search_input').on('blur', function() {
       // console.log(`search_input: ${$(this).val()}`);
-  });
-
-  $('#datetimepicker1').datetimepicker({
-    format: "YYYY-MM-DD HH:mm",
-    defaultDate:new Date(),
-    locale:"zh-tw"
   });
 });
 
@@ -542,8 +545,7 @@ function history_data() {
 }
 // 聯絡狀況
 function contact_data() {
-  // console.log(id_student);
-
+  
   $.ajax({
       type : 'POST',
       url:'contact_data', 
@@ -552,39 +554,83 @@ function contact_data() {
         id_student: id_student_old
       },
       success:function(data){
-        console.log(data)
+        // console.log(data)
+        updatetime = '',remindtime='';
         $.each(data, function(index,val) {
+          opt1 = '',opt2 = '',opt3 = '',opt4 = '',opt5 = '',opt6 = '',opt7 = '';
           id = val['id'];
+          switch (val['id_status']) {
+          case 10:
+            　opt1 = 'selected';
+          　break;
+          case 11:
+            　opt2 = 'selected';
+          　break;
+          case 12:
+            　opt3 = 'selected';
+          　break;
+          case 13:
+            　opt4 = 'selected';
+          　break;
+          case 14:
+            　opt5 = 'selected';
+          　break;
+          case 15:
+            　opt6 = 'selected';
+          　break;
+          case 16:
+            　opt7 = 'selected';
+          　break;
+          }
+          updatetime +="#new_starttime" + id + ','
+          remindtime +="#remind" + id + ','
           data +=
                 '<tr>' +
                 '<td>' + 
-                '<div class="form-group"><div class="input-group date" id="datetimepicker1" data-target-input="nearest"> ' +
-                ' <input type="text" id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker1" ' + 'name="params[start_time]" />' +
-                    ' <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker"> ' +
-                      ' <div class="input-group-text"><i class="fa fa-calendar"></i></div>'+
-                    '</div>' +
-                  '</div>' +
+                '<div class="input-group date" id="new_starttime'+ id +'" data-target-input="nearest"> ' +
+                    ' <input type="text" onblur="updatetime($(this),'+id+',0);"  value="' + val['updated_at'] +'"   name="new_starttime'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#new_starttime'+ id +'" required/> ' +
+                    ' <div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> '+
+                        ' <div class="input-group-text"><i class="fa fa-clock"></i></div> '+
+                    '</div> ' +
                 '</div>' +
                 + '</td>' + 
                 '<td>' + val['name_course'] + '</td>' + 
-                '<td>' + '<input type="text" onblur="tt('+id+');" id="' + id +'_status_payment" class="border-0 bg-transparent input_width">' + '</td>' + 
-                '<td>' + '<input type="text" id="' + id +'_contact"  class="border-0 bg-transparent input_width">' + '</td>' +
-                '<td>' + '<div class="form-group m-0"> <select id="' + id +'_status" class="custom-select border-0 bg-transparent input_width"> ' +
+                '<td>' + '<input type="text" onblur="status_payment($(this),'+id+',1);" id="' + id +'_status_payment" value="' + val['status_payment'] +'" class="border-0 bg-transparent input_width">' + '</td>' + 
+                '<td>' + '<input type="text" onblur="contact($(this),'+id+',2);" id="' + id +'_contact" value="' + val['contact'] +'"  class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<div class="form-group m-0"> <select id="' + id +'_status" onblur="status($(this),'+id+',3);" class="custom-select border-0 bg-transparent input_width"> ' +
                             '<option selected disabled value=""></option>' +
-                            '<option value="10">完款</option>' +
-                            '<option value="10">付訂</option>' +
-                            '<option value="12">待追</option>' +
-                            '<option value="13">退款中</option>' +
-                            '<option value="14">退款完成</option>' +
-                            '<option value="15">無意願</option>' +
-                            '<option value="16">推薦其他講師</option>' +
+                            '<option value="11" '+　opt2 +'>完款</option>' +
+                            '<option value="10" '+　opt1 +'>付訂</option>' +
+                            '<option value="12" '+　opt3 +'>待追</option>' +
+                            '<option value="13" '+　opt4 +'>退款中</option>' +
+                            '<option value="14" '+　opt5 +'>退款完成</option>' +
+                            '<option value="15" '+　opt6 +'>無意願</option>' +
+                            '<option value="16" '+　opt7 +'>推薦其他講師</option>' +
                         '</select>' +
                     '</div> </td>' +
                 '<td>' + val['person'] + '</td>' +
-                '<td>' + '設提醒' + '</td>' +
-                '</tr>'
+                '<td>' + 
+                  '<div class="input-group date" id="remind'+ id +'" data-target-input="nearest"> ' +
+                      ' <input type="text" onblur="remind($(this),'+id+',4);"  value="' + val['remind_at'] +'"   name="remind'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#remind'+ id +'" required/> ' +
+                      ' <div class="input-group-append" data-target="#remind'+ id +'" data-toggle="datetimepicker"> '+
+                          ' <div class="input-group-text"><i class="fa fa-clock"></i></div> '+
+                      '</div> ' +
+                  '</div>' +
+                 + '</td>' +
+                '</tr>'                
+        
+        
         });
-        $('#contact_data_detail').html(data);                                      
+        $('#contact_data_detail').html(data);  
+        // 日期
+        $(updatetime.substring(0, updatetime.length-1)).datetimepicker({
+          format: "YYYY-MM-DD HH:mm:ss",
+          defaultDate:new Date(),
+        });
+        $(remindtime.substring(0, remindtime.length-1)).datetimepicker({
+          format: "YYYY-MM-DD HH:mm:ss",
+          defaultDate:new Date(),
+        });        
       },
       error: function(error){
         console.log(JSON.stringify(error));     
@@ -622,25 +668,58 @@ function save() {
 }
 /* 完整內容 -E Rocky(2020/02/29 */
 
+/* 自動儲存 - S Rocky(2020/03/08) */
 
-// 主持開場
-// $('input[name="new_datasource"]').val(data['datasource']);
-$('input[name="status_payment"]').on('blur', function() {
-      var data_type = 'host';
-      console.log('blur');
-      // save_data($(this), data_type);
-    });
-$('input[name="status_payment"]').on('keyup', function(e) {
-  if (e.keyCode === 13) {
-    var data_type = 'host';
-    console.log('keyup');
-    // save_data($(this), data_type);
-  }
-});
-function tt(id){
-  console.log(id);
+// 日期
+function updatetime(data,id,type){
+  // console.log(data.val()) 
+  save_data(data.val(),id,type)
+}
+// 付款狀態 / 日期
+function status_payment(data,id,type){    
+  save_data(data.val(),id,type)
 }
 
+// 聯絡內容
+function contact(data,id,type){    
+    save_data(data.val(),id,type)
+}
+
+// 最新狀態
+function status(data,id,type){    
+    save_data(data.val(),id,type)
+}
+function remind(data,id,type){    
+    save_data(data.val(),id,type)
+}
+function save_data(data, id,type ){
+  $.ajax({
+    type:'POST',
+    url:'contact_data_save',
+    // dataType:'JSON',
+    data:{
+      id: id,
+      type: type,
+      data: data
+    },
+    success:function(data){
+      // console.log(data);
+
+      /** alert **/
+      $("#success_alert_text").html("資料儲存成功");
+      fade($("#success_alert"));
+    },
+    error: function(jqXHR){
+      console.log(JSON.stringify(jqXHR));  
+
+      /** alert **/ 
+      $("#error_alert_text").html("資料儲存失敗");
+      fade($("#error_alert"));      
+    }
+  });
+}
+
+/* 自動儲存 - S Rocky(2020/03/08) */
 
 
 /*搜尋 Rocky(2020/02/23)*/

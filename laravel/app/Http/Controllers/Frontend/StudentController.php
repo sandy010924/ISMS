@@ -89,12 +89,12 @@ class StudentController extends Controller
         $datas = SalesRegistration::leftjoin('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                             ->leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
                             ->leftjoin('events_course', 'events_course.id', '=', 'sales_registration.id_events')
-                            ->select('sales_registration.*', 'isms_status.name as status_sales', 'course.name as course_sales', 'events_course.name as  course_sales_events')
+                            ->select('sales_registration.id as sales_registration_id', 'sales_registration.*', 'isms_status.name as status_sales', 'course.name as course_sales', 'events_course.name as  course_sales_events')
                             ->selectRaw('sales_registration.*, COUNT(sales_registration.id) as count_sales')
                             ->selectRaw("SUM(CASE WHEN sales_registration.id_status = '4' THEN 1 ELSE 0 END) AS count_sales_ok")
                             ->selectRaw("SUM(CASE WHEN sales_registration.id_status = '5' THEN 1 ELSE 0 END) AS count_sales_no")
                             ->where('sales_registration.id_student', $id_student)
-                            ->groupBy('sales_registration.id')
+                            ->groupBy('sales_registration.id_student', 'course.id')
                             ->orderBy('sales_registration.created_at', 'desc')
                             ->first();
 
