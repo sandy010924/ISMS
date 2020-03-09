@@ -18,5 +18,6 @@ class Student extends Model
         'company',
         'profession',
         'address',
+        'check_blacklist',
     ];
 }

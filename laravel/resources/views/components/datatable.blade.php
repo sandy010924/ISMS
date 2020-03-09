@@ -1,6 +1,6 @@
 <div class="table-responsive">
   <table id="table_list" class="table table-striped table-sm text-center border rounded-lg">
-    <thead>
+    <thead id="table_thead">
       {{ $thead }}
        {{-- <tr>
         <th>日期</th>
@@ -11,7 +11,7 @@
         <th></th>
       </tr>  --}}
     </thead>
-    <tbody>
+    <tbody id = "history_data_detail">
       {{ $tbody }}
        {{-- @foreach($courses as $key => $course )
        @foreach(array_combine($courses, $salesregistrations) as $course => $salesregistration) --}}

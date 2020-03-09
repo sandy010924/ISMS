@@ -55,72 +55,6 @@
               </div>
             </div>
           </div>
-          {{-- <button type="button" class="btn btn-outline-secondary btn_date mx-1" data-toggle="modal" data-target="#form_newclass">新增課程</button>
-          <div class="modal fade" id="form_newclass" tabindex="-1" role="dialog" aria-labelledby="form_newclassLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="form_newclassLabel">新增課程</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label for="newclass_name" class="col-form-label">課程名稱</label>
-                      <input type="text" class="form-control" id="newclass_name" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="newclass_teacher" class="col-form-label">講師</label>
-                      <select class="custom-select" id="newclass_teacher" required>
-                        <option selected>選擇講師</option>
-                        <option value="1">Julia</option>
-                        <option value="2">Jack</option>
-                        <option value="3">Mark</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="newclass_date" class="col-form-label">日期</label>
-                      <input type="date" class="form-control" id="newclass_date">
-                    </div>
-                    <div class="form-group">
-                      <label for="newclass_session" class="col-form-label">場次</label>
-                      <select class="custom-select form-control" id="newclass_session">
-                        <option selected>選擇場次</option>
-                        <option value="1">台北上午場</option>
-                        <option value="2">台北下午場</option>
-                        <option value="3">台北晚上場</option>
-                        <option value="4">台中上午場</option>
-                        <option value="5">台中下午場</option>
-                        <option value="6">台中晚上場</option>
-                        <option value="7">高雄上午場</option>
-                        <option value="8">高雄下午場</option>
-                        <option value="9">高雄晚上場</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="newclass_location" class="col-form-label">地點</label>
-                      <input type="text" class="form-control" id="newclass_location">
-                    </div>
-                    <div class="form-group">
-                      <label for="newclass_timestart" class="col-form-label">開始時間</label>
-                      <input type="time" class="form-control" id="newclass_timestart">
-                    </div>
-                    <div class="form-group">
-                      <label for="newclass_timeend" class="col-form-label">結束時間</label>
-                      <input type="time" class="form-control" id="newclass_timeend">
-                    </div>
-                    
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                  <button type="button" id="import_check" class="btn btn-primary">確認</button>
-                </div>
-              </div>
-            </div>
-          </div> --}}
         </div>
         <div class="col"></div>
         <div class="col-3">
@@ -145,34 +79,38 @@
           </tr>
         @endslot
         @slot('tbody')
-            @foreach($courses as $key => $course )
+            @foreach($events as $key => $event )
               <tr>
-                <td>{{ $course['date'] }}</td>
-                <td>{{ $course['name'] }}</td>
-                <td>{{ $course['event'] }}</td>
-                <td>{{ $course['count_apply'] }} / <span style="color:red">{{ $course['count_cancel'] }}</span></td>
-                <td>{{ $course['count_check'] }}</span></td>
+                <td>{{ $event['date'] }}</td>
+                <td>{{ $event['name'] }}</td>
+                <td>{{ $event['event'] }}</td>
+                <td>{{ $event['count_apply'] }} / <span style="color:red">{{ $event['count_cancel'] }}</span></td>
+                <td>{{ $event['count_check'] }}</span></td>
                 <td>
-                  @if( strtotime($course['date']) == strtotime(date("Y-m-d")) )
+                  @if( strtotime($event['date']) == strtotime(date("Y-m-d")) )
                   <!-- 今日場次 -->
-                  <a href="{{ $course['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">開始報到</button></a>
-                  <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                  <a href="{{ $event['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">開始報到</button></a>
+                  <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                   <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                   <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
-                  @elseif( strtotime($course['date']) > strtotime(date("Y-m-d")) )
+                  @elseif( strtotime($event['date']) > strtotime(date("Y-m-d")) )
                   <!-- 未過場次 -->
                   <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
-                  <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                  <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                   <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                   <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
-                  @elseif( strtotime($course['date']) < strtotime(date("Y-m-d")) )
+                  @elseif( strtotime($event['date']) < strtotime(date("Y-m-d")) )
                   <!-- 已過場次 -->
                   <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
-                  <a href="{{ $course['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                  <a href="{{ $course['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
-                  <a href="{{ $course['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
+                  <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                  @if( $event['nextLevel'] > 0 )
+                    <a href="{{ $event['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
+                  @else
+                    <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                   @endif
-                  <button id="{{ $course['course_id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $course['course_id'] }});" value="{{ $course['course_id'] }}" >刪除</button>
+                  <a href="{{ $event['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
+                  @endif
+                  <button id="{{ $event['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $event['id'] }});" value="{{ $event['id'] }}" >刪除</button>
                 </td>
               </tr>
             @endforeach
@@ -267,15 +205,15 @@
   // Sandy(2020/02/26) dt列表搜尋 E
 
   // 刪除 Rocky(2020/02/11)
-  function btn_delete(id_course){
-    var msg = "是否刪除此課程?";
+  function btn_delete(id_events){
+    var msg = "是否刪除此場次?";
     if (confirm(msg)==true){
       $.ajax({
           type : 'POST',
           url:'course_delete', 
           dataType: 'json',    
           data:{
-            id_course: id_course
+            id_events: id_events
           },
           success:function(data){
             if (data['data'] == "ok") {                           

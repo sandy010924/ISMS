@@ -11472,7 +11472,8 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No data available in table",
+			// "sEmptyTable": "No data available in table",
+			"sEmptyTable": "查無資料",
 	
 	
 			/**

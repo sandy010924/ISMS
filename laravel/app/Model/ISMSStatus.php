@@ -10,6 +10,7 @@ class ISMSStatus extends Model
 
     protected $fillable = [
         'id',
-        'name'
+        'name',
+        'type'
     ];
 }

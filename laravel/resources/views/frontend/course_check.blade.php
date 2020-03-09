@@ -6,16 +6,17 @@
 @section('content')
   <!-- Content Start -->
   <!--開始報到內容-->
+  <input type="hidden" id="event_id" value="{{ $course->id }}">
+  <input type="hidden" id="course_type" value="{{ $course->type }}">
   <div class="card m-3">
     <div class="card-body">
       <div class="row mb-3 align-items-center">
         <div class="col-6">
-          <input type="hidden" id="course_id" value="{{ $course->id }}">
           <h6 class="mb-0">
-            {{ $course->name }}&nbsp;&nbsp;
+            {{ $course->course }}&nbsp;&nbsp;
             {{ date('Y-m-d', strtotime($course->course_start_at)) }}
             ( {{ $week }} )&nbsp;&nbsp;
-            {{ $course->Events }}
+            {{ $course->name }}
           </h6>
         </div>
         <div class="col text-right">
@@ -34,7 +35,7 @@
           </h6>
         </div>
         <div class="col text-right">
-          <a href="{{ route('course_return') }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
+          <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
         </div>
       </div>
       <div class="row">
@@ -53,7 +54,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">結束收單</span>
             </div>
-            <input type="text" class="form-control" aria-label="closeOrder input" aria-describedby="closeOrder" id="closeOrder" value="{{ $course->closeOrder }}">
+            <input type="text" class="form-control" aria-label="closeorder input" aria-describedby="closeorder" id="closeorder" value="{{ $course->closeorder }}">
           </div>
         </div>
         <div class="col-3">
@@ -92,7 +93,9 @@
           </div>
         </div>
         <div class="col-3 text-right">
-          <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#presentApply">現場報名</button>
+          @if( $course->type == 1 )
+            <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#presentApply">現場報名</button>
+          @Endif
           <!-- 現場報名 modal -->
           <div class="modal fade" id="presentApply" tabindex="-1" role="dialog" aria-labelledby="presentApplyLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -106,7 +109,7 @@
                 <div class="modal-body text-left">
                   <form action="{{ url('course_check_insert') }}" name="insert" method="POST" >
                     @csrf
-                      <input type="hidden" name="form_course_id" id="form_course_id" value="{{ $course->id }}">
+                      <input type="hidden" name="form_event_id" id="form_event_id" value="{{ $course->id }}">
                       <div class="form-group required">
                         <label for="new_name" class="col-form-label">姓名</label>
                         <input type="text" class="form-control" name="new_name" id="new_name" required>
@@ -174,20 +177,20 @@
             </div>
           </div>
 
-          <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">二階報名表</button>
+          <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">下階報名表</button>
           {{-- <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a> --}}
           <!-- 二階報名表 modal -->
           <div class="modal fade" id="nextForm" tabindex="-1" role="dialog" aria-labelledby="nextFormLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="nextFormLabel">二階報名表</h5>
+                  <h5 class="modal-title" id="nextFormLabel">下階報名表</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <a href="{{ route('course_form') }}">
+                  <a href="{{ route('course_form',['id'=>$course->id]) }}">
                     <img class="img-thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/QRcode_image.svg/1200px-QRcode_image.svg.png"/>
                   </a>
                 </div>
@@ -320,6 +323,7 @@
     // 報到狀態修改 start
     $('body').on('click','.update_status',function(){
         var update_status = $(this).attr('name');
+        var course_type = $("#course_type").val();
         if( update_status == 'check_btn' ){
           var check_id = $(this).attr('id');
           var check_value = $(this).val();
@@ -328,6 +332,7 @@
             url:'course_check_status',
             data:{
               check_id:check_id,
+              course_type:course_type,
               check_value:check_value,
               update_status:update_status
             },
@@ -362,6 +367,7 @@
             url:'course_check_status',
             data:{
               check_id:check_id,
+              course_type:course_type,
               update_status:update_status
             },
             success:function(data){
@@ -406,13 +412,13 @@
     });
 
     // 結束收單
-    $('#closeOrder').on('blur', function() {
-      var data_type = 'closeOrder';
+    $('#closeorder').on('blur', function() {
+      var data_type = 'closeorder';
       save_data($(this), data_type);
     });
-    $('#closeOrder').on('keyup', function(e) {
+    $('#closeorder').on('keyup', function(e) {
       if (e.keyCode === 13) {
-        var data_type = 'closeOrder';
+        var data_type = 'closeorder';
         save_data($(this), data_type);
       }
     });
@@ -456,13 +462,15 @@
     });
 
     function save_data(data, data_type, data_id){
-      var course_id = $("#course_id").val();
+      var event_id = $("#event_id").val();
+      var course_type = $("#course_type").val();
       var data_val = data.val();
       $.ajax({
         type:'POST',
         url:'course_check_data',
         data:{
-          course_id: course_id,
+          event_id: event_id,
+          course_type: course_type,
           data_type: data_type, 
           data_val: data_val,
           data_id: data_id

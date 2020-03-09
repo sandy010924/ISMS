@@ -25,7 +25,7 @@ body {
 }
 
 /* 必填 */
-.required .col-form-label:after { 
+.required .col-form-label:after, .required_span:after{ 
    content:"*";
    color:red;
 }

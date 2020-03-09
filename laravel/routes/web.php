@@ -71,12 +71,14 @@ Route::get('error_authority', function () {
 
 /*** [課程管理]現場正課表單 ***/
     /*** 顯示頁面 ***/
-    Route::get('course_form', function () {
-        return view('frontend.course_form');
-    })->name('course_form');
+    // Route::get('course_form', function () {
+    //     return view('frontend.course_form');
+    // })->name('course_form');
+    Route::get('course_form', 'Frontend\CourseFormController@show')->name('course_form');
     /*** 新增資料 Sandy(2020/02/28) ***/
     Route::post('course_form_insert', 'Backend\CourseFormController@insert');
-
+    /*** 填入學員資料 Sandy(2020/03/04) ***/
+    Route::get('course_form_fill', 'Frontend\CourseFormController@fill');
     /*** joanna 後端下載電子簽章圖片 ***/
     Route::post('signature', 'Backend\CourseFormController@signature');
 
@@ -95,6 +97,10 @@ Route::get('error_authority', function () {
     Route::get('course_advanced', function () {
         return view('frontend.course_advanced');
     })->name('course_advanced');
+    // Route::get('course_advanced', function () {
+    //     return view('frontend.course_advanced');
+    // })->name('course_advanced');
+    Route::get('course_advanced', 'Frontend\CourseAdvancedController@show')->name('course_advanced');
 
 
 /*** [課程管理] 場次總覽 ***/
@@ -115,6 +121,15 @@ Route::get('error_authority', function () {
         return view('frontend.course_list_apply');
     })->name('course_list_apply');
 
+/*** [課程管理] 報名名單 ***/
+    // Route::get('course_list_apply', function () {
+    //     return view('frontend.course_list_apply');
+    // })->name('course_list_apply');
+    /*** 顯示資料 ***/
+    Route::get('course_list_apply', 'Frontend\CourseListApplyController@show')->name('course_list_apply');
+    /*** 刪除資料 ***/
+    Route::post('course_list_apply_delete', 'Frontend\CourseListApplyController@delete');
+
     Route::get('course_list_refund', function () {
         return view('frontend.course_list_refund');
     })->name('course_list_refund');
@@ -127,9 +142,12 @@ Route::get('error_authority', function () {
         return view('frontend.course_list_chart');
     })->name('course_list_chart');
 
-    Route::get('course_list_edit', function () {
-        return view('frontend.course_list_edit');
-    })->name('course_list_edit');
+/*** [課程管理] 編輯 ***/
+    /*** 顯示資料 ***/
+    Route::get('course_list_edit', 'Frontend\CourseListEditController@show')->name('course_list_edit');
+    /*** 串聯資料 ***/
+    Route::post('course_list_edit_insert', 'Backend\CourseListEditController@insert')->name('course_list_edit_insert');
+
 
 
 /*** [課程管理] 今日課程 ***/
@@ -153,10 +171,11 @@ Route::get('error_authority', function () {
 
 
 /*** [課程管理] 場次報表 ***/
-    /*** 顯示資料 ***/
-    Route::get('course_return', function () {
-        return view('frontend.course_return');
-    })->name('course_return');
+    // Route::get('course_return', function () {
+    //     return view('frontend.course_return');
+    // })->name('course_return');
+    /*** 顯示資料 Sandy(2020/01/17) ***/
+    Route::get('course_return', 'Frontend\CourseReturnController@show')->name('course_return');
 
 
 /*** [現場人員] 報到 ***/
@@ -198,8 +217,13 @@ Route::get('error_authority', function () {
     Route::post('course_data', 'Frontend\StudentController@coursedata');
     /*** 完整內容-聯絡狀況 Rocky(2020/03/01) ***/
     Route::post('contact_data', 'Frontend\StudentController@contactdata');
-
-
+    /*** 完整內容-聯絡狀況-自動儲存 Rocky(2020/03/08) ***/
+    Route::post('contact_data_save', 'Backend\StudentController@updatedata');
+    /*** 完整內容-歷史互動 Rocky(2020/03/06) ***/
+    Route::post('history_data', 'Frontend\StudentController@historydata');
+    /*** 完整內容-儲存 Rocky(2020/03/07) ***/
+    Route::post('student_save', 'Backend\StudentController@save');
+     
 
 /*** [學員管理] 黑名單 ***/
      /*** 顯示資料 Rocky(2020/02/23) ***/

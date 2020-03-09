@@ -11,13 +11,10 @@ class Course extends Model
     protected $fillable = [
         'id_teacher',
         'name',
-        'location',
-        'events',
-        'course_at',
-        'memo',
         'type',
-        'course_start_at',
-        'course_end_at',
+        'id_type',
+        'courseservices',
+        'money',
     ];
 
 }

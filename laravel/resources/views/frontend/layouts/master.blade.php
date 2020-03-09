@@ -44,6 +44,10 @@
   <script src="{{ asset('js/tempusdominus-bootstrap-4.js') }}"></script>
   <link href="{{ asset('css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
 
+  <!-- select2 -->
+  <script src="{{ asset('js/select2.min.js') }}"></script>
+  <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
+  
 </head>
 
 <body>

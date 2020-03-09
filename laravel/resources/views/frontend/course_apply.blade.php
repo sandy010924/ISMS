@@ -7,31 +7,26 @@
 
 <!-- Content Start -->
   <!--查看報名內容-->
+  <input type="hidden" id="course_id" value="{{ $course->id }}">
+  <input type="hidden" id="course_type" value="{{ $course->type }}">
   <div class="card m-3">
     <div class="card-body">
       <div class="row">
         <div class="col-3">
-          <input type="hidden" id="course_id" value="{{ $course->id }}">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text">講師名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $course->teacher_name }}" disabled readonly>
+            <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $course->teacher }}" disabled readonly>
           </div>
-          {{-- <h5>
-            講師名稱 : <input type="text" class="mt-2" value="{{ $course->teacher_name }}" readonly>
-          </h5> --}}
         </div>
         <div class="col-5">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text">課程名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->name }}" disabled readonly>
+            <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->course }}" disabled readonly>
           </div>
-          {{-- <h5>
-            課程名稱 : <input type="text" class="mt-2" value="{{ $course->name }}" readonly>
-          </h5> --}}
         </div>
         <hr/>
       </div>
@@ -39,15 +34,33 @@
   </div>
   <div class="card m-3">
       <div class="card-body">
-          <div class="row mb-3">
-              <div class="col-8 align-self-center">
+          <div class="row mb-3 align-self-center">
+              <div class="col-3 align-self-center">
                   <h6 class="mb-0">
                     {{ date('Y-m-d', strtotime($course->course_start_at)) }}
-                    ( {{ $week }} )&nbsp;&nbsp;
-                    {{ $course->Events }}&nbsp;
-                    報名筆數 : {{ $count_apply }}&nbsp;
-                    取消筆數 : {{ $count_cancel }}
+                    ( {{ $week }} )&nbsp;
+                    {{ $course->name }}&nbsp;&nbsp;
+                    {{-- 報名筆數 : {{ $count_apply }}&nbsp;&nbsp;
+                    取消筆數 : {{ $count_cancel }} --}}
                   </h6>
+              </div>
+              <div class="col align-self-center">
+                <h6 class="mb-0">報名筆數 : 
+                  <span id="count_apply">{{ $count_apply }}</span>
+                </h6>
+              </div>
+              @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d")) )
+                  <!-- 已過場次 -->
+                  <div class="col align-self-center">
+                    <h6 class="mb-0">報到筆數 : 
+                      <span id="count_check">{{ $count_check }}</span>
+                    </h6>
+                  </div>
+              @endif
+              <div class="col align-self-center">
+                <h6 class="mb-0">取消筆數 : 
+                  <span id="count_cancel">{{ $count_cancel }}</span>
+                </h6>
               </div>
               {{-- <div class="col-2">
               </div> --}}
@@ -64,12 +77,22 @@
             @slot('thead')
               <tr>
                 <th>Submission Date</th>
-                <th>名單來源</th>
+
+                <!-- 如果是銷講多加名單來源 -->
+                @if( $course->type == 1 )
+                  <th>名單來源</th>
+                @endif
+
                 <th>姓名</th>
                 <th>聯絡電話</th>
                 <th>電子郵件</th>
                 <th>目前職業</th>
-                <th>我想在講座中了解的內容</th>
+
+                <!-- 如果是銷講多加我想在講座中了解的內容 -->
+                @if( $course->type == 1 )
+                  <th>我想在講座中了解的內容</th>
+                @endif
+
                 @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
                 <!-- 未過場次 -->
                 <th></th>
@@ -83,15 +106,23 @@
             @slot('tbody')
               @foreach($courseapplys as $courseapply)
                 <tr>
-                  <td>{{ $courseapply->submissiondate }}</td>
-                  <td>{{ $courseapply->datasource }}</td>
+                  @if( $course->type == 1 )
+                    <td>{{ $courseapply->submissiondate }}</td>
+                    <td>{{ $courseapply->datasource }}</td >
+                  @else
+                    <td>{{ $courseapply->created_at }}</td>
+                  @endif
+
                   <td>{{ $courseapply->name }}</td>
-                  {{-- <td>{{ $courseapply->phone }}</td>
-                  <td>{{ $courseapply->email }}</td> --}}
                   <td>{{ substr_replace($courseapply->phone, '***', 4, 3) }}</td>
                   <td>{{ substr_replace($courseapply->email, '***', strrpos($courseapply->email, '@')) }}</td>
                   <td>{{ $courseapply->profession }}</td>
-                  <td>{{ ($courseapply->course_content  == 'null')? '':$courseapply->course_content }}</td>
+                  
+                  <!-- 如果是銷講多加我想在講座中了解的內容 -->
+                  @if( $course->type == 1 )
+                    <td>{{ ($courseapply->course_content  == 'null')? '':$courseapply->course_content }}</td>
+                  @endif
+                  
                   @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
                   <!-- 未過場次 -->
                   <td>
@@ -130,6 +161,7 @@
     // Sandy(2020/02/26) dt列表搜尋 S
     var table;
     $("document").ready(function(){
+      status_onload();
       // Sandy (2020/02/26)
       table = $('#table_list').DataTable({
           "dom": '<l<t>p>',
@@ -163,6 +195,8 @@
 
     // 報到狀態修改 Start
     $('body').on('click','.update_status',function(){
+        var course_id = $("#course_id").val();
+        var course_type = $("#course_type").val();
         var apply_id = $(this).attr('id');
         var apply_status = $(this).val();
         $.ajax({
@@ -172,20 +206,25 @@
           //    _token:"{{csrf_token()}}",
           //  },
            data:{
-             '_token':"{{ csrf_token() }}",
+            //  '_token':"{{ csrf_token() }}",
+             course_id:course_id,
+             course_type:course_type,
              apply_id:apply_id, 
              apply_status:apply_status
            },
            success:function(data){
-              $("#"+data[0].id).val(data[0].id_status);
-              $("#"+data[0].id).html(data[0].status_name);
+              $("#"+data["list"].id).val(data["list"].id_status);
+              $("#"+data["list"].id).html(data["list"].status_name);
+              
+              $("#count_check").html(data.count_check);
+              $("#count_cancel").html(data.count_cancel);
 
-              status_style(data[0].id, data[0].id_status);
+              status_style(data["list"].id, data["list"].id_status);
               
               /** alert **/
-              $("#success_alert_text").html(data[0].name + " 報名狀態修改成功");
+              $("#success_alert_text").html(data["list"].name + " 報名狀態修改成功");
               fade($("#success_alert"));
-              // $("main").append('<div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout" role="alert">'+ data[0].name +' 報名狀態修改成功<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+              // $("main").append('<div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout" role="alert">'+ data["list"].name +' 報名狀態修改成功<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
            },
            error: function(jqXHR){
               console.log("error: "+ JSON.stringify(jqXHR)); 
@@ -198,57 +237,6 @@
         });
     });
     // 報到狀態修改 End
-
-    //列表搜尋start
-    // $("#btn_search").click(function(e){
-    //   var search_keyword = $("#search_keyword").val();
-    //   var course_id = $("#course_id").val();
-    //   $.ajax({
-    //       type : 'GET',
-    //       url:'course_apply_search', 
-    //       dataType: 'json',    
-    //       data:{
-    //         search_keyword: search_keyword,
-    //         course_id: course_id
-    //       },
-    //       success:function(data){
-    //         var res = '';
-    //         var buttons = "";
-    //         var d = new Date();
-    //         var nowdate = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
-    //         $.each (data, function (key, value) {
-    //           course_date = moment(value.course_start_at).format('Y/M/D');
-             
-    //           if (course_date > nowdate) {
-    //             buttons =
-    //             '<td>' +
-    //               '<button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="' + value.id +'" value="' +value.id_status + '">' + value.status_name + '</button>' + 
-    //             '</td>'
-    //           } else if (course_date <= nowdate) {
-    //             buttons = '<td>' + value.status_name + '</td>'
-    //           }
-    //           res +=
-    //           '<tr>'+
-    //               '<td>' + value.submissiondate + '</td>'+
-    //               '<td>' + value.datasource + '</td>'+                  
-    //               '<td>' + value.name + '</td>'+
-    //               '<td>' + value.phone + '</td>'+
-    //               '<td>' + value.email + '</td>'+
-    //               '<td>' + value.profession + '</td>'+
-    //               '<td>' + value.course_content + '</td>'+                                    
-    //               buttons +
-    //               '<td>' + '' + '</td>'+
-    //           '</tr>';
-    //         });           
-    //         $('#table_list').html(res);
-    //         status_onload();
-    //       },
-    //       error: function(jqXHR){
-    //         console.log("error: "+ JSON.stringify(jqXHR));
-    //       }
-    //     });
-    // });
-    //列表搜尋end
 
   </script>
 @endsection
