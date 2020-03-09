@@ -198,7 +198,7 @@ Route::get('error_authority', function () {
     Route::post('course_data', 'Frontend\StudentController@coursedata');
     /*** 完整內容-聯絡狀況 Rocky(2020/03/01) ***/
     Route::post('contact_data', 'Frontend\StudentController@contactdata');
-    
+
 
 
 /*** [學員管理] 黑名單 ***/
@@ -262,6 +262,11 @@ Route::get('error_authority', function () {
     Route::get('message_data', function () {
         return view('frontend.message_data');
     })->name('message_data');
+
+    /*** [訊息推播] 推播成本***/
+    Route::get('message_cost', function () {
+        return view('frontend.message_cost');
+    })->name('message_cost');
 
 
 

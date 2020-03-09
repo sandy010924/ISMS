@@ -6,11 +6,11 @@
         </a>
     </div>
     <div class="sidebar-sticky">
-      @if (Auth::user() == null)      
+      @if (Auth::user() == null)
         @php
               header("Location: ./error_authority");
-              exit; 
-        @endphp                          
+              exit;
+        @endphp
       @endif
 
       <ul class="nav flex-column">
@@ -29,7 +29,7 @@
             @endif
              <!-- 學員管理 -->
 
-            <!-- 課程管理 -->          
+            <!-- 課程管理 -->
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher')
             <li class="nav-item border-top">
               <a class="nav-link" href="{{ route('course_list') }}">
@@ -40,7 +40,7 @@
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('course') }}">場次總覽</a>
               <a class="nav-link nav-sub-item" href="{{ route('course_today') }}">今日課程</a>
-            </li>           
+            </li>
             @endif
             <!-- 課程管理 -->
 
@@ -64,6 +64,7 @@
                   訊息推播
                 {{-- </h6> --}}
               </a>
+              <a class="nav-link nav-sub-item" href="{{ route('message_cost') }}">推播成本</a>
               <a class="nav-link nav-sub-item" href="{{ route('message_list') }}">訊息列表</a>
             </li>
             @endif
@@ -77,11 +78,11 @@
                 數據報表
               </a>
             </li>
-            @endif   
+            @endif
              <!-- 數據報表 -->
 
             <!-- 系統設定 -->
-            @can('admin') 
+            @can('admin')
             <li class="nav-item border-top">
               {{-- <a class="nav-link" href="{{ route('system') }}"> --}}
               <a class="nav-link" href="#">

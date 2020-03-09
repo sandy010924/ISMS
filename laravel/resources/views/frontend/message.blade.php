@@ -34,6 +34,11 @@
               </div>
 
               <div class="form-group">
+                <label for="receiverPhone">訊息名稱</label>
+                <input type="text" class="form-control" id="">
+              </div>
+
+              <div class="form-group">
                 <label for="receiverPhone">收件者手機號碼</label>
                 <!-- <input id="receiverPhoneMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#messageModal"> -->
                 <input type="text" class="form-control" id="receiverPhone" placeholder="請輸入收件者手機號碼 ..." >
@@ -49,7 +54,7 @@
 
 
               <div class="form-group">
-                <label for="emailTitle">標題</label>
+                <label for="emailTitle">E-mail 標題</label>
                 <input type="text" class="form-control" id="emailTitle" placeholder="請輸入標題 ...">
                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
               </div>
@@ -63,6 +68,7 @@
               <div style="display:flex;" class=" mt-5">
                 <button id="sendMessageBtn"  class="btn btn-primary mr-2">立即傳送</button>
                 <input type="button" class="btn btn-primary mr-2"  value="排程設定" data-toggle="modal" data-target="#scheduleModal">
+                <input type="button" class="btn btn-primary mr-2"  value="儲存為草稿">
                 <span id="displaySchedule"></span>
               </div>
 
@@ -76,7 +82,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">排成設定</h5>
+                <h5 class="modal-title" id="exampleModalLabel">排成傳送</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
