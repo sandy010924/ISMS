@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Model\Mark;
 use App\Model\Student;
 use App\Model\Blacklist;
 use App\Model\SalesRegistration;
@@ -89,8 +90,6 @@ class StudentController extends Controller
         }
     }
 
-
-    // 儲存 Rocky (2020/03/08)
     /*** 課程資料儲存 ***/
     public function updatedata(Request $request)
     {
@@ -140,5 +139,32 @@ class StudentController extends Controller
         //     // ));
         // }
     }
+
+    // 標記儲存 (2020/03/10)
+    public function tagsave(Request $request)
+    {
+        $id_student = $request->get('id_student');
+        $name = $request->get('name');
+
+        $mark = new Mark;
+
+         // 新增學員資料
+         $mark->id_student       = $id_student;         // 學員ID
+         $mark->name_mark        = $name;               // 標記名稱
+        
+         $mark->save();
+         $id_mark = $mark->id;
+
+
+        if (!empty($id_mark)) {
+            return '儲存成功';
+        } else {
+            return '更新失敗';
+        }
+    }
+ 
+
+
+
 
 }

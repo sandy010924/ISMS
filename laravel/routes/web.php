@@ -215,6 +215,8 @@ Route::get('error_authority', function () {
     Route::post('view_form_detail', 'Frontend\StudentController@formdetail');
     /*** 完整內容-基本資料 Rocky(2020/02/29) ***/
     Route::post('course_data', 'Frontend\StudentController@coursedata');
+    /*** 完整內容-標記 - 新增 Rocky(2020/02/29) ***/
+    Route::post('tag_save', 'Backend\StudentController@tagsave');
     /*** 完整內容-聯絡狀況 Rocky(2020/03/01) ***/
     Route::post('contact_data', 'Frontend\StudentController@contactdata');
     /*** 完整內容-聯絡狀況-自動儲存 Rocky(2020/03/08) ***/
