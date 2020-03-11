@@ -173,18 +173,32 @@
       </div>
     </div>
 
-    <!-- Sandy(2020/03/03) -->
-    @component('components.form_alert')
-      @slot('status')
-        {{ session('status') }}
-      @endslot
-    @endcomponent
+    <!-- alert Start-->
+    <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+      <span id="success_alert_text"></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+      <span id="error_alert_text"></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- alert End -->
 
   <!-- Content End -->
   <script>
-    // Sandy(2020/02/26) dt列表搜尋 S
     var table;
     $(document).ready(function() {
+      // Rocky(2020/01/06)
+      $("#new_flie").change(function(){
+        var i = $(this).prev('label').clone();
+        var file = $('#new_flie')[0].files[0].name;
+        $(this).prev('label').text(file);
+      });
+
       //新增課程 選擇銷講/正課 Sandy (2020/02/26)
       $("select#new_type"). change(function(){
         if( $("#new_type").val() == 1 ){
@@ -235,12 +249,12 @@
       });
     });
 
+    // Sandy(2020/02/26) dt列表搜尋 S
     $('#search_name').on('keyup', function(e) {
       if (e.keyCode === 13) {
         $('#btn_search').click();
       }
     });
-
     $("#btn_search").click(function(){
       table.columns(2).search($("#search_name").val()).draw();
     });

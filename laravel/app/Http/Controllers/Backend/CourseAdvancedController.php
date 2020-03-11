@@ -5,39 +5,27 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Student;
-use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\EventsCourse;
 use App\Model\Payment;
 use App\Model\Debt;
 
-class CourseListApplyController extends Controller
+class CourseAdvancedController extends Controller
 {
      // 刪除 Sandy (2020/03/12)
      public function delete(Request $request)
      {
          $status = "";
-         $id_apply = $request->get('id_apply');
+         $id_fill = $request->get('id_fill');
 
-        // 查詢是否有該筆資料，並判斷是銷講還是正課
-        $sale = SalesRegistration::where('id', $id_apply)
-                                    ->first();
-
+        // 查詢是否有該筆資料
         $formal = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
                               ->select('events_course.id_group as id_group', 'registration.id_student as id_student', 'registration.id_payment as id_payment')
-                              ->where('registration.id', $id_apply)
+                              ->where('registration.id', $id_fill)
                               ->first();
             
-        if(!empty($sale)){
-            //銷講
-
-            //刪除報名表
-            SalesRegistration::where('id', $id_apply)->delete();
-
-            $status = "ok";
+        if(!empty($formal)){
             
-        }elseif(!empty($formal)) {
-            //正課
             $group = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
                                  ->select('registration.*')
                                  ->where('registration.id_student', $formal->id_student)
@@ -54,11 +42,12 @@ class CourseListApplyController extends Controller
             Payment::where('id', $formal->id_payment)->delete();
 
             $status = "ok";
-
-        }else {
+            
+        } else {
             $status = "error";
         }
         
          return json_encode(array('data' => $status));
      }
+
 }

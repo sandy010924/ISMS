@@ -60,6 +60,21 @@ class CourseApplyController extends Controller
                             })
                             ->update([$type.'.id_status' => 1]);
             }
+        }else{
+            //已過場次 狀態預設已報到改為未到
+            if($course->type == 1){
+                SalesRegistration::join('isms_status', 'isms_status.id', $type.'.id_status')
+                                ->join('student', 'student.id', $type.'.id_student')
+                                ->Where('id_events', $id)
+                                ->Where($type.'.id_status', 1)
+                                ->update([$type.'.id_status' => 3]);
+            }else{
+                Registration::join('isms_status', 'isms_status.id', $type.'.id_status')
+                            ->join('student', 'student.id', $type.'.id_student')
+                            ->Where('id_events', $id)
+                            ->Where($type.'.id_status', 1)
+                            ->update([$type.'.id_status' => 3]);
+            }
         }
         
         //報名資訊

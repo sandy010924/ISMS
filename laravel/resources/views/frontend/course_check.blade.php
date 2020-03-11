@@ -10,7 +10,7 @@
   <input type="hidden" id="course_type" value="{{ $course->type }}">
   <div class="card m-3">
     <div class="card-body">
-      <div class="row mb-3 align-items-center">
+      <div class="row mb-3 mt-1 align-items-center">
         <div class="col-6">
           <h6 class="mb-0">
             {{ $course->course }}&nbsp;&nbsp;
@@ -34,9 +34,11 @@
             <span id="count_cancel">{{ $count_cancel }}</span>
           </h6>
         </div>
-        <div class="col text-right">
-          <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
-        </div>
+        @if( $nextLevel > 0 )
+          <div class="col text-right">
+            <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
+          </div>
+        @endif
       </div>
       <div class="row">
         <div class="col">
@@ -176,30 +178,31 @@
               </div>
             </div>
           </div>
-
-          <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">下階報名表</button>
-          {{-- <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a> --}}
-          <!-- 二階報名表 modal -->
-          <div class="modal fade" id="nextForm" tabindex="-1" role="dialog" aria-labelledby="nextFormLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="nextFormLabel">下階報名表</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <a href="{{ route('course_form',['id'=>$course->id]) }}">
-                    <img class="img-thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/QRcode_image.svg/1200px-QRcode_image.svg.png"/>
-                  </a>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>
+          @if( $nextLevel > 0 )
+            <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">下階報名表</button>
+            {{-- <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a> --}}
+            <!-- 二階報名表 modal -->
+            <div class="modal fade" id="nextForm" tabindex="-1" role="dialog" aria-labelledby="nextFormLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="nextFormLabel">下階報名表</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <a href="{{ route('course_form',['id'=>$course->id_course]) }}">
+                      <img class="img-thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/QRcode_image.svg/1200px-QRcode_image.svg.png"/>
+                    </a>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          @endif
         </div>
       </div>
       @component('components.datatable')

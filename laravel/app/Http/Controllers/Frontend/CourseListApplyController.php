@@ -23,6 +23,7 @@ class CourseListApplyController extends Controller
                         ->Where('course.id', $id)
                         ->first();
         
+        $apply = array();
         
         //判斷是銷講or正課
         if( $course->type == 1){
@@ -57,12 +58,13 @@ class CourseListApplyController extends Controller
                                  ->select('student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*', 'events_course.name as event', 'events_course.id_group as id_group')
                                  ->Where('registration.id_course', $id)
                                  ->get();
-                                 
-            $id_group='';           
+
+            $id_group='';      
+            $id_student='';         
                                  
             foreach( $apply_table as $key => $data ){
 
-                if ($id_group == $data['id_group']){ 
+                if ($id_student == $data['id_student'] && $id_group == $data['id_group']){ 
                     continue;
                 }
 
@@ -99,7 +101,8 @@ class CourseListApplyController extends Controller
                 );
 
 
-                $id_group = $data['id_group'];
+                $id_group = $data['id_group']; 
+                $id_student= $data['id_student'];     
             }
         }
 

@@ -46,14 +46,18 @@ class CourseListController extends Controller
             if ( $data['type'] == 1 ){
                 //銷講
                 //累計名單            
-                $count_list = count(SalesRegistration::Where('id_course', $data['id_course'])
-                                                    ->Where('id_status','<>', 2)
+                $count_list = count(SalesRegistration::join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
+                                                    ->Where('sales_registration.id_course', $data['id_course'])
+                                                    ->Where('sales_registration.id_status','<>', 2)
+                                                    ->groupby('events_course.id_group', 'sales_registration.id_student')
                                                     ->get());
             }else{
                 //正課
                 //累計名單            
-                $count_list = count(Registration::Where('id_course', $data['id_course'])
-                                                ->Where('id_status','<>', 2)
+                $count_list = count(Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
+                                                ->Where('registration.id_course', $data['id_course'])
+                                                ->Where('registration.id_status','<>', 2)
+                                                ->groupby('events_course.id_group', 'registration.id_student')
                                                 ->get());
             }
                                               
