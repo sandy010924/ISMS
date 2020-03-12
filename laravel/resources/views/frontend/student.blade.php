@@ -134,7 +134,7 @@
                                   <div class="modal-content">
                                     <div class="modal-header">
                                       <h5 class="modal-title">標記名稱</h5>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <button type="button" class="close" id="tag_close"  aria-label="Close" data-number="1">
                                         <span aria-hidden="true">&times;</span>
                                       </button>
                                     </div>
@@ -353,61 +353,28 @@
 <!-- Content End -->
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="{{ asset('js/typeahead.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/angular.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-tagsinput.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-tagsinput-angular.min.js') }}"></script>
 
 <script>
-var cities = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: "{{ asset('json/cities.json') }}"
-  
-});
-cities.initialize();
-var elt = $('#isms_tags');
-elt.tagsinput({
-  tagClass: function(item) {
-    switch (item.continent) {
-      case 'Europe'   : return 'badge badge-primary';
-      case 'America'  : return 'badge badge-danger badge-important';
-      case 'Australia': return 'badge badge-success';
-      case 'Africa'   : return 'badge badge-default';
-      case 'Asia'     : return 'badge badge-warning';
-    }
-  },
-  itemValue: 'value',
-  itemText: 'text',
-  typeaheadjs: {
-    name: 'cities',
-    displayKey: 'text',
-    source: cities.ttAdapter()
-  }
-});
-elt.tagsinput('add', { "value": 1 , "text": "Amsterdam"   , "continent": "Europe"    });
-elt.tagsinput('add', { "value": 4 , "text": "Washington"  , "continent": "America"   });
-elt.tagsinput('add', { "value": 7 , "text": "Sydney"      , "continent": "Australia" });
-elt.tagsinput('add', { "value": 10, "text": "Beijing"     , "continent": "Asia"      });
-elt.tagsinput('add', { "value": 13, "text": "Cairo"       , "continent": "Africa"    });
-
-// 刪除
-elt.on('itemRemoved', function(event) {
-  alert('dfsdfdsffd')
-});
-</script>
-
-<script>
 var id_student_old = '';
+var elt = $('#isms_tags');
+
 $("document").ready(function(){
   $(".demo2").tooltip();
 
   // 學員管理搜尋 (只能輸入數字、字母、_、.、@)
   $('#search_input').on('blur', function() {
       // console.log(`search_input: ${$(this).val()}`);
-  });
-  
+  }); 
 });
+
+ // 標記關閉
+ $("#tag_close").click(function(){
+    $('#save_tag').modal('hide');
+  });
 
 // 輸入框
 $('#search_input').on('keyup', function(e) {
@@ -502,9 +469,9 @@ function view_form_detail(id,type){
     }
     });
 }
-/* 已填表單 -E Rocky(2020/02/29 */
+/* 已填表單 -E Rocky(2020/02/29) */
 
-/* 完整內容 -S Rocky(2020/02/29 */
+/* 完整內容 -S Rocky(2020/02/29) */
 
 // 基本訊息
 function course_data(id_student){
@@ -512,6 +479,7 @@ function course_data(id_student){
   id_student_old = id_student  
   history_data();
   contact_data();
+  tags_show(id_student);
   $.ajax({
       type : 'POST',
       url:'course_data', 
@@ -576,7 +544,64 @@ function course_data(id_student){
   });
 }
 
-// 標記
+/* 標記 -S Rocky(2020/03/12) */
+// 標記顯示
+function tags_show(id_student){
+  $.ajax({
+      type : 'POST',
+      url:'tag_show', 
+      dataType: 'json',    
+      data:{
+        id_student: id_student
+      },
+      success:function(data){        
+        // console.log(data);
+ 
+        var cities = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: data            
+          });
+          cities.initialize();
+          var elt = $('#isms_tags');
+          // 設定標籤
+          elt.tagsinput({
+            tagClass: function(item) {
+              // switch (item.value % 2) {
+                // case 0  : return 'badge badge-primary';
+                // case 1  : return 'badge badge-success';
+                // defalt   : return 'badge badge-default';
+                // case 'Africa'   : return 'badge badge-default';
+                // case 'Asia'     : return 'badge badge-warning';
+              // }
+              // console.log(item.value % 2)
+              return 'badge badge-primary'
+            },
+            itemValue: 'value',
+            itemText: 'text',
+            typeaheadjs: {
+              name: 'cities',
+              displayKey: 'text',
+              source: cities.ttAdapter()
+            }
+          });
+          // 清空標籤
+          $('#isms_tags').tagsinput('removeAll');               
+
+          if (data.length != 0){
+            // 新增資料到標籤
+            $.each(data, function(index,val) {    
+              elt.tagsinput('add', { "value": val['value'] , "text": val['text']   , "continent": val['text']    });  
+            });
+          }
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));     
+      }
+  });
+}
+
+// 標記新增
 function tags_add(){
   name = $("#tag_name").val();
  
@@ -587,8 +612,10 @@ function tags_add(){
         id_student: id_student_old,
         name:name,
       },
-      success:function(data){        
+      success:function(data){    
         if (data = "儲存成功") {
+          tags_show(id_student_old)  
+          $("#tag_name").val('')  
           $("#success_alert_text").html("儲存成功");
           fade($("#success_alert"));
         } else {
@@ -602,6 +629,40 @@ function tags_add(){
   });
 }
 
+// 標記刪除
+elt.on('itemRemoved', function(event) {
+  var msg = "是否刪除標記資料?";
+    if (confirm(msg)==true){      
+      $.ajax({
+          type : 'POST',
+          url:'tag_delete', 
+          dataType: 'json',    
+          data:{
+            id: event.item['value']
+          },
+          success:function(data){
+            if (data['data'] == "ok") {                           
+              /** alert **/
+              $("#success_alert_text").html("刪除資料成功");
+              fade($("#success_alert"));
+
+              // location.reload();
+            }　else {
+              /** alert **/ 
+              $("#error_alert_text").html("刪除資料失敗");
+              fade($("#error_alert"));       
+            }           
+          },
+          error: function(error){
+            console.log(JSON.stringify(error));      
+          }
+      });
+    }else{
+    return false;
+    }  
+});
+
+/* 標記 -E Rocky(2020/03/12) */
 
 // 歷史互動
 function history_data() {

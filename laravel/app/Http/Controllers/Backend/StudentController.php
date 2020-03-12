@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StudentController extends Controller
 {
-    // 刪除 Rocky (2020/02/23)
+    // 刪除學員資料 Rocky (2020/02/23)
     public function delete(Request $request)
     {
         $status = "";
@@ -161,6 +161,27 @@ class StudentController extends Controller
         } else {
             return '更新失敗';
         }
+    }
+
+    // 刪除學員資料 Rocky (2020/02/23)
+    public function tagdelete(Request $request)
+    {
+        $status = "";
+        $id = $request->get('id');
+
+        // 查詢是否有該筆資料
+        $mark = Mark::where('id', $id)->get();
+        
+         // 刪除資料
+        
+        if (!empty($mark)) { 
+            $mark = Mark::where('id', $id)->delete();
+            
+            $status = "ok";
+        } else {
+            $status = "error";
+        }
+        return json_encode(array('data' => $status));
     }
  
 
