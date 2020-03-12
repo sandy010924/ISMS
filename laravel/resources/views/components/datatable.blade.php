@@ -11,7 +11,7 @@
         <th></th>
       </tr>  --}}
     </thead>
-    <tbody id = "history_data_detail">
+    <tbody id="history_data_detail">
       {{ $tbody }}
        {{-- @foreach($courses as $key => $course )
        @foreach(array_combine($courses, $salesregistrations) as $course => $salesregistration) --}}

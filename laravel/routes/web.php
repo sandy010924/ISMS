@@ -111,9 +111,12 @@ Route::get('error_authority', function () {
     Route::post('course_list_insert', 'Backend\CourseListController@insert');
 
 
-    Route::get('course_list_data', function () {
-        return view('frontend.course_list_data');
-    })->name('course_list_data');
+/*** [課程管理] 場次數據 ***/
+    // Route::get('course_list_data', function () {
+    //     return view('frontend.course_list_data');
+    // })->name('course_list_data');
+    /*** 顯示資料 ***/
+    Route::get('course_list_data', 'Frontend\CourseListDataController@show')->name('course_list_data');
 
 
 /*** [課程管理] 報名名單 ***/

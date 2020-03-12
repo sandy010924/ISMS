@@ -161,7 +161,7 @@
                         <a role="button" class="dropdown-item" href="{{ route('course_list_apply', [ 'id' => $course['id'] ]) }}">報名名單</a>
                         <a role="button" class="dropdown-item" href="{{ route('course_list_refund') }}">退費名單</a>
                       </div>
-                      <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data') }}">場次數據</a>
+                      <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data', [ 'id' => $course['id'] ] ) }}">場次數據</a>
                       <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit', [ 'id' => $course['id'] ] ) }}">編輯</a>
                       {{-- <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['all_id'] }});" value="{{ $course['all_id'] }}" >刪除</a> --}}
                       <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['id'] }});">刪除</a>
