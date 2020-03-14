@@ -308,7 +308,7 @@ $("document").ready(function() {
       // console.log(`Email : ${$('#receiverEmail').val()}`);
       // console.log(`Phone : ${$('#receiverPhone').val()}`);
 
-      console.log($(editor.getData()).text());
+      // console.log($(editor.getData()).text());
 
       var msgContent = editor.getData().replace(new RegExp("<p>", "g"),"");
       msgContent = msgContent.replace(new RegExp("</p>", "g"), "\n");
@@ -317,9 +317,10 @@ $("document").ready(function() {
         type: "POST",
         url: "message_api",
         data: {
-          messageTitle: '訊息名稱',
+          // messageTitle: '訊息名稱',
           messageContents: msgContent,
-          phoneNumber: $('#receiverPhone').val(),
+          phoneNumber: $('#receiverPhone').val().split(","),
+          msgLen: $('#receiverPhone').val().split(",").length,
         }
       }).done(function(res) {
         console.log(res);
