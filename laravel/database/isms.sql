@@ -486,3 +486,27 @@ ALTER TABLE `payment` DROP COLUMN `person`;
 ALTER TABLE `payment` DROP COLUMN `type_invoice`;
 ALTER TABLE `payment` DROP COLUMN `number_taxid`;
 ALTER TABLE `payment` DROP COLUMN `companytitle`;
+
+
+-- register   報到資料表 Rocky(2020/03/14)
+CREATE TABLE IF NOT EXISTS `register`(
+   `id` INT  AUTO_INCREMENT COMMENT 'ID',
+   `id_registration` VARCHAR(50) COMMENT '正課報名ID', 
+   `id_student` VARCHAR(50) COMMENT '學員ID', 
+   `id_status` VARCHAR(50) COMMENT '狀態ID', 
+   `id_events` VARCHAR(50) COMMENT '場次ID',    
+   `created_at` timestamp not NULL default  CURRENT_TIMESTAMP	 COMMENT '創建日期',
+   `updated_at` timestamp not NULL default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- 增加付款資料表欄位 - 正課報名ID
+ALTER TABLE `payment` ADD COLUMN id_registration INT  NULL COMMENT '正課報名ID'
+
+-- 刪掉正課資料表欄位
+ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_3`;
+ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_4`;
+
+ALTER TABLE `registration` DROP COLUMN `id_status`;
+ALTER TABLE `registration` DROP COLUMN `id_payment`;
