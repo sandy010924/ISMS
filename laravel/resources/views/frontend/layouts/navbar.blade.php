@@ -65,6 +65,7 @@
                 {{-- </h6> --}}
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('message_cost') }}">推播成本</a>
+              <a class="nav-link nav-sub-item" href="{{ route('message_result') }}">推播成效</a>
               <a class="nav-link nav-sub-item" href="{{ route('message_list') }}">訊息列表</a>
             </li>
             @endif

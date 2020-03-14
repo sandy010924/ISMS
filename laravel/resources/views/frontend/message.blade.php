@@ -4,6 +4,7 @@
 @section('header', '訊息推播')
 
 @section('content')
+
 {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" /> --}}
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <!-- Content Start -->
@@ -29,20 +30,20 @@
               <div class="form-group">
                 <label for="">發送對象</label>
                 <div>
-                  <input id="" type="button" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
+                  <input id="aa" type="button" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
                 </div>
               </div>
 
               <div class="form-group">
                 <label for="receiverPhone">訊息名稱</label>
-                <input type="text" class="form-control" id="">
+                <input type="text" class="form-control" id="msgTitle">
               </div>
 
               <div class="form-group">
                 <label for="receiverPhone">收件者手機號碼</label>
                 <!-- <input id="receiverPhoneMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#messageModal"> -->
                 <input type="text" class="form-control" id="receiverPhone" placeholder="請輸入收件者手機號碼 ..." >
-                <small id="" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
+                <small id="phoneNumber" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
 
               <div class="form-group">
@@ -183,7 +184,7 @@
     min-height: 350px;
 }
 </style>
-<script>
+<script crossorigin="anonymous">
 ClassicEditor.create(document.querySelector("#content"), {
 		// config
 	})
@@ -303,11 +304,31 @@ $("document").ready(function() {
     $('#sendMessageBtn').on('click', function(e) {
       e.preventDefault();
       // 發ajax to send mail、message
-      console.log(`標題 : ${$('#emailTitle').val()}`);
-      console.log(`Email : ${$('#receiverEmail').val()}`);
-      console.log(`Phone : ${$('#receiverPhone').val()}`);
+      // console.log(`標題 : ${$('#emailTitle').val()}`);
+      // console.log(`Email : ${$('#receiverEmail').val()}`);
+      // console.log(`Phone : ${$('#receiverPhone').val()}`);
 
-      console.log($(editor.getData()).text());
+      // console.log($(editor.getData()).text());
+
+      var msgContent = editor.getData().replace(new RegExp("<p>", "g"),"");
+      msgContent = msgContent.replace(new RegExp("</p>", "g"), "\n");
+      msgContent = msgContent.replace(new RegExp("&nbsp;", "g"), " ");
+      $.ajax({
+        type: "POST",
+        url: "message_api",
+        data: {
+          // messageTitle: '訊息名稱',
+          messageContents: msgContent,
+          phoneNumber: $('#receiverPhone').val().split(","),
+          msgLen: $('#receiverPhone').val().split(",").length,
+        }
+      }).done(function(res) {
+        console.log(res);
+
+      }).fail(function(err) {
+        console.log(err);
+
+      });
 
     });
 
