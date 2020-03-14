@@ -95,7 +95,7 @@ Route::get('error_authority', function () {
         return view('frontend.course_advanced');
     })->name('course_advanced');
     /*** 新增資料 ***/
-    Route::get('course_advanced', 'Frontend\CourseAdvancedController@show')->name('course_advanced'); 
+    Route::get('course_advanced', 'Frontend\CourseAdvancedController@show')->name('course_advanced');
     /*** 刪除資料 Sandy(2020/03/12) ***/
     Route::post('course_advanced_delete', 'Backend\CourseAdvancedController@delete');
 
@@ -297,7 +297,8 @@ Route::get('error_authority', function () {
         return view('frontend.message_result');
     })->name('message_result');
 
-
+    /*** [訊息推播] 簡訊API***/
+    Route::post('message_api', 'Backend\MessageController@messageApi');
 
 
 /*
