@@ -64,6 +64,19 @@
             @endslot
             @slot('tbody')
 
+              @foreach($data as $key => $item )
+              <tr>
+                <td> {{ $item['send_at'] }}</td>
+                <td> {{ $item['title'] }}</td>
+                <td> {{ $item['content'] }}</td>
+                <td> {{ $item['type'] }}</td>
+                <td> 100 </td>
+                <td> 100 </td>
+                <td> 100 </td>
+                <td> 100 </td>
+                <td> 100 </td>
+              </tr>
+              @endforeach
 
             @endslot
           @endcomponent
@@ -280,7 +293,7 @@
       }
 
 
-       $('tbody').append(tdData);
+      //  $('tbody').append(tdData);
 
     });
 

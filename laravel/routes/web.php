@@ -272,7 +272,11 @@ Route::get('error_authority', function () {
 |
 ------------
 */
+
     /*** [訊息推播] ***/
+    Route::get('message_cost', 'Frontend\MessageController@show')->name('message_cost');
+
+
     Route::get('message', function () {
         return view('frontend.message');
     })->name('message');
@@ -288,9 +292,9 @@ Route::get('error_authority', function () {
     })->name('message_data');
 
     /*** [訊息推播] 推播成本***/
-    Route::get('message_cost', function () {
-        return view('frontend.message_cost');
-    })->name('message_cost');
+    // Route::get('message_cost', function () {
+    //     return view('frontend.message_cost');
+    // })->name('message_cost');
 
     /*** [訊息推播] 推播成效***/
     Route::get('message_result', function () {
