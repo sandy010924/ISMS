@@ -41,10 +41,17 @@
 
                   <nav>
                     <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                      <a class="nav-item nav-link active" data-toggle="tab" data-target="Jack" role="tab"></a>
+                    @foreach($teachers as $key => $item )
+                      @if($loop->index == 0)
+                        <a class="nav-item nav-link active" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
+                      @else
+                      <a class="nav-item nav-link" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
+                      @endif
+                    @endforeach
+                      <!-- <a class="nav-item nav-link active" data-toggle="tab" data-target="Jack" role="tab"></a>
                       <a class="nav-item nav-link" data-toggle="tab" data-target="Juila" role="tab"></a>
                       <a class="nav-item nav-link" data-toggle="tab" data-target="順昌" role="tab"></a>
-                      <a class="nav-item nav-link" data-toggle="tab" data-target="北極熊" role="tab"></a>
+                      <a class="nav-item nav-link" data-toggle="tab" data-target="北極熊" role="tab"></a> -->
                     </div>
                   </nav>
 
@@ -254,11 +261,11 @@
         "ordering": false
     });
 
-    $('.nav-item').on('click', function() {
-      var target = $(this).attr('data-target');
-      $('.show_row').removeClass('show_row')
-      $(`.${target}`).addClass('show_row');
-    });
+    // $('.nav-item').on('click', function() {
+    //   var target = $(this).attr('data-target');
+    //   $('.show_row').removeClass('show_row')
+    //   $(`.${target}`).addClass('show_row');
+    // });
 
     $('.datepicker').datepicker({
       format: "yyyy-mm-dd",
@@ -271,7 +278,7 @@
     });
 
     fakeData.forEach((data, idx) => {
-      $('#nav-tab a').eq(idx).text(data.name);
+      // $('#nav-tab a').eq(idx).text(data.name);
 
       var dataLen = fakeData[idx].data.length;
 
