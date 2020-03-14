@@ -42,6 +42,9 @@ class CourseCheckController extends Controller
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($course->course_start_at))];
 
+        //判斷是否有下一階
+        $nextLevel = count(Course::where('id_type', $course->id_course)
+                            ->get());
 
         //判斷是銷講or正課
         if( $course->type == 1 ){
@@ -165,7 +168,7 @@ class CourseCheckController extends Controller
 
         }
         
-        return view('frontend.course_check', compact('coursechecks', 'course', 'week', 'count_apply', 'count_check','count_cancel'));
+        return view('frontend.course_check', compact('coursechecks', 'course', 'week', 'count_apply', 'count_check', 'count_cancel', 'nextLevel'));
             
     }
 }

@@ -4,16 +4,12 @@
 @section('header', '學員管理')
 
 @section('content')
+  <link href="{{ asset('css/bootstrap-tagsinput.css') }}" rel="stylesheet">  
 <style>
     input:read-only {
       background-color: #e0e0e0 !important;
     }
-    /* .datetimepicker-input {  margin-bottom: 100px;
- z-index: 1000;} */
   </style>
-  <!-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
-  <!-- <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
-  <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
 <!-- Content Start -->
         <!--搜尋學員頁面內容-->
         <div class="card m-3">
@@ -112,16 +108,20 @@
                                     <h7 id = "student_datasource"></h7>
                                 </div>
                               </div>
+                              <!-- 標記 -->
                               <div class="row">
-                                <div class="col-3 py-2">
+                                <div class="col-12 py-2">
+
                                   <h6>標記 :
-                                    <span class="bg-dark p-1 text-light">
+                                  <i class="fa fa-plus" aria-hidden="true" style="cursor:pointer;" id="new_tag" data-toggle="modal" data-target="#save_tag"></i>
+                                    <!-- <span class="bg-dark p-1 text-light">
                                       <small>JC學員</small>
                                     </span>&nbsp;
                                     <span class="bg-dark p-1 text-light">
                                       <small>黑心學員</small>
-                                    </span>
+                                    </span> -->                                    
                                   </h6>
+                                  <input type="text" id="isms_tags"/>
                                 </div>
                                 <div class="col-5">
                                 </div>
@@ -129,6 +129,25 @@
                                   <button type="button" class="btn btn-primary float-right" onclick="btn_delete('','1');">刪除聯絡人</button>
                                 </div>
                               </div>
+                              <div class="modal fade" id="save_tag" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title">標記名稱</h5>
+                                      <button type="button" class="close" id="tag_close"  aria-label="Close" data-number="1">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <input type="text" id="tag_name" class="input_width">
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-primary" onclick="tags_add();">儲存</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- 標記 -->
                               <ul class="nav nav-tabs pb-3" id="myTab" role="tablist">
                                 <li class="nav-item">
                                   <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic_data" role="tab" aria-controls="basic_data" aria-selected="true">基本訊息</a>
@@ -329,50 +348,33 @@
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-        </div>
+        </div>     
         <!-- alert End -->       
 <!-- Content End -->
 
 
+    <script src="{{ asset('js/typeahead.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/angular.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-tagsinput.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-tagsinput-angular.min.js') }}"></script>
+
 <script>
 var id_student_old = '';
+var elt = $('#isms_tags');
+
 $("document").ready(function(){
   $(".demo2").tooltip();
 
   // 學員管理搜尋 (只能輸入數字、字母、_、.、@)
   $('#search_input').on('blur', function() {
       // console.log(`search_input: ${$(this).val()}`);
-  });
-  // table=$('#table_list').DataTable({
-  //   "dom": '<l<t>p>',
-  //   "searching" :true,
-  //   "destroy":true,
-  //   "orderable": false,
-  //   "columnDefs": [ {
-  //     "targets": 'no-sort',                
-  //   } ],
-  //   initComplete: function () {                                
-  //     this.api().columns().every( function () {
-  //         var column = this;
-  //         var select = ''
-  //         select = $('<select><option value=""></option></select>')
-  //             .appendTo( $(column.header())  )
-  //             .on( 'change', function () {
-  //                 var val = $.fn.dataTable.util.escapeRegex(
-  //                     $(this).val()
-  //                 );
-  //                 column
-  //                     .search( val ? '^'+val+'$' : '', true, false )
-  //                     .draw();
-  //             } );
-  //         column.data().unique().sort().each( function ( d, j ) {
-  //             select.append( '<option value="'+d+'">'+d+'</option>' )
-  //         } );
-  //     });              
-  //   }
-  // }); 
-
+  }); 
 });
+
+ // 標記關閉
+ $("#tag_close").click(function(){
+    $('#save_tag').modal('hide');
+  });
 
 // 輸入框
 $('#search_input').on('keyup', function(e) {
@@ -467,9 +469,9 @@ function view_form_detail(id,type){
     }
     });
 }
-/* 已填表單 -E Rocky(2020/02/29 */
+/* 已填表單 -E Rocky(2020/02/29) */
 
-/* 完整內容 -S Rocky(2020/02/29 */
+/* 完整內容 -S Rocky(2020/02/29) */
 
 // 基本訊息
 function course_data(id_student){
@@ -477,6 +479,7 @@ function course_data(id_student){
   id_student_old = id_student  
   history_data();
   contact_data();
+  tags_show(id_student);
   $.ajax({
       type : 'POST',
       url:'course_data', 
@@ -541,8 +544,130 @@ function course_data(id_student){
   });
 }
 
+/* 標記 -S Rocky(2020/03/12) */
+// 標記顯示
+function tags_show(id_student){
+  $.ajax({
+      type : 'POST',
+      url:'tag_show', 
+      dataType: 'json',    
+      data:{
+        id_student: id_student
+      },
+      success:function(data){        
+        // console.log(data);
+ 
+        var cities = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: data            
+          });
+          cities.initialize();
+          var elt = $('#isms_tags');
+          // 設定標籤
+          elt.tagsinput({
+            tagClass: function(item) {
+              // switch (item.value % 2) {
+                // case 0  : return 'badge badge-primary';
+                // case 1  : return 'badge badge-success';
+                // defalt   : return 'badge badge-default';
+                // case 'Africa'   : return 'badge badge-default';
+                // case 'Asia'     : return 'badge badge-warning';
+              // }
+              // console.log(item.value % 2)
+              return 'badge badge-primary'
+            },
+            itemValue: 'value',
+            itemText: 'text',
+            typeaheadjs: {
+              name: 'cities',
+              displayKey: 'text',
+              source: cities.ttAdapter()
+            }
+          });
+          // 清空標籤
+          $('#isms_tags').tagsinput('removeAll');               
+
+          if (data.length != 0){
+            // 新增資料到標籤
+            $.each(data, function(index,val) {    
+              elt.tagsinput('add', { "value": val['value'] , "text": val['text']   , "continent": val['text']    });  
+            });
+          }
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));     
+      }
+  });
+}
+
+// 標記新增
+function tags_add(){
+  name = $("#tag_name").val();
+ 
+  $.ajax({
+      type : 'POST',
+      url:'tag_save',    
+      data:{
+        id_student: id_student_old,
+        name:name,
+      },
+      success:function(data){    
+        if (data = "儲存成功") {
+          tags_show(id_student_old)  
+          $("#tag_name").val('')  
+          $("#success_alert_text").html("儲存成功");
+          fade($("#success_alert"));
+        } else {
+          $("#error_alert_text").html("儲存失敗");
+          fade($("#error_alert"));                 
+        }
+      },
+      error: function(error){
+        console.log(JSON.stringify(error));     
+      }
+  });
+}
+
+// 標記刪除
+elt.on('itemRemoved', function(event) {
+  var msg = "是否刪除標記資料?";
+    if (confirm(msg)==true){      
+      $.ajax({
+          type : 'POST',
+          url:'tag_delete', 
+          dataType: 'json',    
+          data:{
+            id: event.item['value']
+          },
+          success:function(data){
+            if (data['data'] == "ok") {                           
+              /** alert **/
+              $("#success_alert_text").html("刪除資料成功");
+              fade($("#success_alert"));
+
+              // location.reload();
+            }　else {
+              /** alert **/ 
+              $("#error_alert_text").html("刪除資料失敗");
+              fade($("#error_alert"));       
+            }           
+          },
+          error: function(error){
+            console.log(JSON.stringify(error));      
+          }
+      });
+    }else{
+    return false;
+    }  
+});
+
+/* 標記 -E Rocky(2020/03/12) */
+
 // 歷史互動
 function history_data() {
+  // table = $('#table_list').DataTable();
+
   $.ajax({
       type : 'POST',
       url:'history_data', 
@@ -552,6 +677,7 @@ function history_data() {
       },
       success:function(data){
         var id_student = '';
+        
         $('#history_data_detail').html(''); 
         $('#table_thead').html(''); 
         // console.log(data)
@@ -569,11 +695,12 @@ function history_data() {
           '<th>時間</th>' +
           '<th>動作</th>' +
           '<th>內容</th>' +
-        '</tr>'
+        '</tr>'        
          $('#history_data_detail').html(data);
          $('#table_thead').html(data_thead);
-        
-        //  table = $('#table_list').DataTable({
+        //  $('#table_list').dataTable().fnClearTable();   //將資料清除  
+        //  render($('#table_list').DataTable());
+        // $('#table_list').DataTable({
         //     "dom": '<l<t>p>',
         //     "destroy":true,
         //     "columnDefs": [ {
@@ -606,6 +733,13 @@ function history_data() {
       }
   });
 }
+
+// function render(table) { 
+//   var currentPage = table.page(); 
+//   table.clear(); 
+//   table.rows.add(this.staff_list); 
+//   table.page(currentPage).draw(false); 
+// }
 // 聯絡狀況
 function contact_data() {
   $('#contact_data_detail').html(''); 

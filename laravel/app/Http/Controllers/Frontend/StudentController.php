@@ -8,6 +8,7 @@ use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Refund;
 use App\Model\Debt;
+use App\Model\Mark;
 use Symfony\Component\HttpFoundation\Request;
 
 class StudentController extends Controller
@@ -220,6 +221,24 @@ class StudentController extends Controller
         }
         return 0;
     }
+
+
+
+
+    public function tagshow(Request $request)
+    {
+        $id_student = $request -> get('id_student');
+
+        $datas = Mark::where('id_student', $id_student)
+        ->select('mark.id as value', 'mark.name_mark as text', 'mark.name_mark as continent')
+        ->get();
+
+
+        return json_encode($datas);
+    }
+
+
+
     // 搜尋
     public function search(Request $request)
     {

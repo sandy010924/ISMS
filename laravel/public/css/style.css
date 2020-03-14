@@ -30,6 +30,21 @@ body {
    color:red;
 }
 
+/* 延展collapse 開合icon */
+[aria-expanded="false"] .collapse_open {
+  display: inline;
+}
+[aria-expanded="false"] .collapse_close {
+  display: none;
+}
+[aria-expanded="true"] .collapse_open {
+  display: none;
+}
+[aria-expanded="true"] .collapse_close {
+  display: inline;
+}
+
+
 /* main */
 main{
     top: 0;

@@ -60,6 +60,7 @@ class CourseListEditController extends Controller
                 }
 
                 $course_group = EventsCourse::Where('id_group', $data['id_group'])
+                                            ->Where('id_course', $id)
                                             ->get();
                 $numItems = count($course_group);
                 $i = 0;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Model\Mark;
 use App\Model\Student;
 use App\Model\Blacklist;
 use App\Model\SalesRegistration;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StudentController extends Controller
 {
-    // 刪除 Rocky (2020/02/23)
+    // 刪除學員資料 Rocky (2020/02/23)
     public function delete(Request $request)
     {
         $status = "";
@@ -89,8 +90,6 @@ class StudentController extends Controller
         }
     }
 
-
-    // 儲存 Rocky (2020/03/08)
     /*** 課程資料儲存 ***/
     public function updatedata(Request $request)
     {
@@ -140,5 +139,53 @@ class StudentController extends Controller
         //     // ));
         // }
     }
+
+    // 標記儲存 (2020/03/10)
+    public function tagsave(Request $request)
+    {
+        $id_student = $request->get('id_student');
+        $name = $request->get('name');
+
+        $mark = new Mark;
+
+         // 新增學員資料
+         $mark->id_student       = $id_student;         // 學員ID
+         $mark->name_mark        = $name;               // 標記名稱
+        
+         $mark->save();
+         $id_mark = $mark->id;
+
+
+        if (!empty($id_mark)) {
+            return '儲存成功';
+        } else {
+            return '更新失敗';
+        }
+    }
+
+    // 刪除學員資料 Rocky (2020/02/23)
+    public function tagdelete(Request $request)
+    {
+        $status = "";
+        $id = $request->get('id');
+
+        // 查詢是否有該筆資料
+        $mark = Mark::where('id', $id)->get();
+        
+         // 刪除資料
+        
+        if (!empty($mark)) { 
+            $mark = Mark::where('id', $id)->delete();
+            
+            $status = "ok";
+        } else {
+            $status = "error";
+        }
+        return json_encode(array('data' => $status));
+    }
+ 
+
+
+
 
 }

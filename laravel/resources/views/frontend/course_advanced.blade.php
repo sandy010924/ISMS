@@ -87,53 +87,23 @@
                     @endforeach
                   @endslot
                 @endcomponent
-            {{-- <div class="table-responsive">
-              <table class="table table-striped table-sm text-center">
-                <thead>
-                  <tr>
-                    <th>Submission Date</th>
-                    <th>報名日期</th>
-                    <th>姓名</th>
-                    <th>聯絡電話</th>
-                    <th>電子郵件</th>
-                    <th>我想參加課程</th>
-                    <th>報名場次</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>現場最優惠價格</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td><a href="#"><button type="button" class="btn btn-secondary btn-sm">刪除</button></a></td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>五日內最優惠價格</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td><a href="#"><button type="button" class="btn btn-secondary btn-sm">刪除</button></a></td>
-                    </tr>
-                    
-                  </tbody>
-              </table>
-            </div> --}}
           </div>
         </div>
+        
+    <!-- alert Start-->
+    <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+      <span id="success_alert_text"></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+      <span id="error_alert_text"></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- alert End -->
 <!-- Content End -->
 <script>
   var table;
@@ -161,5 +131,46 @@
   });
   // Sandy(2020/03/09) dt列表搜尋 E
 
+  // 刪除 Sandy(2020/03/12) start
+  function btn_delete(id_fill){
+    var msg = "是否刪除此資料?";
+    if (confirm(msg)==true){
+      $.ajax({
+          type : 'POST',
+          url:'course_advanced_delete', 
+          dataType: 'json',    
+          data:{
+            id_fill: id_fill
+          },
+          success:function(data){
+            console.log(data);
+            if (data['data'] == "ok") {                           
+              alert('刪除成功！！')
+              /** alert **/
+              // $("#success_alert_text").html("刪除資料成功");
+              // fade($("#success_alert"));
+
+              location.reload();
+            }　else {
+              // alert('刪除失敗！！')
+
+              /** alert **/ 
+              $("#error_alert_text").html("刪除資料失敗");
+              fade($("#error_alert"));       
+            }           
+          },
+          error: function(error){
+            console.log(JSON.stringify(error));   
+
+            /** alert **/ 
+            $("#error_alert_text").html("刪除資料失敗");
+            fade($("#error_alert"));       
+          }
+      });
+    }else{
+      return false;
+    }    
+  }
+  // 刪除 Sandy(2020/03/12) end
 </script>
 @endsection

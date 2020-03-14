@@ -88,29 +88,30 @@
                 <td>{{ $event['count_check'] }}</span></td>
                 <td>
                   @if( strtotime($event['date']) == strtotime(date("Y-m-d")) )
-                  <!-- 今日場次 -->
-                  <a href="{{ $event['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">開始報到</button></a>
-                  <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                  <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
-                  <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
-                  @elseif( strtotime($event['date']) > strtotime(date("Y-m-d")) )
-                  <!-- 未過場次 -->
-                  <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
-                  <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                  <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
-                  <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
-                  @elseif( strtotime($event['date']) < strtotime(date("Y-m-d")) )
-                  <!-- 已過場次 -->
-                  <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
-                  <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-                  @if( $event['nextLevel'] > 0 )
-                    <a href="{{ $event['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
-                  @else
+                    <!-- 今日場次 -->
+                    <a href="{{ $event['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">開始報到</button></a>
+                    <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                     <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                    <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
+                  @elseif( strtotime($event['date']) > strtotime(date("Y-m-d")) )
+                    <!-- 未過場次 -->
+                    <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
+                    <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                    <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                    <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
+                    @elseif( strtotime($event['date']) < strtotime(date("Y-m-d")) )
+                    <!-- 已過場次 -->
+                    <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
+                    <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+                    @if( $event['nextLevel'] > 0 )
+                      <a href="{{ $event['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
+                      <a href="{{ $event['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
+                    @else
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
+                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
+                    @endif
                   @endif
-                  <a href="{{ $event['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
-                  @endif
-                  <button id="{{ $event['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $event['id'] }});" value="{{ $event['id'] }}" >刪除</button>
+                  <button id="{{ $event['id'] }}" name="{{ $event['id_group'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $event['id'] }});" value="{{ $event['id'] }}" >刪除</button>
                 </td>
               </tr>
             @endforeach
@@ -204,9 +205,18 @@
   });
   // Sandy(2020/02/26) dt列表搜尋 E
 
-  // 刪除 Rocky(2020/02/11)
+  // 刪除 Rocky(2020/02/11) Sandy(2020/03/12)
   function btn_delete(id_events){
-    var msg = "是否刪除此場次?";
+    //判斷是否有群組場次
+    var id_group = $("#"+id_events).attr('name');
+    var group = $("button[name='"+ id_group +"']").length;
+    
+    if( group > 1 ){
+      var msg = "此場次與其他場次有群組關係，是否刪除此場次連帶同群組場次?";
+    }else{
+      var msg = "是否刪除此場次?";
+    }
+
     if (confirm(msg)==true){
       $.ajax({
           type : 'POST',

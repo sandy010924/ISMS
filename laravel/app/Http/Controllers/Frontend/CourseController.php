@@ -66,6 +66,7 @@ class CourseController extends Controller
                 'href_return' => route('course_return',["id"=> $data['id'] ]),
                 'href_form' => route('course_form',["id"=> $data['id'] ]),
                 'id' => $data['id'],
+                'id_group' => $data['id_group'],
                 'nextLevel' => $nextLevel
             ];
         }

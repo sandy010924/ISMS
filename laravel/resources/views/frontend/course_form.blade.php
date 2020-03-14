@@ -129,9 +129,7 @@
             @csrf
             <div class="form-group mb-5">
                 <h5 class="font-weight-bold text-center my-3">參加課程服務</h5>
-              <div>
-                {{ $course->courseservices }}
-              </div>
+                <textarea class="form-control border-0 bg-white" rows="8" disabled readonly>{{$course->courseservices}}</textarea>
               <hr>
               <h3 class="font-weight-bold text-center my-3">{{ $course->name }}</h3>
               <h4 class="font-weight-bold text-center my-3">一般方案：{{ $course->money }}</h4> 
@@ -200,7 +198,7 @@
               <label class="col-form-label" for="icash">
                 <b>付款金額</b>
               </label>
-              <input type="text" id="icash" name="icash" class="form-control" required>
+              <input type="number" id="icash" name="icash" class="form-control" required>
               <label class="text-secondary px-2 py-1"><small>（實際金額以財務確認為準）</small></label>
             </div>
             <hr>
