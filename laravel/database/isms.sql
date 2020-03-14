@@ -469,3 +469,20 @@ ALTER TABLE `registration` ADD COLUMN registration_join VARCHAR(20) NULL COMMENT
 
 -- 修改課程資料表外部鍵
 ALTER TABLE course DROP FOREIGN KEY `course_ibfk_1`;
+
+
+-- 新增正課表單資料欄位 (2020/03/13)
+ALTER TABLE `registration` ADD COLUMN id_group INT NULL COMMENT '群組ID';
+ALTER TABLE `registration` ADD COLUMN source_events INT NULL COMMENT '來源場次ID';
+ALTER TABLE `registration` ADD COLUMN pay_date timestamp NULL COMMENT '付款日期';
+ALTER TABLE `registration` ADD COLUMN pay_memo VARCHAR(40) NULL COMMENT '付款備註';
+ALTER TABLE `registration` ADD COLUMN person VARCHAR(40) NULL COMMENT '服務人員';
+ALTER TABLE `registration` ADD COLUMN type_invoice VARCHAR(20) NULL COMMENT '統一發票';
+ALTER TABLE `registration` ADD COLUMN number_taxid VARCHAR(40) NULL COMMENT '統編';
+ALTER TABLE `registration` ADD COLUMN companytitle VARCHAR(40) NULL COMMENT '抬頭';
+
+-- 刪除付款資料表欄位 (2020/03/13)
+ALTER TABLE `payment` DROP COLUMN `person`;
+ALTER TABLE `payment` DROP COLUMN `type_invoice`;
+ALTER TABLE `payment` DROP COLUMN `number_taxid`;
+ALTER TABLE `payment` DROP COLUMN `companytitle`;
