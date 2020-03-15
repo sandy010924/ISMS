@@ -27,7 +27,7 @@
         </div>
         <div class="col align-middle align-self-end">
           @if( $course->id_type != "") 
-          <a role="button" href="{{ route('course_form',['id'=> $course->id_type]) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
+          <a role="button" href="{{ route('course_form',['source_course'=>$course->id_type, 'source_events'=>0]) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
               預覽報名表
             </a>
           @endif
@@ -58,9 +58,9 @@
                   </div>
                   <div class="modal-body">
                     <div class="form-group required">
-                      <label for="newform_courses" class="col-form-label">對應課程</label><br>
-                      <select class="w-100 custom-select" id="newform_courses" name="newform_courses" style="width: 75%;" required>
-                        @foreach($courses as $data)
+                      <label for="newform_course" class="col-form-label">對應課程</label><br>
+                      <select class="w-100 custom-select" id="newform_course" name="newform_course" style="width: 75%;" required>
+                        @foreach($course_all as $data)
                           @if($course->id_type == $data->id)
                             <option value="{{ $data->id }}" selected>{{ $data->name }}</option>
                           @else
@@ -126,7 +126,7 @@
       });
 
       //select2 對應課程 Sandy(2020/03/08)
-      $("#courses").select2({
+      $("#newform_course").select2({
           width: 'resolve' // need to override the changed default
       });
     });

@@ -132,7 +132,7 @@
   // Sandy(2020/03/09) dt列表搜尋 E
 
   // 刪除 Sandy(2020/03/12) start
-  function btn_delete(id_fill){
+  function btn_delete(id_registration){
     var msg = "是否刪除此資料?";
     if (confirm(msg)==true){
       $.ajax({
@@ -140,7 +140,7 @@
           url:'course_advanced_delete', 
           dataType: 'json',    
           data:{
-            id_fill: id_fill
+            id_registration: id_registration
           },
           success:function(data){
             console.log(data);

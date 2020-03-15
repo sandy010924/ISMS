@@ -223,7 +223,8 @@
           url:'course_delete', 
           dataType: 'json',    
           data:{
-            id_events: id_events
+            id_events: id_events,
+            id_group : id_group
           },
           success:function(data){
             if (data['data'] == "ok") {                           

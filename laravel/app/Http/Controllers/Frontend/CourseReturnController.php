@@ -39,11 +39,13 @@ class CourseReturnController extends Controller
         $fill_table = Registration::join('student', 'student.id', '=', 'registration.id_student')
                             ->join('isms_status', 'isms_status.id', '=', 'registration.status_payment')
                             // ->join('events_course', 'events_course.id', '=', 'registration.id_events')
-                            ->join('payment', 'payment.id', '=', 'registration.id_payment')
-                            ->select('student.name as name', 'student.phone as phone', 'registration.*', 'isms_status.name as status_payment_name', 'payment.person as person')
+                            // ->join('payment', 'payment.id', '=', 'registration.id_payment')
+                            // ->select('student.name as name', 'student.phone as phone', 'registration.*', 'isms_status.name as status_payment_name', 'payment.person as person')
+                            ->select('student.name as name', 'student.phone as phone', 'registration.*', 'isms_status.name as status_payment_name')
                             // ->selectraw('sum(cash) as cash')
-                            ->Where('registration.id_course', $next_course->id_course)
-                            ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
+                            // ->Where('registration.id_course', $next_course->id_course)
+                            // ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
+                            ->Where('registration.source_events', $id )
                             ->groupby('registration.id_student')
                             ->get();
 
@@ -73,8 +75,9 @@ class CourseReturnController extends Controller
         $paylist = Registration::join('payment', 'payment.id', '=', 'registration.id_payment')
                             ->select('payment.*')
                             // ->selectraw('sum(cash) as cash')
-                            ->Where('registration.id_course', $next_course->id_course)
-                            ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
+                            // ->Where('registration.id_course', $next_course->id_course)
+                            // ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
+                            ->Where('registration.source_events', $id )
                             ->groupby('registration.id_payment')
                             ->get();
 

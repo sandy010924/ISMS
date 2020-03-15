@@ -14,7 +14,7 @@ class CourseListEditController extends Controller
     public function show(Request $request)
     {
         //所有課程
-        $courses = Course::select('name', 'id')
+        $course_all = Course::select('name', 'id')
                         ->get();
 
          //課程資訊
@@ -101,7 +101,7 @@ class CourseListEditController extends Controller
             // }
         }
 
-        return view('frontend.course_list_edit', compact('course', 'courses', 'events'));    
+        return view('frontend.course_list_edit', compact('course', 'course_all', 'events'));    
     }
 
     

@@ -108,7 +108,7 @@
     
     // 刪除 Sandy(2020/03/12) start
     function btn_delete(id_apply){
-      // var type = $("#course_type").val();
+      var type = $("#course_type").val();
       var msg = "是否刪除此資料?";
       if (confirm(msg)==true){
         $.ajax({
@@ -116,6 +116,7 @@
             url:'course_list_apply_delete', 
             dataType: 'json',    
             data:{
+              type : type,
               id_apply: id_apply
             },
             success:function(data){

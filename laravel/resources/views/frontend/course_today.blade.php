@@ -30,13 +30,13 @@
                 </tr>
               @endslot
               @slot('tbody')
-                @foreach($courses as $key => $course )
+                @foreach($events as $key => $course )
                   <tr>
                     <td>{{ date('Y-m-d', strtotime($course->course_start_at)) }}</td>
                     <td>{{ $course->course }}</td>
                     <td>{{ $course->name }}</td>
-                    <td>{{ $courses_apply[$key] }} / <span style="color:red">{{ $courses_cancel[$key] }}</span></td>
-                    <td>{{ $courses_check[$key] }}</td>
+                    <td>{{ $count_apply[$key] }} / <span style="color:red">{{ $count_cancel[$key] }}</span></td>
+                    <td>{{ $count_check[$key] }}</td>
                     <td>
                       <a href="{{ route('course_check', ['id'=>$course->id]) }}"><button type="button" class="btn btn-success btn-sm">開始報到</button></a>
                     </td>

@@ -11,14 +11,17 @@ use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\EventsCourse;
 use App\User;
+use App\Model\Register;
 
 class CourseListController extends Controller
 {
     //View
     public function show()
     {
-        $courses = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        //  ->rightjoin('events_course', 'events_course.id_course', '=', 'course.id')
+        $course = array();
+        $teachers = array();
+
+        $course_table = Course::join('users', 'users.id', '=', 'course.id_teacher')
                          ->select('course.id as id_course', 'course.name as course', 'course.type as type', 'users.id as id_teacher', 'users.name as teacher')
                          ->orderBy('id_teacher', 'desc')
                          ->distinct()
@@ -26,8 +29,9 @@ class CourseListController extends Controller
 
         $teachers = User::Where('role', 'teacher')   
                         ->get();
+
                                        
-        foreach ($courses as $key => $data) {
+        foreach ($course_table as $key => $data) {
             //表單上場次
             $count_form = count(EventsCourse::Where('course_start_at', '>=', date('Y-m-d H:i:s')) 
                                             ->Where('id_course', $data['id_course'])
@@ -48,16 +52,20 @@ class CourseListController extends Controller
                 //累計名單            
                 $count_list = count(SalesRegistration::join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
                                                     ->Where('sales_registration.id_course', $data['id_course'])
-                                                    ->Where('sales_registration.id_status','<>', 2)
+                                                    // ->Where('sales_registration.id_status','<>', 2)
                                                     ->groupby('events_course.id_group', 'sales_registration.id_student')
                                                     ->get());
             }else{
                 //正課
                 //累計名單            
-                $count_list = count(Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
-                                                ->Where('registration.id_course', $data['id_course'])
-                                                ->Where('registration.id_status','<>', 2)
-                                                ->groupby('events_course.id_group', 'registration.id_student')
+                // $count_list = count(Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
+                //                                 ->Where('registration.id_course', $data['id_course'])
+                //                                 // ->Where('registration.id_status','<>', 2)
+                //                                 ->groupby('events_course.id_group', 'registration.id_student')
+                //                                 ->get());
+                $count_list = count(Registration::Where('id_course', $data['id_course'])
+                                                // ->Where('registration.id_status','<>', 2)
+                                                ->groupby('id_group', 'id_student')
                                                 ->get());
             }
                                               
@@ -97,7 +105,7 @@ class CourseListController extends Controller
                     break;
             }
 
-            $courses[$key] = [
+            $course[$key] = [
                 'teacher' => $data['teacher'],
                 'type' => $type,
                 'course' => $data['course'],
@@ -111,6 +119,6 @@ class CourseListController extends Controller
             ];
         }
         
-        return view('frontend.course_list', compact('courses','teachers'));
+        return view('frontend.course_list', compact('course','teachers'));
     }
 }

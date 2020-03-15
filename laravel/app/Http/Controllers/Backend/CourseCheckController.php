@@ -10,6 +10,7 @@ use App\Model\Student;
 use App\Model\ISMSStatus;
 use App\Model\Course;
 use App\Model\EventsCourse;
+use App\Model\Register;
 
 class CourseCheckController extends Controller
 {
@@ -137,9 +138,9 @@ class CourseCheckController extends Controller
             if($course_type == 1){
                 //銷講
                 $db_check = SalesRegistration::where('id', $check_id);
-            }else{
+            }elseif($course_type == 2 || $course_type == 3){
                 //正課
-                $db_check = Registration::where('id', $check_id);
+                $db_check = Register::where('id', $check_id);
                 
             }
             switch($update_status){
@@ -189,21 +190,21 @@ class CourseCheckController extends Controller
                 $count_cancel = count(SalesRegistration::Where('id_events', $list->id_events)
                     ->Where('id_status','=', 5)
                     ->get());
-            }else{
+            }elseif($course_type == 2 || $course_type == 3){
                 //正課
-                $list = Registration::join('isms_status', 'isms_status.id', '=', 'registration.id_status')
-                                            ->join('student', 'student.id', '=', 'registration.id_student')
-                                            ->select('registration.id as check_id', 'student.name as check_name', 'registration.id_events as id_events', 'registration.id_status as check_status_val', 'isms_status.name as check_status_name')
-                                            ->Where('registration.id','=', $check_id)
-                                            ->first();
+                $list = Register::join('isms_status', 'isms_status.id', '=', 'register.id_status')
+                                    ->join('student', 'student.id', '=', 'register.id_student')
+                                    ->select('register.id as check_id', 'student.name as check_name', 'register.id_events as id_events', 'register.id_status as check_status_val', 'isms_status.name as check_status_name')
+                                    ->Where('register.id','=', $check_id)
+                                    ->first();
 
                 
                 //報到筆數
-                $count_check = count(Registration::Where('id_events', $list->id_events)
+                $count_check = count(Register::Where('id_events', $list->id_events)
                     ->Where('id_status','=', 4)
                     ->get());
                 //取消筆數
-                $count_cancel = count(Registration::Where('id_events', $list->id_events)
+                $count_cancel = count(Register::Where('id_events', $list->id_events)
                     ->Where('id_status','=', 5)
                     ->get());
                 
@@ -259,9 +260,9 @@ class CourseCheckController extends Controller
                         //銷講
                         SalesRegistration::where('id', $data_id)
                                          ->update(['memo' => $data_val]);
-                    }else {
+                    }elseif($course_type == 2 || $course_type == 3){
                         //正課
-                        Registration::where('id', $data_id)
+                        Register::where('id', $data_id)
                                     ->update(['memo' => $data_val]);
                     }
                     break;

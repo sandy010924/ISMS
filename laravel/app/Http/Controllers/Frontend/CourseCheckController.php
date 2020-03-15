@@ -8,6 +8,7 @@ use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Course;
 use App\Model\EventsCourse;
+use App\Model\Register;
 // use DB;
 
 class CourseCheckController extends Controller
@@ -52,12 +53,9 @@ class CourseCheckController extends Controller
             
             //已過場次 狀態預設改為未到
             // if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d"))){
-                SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
-                    ->join('student', 'student.id', '=', 'sales_registration.id_student')
-                    ->select('sales_registration.id as check_id' ,'student.*', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
-                    ->Where('id_events', $id)
-                    ->Where('id_status', 1)
-                    ->update(['id_status' => 3]);
+                SalesRegistration::Where('id_events', $id)
+                                ->Where('id_status', 1)
+                                ->update(['id_status' => 3]);
             // }
 
             // DB::statement(DB::raw('set @row:=0'));
@@ -105,24 +103,21 @@ class CourseCheckController extends Controller
             $count_cancel = count(SalesRegistration::Where('id_events','=', $id)
                 ->Where('id_status','=', 5)
                 ->get());
-        }else {
+        }elseif( $course->type == 2 || $course->type == 3){
             //正課
             //已過場次 狀態預設改為未到
             // if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d"))){
-                Registration::join('isms_status', 'isms_status.id', '=', 'registration.id_status')
-                    ->join('student', 'student.id', '=', 'registration.id_student')
-                    ->select('registration.id as check_id' ,'student.*', 'registration.id_status as check_status_val', 'isms_status.name as check_status_name')
-                    ->Where('id_events', $id)
-                    ->Where('id_status', 1)
-                    ->update(['id_status' => 3]);
+                Register::Where('id_events', $id)
+                        ->Where('id_status', 1)
+                        ->update(['id_status' => 3]);
             // }
 
             // DB::statement(DB::raw('set @row:=0'));
 
             //報名資訊
-            $list = Registration::join('isms_status', 'isms_status.id', '=', 'registration.id_status')
-                ->join('student', 'student.id', '=', 'registration.id_student')
-                ->select('registration.id as check_id' ,'student.*', 'registration.id_status as check_status_val', 'registration.memo as memo', 'isms_status.name as check_status_name')
+            $list = Register::join('isms_status', 'isms_status.id', '=', 'register.id_status')
+                ->join('student', 'student.id', '=', 'register.id_student')
+                ->select('student.*', 'register.id as check_id' ,'register.id_status as check_status_val', 'register.memo as memo', 'isms_status.name as check_status_name')
                 // ->selectRaw('@row:=@row+1 as row')
                 ->Where('id_events','=', $id)
                 ->Where('id_status','<>', 2)
@@ -158,11 +153,11 @@ class CourseCheckController extends Controller
             //報名筆數
             $count_apply = count($coursechecks);
             //報到筆數
-            $count_check = count(Registration::Where('id_events','=', $id)
+            $count_check = count(Register::Where('id_events','=', $id)
                 ->Where('id_status','=', 4)
                 ->get());
             //報到筆數
-            $count_cancel = count(Registration::Where('id_events','=', $id)
+            $count_cancel = count(Register::Where('id_events','=', $id)
                 ->Where('id_status','=', 5)
                 ->get());
 

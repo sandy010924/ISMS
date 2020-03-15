@@ -7,7 +7,7 @@
 
 <!-- Content Start -->
   <!--查看報名內容-->
-  <input type="hidden" id="course_id" value="{{ $course->id }}">
+  <input type="hidden" id="id_events" value="{{ $course->id }}">
   <input type="hidden" id="course_type" value="{{ $course->type }}">
   <div class="card m-3">
     <div class="card-body">
@@ -195,24 +195,22 @@
 
     // 報到狀態修改 Start
     $('body').on('click','.update_status',function(){
-        var course_id = $("#course_id").val();
+        var id_events = $("#id_events").val();
         var course_type = $("#course_type").val();
         var apply_id = $(this).attr('id');
         var apply_status = $(this).val();
         $.ajax({
            type:'POST',
            url:'course_apply',                
-          //  data:{
-          //    _token:"{{csrf_token()}}",
-          //  },
            data:{
-            //  '_token':"{{ csrf_token() }}",
-             course_id:course_id,
+             id_events:id_events,
              course_type:course_type,
              apply_id:apply_id, 
              apply_status:apply_status
            },
            success:function(data){
+              console.log(data); 
+
               $("#"+data["list"].id).val(data["list"].id_status);
               $("#"+data["list"].id).html(data["list"].status_name);
               

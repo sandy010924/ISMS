@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
+use App\Model\EventsCourse;
 use App\Model\Student;
 use App\Model\SalesRegistration;
+use App\Model\Registration;
+use App\Model\Register;
+use App\Model\Debt;
+use App\Model\Refund;
+use App\Model\Payment;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
-use App\Model\EventsCourse;
 
 class CourseListController extends Controller
 {
@@ -428,21 +433,44 @@ class CourseListController extends Controller
         //  foreach ($id_course as $key => $data) {
             
         if(!empty($course)){
-            //判斷是銷講or正課
             if($course->type == 1){
-                $type = "sales_registration";
+                //銷講
                 $db_apply = SalesRegistration::where('id_course', $course->id);
-            }else{
-                $type = "registration";
+
+                $apply_table = SalesRegistration::where('id_course', $course->id)
+                                                ->get();
+            }elseif($course->type == 2 || $course->type == 3){
+                //正課
                 $db_apply = Registration::where('id_course', $course->id);
+
+                $apply_table = Registration::where('id_course', $course->id)
+                                           ->get();
+            }
+            
+            foreach( $apply_table as $data ){
+                //刪除報到
+                Register::where('id_registration', $data['id'])->delete();
+
+                //刪除追單
+                Debt::where('id_registration', $data['id'])->delete();   
+                
+                //刪除退費
+                Refund::where('id_registration', $data['id'])->delete();   
+
+                //刪除付款
+                Payment::where('id_registration', $data['id'])->delete();
             }
 
             //刪除報名表
             $db_apply->delete();
+
             //刪除場次  
-            EventsCourse::where('id_course', $course->id)->delete();   
+            EventsCourse::where('id_course', $course->id)->delete();
+
             //刪除課程
-            Course::where('id', $course->id)->delete();      
+            Course::where('id', $course->id)->delete();     
+            
+            //刪除訊息? 
 
             $status = "ok";
         } else {

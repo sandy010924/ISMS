@@ -145,26 +145,26 @@
               </tr>
             @endslot
             @slot('tbody')
-              @foreach($courses as $key => $course )
+              @foreach($course as $key => $data )
                 <tr>
-                  <td>{{ $course['teacher'] }}</td>
-                  <td>{{ $course['type'] }}</td>
-                  <td>{{ $course['course'] }}</td>
-                  <td>{{ $course['count_form'] }}</td>
-                  <td>{{ $course['count_events'] }}</td>
-                  <td>{{ $course['count_list'] }}</td>
+                  <td>{{ $data['teacher'] }}</td>
+                  <td>{{ $data['type'] }}</td>
+                  <td>{{ $data['course'] }}</td>
+                  <td>{{ $data['count_form'] }}</td>
+                  <td>{{ $data['count_events'] }}</td>
+                  <td>{{ $data['count_list'] }}</td>
                   <td>
                       <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         名單
                       </a>
                       <div class="dropdown-menu dropdown_status" aria-labelledby="dropdownMenu2">
-                        <a role="button" class="dropdown-item" href="{{ route('course_list_apply', [ 'id' => $course['id'] ]) }}">報名名單</a>
+                        <a role="button" class="dropdown-item" href="{{ route('course_list_apply', [ 'id' => $data['id'] ]) }}">報名名單</a>
                         <a role="button" class="dropdown-item" href="{{ route('course_list_refund') }}">退費名單</a>
                       </div>
-                      <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data', [ 'id' => $course['id'] ] ) }}">場次數據</a>
-                      <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit', [ 'id' => $course['id'] ] ) }}">編輯</a>
-                      {{-- <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['all_id'] }});" value="{{ $course['all_id'] }}" >刪除</a> --}}
-                      <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $course['id'] }});">刪除</a>
+                      <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data', [ 'id' => $data['id'] ] ) }}">場次數據</a>
+                      <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit', [ 'id' => $data['id'] ] ) }}">編輯</a>
+                      {{-- <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['all_id'] }});" value="{{ $data['all_id'] }}" >刪除</a> --}}
+                      <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
                   </td>
                 </tr>
               @endforeach

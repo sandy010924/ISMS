@@ -19,8 +19,9 @@
 </head>
 
 <body>
-
   <main role="main" class="mw-100">
+    <input type="hidden" id="source_course" value="{{ $source_course }}">
+    <input type="hidden" id="source_events" value="{{ $source_events }}">
     <img src="{{ asset('img/logo.png') }}" width="100" alt="logo" class="d-block mx-auto mt-5">
     <h4 class="text-center text-white font-weight-bold m-4">無極限國際有限公司</h4>
     <div class="card mx-auto my-3 w-50">
@@ -430,6 +431,8 @@
   //送出報名 Sandy (2020/03/05)
   $("#submit").click(function(){
     //get data
+    var source_course = $('#course_id').val();
+    var source_events = $('#events_id').val();
     var iname = $('#iname').val();
     var isex = $('input[name="isex"]:checked').val();
     var iid = $('#iid').val();
@@ -447,6 +450,8 @@
     var inum = $('#inum').val();
     var icompanytitle = $('#icompanytitle').val();
     var id_group = $('input[name="ievent"]:checked').val();
+
+    var source_events = $('#source_events').val();
 
     $.ajax({
       type:'POST',
@@ -469,7 +474,8 @@
         iinvoice : iinvoice,
         inum : inum,
         icompanytitle : icompanytitle,
-        id_group : id_group
+        id_group : id_group,
+        source_events : source_events
       },
       success:function(data){
         // console.log(data);  
@@ -482,29 +488,6 @@
           location.reload();
         }
 
-        // if( data == "nodata" ){          
-        //   $("#iphone").val($('#iphone_verify').val());
-        // }else{
-        //   $("#iname").val(data[0].name);
-        //   if( data[0].sex == '男'){
-        //     $("#isex1").click();
-        //   }else{
-        //     $("#isex2").click();
-        //   }
-
-        //   $("#iid").val(data[0].id_identity);
-        //   $("#iphone").val(data[0].phone);
-        //   $("#iemail").val(data[0].email);
-        //   $("#ibirthday").val(data[0].birthday);
-        //   $("#icompany").val(data[0].company);
-        //   $("#iprofession").val(data[0].profession);
-        //   $("#iaddress").val(data[0].address);
-        // }
-        
-        // next(now);
-        // $("#step" + now).hide()
-        // $("#step" + (now + 1)).show()
-        // $("body").scrollTop(0);
       },
       error: function(jqXHR, textStatus, errorMessage){
           console.log("error: "+ errorMessage);    

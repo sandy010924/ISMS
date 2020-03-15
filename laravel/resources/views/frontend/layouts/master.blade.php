@@ -48,6 +48,10 @@
   <script src="{{ asset('js/select2.min.js') }}"></script>
   <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
   
+  <!-- daterangepicker -->
+  <script src="{{ asset('js/daterangepicker.min.js') }}"></script>
+  <link href="{{ asset('css/daterangepicker.css') }}" rel="stylesheet">
+
 </head>
 
 <body>

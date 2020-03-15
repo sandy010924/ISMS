@@ -14,7 +14,7 @@ class CourseListEditController extends Controller
         try{
             //讀取data
             $id = $request->get('course_id');
-            $id_type = $request->get('newform_courses');
+            $id_type = $request->get('newform_course');
             $courseservices = $request->get('newform_services');
             $money = $request->get('newform_price');
             

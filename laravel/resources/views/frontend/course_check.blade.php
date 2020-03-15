@@ -192,7 +192,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <a href="{{ route('course_form',['id'=>$course->id_course]) }}">
+                    <a href="{{ route('course_form',['source_course'=>$course->id_course, 'source_events'=>$course->id]) }}">
                       <img class="img-thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/QRcode_image.svg/1200px-QRcode_image.svg.png"/>
                     </a>
                   </div>

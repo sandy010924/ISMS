@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Student;
+// use App\Model\Course;
+// use App\Model\EventsCourse;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
-use App\Model\EventsCourse;
-use App\Model\Payment;
+use App\Model\Register;
 use App\Model\Debt;
+use App\Model\Refund;
+use App\Model\Payment;
 
 class CourseListApplyController extends Controller
 {
@@ -17,41 +19,38 @@ class CourseListApplyController extends Controller
      public function delete(Request $request)
      {
          $status = "";
+         $type = $request->get('type');
          $id_apply = $request->get('id_apply');
-
-        // 查詢是否有該筆資料，並判斷是銷講還是正課
-        $sale = SalesRegistration::where('id', $id_apply)
-                                    ->first();
-
-        $formal = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
-                              ->select('events_course.id_group as id_group', 'registration.id_student as id_student', 'registration.id_payment as id_payment')
-                              ->where('registration.id', $id_apply)
-                              ->first();
             
-        if(!empty($sale)){
+        if($type == 1){
             //銷講
+            $sale = SalesRegistration::where('id', $id_apply)
+                                      ->get();
 
-            //刪除報名表
-            SalesRegistration::where('id', $id_apply)->delete();
+            if( count($sale) != 0 ){
+                //刪除報名表
+                SalesRegistration::where('id', $id_apply)->delete();
+            }
 
             $status = "ok";
             
-        }elseif(!empty($formal)) {
+        }elseif( $type == 2 || $type == 3) {
             //正課
-            $group = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
-                                 ->select('registration.*')
-                                 ->where('registration.id_student', $formal->id_student)
-                                 ->where('events_course.id_group', $formal->id_group)
-                                 ->get();
-                                 
-            foreach( $group as $data ){
+            $formal = Registration::where('id', $id_apply)
+                                  ->get();
+
+            if( count($formal) != 0 ){
+                //刪除報到表
+                Register::where('id_registration', $id_apply)->delete();
+                //刪除付款表
+                Debt::where('id_registration', $id_apply)->delete();   
                 //刪除追單表
-                Debt::where('id_registration', $data['id'])->delete();   
+                Payment::where('id_registration', $id_apply)->delete();
+                //刪除退費
+                Refund::where('id_registration', $id_apply)->delete();   
                 //刪除報名表
-                Registration::where('id', $data['id'])->delete();
+                Registration::where('id', $id_apply)->delete();
             }
-            //刪除付款細項
-            Payment::where('id', $formal->id_payment)->delete();
 
             $status = "ok";
 

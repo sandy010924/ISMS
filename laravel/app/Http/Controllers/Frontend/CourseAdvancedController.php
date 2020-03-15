@@ -30,21 +30,24 @@ class CourseAdvancedController extends Controller
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($course->course_start_at))];
 
+
         //填單名單
         $fill_all = Registration::join('student', 'student.id', '=', 'registration.id_student')
                             ->join('events_course', 'events_course.id', '=', 'registration.id_events')
                             ->select('student.name as student','student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*', 'events_course.name as event', 'events_course.id_group as id_group')
-                            ->Where('registration.id_course', $next_course->id_course)
-                            ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
+                            ->Where('registration.source_events', $id )
+                            // ->Where('registration.id_course', $next_course->id_course)
+                            // ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
                             ->get();
   
         $id_group='';       
+        $fill = array();
                      
         foreach( $fill_all as $key => $data ){
 
-            if ($id_group == $data['id_group']){ 
-                continue;
-            }
+            // if ($id_group == $data['id_group']){ 
+            //     continue;
+            // }
 
             $course_group = EventsCourse::Where('id_group', $data['id_group'])
                                         ->get();
@@ -86,7 +89,7 @@ class CourseAdvancedController extends Controller
                 'event' => $data['event'],
             );
 
-            $id_group = $data['id_group'];
+            // $id_group = $data['id_group'];
         }              
                                         
         return view('frontend.course_advanced', compact('course', 'next_course', 'week', 'fill'));

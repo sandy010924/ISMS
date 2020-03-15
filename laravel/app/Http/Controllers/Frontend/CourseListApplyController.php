@@ -16,14 +16,15 @@ class CourseListApplyController extends Controller
     //view
     public function show(Request $request)
     {
+        $course = array();
+        $apply = array();
+        
          //課程資訊
         $id = $request->get('id');
         $course = Course::join('users', 'users.id', '=', 'course.id_teacher')
                         ->select('course.*', 'users.name as teacher')
                         ->Where('course.id', $id)
                         ->first();
-        
-        $apply = array();
         
         //判斷是銷講or正課
         if( $course->type == 1){
@@ -51,7 +52,7 @@ class CourseListApplyController extends Controller
                     'content' => $data['course_content'],
                 );
             }
-        }else {
+        }elseif( $course->type == 2 || $course->type == 3) {
             //正課
             $apply_table = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
                                  ->join('student', 'student.id', '=', 'registration.id_student')
@@ -64,9 +65,9 @@ class CourseListApplyController extends Controller
                                  
             foreach( $apply_table as $key => $data ){
 
-                if ($id_student == $data['id_student'] && $id_group == $data['id_group']){ 
-                    continue;
-                }
+                // if ($id_student == $data['id_student'] && $id_group == $data['id_group']){ 
+                //     continue;
+                // }
 
                 $course_group = EventsCourse::Where('id_group', $data['id_group'])
                                             ->get();
@@ -101,8 +102,8 @@ class CourseListApplyController extends Controller
                 );
 
 
-                $id_group = $data['id_group']; 
-                $id_student= $data['id_student'];     
+                // $id_group = $data['id_group']; 
+                // $id_student= $data['id_student'];     
             }
         }
 

@@ -7,22 +7,28 @@ use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Student;
-use App\Model\SalesRegistration;
-use App\Model\Registration;
+// use App\Model\SalesRegistration;
+// use App\Model\Registration;
 
 class CourseFormController extends Controller
 {
     // Sandy (2020/03/03)
     public function show(Request $request){
-        $id = $request->get('id');
-        $name = $request->get('name');
+
+        $source_course = $request->get('source_course');
+        $source_events = $request->get('source_events');
+
+        // $name = $request->get('name');
         
-        $course = Course::Where('course.id_type', $id)
+        $course = array();
+        $events = array();
+        
+        $course = Course::Where('course.id_type', $source_course)
                          ->first();
 
         $events_all = EventsCourse::join('course', 'course.id' , '=', 'events_course.id_course')
-                                ->Where('course.id_type', $id)
-                                ->select('events_course.*')
+                                ->select('events_course.*', 'course.name as course')
+                                ->Where('course.id_type', $source_course)
                                 ->get();
 
         $id_group='';
@@ -86,7 +92,7 @@ class CourseFormController extends Controller
 
         // dd($events);
         
-        return view('frontend.course_form', compact('course', 'events'));
+        return view('frontend.course_form', compact('course', 'events', 'source_course', 'source_events'));
     }
 
     

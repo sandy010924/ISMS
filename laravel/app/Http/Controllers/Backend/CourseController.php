@@ -5,9 +5,14 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
+use App\Model\EventsCourse;
 use App\Model\Student;
 use App\Model\SalesRegistration;
-use App\Model\EventsCourse;
+use App\Model\Registration;
+use App\Model\Register;
+use App\Model\Debt;
+use App\Model\Refund;
+use App\Model\Payment;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
 
@@ -346,17 +351,61 @@ class CourseController extends Controller
     {
         $status = "";
         $id_events = $request->get('id_events');
+        $id_group = $request->get('id_group');
 
         // 查詢是否有該筆資料
-        $events = Course::where('id', $id_events)->get();
-        // $course = EventsCourse::where('id', $events->id_course)->get();
-        $sales_registration = SalesRegistration::where('id_events', $id_events)->get();
+        // $course = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+        //                       ->select('course.type as type', 'events_course.*')                      
+        //                       ->where('events_course.id', $id_events)
+        //                       ->first();
+
+        $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                              ->select('course.type as type', 'events_course.*')                      
+                              ->where('events_course.id_group', $id_group)
+                              ->get();
 
         // 刪除資料
-        if ( !empty($events) && !empty($sales_registration)) {
-            SalesRegistration::where('id_events', $id_events)->delete();
-            EventsCourse::where('id', $id_events)->delete();
-            // Course::where('id', $events->id_course)->delete();
+        if ( !empty($events)) {
+            if($events[0]->type == 1){
+                //銷講
+                foreach( $events as $data){
+                    //刪除報名表
+                    SalesRegistration::where('id_events', $data->id)->delete();
+
+                    // $apply_table = SalesRegistration::where('id_events', $events->id)
+                    //                                 ->get();
+
+                }
+            }elseif($events[0]->type == 2 || $events[0]->type == 3){
+                //正課
+                // foreach( $events as $data){
+
+                $apply_table = Registration::where('id_group', $id_group)
+                                            ->get();
+
+                foreach( $apply_table as $data_apply ){
+                    //刪除報到
+                    Register::where('id_registration', $data_apply['id'])->delete();
+
+                    //刪除追單
+                    Debt::where('id_registration', $data_apply['id'])->delete();   
+                    
+                    //刪除退費
+                    Refund::where('id_registration', $data_apply['id'])->delete();   
+
+                    //刪除付款
+                    Payment::where('id_registration', $data_apply['id'])->delete();
+                }
+
+                //刪除報名表
+                Registration::where('id_group', $id_group)->delete();
+                // }
+            
+            }
+
+            //刪除場次  
+            EventsCourse::where('id_group', $id_group)->delete();
+
             $status = "ok";
         } else {
             $status = "error";
