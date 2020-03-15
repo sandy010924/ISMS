@@ -37,7 +37,9 @@ class StudentController extends Controller
                             ->where('sales_registration.id_student', $id_student)
                             ->get();
         // 正課
-        $data_registration = Registration::leftjoin('isms_status', 'isms_status.id', '=', 'registration.id_status')
+        $data_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
+        ->leftjoin('isms_status', 'isms_status.id', '=', 'register.id_status')
+        // leftjoin('isms_status', 'isms_status.id', '=', 'registration.id_status')
             ->leftjoin('course', 'course.id', '=', 'registration.id_course')
             ->select('registration.*', 'isms_status.name as status', 'course.name as course')
             ->where('registration.id_student', $id_student)
@@ -103,11 +105,12 @@ class StudentController extends Controller
                             ->first();
 
         // 正課
-        $data_registration = Registration::leftjoin('isms_status', 'isms_status.id', '=', 'registration.id_status')
+        $data_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
+                            ->leftjoin('isms_status', 'isms_status.id', '=', 'register.id_status')
                             ->leftjoin('course', 'course.id', '=', 'registration.id_course')
                             ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
                             ->leftjoin('isms_status as t1', 't1.id', '=', 'registration.status_payment')
-                            ->select('registration.*', 't1.name as status_payment', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events')
+                            ->select('registration.*', 'register.id_status', 't1.name as status_payment', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events')
                             ->where('registration.id_student', $id_student)
                             ->orderBy('registration.created_at', 'desc')
                             ->first();
@@ -181,15 +184,16 @@ class StudentController extends Controller
                     ->get();
 
         // 正課資料
-        $datas_registration = Registration::leftjoin('isms_status as a', 'a.id', '=', 'registration.id_status')
+        $datas_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
+                    ->leftjoin('isms_status as a', 'a.id', '=', 'register.id_status')
                     ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
                     ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
                     ->select('registration.created_at', 'registration.id_student')
                     ->selectRaw(' CASE
-                                        WHEN registration.id_status = 1 THEN "正課已報名"
-                                        WHEN registration.id_status = 3 THEN "正課未到"
-                                        WHEN registration.id_status = 4 THEN "正課報到"
-                                        WHEN registration.id_status = 5 THEN "正課取消"
+                                        WHEN register.id_status = 1 THEN "正課已報名"
+                                        WHEN register.id_status = 3 THEN "正課未到"
+                                        WHEN register.id_status = 4 THEN "正課報到"
+                                        WHEN register.id_status = 5 THEN "正課取消"
                                     END as status_sales')
                     ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
                     ->where('registration.id_student', $id_student)
