@@ -10,7 +10,7 @@
           <div class="card-body">
             <div class="row">
               <div class="col-3 mx-auto">
-                <button class="btn btn-outline-secondary" type="button" id="btn_newgroup">創建細分組</button>
+                <button class="btn btn-outline-secondary" type="button" id="btn_add"  >創建細分組</button>
               </div>
               <div class="col-6 mx-auto">
                 <div class="input-group mb-3">
@@ -48,5 +48,11 @@
           </div>
         </div>
 <!-- Content End -->
+
+<script>
+  $("#btn_add").click(function(){
+    $(location).attr('href', "{{ route('student_group_add') }}");
+  });
+</script>
 @endsection
      

@@ -174,7 +174,7 @@ class StudentController extends Controller
         
          // 刪除資料
         
-        if (!empty($mark)) { 
+        if (!empty($mark)) {
             $mark = Mark::where('id', $id)->delete();
             
             $status = "ok";
@@ -183,9 +183,4 @@ class StudentController extends Controller
         }
         return json_encode(array('data' => $status));
     }
- 
-
-
-
-
 }
