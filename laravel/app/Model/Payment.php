@@ -13,5 +13,6 @@ class Payment extends Model
         'cash',             // 付款現金
         'pay_model',        // 付款方式
         'number',           // 卡號後四碼
+        'id_registration',  // 正課報名ID
     ];
 }

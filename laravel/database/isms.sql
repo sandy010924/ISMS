@@ -502,7 +502,7 @@ CREATE TABLE IF NOT EXISTS `register`(
 
 
 -- 增加付款資料表欄位 - 正課報名ID
-ALTER TABLE `payment` ADD COLUMN id_registration INT  NULL COMMENT '正課報名ID'
+ALTER TABLE `payment` ADD COLUMN id_registration INT  NULL COMMENT '正課報名ID';
 
 -- 刪掉正課資料表欄位
 ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_3`;
@@ -510,3 +510,11 @@ ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_4`;
 
 ALTER TABLE `registration` DROP COLUMN `id_status`;
 ALTER TABLE `registration` DROP COLUMN `id_payment`;
+
+
+-- 增加報到資料表欄位 - 備註
+ALTER TABLE `register` ADD COLUMN memo VARCHAR(65535) NULL COMMENT '備註';
+
+-- 刪掉正課資料表欄位 - 備註
+ALTER TABLE `registration` DROP COLUMN `memo`;
+
