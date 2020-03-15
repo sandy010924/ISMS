@@ -40,7 +40,7 @@
   <!-- tempusdominus Sandy(2020/02/27) -->
   <script src="{{ asset('js/bootstrap.min.js') }}"></script>
   <script src="{{ asset('js/moment.min.js') }}"></script>
-  <script src="{{ asset('js/zh-tw.js') }}"></script>
+  {{-- <script src="{{ asset('js/zh-tw.js') }}"></script> --}}
   <script src="{{ asset('js/tempusdominus-bootstrap-4.js') }}"></script>
   <link href="{{ asset('css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
 
@@ -64,6 +64,39 @@
           @include('frontend.layouts.header')
 
           @yield('content')
+
+          <!-- form alert Start-->
+          @if (session('status') == "報名成功")
+            <div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
+              {{ session('status') }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            @elseif (session('status') == "報名失敗")  
+            <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
+              {{ session('status') }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          @endif
+          <!-- form alert End -->
+
+          <!-- alert Start-->
+          <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+            <span id="success_alert_text"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+            <span id="error_alert_text"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- alert End -->
 
         </main>
   {{-- </div> --}}

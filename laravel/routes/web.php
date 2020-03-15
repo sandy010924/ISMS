@@ -134,9 +134,10 @@ Route::get('error_authority', function () {
         return view('frontend.course_list_view');
     })->name('course_list_view');
 
-    Route::get('course_list_chart', function () {
-        return view('frontend.course_list_chart');
-    })->name('course_list_chart');
+
+/*** [課程管理] 完整內容 ***/
+    /*** 顯示資料 ***/
+    Route::get('course_list_chart', 'Frontend\CourseListChartController@show')->name('course_list_chart');
 
 
 /*** [課程管理] 編輯 ***/
@@ -170,6 +171,9 @@ Route::get('error_authority', function () {
 /*** [課程管理] 場次報表 ***/
     /*** 顯示資料 Sandy(2020/01/17) ***/
     Route::get('course_return', 'Frontend\CourseReturnController@show')->name('course_return');
+    /*** 更新資料 Sandy(2020/03/16) ***/
+    Route::post('course_return_update', 'Backend\CourseReturnController@update');
+
 
 
 /*** [現場人員] 報到 ***/

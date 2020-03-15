@@ -120,7 +120,7 @@
     </div>
   </div>
   <!-- Rocky(2020/01/11) -->
-  @if (session('status') == "匯入成功")
+  {{-- @if (session('status') == "匯入成功")
   <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert">
     {{ session('status') }}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -134,10 +134,10 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  @endif
+  @endif --}}
 
   <!-- alert Start-->
-  <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+  {{-- <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
     <span id="success_alert_text"></span>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
@@ -148,7 +148,7 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
-  </div>
+  </div> --}}
   <!-- alert End -->
 
 <!-- Content End -->

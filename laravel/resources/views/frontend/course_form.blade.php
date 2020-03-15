@@ -485,7 +485,7 @@
           location.reload();
         }else{
           alert('報名失敗');
-          location.reload();
+          // location.reload();
         }
 
       },

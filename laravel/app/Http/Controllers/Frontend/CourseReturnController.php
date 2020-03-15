@@ -27,68 +27,96 @@ class CourseReturnController extends Controller
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($course['course_start_at']))]; 
 
+        $fill = array();
+        $cash = 0;
 
-        // 進階填單課程
-        $next_course = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('course.id as id_course', 'course.name as course', 'users.name as teacher')
-                        ->Where('course.id_type', $course->id_course)
-                        ->first();
-
-
-        /* 填單名單 S */
         $fill_table = Registration::join('student', 'student.id', '=', 'registration.id_student')
                             ->join('isms_status', 'isms_status.id', '=', 'registration.status_payment')
-                            // ->join('events_course', 'events_course.id', '=', 'registration.id_events')
-                            // ->join('payment', 'payment.id', '=', 'registration.id_payment')
-                            // ->select('student.name as name', 'student.phone as phone', 'registration.*', 'isms_status.name as status_payment_name', 'payment.person as person')
-                            ->select('student.name as name', 'student.phone as phone', 'registration.*', 'isms_status.name as status_payment_name')
-                            // ->selectraw('sum(cash) as cash')
-                            // ->Where('registration.id_course', $next_course->id_course)
-                            // ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
+                            // ->join('payment', 'payment.id_registration', '=', 'registration.id')
+                            ->select('student.name as name', 'student.phone as phone', 'registration.*','isms_status.name as status_payment_name')
                             ->Where('registration.source_events', $id )
-                            ->groupby('registration.id_student')
+                            // ->groupby('registration.id_student')
                             ->get();
 
-        $fill =array();
+        foreach( $fill_table as $key => $data){    
+            
+            $payment_table = Payment::Where('id_registration', $data['id'] )
+                                    ->select('cash', 'pay_model', 'number')
+                                    ->get();
 
-        foreach( $fill_table as $key => $data){            
-            // $over = Registration::where('status_payment', 7)
+            $payment = array();
 
-            $fill[$key] = [
+            foreach ($payment_table as $key_payment => $data_payment) {
+                switch ($data_payment['pay_model']) {
+                    case 0:
+                        $pay_model = '現金';
+                        break;
+                    case 1:
+                        $pay_model = '匯款';
+                        break;
+                    case 2:
+                        $pay_model = '刷卡：輕鬆付';
+                        break;
+                    case 3:
+                        $pay_model = '刷卡：一次付';
+                        break;
+                    default:
+                        $pay_model = '現金';
+                        break;
+                }
+
+                $payment[$key_payment] = [ 
+                    'cash' => $data_payment['cash'],
+                    'pay_model' => $pay_model,
+                    'number' => $data_payment['number'],
+                ];
+            }
+
+            //該場總金額
+            $cash += $payment_table->sum('cash');
+            $pay_date = '';
+
+            if(!empty($data['pay_date'])){
+                $pay_date = date('Y-m-d', strtotime($data['pay_date']));
+            }else {
+                $pay_date = '';
+            }
+
+            $fill[$key] = [ 
+                'id' => $data['id'],
                 'name' => $data['name'],
                 'phone' => $data['phone'],
-                'status_payment' => $data['status_payment'],
                 'status_payment_name' => $data['status_payment_name'],
+                'status_payment' => $data['status_payment'],
                 'amount_payable' => $data['amount_payable'],
-                'amount_paid' => $data['amount_paid'],
-                // 'pay_date' => $data['pay_date'],  //付款日期
+                'amount_paid' => $payment_table->sum('cash'),
+                'pay_date' => $pay_date,
                 'person' => $data['person'],
-                // 'memo' => $data['memo_payment'],  //付款備註
-                'id_payment' => $data['id_payment'],
-                'id' => $data['id']
+                'pay_memo' => $data['pay_memo'],
+                'payment' => $payment
             ];
         }
-        /* 填單名單 E */
 
+        $count_settle = 0;
+        $count_deposit = 0;
+        $count_order = 0;
 
-        /* 付款細項 S */
-        $paylist = Registration::join('payment', 'payment.id', '=', 'registration.id_payment')
-                            ->select('payment.*')
-                            // ->selectraw('sum(cash) as cash')
-                            // ->Where('registration.id_course', $next_course->id_course)
-                            // ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
-                            ->Where('registration.source_events', $id )
-                            ->groupby('registration.id_payment')
-                            ->get();
+        //完款
+        $count_settle = count(Registration::Where('source_events', $id )
+                                          ->Where('status_payment', 7 )
+                                          ->get());
 
-        /* 填單名單 E */
+        //付訂
+        $count_deposit = count(Registration::Where('source_events', $id )
+                                          ->Where('status_payment', 8 )
+                                          ->get());
 
-        //該場總金額
-        $cash = $paylist->sum('cash');
+        //留單
+        $count_order = count(Registration::Where('source_events', $id )
+                                          ->Where('status_payment', 6 )
+                                          ->get());
 
-        // dd($fill);
-
-        return view('frontend.course_return', compact('course', 'week', 'fill', 'cash', 'paylist'));    
+        return view('frontend.course_return', compact('course', 'week', 'fill', 'cash', 'count_settle', 'count_deposit', 'count_order'));    
     }
 
 }

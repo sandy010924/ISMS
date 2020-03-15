@@ -61,11 +61,11 @@
                 <td>{{ $data['count_apply'] }} / <span style="color:red">{{ $data['count_cancel'] }}</span></td>
                 <td>{{ $data['count_check'] }}</td>
                 <td>{{ $data['rate_check'] }}</td>
-                <td></td>
-                <td></td>
+                <td>{{ $data['deal'] }}</td>
+                <td>{{ $data['rate_deal'] }}</td>
                 <td>
-                  {{-- <a href="{{ route('course_list_chart') }}"><button type="button"
-                      class="btn btn-secondary btn-sm">完整內容</button></a> --}}
+                  <a href="{{ route('course_list_chart', ['id' => $data['id']]) }}"><button type="button"
+                      class="btn btn-secondary btn-sm">完整內容</button></a>
                 </td>
               </tr>
             @endforeach
