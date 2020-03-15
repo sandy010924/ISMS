@@ -236,10 +236,17 @@ Route::get('error_authority', function () {
      Route::post('blacklist_add', 'Backend\BlacklistController@add');
 
 
-    /*** [學員管理] 細分組 ***/
+    /*** 顯示細分組條件 - 課程名稱 Rocky(2020/02/23) ***/
+    Route::post('show_requirement_course', 'Frontend\StudentGroupController@showrequirement');
+
     Route::get('student_group', function () {
         return view('frontend.student_group');
     })->name('student_group');
+
+     /*** [學員管理] 細分組新增 ***/
+    Route::get('student_group_add', function () {
+        return view('frontend.student_group_add');
+    })->name('student_group_add');
 
     /*** [學員管理] 細分組編輯 ***/
     Route::get('student_group_edit', function () {
