@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Student;
 use App\Model\Blacklist;
 use App\Model\Course;
+use App\Model\SalesRegistration;
 use Symfony\Component\HttpFoundation\Request;
 
 class StudentGroupController extends Controller
@@ -33,6 +34,47 @@ class StudentGroupController extends Controller
         
 
         return $datas;
+    }
+
+    // 搜尋符合條件的學員資料 Rock(2020/03/16)
+    public function searchstudents(Request $request)
+    {
+        $type_course = $request->get('type_course');
+        $id_course = $request->get('id_course');
+        $date = $request->get('date');
+        $type_condition = $request->get('type_condition');
+        $opt1 = $request->get('opt1');
+        $opt2 = $request->get('opt2');
+        $value = $request->get('value');
+
+        if ($type_course == "1") {
+            if ($type_condition == "information") {
+                // 名單資料
+                $datas = Student::select('student.*')
+                                ->where(function ($query) use ($opt2, $opt1, $value) {
+                                    switch ($opt2) {
+                                        case "yes":
+                                            $query->where($opt1, '=', $value);
+                                            break;
+                                        case "no":
+                                            echo "i equals 1";
+                                            break;
+                                        case "like":
+                                            echo "i equals 2";
+                                            break;
+                                        case "nolike":
+                                            echo "i equals 2";
+                                            break;
+                                    }
+                                })
+                                ->get();
+            }
+            // 銷講
+        } elseif ($type_course == "2") {
+            // 正課
+        }
+
+        echo $datas;
     }
 
     // 顯示資料

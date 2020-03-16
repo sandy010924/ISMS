@@ -92,7 +92,7 @@
                   </select>                
                 </div>
                 <div class="col-2 pr-3">
-                  <input type="text" class="m-1 form-control" style="display:none;" id="condition_input3">
+                  <input type="text" class="m-1 form-control" style="display:blick;" id="condition_input3">
                   <select class="form-control m-1" id="condition_option3" style="display:none;">
                     <option value="">請選擇</option>
                     
@@ -294,22 +294,56 @@ $.ajax({
 // 尋找資料 Rocky(2020/03/14)
 function search(){
   // 課程類型
-  console.log($('#select_type').val());
-
+  type_course = $('#select_type').val();
   // 課程選擇
-  console.log($('#select_course').val());
-
+  id_course = $('#select_course').val()
   // 日期選擇
-  console.log($('#input_date').val());
-
+  date = $('#input_date').val()  
   // 類別
-  console.log($('#condition').val());
-  
+  type_condition = $('#condition').val()  
   // 選項一
-  console.log($('#condition_option1').val());
-
+  opt1 = $('#condition_option1').val()
   // 選項二
-  console.log($('#condition_option2').val());
+  opt2 = $('#condition_option2').val()
+  // 內容
+  value = $('#condition_input3').val()
+  $.ajax({
+    type:'POST',
+    url:'search_students',
+    dataType:'json',
+    data:{
+      type_course:type_course,
+      id_course:id_course,
+      date:date,
+      type_condition:type_condition,
+      opt1:opt1,
+      opt2:opt2,
+      value:value
+    },
+    success:function(data){
+      console.log(data)
+    },
+    error:function(error){
+      console.log(JSON.stringify(error))
+    }
+  })
+  // // 課程類型
+  // console.log($('#select_type').val());
+
+  // // 課程選擇
+  // console.log($('#select_course').val());
+
+  // // 日期選擇
+  // console.log($('#input_date').val());
+
+  // // 類別
+  // console.log($('#condition').val());
+  
+  // // 選項一
+  // console.log($('#condition_option1').val());
+
+  // // 選項二
+  // console.log($('#condition_option2').val());
   
   
 }

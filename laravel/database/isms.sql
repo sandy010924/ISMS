@@ -518,3 +518,16 @@ ALTER TABLE `register` ADD COLUMN memo VARCHAR(65535) NULL COMMENT '備註';
 -- 刪掉正課資料表欄位 - 備註
 ALTER TABLE `registration` DROP COLUMN `memo`;
 
+-- 刪掉細分組資料表 - 學員ID Rocky (2020/03/16)
+ALTER TABLE student_group DROP FOREIGN KEY `student_group_ibfk_1`
+ALTER TABLE `student_group` DROP COLUMN `student_group`;
+
+-- student_group  細分組詳細資料資料表 Rocky (2020/03/16)
+CREATE TABLE IF NOT EXISTS `student_groupdetail`(
+   `id` INT  AUTO_INCREMENT COMMENT 'id',
+   `id_student`  VARCHAR(150) COMMENT '學員ID',  
+   `id_group` VARCHAR(150)  NULL COMMENT '分組ID',
+   `created_at` timestamp not null default  CURRENT_TIMESTAMP	 COMMENT '創建日期',
+   `updated_at` timestamp not null default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

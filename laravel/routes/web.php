@@ -240,8 +240,11 @@ Route::get('error_authority', function () {
      Route::post('blacklist_add', 'Backend\BlacklistController@add');
 
 
-    /*** 顯示細分組條件 - 課程名稱 Rocky(2020/02/23) ***/
+    /*** 顯示細分組條件 - 課程名稱 Rocky(2020/03/14) ***/
     Route::post('show_requirement_course', 'Frontend\StudentGroupController@showrequirement');
+
+    /*** 搜尋學員 Rocky(2020/03/16) ***/
+    Route::post('search_students', 'Frontend\StudentGroupController@searchstudents');
 
     Route::get('student_group', function () {
         return view('frontend.student_group');
