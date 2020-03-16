@@ -8,14 +8,34 @@ use App\Http\Controllers\Controller;
 
 class MessageController extends Controller
 {
-    // joanna測試api
+    /**
+     * 單筆發送
+     */
     public function messageApi(Request $request)
     {
-        /**
-         * 多筆發送
-         */
         $msgContents = $request['messageContents'];
-        $sendContents = str_replace("\n","\r\n",$msgContents);
+        $sendContents = str_replace("\n", chr(6), $msgContents);
+        $phoneNum = $request['phoneNumber'];
+        $url = 'http://smsb2c.mitake.com.tw/b2c/mtk/SmSend?';
+        $url .= '&username=0908916687';
+        $url .= '&password=wjx2020';
+        $url .= '&dstaddr='.$phoneNum;
+        $url .= '&smbody='.urlencode($sendContents);
+        $url .= '&CharsetURL=UTF-8';
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($curl);
+        curl_close($curl);
+        return $output;
+    }
+
+    /**
+     * 多筆發送
+     */
+    public function messageBulkApi(Request $request) {
+        $msgContents = $request['messageContents'];
+        $sendContents = str_replace("\n", chr(6), $msgContents);
         $msgLen = $request['msgLen'];
         $curl = curl_init();
         $data = '';
@@ -31,25 +51,6 @@ class MessageController extends Controller
         curl_setopt($curl, CURLOPT_HEADER,0);
         curl_exec($curl);
         curl_close($curl);
-
-
-        /**
-         * 單筆發送
-         */
-        // $msgContents = $request['messageContents'];
-        // $sendContents = str_replace("\n","\r\n",$msgContents);
-        // $phoneNum = $request['phoneNumber'];
-        // $url = 'http://smsb2c.mitake.com.tw/b2c/mtk/SmSend?';
-        // $url .= '&username=0908916687';
-        // $url .= '&password=wjx2020';
-        // $url .= '&dstaddr='.$phoneNum;
-        // $url .= '&smbody='.urlencode($sendContents);
-        // $url .= '&CharsetURL=UTF-8';
-        // $curl = curl_init();
-        // curl_setopt($curl, CURLOPT_URL, $url);
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        // $output = curl_exec($curl);
-        // curl_close($curl);
-        // echo $output;
+        return $output;
     }
 }

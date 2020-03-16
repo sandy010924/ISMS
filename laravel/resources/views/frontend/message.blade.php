@@ -313,22 +313,58 @@ $("document").ready(function() {
       var msgContent = editor.getData().replace(new RegExp("<p>", "g"),"");
       msgContent = msgContent.replace(new RegExp("</p>", "g"), "\n");
       msgContent = msgContent.replace(new RegExp("&nbsp;", "g"), " ");
-      $.ajax({
-        type: "POST",
-        url: "message_api",
-        data: {
-          // messageTitle: '訊息名稱',
-          messageContents: msgContent,
-          phoneNumber: $('#receiverPhone').val().split(","),
-          msgLen: $('#receiverPhone').val().split(",").length,
-        }
-      }).done(function(res) {
-        console.log(res);
 
-      }).fail(function(err) {
-        console.log(err);
 
-      });
+      // 單筆 & 多筆 簡訊判斷
+      if ($('#receiverPhone').val().indexOf(",") == -1) {
+        messageApi();
+      } else {
+        messageBulkApi();
+      }
+
+      /**
+        單筆簡訊發送
+       */
+      function messageApi() {
+        $.ajax({
+          type: "POST",
+          url: "messageApi",
+          data: {
+            // messageTitle: '訊息名稱',
+            messageContents: msgContent,
+            phoneNumber: $('#receiverPhone').val()
+          }
+        }).done(function(res) {
+          console.log(res);
+
+        }).fail(function(err) {
+          console.log(err);
+
+        });
+      }
+
+      /**
+        多筆簡訊發送
+       */
+       function messageBulkApi() {
+        $.ajax({
+          type: "POST",
+          url: "messageBulkApi",
+          data: {
+            // messageTitle: '訊息名稱',
+            messageContents: msgContent,
+            phoneNumber: $('#receiverPhone').val().split(","),
+            msgLen: $('#receiverPhone').val().split(",").length,
+          }
+        }).done(function(res) {
+          console.log(res);
+
+        }).fail(function(err) {
+          console.log(err);
+
+        });
+       }
+
 
     });
 

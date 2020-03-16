@@ -312,8 +312,11 @@ Route::get('error_authority', function () {
         return view('frontend.message_result');
     })->name('message_result');
 
-    /*** [訊息推播] 簡訊API***/
-    Route::post('message_api', 'Backend\MessageController@messageApi');
+    /*** [訊息推播] 單筆簡訊API***/
+    Route::post('messageApi', 'Backend\MessageController@messageApi');
+
+    /*** [訊息推播] 多筆簡訊API***/
+    Route::post('messageBulkApi', 'Backend\MessageController@messageBulkApi');
 
 
 /*
