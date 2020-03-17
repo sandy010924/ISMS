@@ -531,3 +531,6 @@ CREATE TABLE IF NOT EXISTS `student_groupdetail`(
    `updated_at` timestamp not null default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
    PRIMARY KEY ( `id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 修改標記資料表欄位 Rocky (2020/03/17)
+ALTER TABLE `mark` CHANGE COLUMN name_course course_id VARCHAR(50) null COMMENT '課程ID';

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use DB;
 use App\Http\Controllers\Controller;
 use App\Model\Student;
 use App\Model\Blacklist;
@@ -48,44 +49,96 @@ class StudentGroupController extends Controller
         $opt2 = $request->get('opt2');
         $value = $request->get('value');
 
-        $data_id_course = '';
-
-        // if (count($id_course) != 0) {
-        //     foreach ($id_course as $value) {
-        //         $data_id_course .=  $value.',';
-        //     }
-        //     $data_id_course = substr($data_id_course, 0, -1);
-        //     $data_id_course = json_decode($data_id_course);
-        // }
-
-
-        // $t = [1,2];
-
         if ($type_course == "1") {
             if ($type_condition == "information") {
                 // 名單資料
-                $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                                ->select('student.*')
-                                ->where(function ($query2) use ($id_course) {
-                                    $query2->whereIn('b.id_course', $id_course);
-                                })
-                                ->where(function ($query) use ($opt1, $opt2, $value) {
-                                    switch ($opt2) {
-                                        case "yes":
-                                            $query->where($opt1, '=', $value);
-                                            break;
-                                        case "no":
-                                            $query->where($opt1, '<>', $value);
-                                            break;
-                                        case "like":
-                                            $query->where($opt1, 'like', '%'.$value.'%');
-                                            break;
-                                        case "notlike":
-                                            $query->where($opt1, 'not like', '%'.$value.'%');
-                                            break;
-                                    }
-                                })
-                                ->distinct()->get();
+
+                if ($opt1 == "datasource_old") {
+                    $opt1 = "datasource";
+                    // 原始來源
+                    $datas = Student::join(
+                        DB::raw("(SELECT * FROM sales_registration ORDER BY created_at asc LIMIT 9999) as b"),
+                        function ($join) {
+                            $join->on("student.id", "=", "b.id_student");
+                        }
+                    )
+                     ->select('student.*', 'b.datasource')
+                     ->where(function ($query2) use ($id_course) {
+                         $query2->whereIn('b.id_course', $id_course);
+                     })
+                     ->where(function ($query) use ($opt1, $opt2, $value) {
+                        switch ($opt2) {
+                            case "yes":
+                                $query->where($opt1, '=', $value);
+                                break;
+                            case "no":
+                                $query->where($opt1, '<>', $value);
+                                break;
+                            case "like":
+                                $query->where($opt1, 'like', '%'.$value.'%');
+                                break;
+                            case "notlike":
+                                $query->where($opt1, 'not like', '%'.$value.'%');
+                                break;
+                        }
+                     })
+                     ->groupby('student.id')
+                     ->distinct()->get();
+                } elseif ($opt1 == "datasource_new") {
+                    $opt1 = "datasource";
+                     // 最新來源
+                    $datas = Student::join(
+                        DB::raw("(SELECT * FROM sales_registration ORDER BY created_at desc LIMIT 9999) as b"),
+                        function ($join) {
+                            $join->on("student.id", "=", "b.id_student");
+                        }
+                    )
+                    ->select('student.*', 'b.datasource')
+                    ->where(function ($query2) use ($id_course) {
+                        $query2->whereIn('b.id_course', $id_course);
+                    })
+                    ->where(function ($query) use ($opt1, $opt2, $value) {
+                        switch ($opt2) {
+                            case "yes":
+                                $query->where($opt1, '=', $value);
+                                break;
+                            case "no":
+                                $query->where($opt1, '<>', $value);
+                                break;
+                            case "like":
+                                $query->where($opt1, 'like', '%'.$value.'%');
+                                break;
+                            case "notlike":
+                                $query->where($opt1, 'not like', '%'.$value.'%');
+                                break;
+                        }
+                    })
+                    ->groupby('student.id')
+                    ->distinct()->get();
+                } else {
+                    $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                    ->select('student.*')
+                    ->where(function ($query2) use ($id_course) {
+                        $query2->whereIn('b.id_course', $id_course);
+                    })
+                    ->where(function ($query) use ($opt1, $opt2, $value) {
+                        switch ($opt2) {
+                            case "yes":
+                                $query->where($opt1, '=', $value);
+                                break;
+                            case "no":
+                                $query->where($opt1, '<>', $value);
+                                break;
+                            case "like":
+                                $query->where($opt1, 'like', '%'.$value.'%');
+                                break;
+                            case "notlike":
+                                $query->where($opt1, 'not like', '%'.$value.'%');
+                                break;
+                        }
+                    })
+                    ->distinct()->get();
+                }
             }
             // 銷講
         } elseif ($type_course == "2") {

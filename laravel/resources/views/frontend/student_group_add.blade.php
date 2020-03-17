@@ -73,8 +73,8 @@
                 <div class="col-2 pr-1">
                   <select class="form-control m-1" id="condition_option1">
                     <option value="">請選擇</option>
-                    <option value="datasource">原始來源</option>
-                    <option>最新來源</option>
+                    <option value="datasource_old">原始來源</option>
+                    <option value="datasource_new">最新來源</option>
                     <option value="id_events">報名場次</option>
                     <option value="profession">目前職業</option>
                     <option value="address">居住地址</option>
@@ -204,8 +204,8 @@ document.getElementById('condition').onchange=function(){
 	if(this.value=='information'){
     // 選項一
     $('#condition_option1').append(new Option('請選擇', ''));
-    $('#condition_option1').append(new Option('原始來源', 'datasource'));
-    $('#condition_option1').append(new Option('最新來源', ''));
+    $('#condition_option1').append(new Option('原始來源', 'datasource_old'));
+    $('#condition_option1').append(new Option('最新來源', 'datasource_new'));
     $('#condition_option1').append(new Option('報名場次', 'id_events'));
     $('#condition_option1').append(new Option('目前職業', 'profession'));
     $('#condition_option1').append(new Option('居住地址', 'address'));
