@@ -4,12 +4,6 @@
 @section('header', '推播成效')
 
 @section('content')
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
 <!-- Content Start -->
        <!--搜尋課程頁面內容-->
         <div class="card m-3">
@@ -22,10 +16,8 @@
             <div class="row mb-2" style="align-items: baseline;">
               <h4 class="mr-2">選擇日期</h4>
               <div class="form-group">
-                <div class='input-group date' id='datepicker' data-target-input='nearest'>
-                  <input type='text' class="form-control datepicker" />
-                  <span>~</span>
-                  <input type='text' class="form-control datepicker" />
+                <div class='input-group date' id='datepicker' data-target-input='nearest' style="width: 275px;">
+                  <input type="text" class="m-1 w-100 form-control p-0" name="daterange"/>
                   <button type="button" class="btn btn-primary ml-2">查詢</button>
                 </div>
               </div>
@@ -74,39 +66,12 @@
           </div>
         </div>
 
-        <!-- 排成設定Modal -->
-        <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">排成傳送</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-               <h4>選擇日期和時間</h4>
-
-                <div class="form-group">
-                  <div class='input-group date' id='datetimepicker1' data-target-input='nearest'>
-                    <input type='text' id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker1" name="params['start_time']" />
-                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" id="saveScheduleBtn" class="btn btn-secondary" data-dismiss="modal">確定排程</button>
-                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-              </div>
-            </div>
-          </div>
-        </div>
 
 
 <!-- Content End -->
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <style>
   .fade_row {
@@ -234,6 +199,11 @@
 
   $("document").ready(function() {
 
+    $('input[name="daterange"]').daterangepicker({
+      opens: 'left'
+    }, function(start, end, label) {
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
 
     table = $('#table_list').DataTable({
         "dom": '<l<t>p>',
@@ -246,15 +216,7 @@
       $(`.${target}`).addClass('show_row');
     });
 
-    $('.datepicker').datepicker({
-      format: "yyyy-mm-dd",
-      autoclose: true,
-      startDate: "today",
-      clearBtn: true,
-      calendarWeeks: true,
-      todayHighlight: true,
-      language: 'zh-TW'
-    });
+
 
     fakeData.forEach((data, idx) => {
       $('#nav-tab a').eq(idx).text(data.name);
