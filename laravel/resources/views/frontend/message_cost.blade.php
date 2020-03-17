@@ -4,14 +4,6 @@
 @section('header', '推播成本')
 
 @section('content')
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" /> --}}
-<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
 <!-- Content Start -->
        <!--搜尋課程頁面內容-->
         <div class="card m-3">
@@ -24,17 +16,12 @@
             <div class="row mb-2" style="align-items: baseline;">
               <h4 class="mr-2">選擇日期</h4>
               <div class="form-group">
-                <div class='input-group date' id='datepicker' data-target-input='nearest'>
-                  <input type='text' class="form-control datepicker" />
-                  <span>~</span>
-                  <input type='text' class="form-control datepicker" />
+                <div class='input-group date' style="width: 275px;">
+                  <input type="text" class="m-1 w-100 form-control p-0" name="daterange"/>
                   <button type="button" class="btn btn-primary ml-2">查詢</button>
                 </div>
               </div>
-
-
             </div>
-
 
               <div class="row">
                 <div class="col-xs-12" style="width: 100%;">
@@ -126,8 +113,10 @@
           </div>
         </div>
 
-
 <!-- Content End -->
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <style>
   .fade_row {
@@ -255,11 +244,17 @@
 
   $("document").ready(function() {
 
+    $('input[name="daterange"]').daterangepicker({
+      opens: 'left'
+    }, function(start, end, label) {
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
 
     table = $('#table_list').DataTable({
         "dom": '<l<t>p>',
         "ordering": false
     });
+
 
     // $('.nav-item').on('click', function() {
     //   var target = $(this).attr('data-target');
@@ -267,15 +262,6 @@
     //   $(`.${target}`).addClass('show_row');
     // });
 
-    $('.datepicker').datepicker({
-      format: "yyyy-mm-dd",
-      autoclose: true,
-      startDate: "today",
-      clearBtn: true,
-      calendarWeeks: true,
-      todayHighlight: true,
-      language: 'zh-TW'
-    });
 
     fakeData.forEach((data, idx) => {
       // $('#nav-tab a').eq(idx).text(data.name);
