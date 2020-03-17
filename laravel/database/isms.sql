@@ -519,8 +519,8 @@ ALTER TABLE `register` ADD COLUMN memo VARCHAR(65535) NULL COMMENT '備註';
 ALTER TABLE `registration` DROP COLUMN `memo`;
 
 -- 刪掉細分組資料表 - 學員ID Rocky (2020/03/16)
-ALTER TABLE student_group DROP FOREIGN KEY `student_group_ibfk_1`
-ALTER TABLE `student_group` DROP COLUMN `student_group`;
+ALTER TABLE student_group DROP FOREIGN KEY `student_group_ibfk_1`;
+ALTER TABLE `student_group` DROP COLUMN `id_student`;
 
 -- student_group  細分組詳細資料資料表 Rocky (2020/03/16)
 CREATE TABLE IF NOT EXISTS `student_groupdetail`(

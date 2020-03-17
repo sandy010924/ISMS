@@ -39,6 +39,7 @@ class StudentGroupController extends Controller
     // 搜尋符合條件的學員資料 Rock(2020/03/16)
     public function searchstudents(Request $request)
     {
+        // request data
         $type_course = $request->get('type_course');
         $id_course = $request->get('id_course');
         $date = $request->get('date');
@@ -47,34 +48,51 @@ class StudentGroupController extends Controller
         $opt2 = $request->get('opt2');
         $value = $request->get('value');
 
+        $data_id_course = '';
+
+        // if (count($id_course) != 0) {
+        //     foreach ($id_course as $value) {
+        //         $data_id_course .=  $value.',';
+        //     }
+        //     $data_id_course = substr($data_id_course, 0, -1);
+        //     $data_id_course = json_decode($data_id_course);
+        // }
+
+
+        // $t = [1,2];
+
         if ($type_course == "1") {
             if ($type_condition == "information") {
                 // 名單資料
-                $datas = Student::select('student.*')
-                                ->where(function ($query) use ($opt2, $opt1, $value) {
+                $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                                ->select('student.*')
+                                ->where(function ($query2) use ($id_course) {
+                                    $query2->whereIn('b.id_course', $id_course);
+                                })
+                                ->where(function ($query) use ($opt1, $opt2, $value) {
                                     switch ($opt2) {
                                         case "yes":
                                             $query->where($opt1, '=', $value);
                                             break;
                                         case "no":
-                                            echo "i equals 1";
+                                            $query->where($opt1, '<>', $value);
                                             break;
                                         case "like":
-                                            echo "i equals 2";
+                                            $query->where($opt1, 'like', '%'.$value.'%');
                                             break;
-                                        case "nolike":
-                                            echo "i equals 2";
+                                        case "notlike":
+                                            $query->where($opt1, 'not like', '%'.$value.'%');
                                             break;
                                     }
                                 })
-                                ->get();
+                                ->distinct()->get();
             }
             // 銷講
         } elseif ($type_course == "2") {
             // 正課
         }
 
-        echo $datas;
+        return $datas;
     }
 
     // 顯示資料

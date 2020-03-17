@@ -276,7 +276,7 @@ $.ajax({
         type:type
       },
       success:function(data){
-        console.log(data);
+        // console.log(data);
         $('#select_course').find('option').remove();
         $.each(data, function(index,val) {           
           $('#select_course').append(new Option(val['name'], val['id']))
@@ -294,7 +294,7 @@ $.ajax({
 // 尋找資料 Rocky(2020/03/14)
 function search(){
   // 課程類型
-  type_course = $('#select_type').val();
+  type_course = $('#select_type').val()
   // 課程選擇
   id_course = $('#select_course').val()
   // 日期選擇
@@ -307,6 +307,7 @@ function search(){
   opt2 = $('#condition_option2').val()
   // 內容
   value = $('#condition_input3').val()
+  // console.log(id_course)
   $.ajax({
     type:'POST',
     url:'search_students',
