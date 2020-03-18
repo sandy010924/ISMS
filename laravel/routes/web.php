@@ -126,13 +126,19 @@ Route::get('error_authority', function () {
     Route::post('course_list_apply_delete', 'Backend\CourseListApplyController@delete');
 
 
-    Route::get('course_list_refund', function () {
-        return view('frontend.course_list_refund');
-    })->name('course_list_refund');
+/*** [課程管理] 退費名單 ***/
+    /*** 顯示資料 ***/
+    Route::get('course_list_refund', 'Frontend\CourseListRefundController@show')->name('course_list_refund');
+    /*** 顯示表單所選場次學員資料 ***/
+    Route::get('course_list_refund_form', 'Frontend\CourseListRefundController@form');
 
-    Route::get('course_list_view', function () {
-        return view('frontend.course_list_view');
-    })->name('course_list_view');
+    // Route::get('course_list_refund', function () {
+    //     return view('frontend.course_list_refund');
+    // })->name('course_list_refund');
+
+    // Route::get('course_list_view', function () {
+    //     return view('frontend.course_list_view');
+    // })->name('course_list_view');
 
 
 /*** [課程管理] 完整內容 ***/

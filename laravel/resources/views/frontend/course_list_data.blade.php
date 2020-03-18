@@ -8,7 +8,7 @@
     <!--搜尋課程頁面內容-->
     <div class="card m-3">
       <div class="card-body">
-        <div class="row mb-3">
+        <div class="row">
           <div class="col-3">
             <div class="input-group">
               <div class="input-group-prepend">

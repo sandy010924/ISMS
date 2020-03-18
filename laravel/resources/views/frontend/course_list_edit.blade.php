@@ -6,9 +6,9 @@
 @section('content')
 <!-- Content Start -->
 <!--課程總覽編輯頁面內容-->
-<div class="card m-3">
+  <div class="card m-3">
     <div class="card-body">
-      <div class="row mb-3">
+      <div class="row">
         <div class="col-3">
           <div class="input-group">
             <div class="input-group-prepend">
@@ -58,8 +58,8 @@
                   </div>
                   <div class="modal-body">
                     <div class="form-group required">
-                      <label for="newform_course" class="col-form-label">對應課程</label><br>
-                      <select class="w-100 custom-select" id="newform_course" name="newform_course" style="width: 75%;" required>
+                      <label for="newform_course" class="col-form-label">對應課程</label>
+                      <select class="custom-select" id="newform_course" name="newform_course" required>
                         @foreach($course_all as $data)
                           @if($course->id_type == $data->id)
                             <option value="{{ $data->id }}" selected>{{ $data->name }}</option>
@@ -88,6 +88,10 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="card m-3">
+    <div class="card-body">
       @component('components.datatable')
         @slot('thead')
           <tr>
@@ -127,9 +131,13 @@
 
       //select2 對應課程 Sandy(2020/03/08)
       $("#newform_course").select2({
-          width: 'resolve' // need to override the changed default
+          width: 'resolve', // need to override the changed default
+          theme: 'bootstrap'
       });
+
     });
+    
+    $.fn.select2.defaults.set( "theme", "bootstrap" );
     // Sandy(2020/02/26) dt列表 S
 
     // 取消場次 Sandy(2020/03/08) start

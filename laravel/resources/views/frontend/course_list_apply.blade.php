@@ -10,7 +10,7 @@
   <input type="hidden" id="course_type" value="{{ $course->type }}">
   <div class="card m-3">
     <div class="card-body">
-      <div class="row mb-3">
+      <div class="row">
         <div class="col-3">
           <div class="input-group">
             <div class="input-group-prepend">
@@ -29,6 +29,20 @@
         </div>
         <div class="col px-5 text-right align-self-center">
           <h6 class="mb-0">累積筆數 : {{ count($apply) }} </h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card m-3">
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-5 mx-auto">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">日期區間</span>
+            </div>
+            <input type="text" class="form-control px-3" name="daterange"> 
+          </div>
         </div>
       </div>
       @component('components.datatable')
@@ -74,8 +88,8 @@
           @endforeach
         @endslot
       @endcomponent
-      </div>
     </div>
+  </div>
 
     <!-- alert Start-->
     {{-- <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
@@ -95,6 +109,16 @@
   <script>
     var table;
     $(document).ready(function() {
+      //日期區間
+      $('input[name="daterange"]').daterangepicker({
+        locale: {
+          format: 'YYYY-MM-DD',
+          separator: ' 至 '
+        }
+      }, function(start, end, label) {
+        console.log(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+      });
+      
       //DataTable
       table=$('#table_list').DataTable({
         "dom": '<l<t>p>',
