@@ -5,13 +5,21 @@ namespace App\Http\Controllers\Frontend;
 use DB;
 use App\Http\Controllers\Controller;
 use App\Model\Student;
-use App\Model\Blacklist;
 use App\Model\Course;
-use App\Model\SalesRegistration;
+use App\Model\StudentGroup;
 use Symfony\Component\HttpFoundation\Request;
 
 class StudentGroupController extends Controller
 {
+    // 顯示列表資料 Rocky(2020/03/14)
+    public function showgroup()
+    {
+        $datas = StudentGroup::leftjoin('student_groupdetail as b', 'b.id_group', '=', 'student_group.id')
+                        ->select('student_group.name', 'student_group.created_at')
+                        ->selectraw('COUNT(b.id) as COUNT')
+                        ->get();
+        return view('frontend.student_group', compact('datas'));
+    }
     // 顯示細分條件資料 Rocky(2020/03/14)
     public function showrequirement(Request $request)
     {
@@ -43,16 +51,26 @@ class StudentGroupController extends Controller
         // request data
         $type_course = $request->get('type_course');
         $id_course = $request->get('id_course');
-        $date = $request->get('date');
+        $date = $request->get('date');  
         $type_condition = $request->get('type_condition');
         $opt1 = $request->get('opt1');
         $opt2 = $request->get('opt2');
         $value = $request->get('value');
 
+        // 看日期有沒有'-'，變成陣列
+        $date = str_replace(" ", "", explode("-", $date));
+        $sdate = $date[0];
+        $edate = $date[1];
+        //  如果開始日期 = 結束日期 -> 結束日期+1
+        if ($sdate == $edate) {
+            $edate=date_create($date[1]);
+            date_add($edate, date_interval_create_from_date_string("1 days"));
+            $edate =  date_format($edate, "Y/m/d");
+        }
+
         if ($type_course == "1") {
             if ($type_condition == "information") {
                 // 名單資料
-
                 if ($opt1 == "datasource_old") {
                     $opt1 = "datasource";
                     // 原始來源
@@ -82,6 +100,9 @@ class StudentGroupController extends Controller
                                 break;
                         }
                      })
+                    ->where(function ($query3) use ($sdate, $edate) {
+                        $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                    })
                      ->groupby('student.id')
                      ->distinct()->get();
                 } elseif ($opt1 == "datasource_new") {
@@ -113,11 +134,14 @@ class StudentGroupController extends Controller
                                 break;
                         }
                     })
+                    ->where(function ($query3) use ($sdate, $edate) {
+                        $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                    })
                     ->groupby('student.id')
                     ->distinct()->get();
                 } else {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                    ->select('student.*')
+                    ->select('student.*', 'b.datasource')
                     ->where(function ($query2) use ($id_course) {
                         $query2->whereIn('b.id_course', $id_course);
                     })
@@ -137,6 +161,9 @@ class StudentGroupController extends Controller
                                 break;
                         }
                     })
+                    ->where(function ($query3) use ($sdate, $edate) {
+                        $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                    })
                     ->distinct()->get();
                 }
             }
@@ -144,43 +171,8 @@ class StudentGroupController extends Controller
         } elseif ($type_course == "2") {
             // 正課
         }
-
-        return $datas;
-    }
-
-    // 顯示資料
-    // public function show()
-    // {
-    //     $pagesize = 15;
-       
-    //     $blacklists =  Blacklist::leftJoin('student', 'Blacklist.id_student', '=', 'student.id')
-    //                     ->select('Blacklist.id as blacklist_id', 'Blacklist.reason', 'student.*')
-    //                     ->paginate($pagesize);
-    //     // dd($blacklists);
-    //     return view('frontend.student_blacklist', compact('blacklists'));
-    // }
-
-    // 搜尋
-    // public function search(Request $request)
-    // {
-    //     $pagesize = 15;
-    //     $search_data = $request->get('search_data');
-
-    //     if (!empty($search_data)) {
-    //         $blacklists = Blacklist::leftJoin('student', 'Blacklist.id_student', '=', 'student.id')
-    //                         ->select('Blacklist.id as blacklist_id', 'Blacklist.reason', 'student.*')
-    //                         ->Where('email', 'like', '%' .$search_data. '%')
-    //                         ->orWhere('phone', 'like', '%' .$search_data. '%')
-    //                         ->paginate($pagesize);
-    //     } else {
-    //         $blacklists =  Blacklist::leftJoin('student', 'Blacklist.id_student', '=', 'student.id')
-    //                     ->select('Blacklist.id as blacklist_id', 'Blacklist.reason', 'student.*')
-    //                     ->paginate($pagesize);
-    //     }
         
-
-    //     // $returnHTML = view('frontend.student_blacklist')->with('blacklists', $blacklists)->renderSections()['content'];
-    //     $returnHTML = view('frontend.student_blacklist')->with('blacklists', $blacklists)->render();
-    //     return $returnHTML;
-    // }
+        return $datas;
+       
+    }
 }

@@ -37,6 +37,7 @@
   {{-- <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script> --}}
 
   <script src="{{ asset('js/popper.min.js') }}" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  
   <!-- tempusdominus Sandy(2020/02/27) -->
   <script src="{{ asset('js/bootstrap.min.js') }}"></script>
   <script src="{{ asset('js/moment.min.js') }}"></script>
@@ -52,7 +53,10 @@
   <!-- daterangepicker -->
   <script src="{{ asset('js/daterangepicker.min.js') }}"></script>
   <link href="{{ asset('css/daterangepicker.css') }}" rel="stylesheet">
-
+  
+  <!-- 下拉多選 Rocky (2020/03/19) -->
+  <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
+  <script src="{{ asset('js/bootstrap-select.min.js') }} "></script>
 </head>
 
 <body>

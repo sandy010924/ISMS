@@ -32,16 +32,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td class="align-middle">JC學員</td>
-                    <td class="align-middle">2019年12月18日</td>
-                    <td class="align-middle">95</td>
-                    <td class="align-middle">
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">編輯</button></a>
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">複製</button></a>
-                      <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">刪除</button></a>
-                    </td>
-                  </tr>
+                  @foreach($datas as $data)
+                    <tr>
+                      <td class="align-middle">{{ $data['name'] }}</td>
+                      <td class="align-middle">{{ $data['created_at'] }}</td>
+                      <td class="align-middle">{{ $data['COUNT'] }}</td>
+                      <td class="align-middle">
+                        <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">編輯</button></a>
+                        <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">複製</button></a>
+                        <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">刪除</button></a>
+                      </td>
+                    </tr>
+                  @endforeach  
                 </tbody>
               </table>
             </div>

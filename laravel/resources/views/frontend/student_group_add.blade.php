@@ -5,26 +5,6 @@
 
 @section('content')
 
-<!-- Latest compiled and minified CSS -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css"> -->
-
-<!-- Latest compiled and minified JavaScript -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script> -->
-
-<!-- (Optional) Latest compiled and minified JavaScript translation files -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-*.min.js"></script> -->
-
-
-
-
-<link rel="stylesheet "type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
-
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> -->
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-
-
 <!-- Content Start -->
         <!--學員細分組內容-->
         <div class="card m-3">
@@ -93,10 +73,10 @@
                 </div>
                 <div class="col-2 pr-3">
                   <input type="text" class="m-1 form-control" style="display:blick;" id="condition_input3">
-                  <select class="form-control m-1" id="condition_option3" style="display:none;">
+                  <!-- <select class="form-control m-1" id="condition_option3" style="display:none;">
                     <option value="">請選擇</option>
                     
-                  </select>
+                  </select> -->
                   <button type="button" class="btn btn-primary btn-sm mt-2 float-right" onclick="search();">確定</button>                
                 </div>
             </div>
@@ -118,11 +98,11 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                        <input type="text" class="input_width">
+                        <input type="text" id="group_title" class="input_width">
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary">保存</button>
+                        <button type="button" class="btn btn-primary" onclick="save();">保存</button>
                       </div>
                     </div>
                   </div>
@@ -141,8 +121,8 @@
                     <th>加入日期</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
+                <tbody id= "data_student">
+                  <!-- <tr>
                     <td class="align-middle">王小名</td>
                     <td class="align-middle">0912345678</td>
                     <td class="align-middle">a123@gmail.com</td>
@@ -155,7 +135,7 @@
                     <td class="align-middle">fd546@gmail.com</td>
                     <td class="align-middle">ellen</td>
                     <td class="align-middle">2019年08月17日</td>
-                  </tr>
+                  </tr> -->
                 </tbody>
               </table>
             </div>
@@ -170,6 +150,8 @@
 
 
 <script>  
+// 宣告
+var array_studentid = new Array();
 //  $('select').selectpicker();
 $("document").ready(function(){
   //  // 顯示細分條件資料 Rocky(2020/03/14)
@@ -186,7 +168,7 @@ $(function() {
   $('input[name="daterange"]').daterangepicker({
     opens: 'left',
     locale: {
-      format: "YYYY-MM-DD"
+      format: "YYYY/MM/DD"
     }
     
   }, function(start, end, label) {
@@ -229,8 +211,21 @@ document.getElementById('condition').onchange=function(){
   }
   else if(this.value=='action'){
 		condition_option1.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option>';
-    condition_option2.innerHTML='<option value="">請選擇</option><option value="present">報到</option><option value="cancel">取消</option><option value="absent">未到</option><option value="pay">交付</option><option value="participate">參與</option><option value="open-mail">打開郵件</option><option value="open-sms">打開簡訊</option>';
-    condition_option3.style.display='block';
+     // 選項二
+     $('#condition_option2').empty();
+    $('#condition_option2').append(new Option('請選擇', ''));
+    $('#condition_option2').append(new Option('報到', '4'));
+    $('#condition_option2').append(new Option('取消', '5'));
+    $('#condition_option2').append(new Option('未到', '3'));
+    $('#condition_option2').append(new Option('交付', ''));
+    $('#condition_option2').append(new Option('完款', '7'));
+    $('#condition_option2').append(new Option('付訂', '8'));
+    $('#condition_option2').append(new Option('參與', ''));
+    $('#condition_option2').append(new Option('打開郵件', ''));
+    $('#condition_option2').append(new Option('打開簡訊', ''));
+
+    // condition_option2.innerHTML='<option value="">請選擇</option><option value="present">報到</option><option value="cancel">取消</option><option value="absent">未到</option><option value="pay">交付</option><option value="participate">參與</option><option value="open-mail">打開郵件</option><option value="open-sms">打開簡訊</option>';
+    // condition_option3.style.display='block';
     condition_input3.style.display='none';
 	}
   else if(this.value=='tag'){
@@ -307,7 +302,7 @@ function search(){
   opt2 = $('#condition_option2').val()
   // 內容
   value = $('#condition_input3').val()
-  // console.log(id_course)
+
   $.ajax({
     type:'POST',
     url:'search_students',
@@ -322,31 +317,62 @@ function search(){
       value:value
     },
     success:function(data){
-      console.log(data)
+      show(data);
     },
     error:function(error){
       console.log(JSON.stringify(error))
     }
   })
-  // // 課程類型
-  // console.log($('#select_type').val());
+}
 
-  // // 課程選擇
-  // console.log($('#select_course').val());
+// 顯示資料 Rocky(2020/03/19)
+function show(data){
+  $.each(data, function(index,val) {
+    // 檢查陣列有沒有重複資料
+    var check_array_student = array_studentid.filter(function(item, index, array){
+      return item.id == val['id']
+    });
+    if(check_array_student.length == 0 ){
+      array_studentid.push(data[index]);
+    }    
+  });
 
-  // // 日期選擇
-  // console.log($('#input_date').val());
+  $.each(array_studentid, function(index,val) {
+      id_student = val['id_student'];
+      data +=
+          '<tr>' +
+          '<td>' + val['name'] + '</td>' + 
+          '<td>' + val['phone'] + '</td>' +
+          '<td>' + val['email'] + '</td>' +
+          '<td>' + val['datasource'] + '</td>' +
+          '<td>' + val['created_at'] + '</td>' +
+          '</tr>'
+  });     
+  $('#data_student').html(data);
 
-  // // 類別
-  // console.log($('#condition').val());
+  // console.log(JSON.stringify(array_studentid) + '\n')
+  // console.log(JSON.stringify(data) + '\n')
   
-  // // 選項一
-  // console.log($('#condition_option1').val());
+}
 
-  // // 選項二
-  // console.log($('#condition_option2').val());
-  
-  
+// 儲存資料 Rocky(2020/03/19)
+function save(){
+  var title = $('#group_title').val()
+  $.ajax({
+    type:'POST',
+    url:'save',
+    dataType:'json',
+    data:{
+      title:title,
+      array_studentid:array_studentid
+    },
+    success:function(data){
+      console.log(data);
+    },
+    error:function(error){
+      console.log(JSON.stringify(error))
+    }
+  })
 }
 </script>
 
