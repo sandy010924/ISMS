@@ -131,6 +131,10 @@ Route::get('error_authority', function () {
     Route::get('course_list_refund', 'Frontend\CourseListRefundController@show')->name('course_list_refund');
     /*** 顯示表單所選場次學員資料 ***/
     Route::get('course_list_refund_form', 'Frontend\CourseListRefundController@form');
+    /*** 新增資料 ***/
+    Route::post('course_list_refund_insert', 'Backend\CourseListRefundController@insert');
+    /*** 刪除 ***/
+    Route::post('course_list_refund_delete', 'Backend\CourseListRefundController@delete');
 
     // Route::get('course_list_refund', function () {
     //     return view('frontend.course_list_refund');

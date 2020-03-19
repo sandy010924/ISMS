@@ -64,8 +64,9 @@
           <div class="modal fade" id="listform_new" tabindex="-1" role="dialog" aria-labelledby="listform_newLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
-                <form class="form" action="{{ url('course_list_insert') }}" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{ url('course_list_refund_insert') }}" method="POST">
                   @csrf
+                  <input type="hidden" id="course_id" name="course_id" value="{{ $course->id }}">
                   <div class="modal-header">
                     <h5 class="modal-title">新增退費</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -135,16 +136,16 @@
         @slot('tbody')
           @foreach($refund as $key => $data )
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a href="#"><button type="button" class="btn btn-danger btn-sm mx-1">刪除</button></a></td>
+              <td>{{ $data['date'] }}</td>
+              <td>{{ $data['refund_date'] }}</td>
+              <td>{{ $data['name'] }}</td>
+              <td>{{ $data['phone'] }}</td>
+              <td>{{ $data['email'] }}</td>
+              <td>{{ $data['event'] }}</td>
+              <td>{{ $data['refund_reason'] }}</td>
+              <td>{{ $data['pay_model'] }}</td>
+              <td>{{ $data['number'] }}</td>
+              <td><a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a></td>
             </tr>
           @endforeach
         @endslot
@@ -202,7 +203,8 @@
       //日期選擇器 Sandy (2020/03/19)
       $('#form_date').datetimepicker({ 
         format: 'YYYY-MM-DD',
-        // icons: iconlist, 
+        // icons: iconlist,
+        defaultDate: moment(), 
       });
 
       //DataTable
@@ -226,39 +228,77 @@
       });
       $.fn.select2.defaults.set( "theme", "bootstrap" );
 
-      //form 選擇場次後跳出學員
-      $("#form_events").change(function() {
-        var id_group = $(this).val();
-        $.ajax({
-          type : 'GET',
-          url:'course_list_refund_form', 
-          dataType: 'json',    
-          data:{
-            id_group: id_group
-          },
-          success:function(data){
-            // console.log(data);
-
-            $('#form_student').children().remove();
-
-            var res = '';
-            $.each (data, function (key, value) {
-              res +=`'<option value="${value.id_group}">${value.name}</option>'`
-            });
-
-            $('#form_student').html(res);
-            $('#form_student').attr('disabled', false);         
-          },
-          error: function(error){
-            console.log(JSON.stringify(error));    
-          }
-        });
-          
-
-
-      });
-
-
     });
+
+    //form 選擇場次後跳出學員
+    $("#form_events").change(function() {
+      var id_group = $(this).val();
+      $.ajax({
+        type : 'GET',
+        url:'course_list_refund_form', 
+        dataType: 'json',    
+        data:{
+          id_group: id_group
+        },
+        success:function(data){
+          // console.log(data);
+
+          $('#form_student').children().remove();
+
+          var res = '';
+          $.each (data, function (key, value) {
+            res +=`'<option value="${value.id_student}">${value.name}</option>'`
+          });
+
+          $('#form_student').html(res);
+          $('#form_student').attr('disabled', false);         
+        },
+        error: function(error){
+          console.log(JSON.stringify(error));    
+        }
+      });
+    });
+    
+    // 刪除 Sandy(2020/03/20) start
+    function btn_delete(id_refund){
+      var msg = "是否刪除此退費?";
+      if (confirm(msg)==true){
+        $.ajax({
+            type : 'POST',
+            url:'course_list_refund_delete', 
+            dataType: 'json',    
+            data:{
+              id_refund: id_refund
+            },
+            success:function(data){
+              console.log(data);
+              if (data['data'] == "ok") {                           
+                alert('刪除成功！！')
+                /** alert **/
+                // $("#success_alert_text").html("刪除課程成功");
+                // fade($("#success_alert"));
+
+                location.reload();
+              }　else {
+                // alert('刪除失敗！！')
+
+                /** alert **/ 
+                $("#error_alert_text").html("刪除失敗");
+                fade($("#error_alert"));       
+              }           
+            },
+            error: function(error){
+              console.log(JSON.stringify(error));   
+
+              /** alert **/ 
+              $("#error_alert_text").html("刪除失敗");
+              fade($("#error_alert"));       
+            }
+        });
+      }else{
+        return false;
+      }    
+    }
+    // 刪除 Sandy(2020/03/20) end
   </script>
 @endsection
