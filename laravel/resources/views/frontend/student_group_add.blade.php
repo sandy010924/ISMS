@@ -72,7 +72,7 @@
                   </select>                
                 </div>
                 <div class="col-2 pr-3">
-                  <input type="text" class="m-1 form-control" style="display:blick;" id="condition_input3">
+                  <input type="text" class="m-1 form-control" style="display:block;" id="condition_input3">
                   <!-- <select class="form-control m-1" id="condition_option3" style="display:none;">
                     <option value="">請選擇</option>
                     
@@ -180,11 +180,12 @@ $(function() {
 document.getElementById('condition').onchange=function(){
   var condition_option1=document.getElementById('condition_option1')
   ,condition_option2=document.getElementById('condition_option2')
-  ,condition_option3=document.getElementById('condition_option3')
+  // ,condition_option3=document.getElementById('condition_option3')
   ,condition_input3=document.getElementById('condition_input3');
 	
 	if(this.value=='information'){
     // 選項一
+    $('#condition_option1').empty();
     $('#condition_option1').append(new Option('請選擇', ''));
     $('#condition_option1').append(new Option('原始來源', 'datasource_old'));
     $('#condition_option1').append(new Option('最新來源', 'datasource_new'));
@@ -195,6 +196,7 @@ document.getElementById('condition').onchange=function(){
     $('#condition_option1').append(new Option('想了解的內容', 'course_content'));
 
     // 選項二
+    $('#condition_option2').empty();
     $('#condition_option2').append(new Option('是', 'yes'));
     $('#condition_option2').append(new Option('未', 'no'));
     $('#condition_option2').append(new Option('包含', 'like'));
@@ -207,12 +209,17 @@ document.getElementById('condition').onchange=function(){
 		// condition_option1.innerHTML='<option value="">請選擇</option><option>原始來源</option><option>最新來源</option><option>報名場次</option><option>目前職業</option><option>居住地址</option><option>銷講後最新狀態</option><option>想了解的內容</option>';
     // condition_option2.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option><option>包含</option><option>不包含</option>';
     condition_input3.style.display='block';
-    condition_option3.style.display='none';
+    // condition_option3.style.display='none';
   }
   else if(this.value=='action'){
-		condition_option1.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option>';
+    // 選項一
+    $('#condition_option1').empty();
+    $('#condition_option1').append(new Option('請選擇', ''));
+    $('#condition_option1').append(new Option('是', 'yes'));
+    $('#condition_option1').append(new Option('未', 'no'));
+		// condition_option1.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option>';
      // 選項二
-     $('#condition_option2').empty();
+    $('#condition_option2').empty();
     $('#condition_option2').append(new Option('請選擇', ''));
     $('#condition_option2').append(new Option('報到', '4'));
     $('#condition_option2').append(new Option('取消', '5'));
@@ -229,8 +236,15 @@ document.getElementById('condition').onchange=function(){
     condition_input3.style.display='none';
 	}
   else if(this.value=='tag'){
-    condition_option1.innerHTML='<option value="">請選擇</option><option>已分配</option><option>未分配</option>';
+     // 選項一
+    $('#condition_option1').empty();
+    $('#condition_option1').append(new Option('請選擇', ''));
+    $('#condition_option1').append(new Option('已分配', 'yes'));
+    $('#condition_option1').append(new Option('未分配', 'no'));
+    // condition_option1.innerHTML='<option value="">請選擇</option><option>已分配</option><option>未分配</option>';
     // 選項二
+    $('#condition_option2').empty();
+    $('#condition_option2').append(new Option('請選擇', ''));
     $('#condition_option2').append(new Option('是', 'yes'));
     $('#condition_option2').append(new Option('未', 'no'));
     $('#condition_option2').append(new Option('包含', 'like'));
@@ -238,9 +252,67 @@ document.getElementById('condition').onchange=function(){
 
     // condition_option2.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option><option>包含</option><option>不包含</option>';
     condition_input3.style.display='block';
-    condition_option3.style.display='none';
+    // condition_option3.style.display='none';
 	}
 };
+// 類型 Rocky(2020/03/20)
+document.getElementById('select_type').onchange=function(){
+  if(this.value=='1'){
+    // 銷講
+    if ($('#condition').val() == "information") {
+      // 選項一
+      $('#condition_option1').empty();
+      $('#condition_option1').append(new Option('請選擇', ''));
+      $('#condition_option1').append(new Option('原始來源', 'datasource_old'));
+      $('#condition_option1').append(new Option('最新來源', 'datasource_new'));
+      $('#condition_option1').append(new Option('報名場次', 'id_events'));
+      $('#condition_option1').append(new Option('目前職業', 'profession'));
+      $('#condition_option1').append(new Option('居住地址', 'address'));
+      $('#condition_option1').append(new Option('銷講後最新狀態', ''));
+      $('#condition_option1').append(new Option('想了解的內容', 'course_content'));  
+    }
+    
+  } else if(this.value=='2') {
+    // 正課
+    // 選項一
+    if ($('#condition').val() == "information") {
+      $('#condition_option1').empty();
+      $('#condition_option1').append(new Option('請選擇', ''));
+      $('#condition_option1').append(new Option('應付金額', 'amount_payable'));
+      $('#condition_option1').append(new Option('已付金額', 'amount_paid'));
+      $('#condition_option1').append(new Option('服務人員', 'person'));
+      $('#condition_option1').append(new Option('統一發票', 'type_invoice'));
+      $('#condition_option1').append(new Option('統編', 'number_taxid'));
+      $('#condition_option1').append(new Option('抬頭', 'companytitle'));
+      $('#condition_option1').append(new Option('報名場次', 'id_events'));
+      $('#condition_option1').append(new Option('目前職業', 'profession'));
+      $('#condition_option1').append(new Option('居住地址', 'address'));
+    }
+  } else if(this.value=='3') {
+    // 活動
+    // 選項一
+    $('#condition_option1').empty();
+    $('#condition_option1').append(new Option('請選擇', ''));
+    $('#condition_option1').append(new Option('原始來源', 'datasource_old'));
+    $('#condition_option1').append(new Option('最新來源', 'datasource_new'));
+    $('#condition_option1').append(new Option('報名場次', 'id_events'));
+    $('#condition_option1').append(new Option('目前職業', 'profession'));
+    $('#condition_option1').append(new Option('居住地址', 'address'));
+    $('#condition_option1').append(new Option('銷講後最新狀態', ''));
+    $('#condition_option1').append(new Option('想了解的內容', 'course_content'));
+  }
+  
+}
+
+// 選項一 Rocky(2020/03/20)
+document.getElementById('condition_option1').onchange=function(){
+  if(this.value=='yes'){
+    condition_option2.style.display='block';
+  } else if(this.value=='no') {
+    condition_option2.style.display='none';
+    condition_input3.style.display='none';    
+  }
+}
 
 document.getElementById('condition_option2').onchange=function(){
 if(this.value=='present'||this.value=='cancel'||this.value=='absent'||this.value=='pay'){
@@ -317,6 +389,7 @@ function search(){
       value:value
     },
     success:function(data){
+      console.log(data)
       show(data);
     },
     error:function(error){
@@ -327,15 +400,19 @@ function search(){
 
 // 顯示資料 Rocky(2020/03/19)
 function show(data){
-  $.each(data, function(index,val) {
-    // 檢查陣列有沒有重複資料
-    var check_array_student = array_studentid.filter(function(item, index, array){
-      return item.id == val['id']
+
+  if (data.length > 0)
+  {
+    $.each(data, function(index,val) {
+      // 檢查陣列有沒有重複資料
+      var check_array_student = array_studentid.filter(function(item, index, array){
+        return item.id == val['id']
+      });
+      if(check_array_student.length == 0 ){
+        array_studentid.push(data[index]);
+      }    
     });
-    if(check_array_student.length == 0 ){
-      array_studentid.push(data[index]);
-    }    
-  });
+  }
 
   $.each(array_studentid, function(index,val) {
       id_student = val['id_student'];

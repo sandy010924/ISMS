@@ -9,57 +9,52 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StudentGroupController extends Controller
 {
-    // 刪除學員資料 Rocky (2020/02/23)
-    // public function delete(Request $request)
-    // {
-    //     $status = "";
-    //     $id_student = $request->get('id_student');
+    // 刪除細分組 Rocky (2020/03/20)
+    public function groupdelete(Request $request)
+    {
+        $status = "";
+        $id = $request->get('id');
 
-    //     // 查詢是否有該筆資料
-    //     $student = Student::where('id', $id_student)->get();
-    //     $registration = Registration::where('id_student', $id_student)->get();
-    //     $sales_registration = SalesRegistration::where('id_student', $id_student)->get();
-    //     $payment = Payment::where('id_student', $id_student)->get();
+        // 查詢是否有該筆資料
+        $StudentGroup = StudentGroup::where('id', $id)->get();
         
+         // 刪除資料
         
-    //      // 刪除資料
-        
-    //     if (!empty($student) || !empty($sales_registration) || !empty($payment) || !empty($registration)) {
-    //         $sales_registration = SalesRegistration::where('id_student', $id_student)->delete();
-    //         $registration= Registration::where('id_student', $id_student)->delete();
-    //         $payment= Payment::where('id_student', $id_student)->delete();
-    //         $student = Student::where('id', $id_student)->delete();
+        if (!empty($StudentGroup)) {
+            StudentGroup::where('id', $id)->delete();
+            StudentGroupdetail::where('id_group', $id)->delete();
             
-    //         $status = "ok";
-    //     } else {
-    //         $status = "error";
-    //     }
-    //     return json_encode(array('data' => $status));
-    // }
+            $status = "ok";
+        } else {
+            $status = "error";
+        }
+        return json_encode(array('data' => $status));
+    }
 
 
-    // 標記儲存 (2020/03/10)
+    // 儲存 (2020/03/10)
     public function save(Request $request)
     {
         $title = $request->get('title');
         $array_studentid = $request->get('array_studentid');
-
-        // echo $array_studentid;
         // return $array_studentid;
         
 
         $StudentGroup = new StudentGroup;
-        $StudentGroupdetail = new StudentGroupdetail;
-        
-
+       
+       
         // 新增細分組資料
         $StudentGroup->name       = $title;         // 細分組名稱
-                
+                        
         $StudentGroup->save();
         $id_StudentGroup = $StudentGroup->id;
 
+
         if (!empty($id_StudentGroup)) {
+            
             foreach ($array_studentid as $key => $data) {
+                $StudentGroupdetail = new StudentGroupdetail;
+
                 // 新增細分組詳細資料
                 $StudentGroupdetail->id_student     = $data['id'];           // 學生ID
                 $StudentGroupdetail->id_group       = $id_StudentGroup;      // 細分組ID
@@ -72,6 +67,55 @@ class StudentGroupController extends Controller
 
         if (!empty($id_StudentGroupdetail)) {
             return '儲存成功';
+        } else {
+            return '更新失敗';
+        }
+    }
+
+    // 複製 (2020/03/20)
+    public function groupcopy(Request $request)
+    {
+        $id = $request->get('id');
+
+         // 查詢細分組名稱
+         $name_group = StudentGroup::where('id', $id)
+                        ->select('student_group.name')
+                        ->get();
+        
+        // 查詢細分組學員資料
+        $id_students = StudentGroupdetail::where('id_group', $id)
+                    ->select('student_groupdetail.id_student')
+                    ->get();
+
+        // 儲存細分組
+        $StudentGroup = new StudentGroup;
+              
+        // 新增細分組資料
+        $StudentGroup->name       = $name_group[0]['name'];         // 細分組名稱
+                        
+        $StudentGroup->save();
+        $id_StudentGroup = $StudentGroup->id;
+
+        if (!empty($id_StudentGroup)) {
+            $StudentGroupdetail = new StudentGroupdetail;
+            // 查詢是否有該筆資料
+            $check_detail = StudentGroupdetail::where('id_student', $id)->get();
+            if (!empty($check_detail)) {
+                foreach ($id_students as $key => $data) {
+                    $StudentGroupdetail = new StudentGroupdetail;
+
+                    // 新增細分組詳細資料
+                    $StudentGroupdetail->id_student     = $data['id_student'];   // 學生ID
+                    $StudentGroupdetail->id_group       = $id_StudentGroup;      // 細分組ID
+
+                    $StudentGroupdetail->save();
+                }
+                $id_StudentGroupdetail = $StudentGroupdetail->id;
+            }
+        }
+
+        if (!empty($id_StudentGroupdetail) || !empty($id_StudentGroup)) {
+            return '複製成功';
         } else {
             return '更新失敗';
         }

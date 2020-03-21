@@ -248,10 +248,13 @@ Route::get('error_authority', function () {
      Route::get('blacklist_cancel', 'Backend\BlacklistController@cancel');
      /*** 自動新增黑名單學員 Rocky(2020/02/23) ***/
      Route::post('blacklist_add', 'Backend\BlacklistController@add');
-
-
+    
     /*** 顯示列表資料 Rocky(2020/03/19) ***/
     Route::get('student_group', 'Frontend\StudentGroupController@showgroup')->name('student_group');
+    /*** 刪除列表資料 Rocky(2020/03/19) ***/
+    Route::post('group_delete', 'Backend\StudentGroupController@groupdelete');
+    /*** 複製列表資料 Rocky(2020/03/20) ***/
+    Route::post('group_copy', 'Backend\StudentGroupController@groupcopy');
     /*** 顯示細分組條件 - 課程名稱 Rocky(2020/03/14) ***/
     Route::post('show_requirement_course', 'Frontend\StudentGroupController@showrequirement');
     /*** 搜尋學員 Rocky(2020/03/16) ***/
@@ -259,9 +262,6 @@ Route::get('error_authority', function () {
     /*** 儲存學員 Rocky(2020/03/19) ***/
     Route::post('save', 'Backend\StudentGroupController@save');
 
-    // Route::get('student_group', function () {
-    //     return view('frontend.student_group');
-    // })->name('student_group');
 
      /*** [學員管理] 細分組新增 ***/
     Route::get('student_group_add', function () {
@@ -272,7 +272,6 @@ Route::get('error_authority', function () {
     Route::get('student_group_edit', function () {
         return view('frontend.student_group_edit');
     })->name('student_group_edit');
-
 
 
 /*
