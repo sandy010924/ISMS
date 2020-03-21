@@ -42,7 +42,9 @@
                       <td class="align-middle">{{ $data['created_at'] }}</td>
                       <td class="align-middle">{{ $data['COUNT'] }}</td>
                       <td class="align-middle">
-                        <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">編輯</button></a>
+                        <!-- <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">編輯</button></a> -->
+                        <!-- <button id="edit_{{ $data['id'] }}" class="btn btn-secondary btn-sm mx-1" onclick="btn_edit({{ $data['id'] }});">編輯</button> -->
+                        <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('student_group_edit', [ 'id' => $data['id'] ] ) }}">編輯</a>
                         <button id="copy_{{ $data['id'] }}" class="btn btn-secondary btn-sm mx-1" onclick="btn_copy({{ $data['id'] }});" value="{{ $data['id'] }}" >複製</button>
                         <!-- <a href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">複製</button></a> -->
                         <!-- <button href="#"><button type="button" class="btn btn-secondary btn-sm mx-1">刪除</button></a> -->
@@ -108,6 +110,25 @@
   $("#btn_add").click(function(){
     $(location).attr('href', "{{ route('student_group_add') }}");
   });
+  function btn_edit(id){
+    $.ajax({
+        type : 'POST',
+        url:'testshow',  
+        data:{
+          id: id
+        },
+        success:function(data){
+          console.log(data);
+          // if (data == "複製成功") {
+          //   location.reload();
+          // }
+        },
+        error: function(error){
+          console.log(JSON.stringify(error));      
+        }
+    });
+  }
+  
 
   // 刪除 Rocky(2020/03/20)
   function btn_delete(id){

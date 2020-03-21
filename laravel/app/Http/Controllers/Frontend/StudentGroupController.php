@@ -389,4 +389,19 @@ class StudentGroupController extends Controller
         
         return $datas;
     }
+
+    /* 修改資料 */
+    // 顯示資料
+    public function testshow(Request $request)
+    {
+        $id = $request->get('id');
+        $datas = StudentGroup::leftjoin('student_groupdetail as b', 'student_group.id', '=', 'b.id_group')
+                    ->leftjoin('student as c', 'b.id_student', '=', 'c.id')
+                    ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
+                    ->select('c.*', 'd.datasource', 'student_group.name as name_group')
+                    ->where('student_group.id', $id)
+                    ->groupby('c.id')
+                    ->get();
+        return view('frontend.student_group_edit', compact('datas', 'id'));
+    }
 }

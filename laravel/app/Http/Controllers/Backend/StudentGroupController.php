@@ -72,6 +72,44 @@ class StudentGroupController extends Controller
         }
     }
 
+    // 更新 (2020/03/21)
+    public function update(Request $request)
+    {
+        $id_StudentGroupdetail = "";
+        
+        $id = $request->get('id');
+        $name_group = $request->get('name_group');
+        $array_studentid = $request->get('array_upate_studentid');
+       
+
+
+        if (!empty($id)) {
+               
+            // 更新資料 -> 學員資料
+            StudentGroup::where('id', $id)
+                ->update(['name' => $name_group]);
+
+            if(!empty($array_studentid)) {
+                foreach ($array_studentid as $key => $data) {
+                    $StudentGroupdetail = new StudentGroupdetail;
+    
+                    // 新增細分組詳細資料
+                    $StudentGroupdetail->id_student     = $data['id'];           // 學生ID
+                    $StudentGroupdetail->id_group       = $id;                   // 細分組ID
+    
+                    $StudentGroupdetail->save();
+                }
+                $id_StudentGroupdetail = $StudentGroupdetail->id;
+            }
+        }
+
+        // if (!empty($id_StudentGroupdetail)) {
+        //     return '儲存成功';
+        // } else {
+        //     return '更新失敗';
+        // }
+    }
+
     // 複製 (2020/03/20)
     public function groupcopy(Request $request)
     {
