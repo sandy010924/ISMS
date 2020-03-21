@@ -58,7 +58,13 @@
         </div>
         <div class="col"></div>
         <div class="col-3">
-          <input type="date" class="form-control" id="search_date">
+          {{-- <input type="date" class="form-control" id="search_date" name="search_date"> --}}
+          <div class="input-group date" data-target-input="nearest">
+              <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="搜尋日期" required/>
+              <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+          </div>
         </div>
         <div class="col-3">
           <input type="search" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name">
@@ -119,37 +125,6 @@
       @endcomponent
     </div>
   </div>
-  <!-- Rocky(2020/01/11) -->
-  {{-- @if (session('status') == "匯入成功")
-  <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert">
-    {{ session('status') }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  @elseif (session('status') == "匯入失敗" || session('status') == "請選檔案/填講師姓名")  
-  <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert">
-    {{ session('status') }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  @endif --}}
-
-  <!-- alert Start-->
-  {{-- <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
-    <span id="success_alert_text"></span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
-    <span id="error_alert_text"></span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div> --}}
-  <!-- alert End -->
 
 <!-- Content End -->
 
@@ -186,6 +161,12 @@
         "ordering": false
     });
 
+    //日期選擇器
+      $('#search_date').datetimepicker({ 
+        format: 'YYYY-MM-DD',
+      });
+      
+
   });
 
   // 輸入框 Sandy(2020/02/25)
@@ -198,6 +179,9 @@
     if (e.keyCode === 13) {
         $('#btn_search').click();
     }
+  });
+  $('#search_date').on('change.datetimepicker', function(e) {
+    $('#btn_search').click();
   });
   
   $("#btn_search").click(function(){

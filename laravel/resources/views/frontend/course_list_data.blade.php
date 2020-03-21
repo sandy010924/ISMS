@@ -36,7 +36,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">日期區間</span>
               </div>
-              <input type="text" class="form-control px-3" name="daterange"> 
+              <input type="text" class="form-control px-3" name="daterange" id="daterange" value="{{ $start }} 至 {{ $end }}"> 
             </div>
           </div>
         </div>
@@ -77,15 +77,37 @@
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
   <script>
+    var table;
+    var daterange = $('#daterange').val();
+
     $(function() {
+      
       //日期區間
       $('input[name="daterange"]').daterangepicker({
         locale: {
+          defaultDate: moment(), 
           format: 'YYYY-MM-DD',
-          separator: ' 至 '
+          separator: ' 至 ',
         }
-      }, function(start, end, label) {
-        console.log(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+      // }, function(start, end, label) {
+      //   console.log(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+      });
+
+      //日期區間搜尋
+      $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+        $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+
+            var min = picker.startDate.format('YYYY-MM-DD');
+            var max = picker.endDate.format('YYYY-MM-DD');
+            
+            var startDate = data[0].substring(0,10);
+            
+            if (startDate <= max && startDate >= min) { return true; }
+            return false;
+        });
+
+        table.draw();
       });
       
       //DataTable

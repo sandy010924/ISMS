@@ -267,6 +267,7 @@ class CourseListController extends Controller
                         $events_course->course_end_at    = $time_end;            // 課程結束時間
                         $events_course->memo             = '';                   // 課程備註
                         $events_course->id_group         = strtotime($time_start) . $id_course;     // 群組ID
+                        $events_course->unpublish        = 0;                    // 不公開
                         $events_course->save();
                         $id_events = $events_course->id;
                     }
@@ -389,6 +390,7 @@ class CourseListController extends Controller
                     // $events->weather            = '';                // 天氣
                     // $events->staff              = '';                // 工作人員
                     $events->id_group           = strtotime("now");  // 群組ID
+                    $events->unpublish          = 0;                    // 不公開
 
                     // if( count($new_date) != 1 ){
                     //     $events->id_group           = strtotime("now");  // 群組ID

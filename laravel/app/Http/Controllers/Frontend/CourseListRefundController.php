@@ -163,9 +163,30 @@ class CourseListRefundController extends Controller
                 );
 
             }
+
+            $start = '';
+            $end = '';
+
+            //開始時間
+            $start = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
+                            ->select('registration.created_at as date', 
+                                    'refund.id as id')
+                            ->orderBy('date','asc')
+                            ->get('date')
+                            ->unique('id');
+
+            //結束時間
+            $end = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
+                            ->select('registration.created_at as date', 
+                                    'refund.id as id')
+                            ->orderBy('date','desc')
+                            ->get('date')
+                            ->unique('id');
         }
 
-        return view('frontend.course_list_refund', compact('course', 'events', 'refund'));    
+
+
+        return view('frontend.course_list_refund', compact('course', 'events', 'refund', 'start', 'end'));    
     }
 
     //新增退費form選取場次後搜尋該場次所報名之學員

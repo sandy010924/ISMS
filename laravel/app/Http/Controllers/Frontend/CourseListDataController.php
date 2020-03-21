@@ -133,9 +133,25 @@ class CourseListDataController extends Controller
             );
 
         }
-        
 
-        return view('frontend.course_list_data', compact('course', 'events'));    
+        $events_all = EventsCourse::Where('id_course', $id)
+                                  ->get();
+        //開始時間
+        $start = EventsCourse::select('course_start_at')
+                        ->Where('id_course', $id)
+                        ->orderBy('course_start_at','asc')
+                        ->get('date')
+                        ->unique('id');
+
+        //結束時間
+        $end = EventsCourse::select('course_end_at')
+                        ->Where('id_course', $id)
+                        ->orderBy('course_end_at','desc')
+                        ->get('date')
+                        ->unique('id');
+    
+
+        return view('frontend.course_list_data', compact('course', 'events', 'start', 'end'));    
     }
 
 

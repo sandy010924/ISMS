@@ -249,7 +249,7 @@
                 <div class="collapse multi-collapse" id="payment_{{ $data['id'] }}">
                   <div class="card card-body p-1">
                     <div class="table-responsive">
-                      <table class="table table-striped table-sm text-center border rounded-lg mb-0 return_table">
+                      <table class="table table-striped table-sm text-center border rounded-lg mb-0 return_table" id="payment_table{{ $data['id'] }}">
                         <thead class="thead-dark" style="font-size:14px;">
                           <tr>
                             <th class="text-nowrap"></th>
@@ -261,7 +261,7 @@
                         </thead>
                         <tbody>
                           @foreach($data['payment'] as $key_payment => $data_payment)
-                            <tr>
+                            <tr name="tr{{ $data['id'] }}">
                               <td class="align-middle">{{ $key_payment+1 }}</td>
                               <td class="align-middle">
                                 {{ $data_payment['pay_model'] }}
@@ -281,7 +281,7 @@
                           @endforeach
                         </tbody>
                       </table>
-                      <button type="button" class="btn btn-primary btn-sm m-2">新增付款</button>
+                      <button type="button" class="btn btn-primary btn-sm m-2 add_payment" id="add_payment{{ $data['id'] }}">新增付款</button>
                     </div>
                   </div>
                 </div>    
@@ -481,5 +481,33 @@
       });
     }
     // 資料自動儲存 End
+
+
+    $('body').on('click', '.add_payment',function(){
+      var data_id = ($(this).attr('id')).substr(11);
+      var payment_len = $('tr[name="tr'+data_id+'"]').length;
+      if( payment_len < 3 ){
+        $('#payment_table' + data_id + ' tbody').append(`
+          <tr name="tr{{ $data['id'] }}">
+            <td class="align-middle">{{ $key_payment+1 }}</td>
+            <td class="align-middle">
+              {{ $data_payment['pay_model'] }}
+            </td>
+            <td class="align-middle">
+              {{ $data_payment['cash'] }}
+            </td>
+            <td class="align-middle">
+              {{ $data_payment['number'] }}
+            </td>
+            <td class="align-middle">
+              <button type="button" class="btn btn-secondary btn-sm mx-1">修改</button>
+              <button type="button" class="btn btn-success btn-sm mx-1">儲存</button>
+              <button type="button" class="btn btn-danger btn-sm mx-1">刪除</button>
+            </td>
+          </tr>
+        `);
+      }
+    });
+
 </script>
 @endsection

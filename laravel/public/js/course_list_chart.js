@@ -7,16 +7,16 @@ Chart.defaults.global.defaultFontFamily = '微軟正黑體';
 const turnover_rate_config = {
   type: 'pie',
   data: {
-    labels: ["追完款數", "完款數", "實到人數"],
+    labels: ["留單數", "付訂數", "完款數", "未留單"],
     datasets: [{
       backgroundColor: ["#F9A03F", "#D45113", "#f24"],
-      data: [4, 3, 25]
+      data: [order, deposit, settle, count_check - order - deposit - settle]
     }]
   },
   options: {
     title: {
       display: true,
-      text: '成交率: 0.12%',
+      text: '成交率: ' + rate_settle,
       fontSize: '22'
     },
     legend: false,
@@ -56,58 +56,59 @@ const turnover_rate_config = {
 }
 
 // old setting
-var turnover_rate_config2 = {
-  type: 'pie',
-  data: {
-    labels: ["追完款數", "完款數", "實到人數"],
-    datasets: [{
-      backgroundColor: ["#F9A03F", "#D45113", "#f24"],
-      data: [4, 3, 25]
-    }]
-  },
-  options: {
-    title: {
-      display: true,
-      text: '成交率: 0.12%',
-      fontSize: '20'
-    },
-    legend: {
-      display: false,
-      width: 300,
-      height: 300,
-      labels: {
-        generateLabels: function (chart) {
-          var data = chart.data;
-          if (data.labels.length && data.datasets.length) {
-            return data.labels.map(function (label, i) {
-              var ds = data.datasets[0];
-              var arc = chart.getDatasetMeta(0).data[i];
-              var custom = arc && arc.custom || {};
-              var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
-              var arcOpts = chart.options.elements.arc;
-              var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
-              var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
-              var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+// var turnover_rate_config2 = {
+//   type: 'pie',
+//   data: {
+//     labels: ["追完款數", "完款數", "實到人數"],
+//     datasets: [{
+//       backgroundColor: ["#F9A03F", "#D45113", "#f24"],
+//       data: [4, 3, 25]
+//     }]
+//   },
+//   options: {
+//     title: {
+//       display: true,
+//       text: '成交率: 0.12%',
+//       fontSize: '20'
+//     },
+//     legend: {
+//       display: false,
+//       width: 300,
+//       height: 300,
+//       labels: {
+//         generateLabels: function (chart) {
+//           var data = chart.data;
+//           if (data.labels.length && data.datasets.length) {
+//             return data.labels.map(function (label, i) {
+//               var ds = data.datasets[0];
+//               var arc = chart.getDatasetMeta(0).data[i];
+//               var custom = arc && arc.custom || {};
+//               var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
+//               var arcOpts = chart.options.elements.arc;
+//               var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+//               var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+//               var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
 
-              var value = chart.config.data.datasets[chart.getDatasetMeta(0).data[i]._datasetIndex].data[chart.getDatasetMeta(0).data[i]._index];
+//               var value = chart.config.data.datasets[chart.getDatasetMeta(0).data[i]._datasetIndex].data[chart.getDatasetMeta(0).data[i]._index];
 
-              return {
-                text: label + " : " + value,
-                fillStyle: fill,
-                strokeStyle: stroke,
-                lineWidth: bw,
-                hidden: isNaN(ds.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
-                index: i
-              };
-            });
-          } else {
-            return [];
-          }
-        }
-      }
-    }
-  }
-}
+//               return {
+//                 text: label + " : " + value,
+//                 fillStyle: fill,
+//                 strokeStyle: stroke,
+//                 lineWidth: bw,
+//                 hidden: isNaN(ds.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
+//                 index: i
+//               };
+//             });
+//           } else {
+//             return [];
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
 // 設定
 const ctx_turnover_rate = document.getElementById("pie_chart_turnover_rate").getContext('2d');
 const pie_chart_turnover_rate = new Chart(ctx_turnover_rate, turnover_rate_config);
@@ -117,16 +118,16 @@ const pie_chart_turnover_rate = new Chart(ctx_turnover_rate, turnover_rate_confi
 var check_in_rate_config = {
   type: 'pie',
   data: {
-    labels: ["實到人數", "報名筆數"],
+    labels: ["實到人數", "未到人數", "取消人數"],
     datasets: [{
       backgroundColor: ["#16F4D0", "#153B50"],
-      data: [25, 67]
+      data: [count_check, count_apply - count_check, count_cancel]
     }]
   },
   options: {
     title: {
       display: true,
-      text: '報到率: 41.6%',
+      text: '報到率: ' + rate_check,
       fontSize: '22'
     },
     legend: false,
@@ -166,56 +167,57 @@ var check_in_rate_config = {
 }
 
 // old setting
-var check_in_rate_config2 = {
-  type: 'pie',
-  data: {
-    labels: ["實到人數", "報名筆數"], // 實到、未到、取消 下方呈現 報名比數
-    datasets: [{
-      backgroundColor: ["#16F4D0", "#153B50"],
-      data: [25, 67]
-    }]
-  },
-  options: {
-    title: {
-      display: true,
-      text: '報到率: 41.6%',
-      fontSize: '24'
-    },
-    legend: {
-      display: false,
-      labels: {
-        generateLabels: function (chart) {
-          var data = chart.data;
-          if (data.labels.length && data.datasets.length) {
-            return data.labels.map(function (label, i) {
-              // var ds = data.datasets[0];
-              // var arc = chart.getDatasetMeta(0).data[i];
-              // var custom = arc && arc.custom || {};
-              // var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
-              // var arcOpts = chart.options.elements.arc;
-              // var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
-              // var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
-              // var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+// var check_in_rate_config2 = {
+//   type: 'pie',
+//   data: {
+//     labels: ["實到人數", "報名筆數"], // 實到、未到、取消 下方呈現 報名比數
+//     datasets: [{
+//       backgroundColor: ["#16F4D0", "#153B50"],
+//       data: [25, 67]
+//     }]
+//   },
+//   options: {
+//     title: {
+//       display: true,
+//       text: '報到率: 41.6%',
+//       fontSize: '24'
+//     },
+//     legend: {
+//       display: false,
+//       labels: {
+//         generateLabels: function (chart) {
+//           var data = chart.data;
+//           if (data.labels.length && data.datasets.length) {
+//             return data.labels.map(function (label, i) {
+//               // var ds = data.datasets[0];
+//               // var arc = chart.getDatasetMeta(0).data[i];
+//               // var custom = arc && arc.custom || {};
+//               // var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
+//               // var arcOpts = chart.options.elements.arc;
+//               // var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+//               // var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+//               // var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
 
-              var value = chart.config.data.datasets[chart.getDatasetMeta(0).data[i]._datasetIndex].data[chart.getDatasetMeta(0).data[i]._index];
+//               var value = chart.config.data.datasets[chart.getDatasetMeta(0).data[i]._datasetIndex].data[chart.getDatasetMeta(0).data[i]._index];
 
-              return {
-                text: label + " : " + value,
-                // fillStyle: fill,
-                // strokeStyle: stroke,
-                // lineWidth: bw,
-                // hidden: isNaN(ds.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
-                // index: i
-              };
-            });
-          } else {
-            return [];
-          }
-        }
-      }
-    }
-  }
-}
+//               return {
+//                 text: label + " : " + value,
+//                 // fillStyle: fill,
+//                 // strokeStyle: stroke,
+//                 // lineWidth: bw,
+//                 // hidden: isNaN(ds.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
+//                 // index: i
+//               };
+//             });
+//           } else {
+//             return [];
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
 const ctx_pie_chart_check_in_rate = document.getElementById("pie-chart_check_in_rate").getContext('2d');
 const pie_chart_check_in_rate = new Chart(ctx_pie_chart_check_in_rate, check_in_rate_config);
 

@@ -153,8 +153,10 @@ Route::get('error_authority', function () {
 /*** [課程管理] 編輯 ***/
     /*** 顯示資料 ***/
     Route::get('course_list_edit', 'Frontend\CourseListEditController@show')->name('course_list_edit');
-    /*** 串聯資料 ***/
-    Route::post('course_list_edit_insert', 'Backend\CourseListEditController@insert')->name('course_list_edit_insert');
+    /*** 新增報名表 ***/
+    Route::post('course_list_edit_insert', 'Backend\CourseListEditController@insert');
+    /*** 更新場次 ***/
+    Route::post('course_list_edit_update', 'Backend\CourseListEditController@update');
 
 
 

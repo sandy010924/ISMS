@@ -534,3 +534,6 @@ CREATE TABLE IF NOT EXISTS `student_groupdetail`(
 
 -- 修改標記資料表欄位 Rocky (2020/03/17)
 ALTER TABLE `mark` CHANGE COLUMN name_course course_id VARCHAR(50) null COMMENT '課程ID';
+
+-- 增加場次資料表欄位 - 不公開(針對正課)
+ALTER TABLE `events_course` ADD COLUMN unpublish INT NULL COMMENT '不公開(0:否,1:是)';

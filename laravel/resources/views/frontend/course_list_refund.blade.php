@@ -56,7 +56,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">日期區間</span>
             </div>
-            <input type="text" class="form-control px-3" name="daterange"> 
+            <input type="text" class="form-control px-3" name="daterange" id="daterange"  value="{{ $start }} 至 {{ $end }}"> 
           </div>
         </div>
         <div class="col-3 text-right">
@@ -188,16 +188,19 @@
   <script>
     //DataTable
     var table;
+    var daterange = $('#daterange').val();
     
     $(document).ready(function() {
+
+      var daterange = $('#daterange').val();
+
       //日期區間
       $('input[name="daterange"]').daterangepicker({
         locale: {
+          defaultDate: moment(), 
           format: 'YYYY-MM-DD',
-          separator: ' 至 '
+          separator: ' 至 ',
         }
-      }, function(start, end, label) {
-        console.log(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
       });
 
       //日期選擇器 Sandy (2020/03/19)
@@ -227,6 +230,22 @@
           theme: 'bootstrap'
       });
       $.fn.select2.defaults.set( "theme", "bootstrap" );
+
+      //日期區間搜尋
+      $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+        $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+
+            var min = picker.startDate.format('YYYY-MM-DD');
+            var max = picker.endDate.format('YYYY-MM-DD');
+            
+            var startDate = data[0];
+            if (startDate <= max && startDate >= min) { return true; }
+            return false;
+        });
+
+        table.draw();
+      });
 
     });
 
