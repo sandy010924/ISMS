@@ -185,6 +185,10 @@ Route::get('error_authority', function () {
     Route::get('course_return', 'Frontend\CourseReturnController@show')->name('course_return');
     /*** 更新資料 Sandy(2020/03/16) ***/
     Route::post('course_return_update', 'Backend\CourseReturnController@update');
+    /*** 新增資料 Sandy(2020/03/16) ***/
+    Route::post('course_return_insert', 'Backend\CourseReturnController@insert');
+    /*** 刪除資料 Sandy(2020/03/16) ***/
+    Route::post('course_return_delete', 'Backend\CourseReturnController@delete');
 
 
 

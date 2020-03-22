@@ -41,7 +41,7 @@ class CourseReturnController extends Controller
         foreach( $fill_table as $key => $data){    
             
             $payment_table = Payment::Where('id_registration', $data['id'] )
-                                    ->select('cash', 'pay_model', 'number')
+                                    ->select('payment.*')
                                     ->get();
 
             $payment = array();
@@ -66,6 +66,7 @@ class CourseReturnController extends Controller
                 }
 
                 $payment[$key_payment] = [ 
+                    'id_payment' => $data_payment['id'],
                     'cash' => $data_payment['cash'],
                     'pay_model' => $pay_model,
                     'number' => $data_payment['number'],

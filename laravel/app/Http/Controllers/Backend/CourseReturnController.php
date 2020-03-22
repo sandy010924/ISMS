@@ -11,6 +11,7 @@ use App\Model\ISMSStatus;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Register;
+use App\Model\Payment;
 
 class CourseReturnController extends Controller
 {
@@ -125,6 +126,74 @@ class CourseReturnController extends Controller
 
     // }
 
+    /*** 新增付款資料 ***/
+    public function insert(Request $request)
+    {
+        //取回data
+        $id_registration = $request->input('id_registration');
+        $pay_model = $request->input('pay_model');
+        $cash = $request->input('cash');
+        $number = $request->input('number');
+        
+        $check_registration = Registration::where('id', $id_registration)->first();
+        
+        try{
+
+            if( !empty($check_registration) ){
+                $payment = new Payment;
+                $payment->id_student        = $check_registration->id_student;      // 學員ID
+                $payment->cash              = $cash;                                // 金額
+                $payment->pay_model         = $pay_model;                           // 付款方式
+                $payment->number            = $number;                              // 帳戶/卡號後四碼
+                $payment->id_registration   = $id_registration;                     // 正課報名ID
+                $payment->save();
+                $id_payment = $payment->id;
+            }
+
+            if($id_payment != ""){
+
+                $payment_table = Payment::where('id', $id_payment)
+                                        ->first();
+
+                switch ($payment_table->pay_model) {
+                    case 0:
+                        $pay_model_data = '現金';
+                        break;
+                    case 1:
+                        $pay_model_data = '匯款';
+                        break;
+                    case 2:
+                        $pay_model_data = '刷卡：輕鬆付';
+                        break;
+                    case 3:
+                        $pay_model_data = '刷卡：一次付';
+                        break;
+                    default:
+                        return 'error';
+                        break;
+                }
+
+                $payment_data = array(
+                    'id' => $payment_table->id,
+                    'cash' => $payment_table->cash,
+                    'pay_model' => $pay_model_data,
+                    'number' => $payment_table->number,
+                    'id_registration' => $payment_table->id_registration,
+                );
+
+                return $payment_data;
+            }else{
+                return 'error';
+            }
+
+        }catch (Exception $e) {
+            return 'error';
+            // return json_encode(array(
+            //     'errorMsg' => '儲存失敗'
+            // ));
+        }
+    }
+    
     /*** 資料更新 ***/
     public function update(Request $request)
     {
@@ -154,6 +223,14 @@ class CourseReturnController extends Controller
                     //該場備註
                     EventsCourse::where('id', $id_events)
                                 ->update(['memo' => $data_val]);
+                    break;
+                case 'status_payment':
+                    //應付
+                    $data_id = $request->input('data_id');
+                    
+                    Registration::where('id', $data_id)
+                                ->update(['status_payment' => $data_val]);
+
                     break;
                 case 'amount_payable':
                     //應付
@@ -187,6 +264,30 @@ class CourseReturnController extends Controller
                                 ->update(['pay_memo' => $data_val]);
 
                     break;
+                case 'pay_model':
+                    //付款資料 - 付款方式
+                    $data_id = $request->input('data_id');
+                    
+                    Payment::where('id', $data_id)
+                                ->update(['pay_model' => $data_val]);
+
+                    break;
+                case 'cash':
+                    //付款資料 - 金額
+                    $data_id = $request->input('data_id');
+                    
+                    Payment::where('id', $data_id)
+                                ->update(['cash' => $data_val]);
+
+                    break;
+                case 'number':
+                    //付款資料 - 帳戶/卡號後四碼
+                    $data_id = $request->input('data_id');
+                    
+                    Payment::where('id', $data_id)
+                                ->update(['number' => $data_val]);
+
+                    break;
                 default:
                     return 'error';
                     break;
@@ -201,5 +302,30 @@ class CourseReturnController extends Controller
             //     'errorMsg' => '儲存失敗'
             // ));
         }
+    }
+
+    // 刪除 Sandy (2020/03/22)
+    public function delete(Request $request)
+    {
+        $status = "";
+        $id_payment = $request->get('id_payment');
+
+        // 查詢是否有該筆資料
+        $payment = Payment::where('id', $id_payment)->first();
+            
+        try{
+            if(!empty($payment)){
+                //刪除付款資料
+                Payment::where('id', $id_payment)->delete();     
+                
+                $status = "ok";
+            } else {
+                $status = "error";
+            }
+        }catch (Exception $e) {
+            $status = "error";
+        }
+        
+        return json_encode(array('data' => $status));
     }
 }

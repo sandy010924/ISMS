@@ -209,7 +209,7 @@
           @foreach($fill as $data)
             <tr>
               <td class="align-middle">
-                <button type="button" class="btn collapse-btn" data-toggle="collapse" data-target="#payment_{{ $data['id'] }}" aria-expanded="false" aria-controls="payment_{{ $data['id'] }}">
+                <button type="button" class="btn collapse-btn" data-toggle="collapse" data-target="#payment{{ $data['id'] }}" aria-expanded="false" aria-controls="payment{{ $data['id'] }}">
                 <span class="fas fa-angle-right fa-lg collapse_open"></span>
                 <span class="fas fa-angle-down fa-lg collapse_close"></span>
                 </button>
@@ -218,7 +218,7 @@
               <td class="align-middle">{{ $data['phone'] }}</td>
               <td class="align-middle">
                 <div class="form-group m-0">
-                  <select class="custom-select border-0 bg-transparent input_width" id="pay_state_{{ $data['id'] }}" name="pay_state" value="{{$data['status_payment']}}">
+                  <select class="custom-select border-0 bg-transparent input_width" id="status_payment{{ $data['id'] }}" name="status_payment" value="{{$data['status_payment']}}">
                     <option selected disabled value="{{$data['status_payment']}}">{{$data['status_payment_name']}}
                     </option>
                     <option value="6">留單</option>
@@ -231,8 +231,8 @@
               <td class="align-middle">
                 <input type="number" class="form-control form-control-sm" id="amount_payable{{ $data['id'] }}" name="amount_payable" value="{{ $data['amount_payable'] }}">
               </td>
-              <td class="align-middle">{{ $data['amount_paid'] }}</td>
-              <td class="align-middle"></td>
+              <td class="align-middle" id="amount_paid{{ $data['id'] }}">{{ $data['amount_paid'] }}</td>
+              <td class="align-middle" id="pending{{ $data['id'] }}">{{ $data['amount_payable'] - $data['amount_paid'] }} </td>
               <td class="align-middle">
                 {{-- <input type="text" id="pay_date{{ $data['id'] }}" name="pay_date" class="form-control form-control-sm datetimepicker-input" data-toggle="datetimepicker" data-target="#pay_date{{ $data['id'] }}" value="{{ $data['pay_date'] }}"/> --}}
                 <input type="date" id="pay_date{{ $data['id'] }}" name="pay_date" class="form-control form-control-sm" value="{{ $data['pay_date'] }}"/>
@@ -246,7 +246,7 @@
             </tr>
             <tr>
               <td colspan="10">
-                <div class="collapse multi-collapse" id="payment_{{ $data['id'] }}">
+                <div class="collapse multi-collapse" id="payment{{ $data['id'] }}">
                   <div class="card card-body p-1">
                     <div class="table-responsive">
                       <table class="table table-striped table-sm text-center border rounded-lg mb-0 return_table" id="payment_table{{ $data['id'] }}">
@@ -264,37 +264,91 @@
                             <tr name="tr{{ $data['id'] }}">
                               <td class="align-middle">{{ $key_payment+1 }}</td>
                               <td class="align-middle">
-                                {{ $data_payment['pay_model'] }}
+                                {{-- <input type="select" class="form-control form-control-sm" value="{{ $data_payment['pay_model'] }}"> --}}
+                                <select class="custom-select border-0 bg-transparent" id="pay_model{{ $data_payment['id_payment'] }}" name="pay_model" value="{{$data_payment['pay_model']}}">
+                                  <option selected disabled>{{$data_payment['pay_model']}}</option>
+                                  <option value="0">現金</option>
+                                  <option value="1">匯款</option>
+                                  <option value="2">刷卡：輕鬆付</option>
+                                  <option value="3">刷卡：一次付</option>
+                                </select>
                               </td>
                               <td class="align-middle">
-                                {{ $data_payment['cash'] }}
+                                <input type="number" class="form-control form-control-sm" id="cash{{ $data_payment['id_payment'] }}" name="cash" value="{{ $data_payment['cash'] }}" data-registration="{{ $data['id'] }}">                                
                               </td>
                               <td class="align-middle">
-                                {{ $data_payment['number'] }}
+                                <input type="number" class="form-control form-control-sm" id="number{{ $data_payment['id_payment'] }}" name="number" value="{{ $data_payment['number'] }}">               
                               </td>
                               <td class="align-middle">
-                                <button type="button" class="btn btn-secondary btn-sm mx-1">修改</button>
-                                <button type="button" class="btn btn-success btn-sm mx-1">儲存</button>
-                                <button type="button" class="btn btn-danger btn-sm mx-1">刪除</button>
+                                {{-- <button type="button" class="btn btn-secondary btn-sm mx-1">修改</button>
+                                <button type="button" class="btn btn-success btn-sm mx-1">儲存</button> --}}
+                                <button type="button" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data_payment['id_payment'] }});">刪除</button>
                               </td>
                             </tr>
                           @endforeach
                         </tbody>
                       </table>
-                      <button type="button" class="btn btn-primary btn-sm m-2 add_payment" id="add_payment{{ $data['id'] }}">新增付款</button>
+                      @if(count($data['payment']) < 3)
+                        <button type="button" class="btn btn-primary btn-sm m-2 add_payment" id="add_payment{{ $data['id'] }}" data-name="{{ $data['name'] }}" data-phone="{{ $data['phone'] }}" data-toggle="modal" data-target="#add_payment">新增付款</button>
+                      @endif
                     </div>
                   </div>
-                </div>    
+                </div>
               </td>
             </tr>
           @endforeach
         @endslot
       @endcomponent
+
+      <!-- 新增付款 modal -->
+      <div class="modal fade" id="add_payment" tabindex="-1" role="dialog" aria-labelledby="add_paymentLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="presentApplyLabel">新增付款</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-left">
+              {{-- <form action="{{ url('course_return_insert') }}" name="insert" method="POST" >
+                @csrf --}}
+                  <input type="hidden" name="id_registration" id="id_registration" value="">
+                  <div class="form-group">
+                    <label for="add_student">學員姓名</label>
+                    <input type="text" class="form-control" name="add_student" id="add_student" value="" disabled>
+                  </div>
+                  <div class="form-group">
+                    <label for="add_phone">聯絡電話</label>
+                    <input type="text" class="form-control" name="add_phone" id="add_phone" value="" disabled>
+                  </div>
+                  <div class="form-group required">
+                    <label for="add_paymodel" class="col-form-label">付款方式</label>
+                    <select class="custom-select form-control" name="add_paymodel" id="add_paymodel" required>
+                      <option value="0" selected>現金</option>
+                      <option value="1">匯款</option>
+                      <option value="2">刷卡：輕鬆付</option>
+                      <option value="3">刷卡：一次付</option>
+                    </select>
+                  </div>
+                  <div class="form-group required">
+                    <label for="add_cash" class="col-form-label">金額</label>
+                    <input type="number" class="form-control" name="add_cash" id="add_cash" required>
+                  </div>
+                  <div class="form-group required">
+                    <label for="add_number" class="col-form-label">帳號/卡號後四碼</label>
+                    <input type="number" class="form-control" name="add_number" id="add_number" required>
+                  </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" id="btn_payment">確認新增</button>
+                  </div>
+              {{-- </form> --}}
+          </div>
+        </div>
+      </div>
       
-      <!-- alert Start-->
-      {{-- @component('components.alert')
-      @endcomponent --}}
-      <!-- alert End -->
 
     </div>
   </div>
@@ -340,7 +394,8 @@
     // });
   });
 
-  // 資料自動儲存 Start
+  /* 資料儲存 Start */
+
     // 現場完款
     $('#money').on('blur', function() {
       var data_type = 'money';
@@ -389,17 +444,46 @@
       }
     });
 
+    // 付款狀態
+    $('body').on('change','select[name="status_payment"]',function(){
+      var data_id = ($(this).attr('id')).substr(14);
+      var data_type = 'status_payment';
+      save_data($(this), data_type, data_id);
+    });
+
     // 應付
     $('body').on('blur','input[name="amount_payable"]',function(){
       var data_id = ($(this).attr('id')).substr(14);
       var data_type = 'amount_payable';
       save_data($(this), data_type, data_id);
+      
+      //已付更新
+      $('#amount_paid' + data_id).html( function(){
+        return $('#payment'+ data_id + ' input[name="cash"]').toArray().reduce(function(tot, val) {
+          return tot + parseInt(val.value);
+        }, 0);
+      });
+      //待付更新
+      $('#pending' + data_id).html( function(){
+        return parseInt($('#amount_payable' + data_id).val() - $('#amount_paid' + data_id).html());
+      });
     });
     $('body').on('keyup','input[name="amount_payable"]',function(e){
       if (e.keyCode === 13) {
         var data_id = ($(this).attr('id')).substr(14);
         var data_type = 'amount_payable';
         save_data($(this), data_type, data_id);
+
+        //已付更新
+        $('#amount_paid' + data_id).html( function(){
+          return $('#payment'+ data_id + ' input[name="cash"]').toArray().reduce(function(tot, val) {
+            return tot + parseInt(val.value);
+          }, 0);
+        });
+        //待付更新
+        $('#pending' + data_id).html( function(){
+          return parseInt($('#amount_payable' + data_id).val() - $('#amount_paid' + data_id).html());
+        });
       }
     });
 
@@ -445,6 +529,99 @@
       }
     });
 
+    // 付款資料 - 付款方式
+    $('body').on('change','select[name="pay_model"]',function(e){
+      var data_id = ($(this).attr('id')).substr(9);
+      var data_type = 'pay_model';
+      save_data($(this), data_type, data_id);
+    });
+
+    // 付款資料 - 金額
+    $('body').on('blur','input[name="cash"]',function(e){
+	    e.preventDefault();
+      var data_val = $(this).val();
+      if( data_val == "" ){
+        /** alert **/ 
+        $("#error_alert_text").html("金額欄位不可空白，請輸入金額");
+        fade($("#error_alert")); 
+        $(this).focus();
+      }else{
+        var data_id = ($(this).attr('id')).substr(4);
+        var data_type = 'cash';
+        save_data($(this), data_type, data_id);
+
+        var id_registration = $(this).attr('data-registration');
+        //已付更新
+        $('#amount_paid' + id_registration).html( function(){
+          return $('#payment'+ id_registration + ' input[name="cash"]').toArray().reduce(function(tot, val) {
+            return tot + parseInt(val.value);
+          }, 0);
+        });
+        //待付更新
+        $('#pending' + id_registration).html( function(){
+          return parseInt($('#amount_payable' + id_registration).val() - $('#amount_paid' + id_registration).html());
+        });
+      }
+    });
+    $('body').on('keyup','input[name="cash"]',function(e){
+      e.preventDefault();
+      if (e.keyCode === 13) {
+        var data_val = $(this).val();
+        if( data_val == "" ){
+          /** alert **/ 
+          $("#error_alert_text").html("金額欄位不可空白，請輸入金額");
+          fade($("#error_alert")); 
+          $(this).focus();
+        }else{
+          var data_id = ($(this).attr('id')).substr(4);
+          var data_type = 'cash';
+          save_data($(this), data_type, data_id);
+
+          var id_registration = $(this).attr('data-registration');
+          //已付更新
+          $('#amount_paid' + id_registration).html( function(){
+            return $('#payment'+ id_registration + ' input[name="cash"]').toArray().reduce(function(tot, val) {
+              return tot + parseInt(val.value);
+            }, 0);
+          });
+          //待付更新
+          $('#pending' + id_registration).html( function(){
+            return parseInt($('#amount_payable' + id_registration).val() - $('#amount_paid' + id_registration).html());
+          });
+        }
+      }
+    });
+    
+    // 付款資料 - 帳戶/卡號後四碼
+    $('body').on('blur','input[name="number"]',function(e){
+      var data_val = $(this).val();
+      if( data_val == "" ){
+        /** alert **/ 
+        $("#error_alert_text").html("帳戶/卡號後四碼不可空白，請輸入帳戶/卡號後四碼");
+        fade($("#error_alert")); 
+        $(this).focus();
+      }else{
+        var data_id = ($(this).attr('id')).substr(6);
+        var data_type = 'number';
+        save_data($(this), data_type, data_id);
+      }
+    });
+    $('body').on('keyup','input[name="number"]',function(e){
+      if (e.keyCode === 13) {
+        var data_val = $(this).val();
+        if( data_val == "" ){
+          /** alert **/ 
+          $("#error_alert_text").html("卡號後四碼不可空白");
+          fade($("#error_alert")); 
+          $(this).focus();
+        }else{
+          var data_id = ($(this).attr('id')).substr(6);
+          var data_type = 'number';
+          save_data($(this), data_type, data_id);
+        }
+      }
+    });
+    
     function save_data(data, data_type, data_id){
       var id_events = $("#id_events").val();
       var data_val = data.val();
@@ -480,34 +657,140 @@
         }
       });
     }
-    // 資料自動儲存 End
+
+  /* 資料儲存 End */
+
+  /* 新增付款 Start */
+  $('body').on('click', '.add_payment',function(){
+    var data_id = ($(this).attr('id')).substr(11);
+     $("#add_payment #id_registration").val( data_id );
+     $("#add_payment #add_student").val( $(this).attr('data-name') );
+     $("#add_payment #add_phone").val( $(this).attr('data-phone') );
+    // var payment_len = $('tr[name="tr'+data_id+'"]').length;
+    // if( payment_len < 3 ){
+    //   $('#payment_table' + data_id + ' tbody').append(`
+        
+    //   `);
+    // }
+  });
+
+  $('body').on('click', '#btn_payment',function(){
+    var id_registration = $("#id_registration").val();
+    var pay_model = $("#add_paymodel").val();
+    var cash = $("#add_cash").val();
+    var number = $("#add_number").val();
+    
+    var payment_len = $('tr[name="tr'+id_registration+'"]').length;
+
+    $.ajax({
+        type:'POST',
+        url:'course_return_insert',
+        data:{
+          id_registration: id_registration,
+          pay_model : pay_model,
+          cash: cash,
+          number: number
+        },
+        success:function(data){
+          // console.log(JSON.stringify(data));
+
+          if( data != 'error' ){
+
+            $('#payment_table' + id_registration + ' tbody').append(`
+              <tr name="tr${ data.id_registration }">
+                <td class="align-middle">${ payment_len+1 }</td>
+                <td class="align-middle">
+                  <select class="custom-select border-0 bg-transparent" id="pay_model${ data.id }" name="pay_model" value="${ data.pay_model }">
+                    <option selected disabled>${ data.pay_model }</option>
+                    <option value="0">現金</option>
+                    <option value="1">匯款</option>
+                    <option value="2">刷卡：輕鬆付</option>
+                    <option value="3">刷卡：一次付</option>
+                  </select>
+                </td>
+                <td class="align-middle">
+                  <input type="number" class="form-control form-control-sm" id="cash${ data.id }" name="cash" value="${ data.cash }" data-registration="${ data.id_registration }">                                
+                </td>
+                <td class="align-middle">
+                  <input type="number" class="form-control form-control-sm" id="number${ data.id }" name="number" value="${ data.number }">               
+                </td>
+                <td class="align-middle">
+                  <button type="button" class="btn btn-danger btn-sm mx-1">刪除</button>
+                </td>
+              </tr>
+            `);
+            
+            //已付更新
+            $('#amount_paid' + data.id_registration).html( function(){
+              return $('#payment'+ data.id_registration + ' input[name="cash"]').toArray().reduce(function(tot, val) {
+                return tot + parseInt(val.value);
+              }, 0);
+            });
+            //待付更新
+            $('#pending' + data.id_registration).html( function(){
+              return parseInt($('#amount_payable' + data.id_registration).val() - $('#amount_paid' + data.id_registration).html());
+            });
+
+            $('#add_payment').modal('hide');
+
+            /** alert **/
+            $("#success_alert_text").html("新增付款成功");
+            fade($("#success_alert"));
+
+          }else{
+            /** alert **/ 
+            $("#error_alert_text").html("新增付款失敗");
+            fade($("#error_alert"));     
+          }
+
+        },
+        error: function(jqXHR){
+          // console.log(JSON.stringify(jqXHR));  
+
+          /** alert **/ 
+          $("#error_alert_text").html("新增付款失敗");
+          fade($("#error_alert"));      
+        }
+      });
+  });
+  
+  /* 新增付款 End */
 
 
-    $('body').on('click', '.add_payment',function(){
-      var data_id = ($(this).attr('id')).substr(11);
-      var payment_len = $('tr[name="tr'+data_id+'"]').length;
-      if( payment_len < 3 ){
-        $('#payment_table' + data_id + ' tbody').append(`
-          <tr name="tr{{ $data['id'] }}">
-            <td class="align-middle">{{ $key_payment+1 }}</td>
-            <td class="align-middle">
-              {{ $data_payment['pay_model'] }}
-            </td>
-            <td class="align-middle">
-              {{ $data_payment['cash'] }}
-            </td>
-            <td class="align-middle">
-              {{ $data_payment['number'] }}
-            </td>
-            <td class="align-middle">
-              <button type="button" class="btn btn-secondary btn-sm mx-1">修改</button>
-              <button type="button" class="btn btn-success btn-sm mx-1">儲存</button>
-              <button type="button" class="btn btn-danger btn-sm mx-1">刪除</button>
-            </td>
-          </tr>
-        `);
-      }
-    });
+  /* 刪除付款 Sandy(2020/03/22) */
+  function btn_delete(id_payment){
+    var msg = "是否刪除此付款資訊?";
+    if (confirm(msg)==true){
+      $.ajax({
+          type : 'POST',
+          url:'course_return_delete', 
+          dataType: 'json',    
+          data:{
+            id_payment: id_payment,
+          },
+          success:function(data){
+            if (data['data'] == "ok") {                           
+              alert('刪除付款成功！！')
+              location.reload();
+            }　else {
+              /** alert **/ 
+              $("#error_alert_text").html("刪除付款失敗");
+              fade($("#error_alert"));       
+            }           
+          },
+          error: function(error){
+            console.log(JSON.stringify(error));   
+
+            /** alert **/ 
+            $("#error_alert_text").html("刪除付款失敗");
+            fade($("#error_alert"));       
+          }
+      });
+    }else{
+      return false;
+    }    
+  }
+  /* 刪除付款 Sandy(2020/03/22) */
 
 </script>
 @endsection
