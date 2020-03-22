@@ -16,6 +16,13 @@ class CourseListDataController extends Controller
     //view
     public function show(Request $request)
     {
+        $course = array();
+        $events = array();
+        $start = '';
+        $end = '';
+        $start_array = array();
+        $start_array = array();
+
          //課程資訊
         $id = $request->get('id');
         $course = Course::join('users', 'users.id', '=', 'course.id_teacher')
@@ -137,19 +144,25 @@ class CourseListDataController extends Controller
         $events_all = EventsCourse::Where('id_course', $id)
                                   ->get();
         //開始時間
-        $start = EventsCourse::select('course_start_at')
+        $start_array = EventsCourse::select('course_start_at as date')
                         ->Where('id_course', $id)
                         ->orderBy('course_start_at','asc')
-                        ->get('date')
-                        ->unique('id');
+                        ->first();
+                        // ->get('date')
+                        // ->unique('id');
 
         //結束時間
-        $end = EventsCourse::select('course_end_at')
+        $end_array = EventsCourse::select('course_end_at as date')
                         ->Where('id_course', $id)
                         ->orderBy('course_end_at','desc')
-                        ->get('date')
-                        ->unique('id');
+                        ->first();
+                        // ->get('date')
+                        // ->unique('id');
     
+        if( $start_array!="" && $end_array!="" ){
+            $start = date('Y-m-d', strtotime($start_array->date));
+            $end = date('Y-m-d', strtotime($end_array->date));
+        }
 
         return view('frontend.course_list_data', compact('course', 'events', 'start', 'end'));    
     }

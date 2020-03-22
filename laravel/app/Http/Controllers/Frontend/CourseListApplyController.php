@@ -18,8 +18,10 @@ class CourseListApplyController extends Controller
     {
         $course = array();
         $apply = array();
-        $start = date('Y-m-d');
-        $end = date('Y-m-d');
+        $start = '';
+        $end = '';
+        $start_array = array();
+        $end_array = array();
         
          //課程資訊
         $id = $request->get('id');
@@ -57,18 +59,20 @@ class CourseListApplyController extends Controller
 
             
             //開始時間
-            $start_array = SalesRegistration::select('submissiondate as date', 'id')
+            $start_array = SalesRegistration::select('submissiondate as date')
                             ->where('id_course', $id)
                             ->orderBy('date','asc')
-                            ->get('date')
-                            ->unique('id');
+                            ->first();
+                            // ->get('date')
+                            // ->unique('id');
 
             //結束時間
-            $end_array = SalesRegistration::select('submissiondate as date', 'id')
+            $end_array = SalesRegistration::select('submissiondate as date')
                             ->where('id_course',$id)
                             ->orderBy('date','desc')
-                            ->get('date')
-                            ->unique('id');
+                            ->first();
+                            // ->get('date')
+                            // ->unique('id');
 
         }elseif( $course->type == 2 || $course->type == 3) {
             //正課
@@ -139,7 +143,7 @@ class CourseListApplyController extends Controller
             
         }
         
-        if( !empty($start_array) && !empty($end_array) ){
+        if( $start_array!="" && $end_array!="" ){
             $start = date('Y-m-d', strtotime($start_array->date));
             $end = date('Y-m-d', strtotime($end_array->date));
         }

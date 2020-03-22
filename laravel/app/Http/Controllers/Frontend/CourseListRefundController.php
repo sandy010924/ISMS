@@ -21,8 +21,10 @@ class CourseListRefundController extends Controller
         $course = array();
         $events = array();
         $refund = array();
-        $start = date('Y-m-d');
-        $end = date('Y-m-d');
+        $start = '';
+        $end = '';
+        $start_array = array();
+        $start_array = array();
         
         //課程資訊
         $id = $request->get('id');
@@ -185,7 +187,8 @@ class CourseListRefundController extends Controller
                             // ->get('date')
                             // ->unique('id');
 
-            if( !empty($start_array) && !empty($end_array) ){
+            
+            if( $start_array!="" && $end_array!="" ){
                 $start = date('Y-m-d', strtotime($start_array->date));
                 $end = date('Y-m-d', strtotime($end_array->date));
             }
