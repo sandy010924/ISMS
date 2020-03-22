@@ -28,42 +28,44 @@
               </div>
             </div> -->
             <div class="row">
-            <div class="col-2">
-                  <select  class="form-control" id="select_type">
+            <div class="col-3">
+                  <select  class="form-control mt-1" id="select_type">
                     <option value="0">請選擇</option>
                     <option value="1">銷講</option>
                     <option value="2">正課</option>
                     <option value="3">活動</option>
                   </select> 
               </div>
-              <div class="col-2 ">
-                  <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course"></select> 
+              <div class="col-3">
+                  <select multiple class="selectpicker form-control mt-1" data-actions-box="true" id="select_course"></select> 
               </div>
-              <div class="col-2 px-1">
-                <input type="text" class="m-1 w-100 form-control p-0" name="daterange" id="input_date">                
+              <div class="col-3">
+                <input type="text" class="mt-1 w-100 form-control p-0" name="daterange" id="input_date">                
               </div>
              
-                <div class="col-2 pr-1">
-                  <select class="form-control m-1" id="condition">
+                <div class="col-3">
+                  <select class="form-control mt-1" id="condition">
                     <option value="information">名單資料</option>
                     <option value="action">名單動作</option>
                     <option value="tag">標籤</option>
                   </select>                
                 </div>
-                <div class="col-2 pr-1">
-                  <select class="form-control m-1" id="condition_option1">
+                </div>
+                <div class="row">
+                <div class="col-3">
+                  <select class="form-control mt-2" id="condition_option1">
                     <option value="">請選擇</option>
                     <option value="datasource_old">原始來源</option>
                     <option value="datasource_new">最新來源</option>
                     <option value="id_events">報名場次</option>
                     <option value="profession">目前職業</option>
                     <option value="address">居住地址</option>
-                    <option>銷講後最新狀態</option>
+                    <option>銷講後最新狀態(尚未開放此功能)</option>
                     <option value="course_content">想了解的內容</option>
                   </select>                
                 </div>
-                <div class="col-2 pr-1">
-                  <select class="form-control m-1" id="condition_option2">
+                <div class="col-3">
+                  <select class="form-control mt-2" id="condition_option2">
                     <option value="">請選擇</option>
                     <option value="yes">是</option>
                     <option value="no">未</option>
@@ -71,13 +73,15 @@
                     <option value="notlike">不包含</option>
                   </select>                
                 </div>
-                <div class="col-2 pr-3">
-                  <input type="text" class="m-1 form-control" style="display:block;" id="condition_input3">
+                <div class="col-3">
+                  <input type="text" class="mt-2 form-control" style="display:block;" id="condition_input3">
                   <!-- <select class="form-control m-1" id="condition_option3" style="display:none;">
                     <option value="">請選擇</option>
                     
                   </select> -->
-                  <button type="button" class="btn btn-primary btn-sm mt-2 float-right" onclick="search();">確定</button>                
+                </div>
+                <div class="col-3">
+                  <button type="button" class="btn btn-primary btn-sm mt-3 float-right" onclick="search();">確定</button>                
                 </div>
             </div>
             <!-- <h7 class="ml-1">添加另一條件+</h7> -->
@@ -86,14 +90,14 @@
         <div class="card m-3">
           <div class="card-body">
             <div class="row">
-              <div class="col-10 pr-3">
-                <div class="col-sm-2">
-                  <input type="text" id="name_group" class="m-1 form-control"  value="{{$datas[0]['name_group']}}">
+                <div class="col-4"></div>
+                <div class="col-3">
+                  <input type="text" id="name_group" class="m-2 form-control"  value="{{$datas[0]['name_group']}}">
                 </div>
-                <div class="col-sm-2">
-                  <button class="btn btn-outline-secondary mr-2 " type="button" id="btn_update"  onclick="update();">儲存</button>
+                <div class="col-2">
+                  <button class="btn btn-outline-secondary m-2" type="button" id="btn_update"  onclick="update();">儲存</button>
                 </div>
-              </div>
+              
             </div>
             <div class="table-responsive">       
               <input type="hidden" id="id_group"  value="{{$id}}">

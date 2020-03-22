@@ -9,10 +9,11 @@
         <div class="card m-3">
           <div class="card-body">
             <div class="row">
-              <div class="col-3 mx-auto">
+            <div class="col-3 "></div>
+              <div class="col-2">
                 <button class="btn btn-outline-secondary" type="button" id="btn_add"  >創建細分組</button>
               </div>
-              <div class="col-6 mx-auto">
+              <div class="col-4">
                 <div class="input-group mb-3">
                   <input type="search" id="search_keyword" class="form-control" placeholder="輸入細分組名稱" aria-label="Group's name" aria-describedby="btn_search">
                   <div class="input-group-append">
