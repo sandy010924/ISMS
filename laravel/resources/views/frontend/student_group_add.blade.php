@@ -145,6 +145,20 @@
             </div>
           </div>
         </div>
+         <!-- alert Start-->
+         <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+          <span id="success_alert_text"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+          <span id="error_alert_text"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>     
+        <!-- alert End -->   
 <!-- Content End -->
 <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script> -->
 <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script> -->
@@ -442,13 +456,19 @@ function save(){
   $.ajax({
     type:'POST',
     url:'save',
-    dataType:'json',
+    // dataType:'json',
     data:{
       title:title,
       array_studentid:array_studentid
     },
     success:function(data){
-      console.log(data);
+      if (data = "儲存成功") {         
+          $("#success_alert_text").html("儲存成功");
+          fade($("#success_alert"));
+      } else {
+        $("#error_alert_text").html("儲存失敗");
+        fade($("#error_alert"));                 
+      }
     },
     error:function(error){
       console.log(JSON.stringify(error))

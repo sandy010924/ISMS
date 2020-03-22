@@ -35,6 +35,7 @@ class StudentGroupController extends Controller
     // 儲存 (2020/03/10)
     public function save(Request $request)
     {
+        $id_StudentGroupdetail = "";
         $title = $request->get('title');
         $array_studentid = $request->get('array_studentid');
         // return $array_studentid;
@@ -51,21 +52,21 @@ class StudentGroupController extends Controller
 
 
         if (!empty($id_StudentGroup)) {
-            
-            foreach ($array_studentid as $key => $data) {
-                $StudentGroupdetail = new StudentGroupdetail;
+            if (!empty($array_studentid)) {
+                foreach ($array_studentid as $key => $data) {
+                    $StudentGroupdetail = new StudentGroupdetail;
 
-                // 新增細分組詳細資料
-                $StudentGroupdetail->id_student     = $data['id'];           // 學生ID
-                $StudentGroupdetail->id_group       = $id_StudentGroup;      // 細分組ID
+                    // 新增細分組詳細資料
+                    $StudentGroupdetail->id_student     = $data['id'];           // 學生ID
+                    $StudentGroupdetail->id_group       = $id_StudentGroup;      // 細分組ID
 
-                $StudentGroupdetail->save();
+                    $StudentGroupdetail->save();
+                }
+                $id_StudentGroupdetail = $StudentGroupdetail->id;
             }
-            
-            $id_StudentGroupdetail = $StudentGroupdetail->id;
         }
 
-        if (!empty($id_StudentGroupdetail)) {
+        if (!empty($id_StudentGroupdetail) || !empty($id_StudentGroup)) {
             return '儲存成功';
         } else {
             return '更新失敗';
@@ -76,7 +77,7 @@ class StudentGroupController extends Controller
     public function update(Request $request)
     {
         $id_StudentGroupdetail = "";
-        
+        $id_StudentGroup = "";
         $id = $request->get('id');
         $name_group = $request->get('name_group');
         $array_studentid = $request->get('array_upate_studentid');
@@ -84,12 +85,10 @@ class StudentGroupController extends Controller
 
 
         if (!empty($id)) {
-               
-            // 更新資料 -> 學員資料
-            StudentGroup::where('id', $id)
-                ->update(['name' => $name_group]);
+            $id_StudentGroup = StudentGroup::where('id', $id)
+                                ->update(['name' => $name_group]);
 
-            if(!empty($array_studentid)) {
+            if (!empty($array_studentid)) {
                 foreach ($array_studentid as $key => $data) {
                     $StudentGroupdetail = new StudentGroupdetail;
     
@@ -103,11 +102,11 @@ class StudentGroupController extends Controller
             }
         }
 
-        // if (!empty($id_StudentGroupdetail)) {
-        //     return '儲存成功';
-        // } else {
-        //     return '更新失敗';
-        // }
+        if (!empty($id_StudentGroupdetail) || !empty($id_StudentGroup)) {
+            return '儲存成功';
+        } else {
+            return '更新失敗';
+        }
     }
 
     // 複製 (2020/03/20)

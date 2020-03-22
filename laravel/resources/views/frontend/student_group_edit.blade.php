@@ -118,6 +118,20 @@
             </div>
           </div>
         </div>
+         <!-- alert Start-->
+         <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+          <span id="success_alert_text"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+          <span id="error_alert_text"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>     
+        <!-- alert End -->  
 <!-- Content End -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -394,8 +408,8 @@ function show(data){
       }    
     });
   }
-
-  $.each(array_old_studentid, function(index,val) {
+  if (array_old_studentid.length != 1) {
+    $.each(array_old_studentid, function(index,val) {
       id_student = val['id_student'];
       data +=
           '<tr>' +
@@ -405,8 +419,9 @@ function show(data){
           '<td>' + val['datasource'] + '</td>' +
           '<td>' + val['created_at'] + '</td>' +
           '</tr>'
-  });     
-  $('#data_student').html(data); 
+    });     
+    $('#data_student').html(data); 
+  }
 }
 
 // 儲存資料 Rocky(2020/03/19)
@@ -416,14 +431,20 @@ function update(){
   $.ajax({
     type:'POST',
     url:'update',
-    dataType:'json',
+    // dataType:'json',
     data:{
       id:id,
       name_group:name_group,
       array_upate_studentid:array_upate_studentid
     },
     success:function(data){
-      console.log(data);
+      if (data = "儲存成功") {         
+          $("#success_alert_text").html("儲存成功");
+          fade($("#success_alert"));
+      } else {
+        $("#error_alert_text").html("儲存失敗");
+        fade($("#error_alert"));                 
+      }
     },
     error:function(error){
       console.log(JSON.stringify(error))
