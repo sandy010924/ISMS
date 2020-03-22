@@ -107,7 +107,7 @@ class CourseFormController extends Controller
                     $registration->id_events         = $events_group->id;             // 場次ID
                     $registration->registration_join = $join;                         // 我想參加課程
                     $registration->id_group          = $data_group;                     // 群組ID
-                    $registration->pay_date          = '';                            // 付款日期
+                    $registration->pay_date          = null;                            // 付款日期
                     $registration->pay_memo          = '';                            // 付款備註
                     $registration->person            = '';                            // 服務人員
                     $registration->type_invoice      = $type_invoice;                 // 統一發票

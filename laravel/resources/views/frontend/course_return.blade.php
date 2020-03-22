@@ -40,7 +40,7 @@
         <div class="col-2 text-right">
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_form">新增資料</button>
           <!-- 新增資料 modal -->
-          {{-- <div class="modal fade" id="new_form" tabindex="-1" role="dialog" aria-labelledby="new_formLabel" aria-hidden="true">
+          <div class="modal fade" id="new_form" tabindex="-1" role="dialog" aria-labelledby="new_formLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -50,75 +50,147 @@
                   </button>
                 </div>
                 <div class="modal-body text-left">
-                  <form action="{{ url('course_check_insert') }}" name="insert" method="POST" >
+                  <form action="{{ url('course_return_insert_data') }}" name="insert" method="POST" >
                     @csrf
                       <input type="hidden" name="form_event_id" id="form_event_id" value="{{ $course->id }}">
-                      <div class="form-group required">
-                        <label for="new_name" class="col-form-label">姓名</label>
-                        <input type="text" class="form-control" name="new_name" id="new_name" required>
+                      <div class="form-group">
+                        <label class="col-form-label" for="idate">報名日期</label>
+                        <input type="text" id="idate" name="idate" class="form-control" value="" disabled readonly>
                       </div>
                       <div class="form-group required">
-                        <label for="new_phone" class="col-form-label">聯絡電話</label>
-                        <input type="text" class="form-control" name="new_phone" id="new_phone" required>
-                        <label class="text-secondary"><small>聯繫方式</small></label>
-                      </div>
-                      <div class="form-group required">
-                        <label for="new_email">電子郵件</label>
-                        <input type="text" class="form-control" name="new_email" id="new_email">
-                        <label class="text-secondary"><small>example@example.com</small></label>
+                        <label for="iname" class="col-form-label">姓名</label>
+                        <input type="text" class="form-control" name="iname" id="iname" required>
                       </div>
                       <div class="form-group">
-                        <label for="new_address" class="col-form-label">居住區域</label>
-                        <select class="custom-select form-control" name="new_address" id="new_address">
-                          <option selected disabled>請選擇居住區域</option>
-                          <option>宜蘭</option>
-                          <option>基隆</option>
-                          <option>台北</option>
-                          <option>新北</option>
-                          <option>桃園</option>
-                          <option>新竹</option>
-                          <option>苗栗</option>
-                          <option>台中</option>
-                          <option>彰化</option>
-                          <option>南投</option>
-                          <option>雲林</option>
-                          <option>嘉義</option>
-                          <option>台南</option>
-                          <option>高雄</option>
-                          <option>屏東</option>
-                          <option>台東</option>
-                          <option>花蓮</option>
-                        </select>
-                      </div>
-                      <div class="form-group required">
-                        <label for="new_profession">目前職業</label>
-                        <input type="text" class="form-control" name="new_profession" id="new_profession">
-                        <label class="text-secondary"><small>目前的工作職稱</small></label>
-                      </div>
-                      <div class="form-group">
-                        <label for="new_paymodel" class="col-form-label">付款方式</label>
-                        <div class="custom-control custom-radio">
-                          <input type="radio" class="custom-control-input" id="new_paymodel1" name="new_paymodel" value="刷卡">
-                          <label class="custom-control-label" for="new_paymodel1">刷卡</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input type="radio" class="custom-control-input" id="new_paymodel2" name="new_paymodel" value="匯款">
-                          <label class="custom-control-label" for="new_paymodel2">匯款</label>
+                        <label for="isex" class="col-form-label">性別</label>
+                        <div class="d-block my-2">
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="isex1" name="isex" class="custom-control-input" value="男" checked>
+                            <label class="custom-control-label" for="isex1">男</label>
+                          </div>
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="isex2" name="isex" class="custom-control-input" value="女">
+                            <label class="custom-control-label" for="isex2">女</label>
+                          </div>
                         </div>
                       </div>
-                      <div class="form-group">
-                        <label for="new_account" class="col-form-label">帳號/卡號後五碼</label>
-                        <input type="text" class="form-control" name="new_account" id="new_account">
+                      <div class="form-group required">
+                        <label for="iid" class="col-form-label">身分證字號</label>
+                        <input type="number" class="form-control" name="iid" id="iid" required>
                       </div>
+                      <div class="form-group required">
+                        <label for="iphone" class="col-form-label">聯絡電話</label>
+                        <input type="text" class="form-control" name="iphone" id="iphone" required>
+                      </div>
+                      <div class="form-group required">
+                        <label for="iemail" class="col-form-label">電子郵件</label>
+                        <input type="text" class="form-control" name="iemail" id="iemail">
+                      </div>
+                      <div class="form-group required">
+                        <label for="ibirthday" class="col-form-label">出生日期</label>
+                        <input type="date" class="form-control" name="ibirthday" id="ibirthday" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="icompany" class="col-form-label">公司名稱</label>
+                        <input type="text" class="form-control" name="icompany" id="icompany">
+                      </div>
+                      <div class="form-group">
+                        <label for="iprofession" class="col-form-label">職業</label>
+                        <input type="text" class="form-control" name="iprofession" id="iprofession">
+                      </div>
+                      <div class="form-group required">
+                        <label for="iaddress" class="col-form-label">聯絡地址</label>
+                        <input type="text" class="form-control" name="iaddress" id="iaddress">
+                      </div>
+                      <div class="form-group required">
+                        <label for="ijoin" class="col-form-label">我想參加課程</label>
+                        <div class="d-block my-2">
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="ijoin1" name="ijoin" class="custom-control-input" value="0" checked>
+                            <label class="custom-control-label" for="ijoin1">現場最優惠價格</label>
+                          </div>
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="ijoin2" name="ijoin" class="custom-control-input" value="1">
+                            <label class="custom-control-label" for="ijoin2">五日內優惠價格</label>
+                          </div>
+                        </div>
+                      </div>
+                      @foreach( $events as $key => $data )
+                        <div class="form-group">
+                          <label class="col-form-label" for="ievent">{{ $data['course_name'] }} 的場次</label>
+                          @foreach( $data['events'] as $data_events )
+                            <div class="d-block my-2">
+                              <div class="custom-control custom-radio my-3">
+                                <input type="radio" id="{{ $data_events['id_group'] }}" value="{{ $data_events['id_group'] }}" name="ievent" class="custom-control-input ievent">
+                                <label class="custom-control-label" for="{{ $data_events['id_group'] }}">{{ $data_events['events'] }}</label>
+                              </div>
+                            </div>
+                          @endforeach
+                        </div>
+                      @endforeach
+                      <div class="form-group">
+                        <label for="ipay_model" class="col-form-label">付款方式</label>
+                        <div class="d-block my-2">
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="ipay_model1" name="ipay_model" class="custom-control-input" value="0" checked>
+                            <label class="custom-control-label" for="ipay_model1">現金</label>
+                          </div>
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="ipay_model2" name="ipay_model" class="custom-control-input" value="1">
+                            <label class="custom-control-label" for="ipay_model2">匯款</label>
+                          </div>
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="ipay_model3" name="ipay_model" class="custom-control-input" value="2">
+                            <label class="custom-control-label" for="ipay_model3">刷卡：輕鬆付</label>
+                          </div>
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="ipay_model4" name="ipay_model" class="custom-control-input" value="3">
+                            <label class="custom-control-label" for="ipay_model4">刷卡：一次付</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label for="icash" class="col-form-label">付款金額</label>
+                        <input type="number" class="form-control" name="icash" id="icash" required>
+                      </div>
+                      <div class="form-group required">
+                        <label for="inumber" class="col-form-label">匯款帳號/卡號後五碼 </label>
+                        <input type="number" class="form-control" name="inumber" id="inumber" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="iinvoice" class="col-form-label">統一發票</label>
+                        <div class="d-block my-2">
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="iinvoice1" name="iinvoice" class="custom-control-input" value="0" checked>
+                            <label class="custom-control-label" for="iinvoice1">捐贈社會福利機構（由無極限國際公司另行辦理）</label>
+                          </div>
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="iinvoice2" name="iinvoice" class="custom-control-input" value="1">
+                            <label class="custom-control-label" for="iinvoice2">二聯式</label>
+                          </div>
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="iinvoice3" name="iinvoice" class="custom-control-input" value="2">
+                            <label class="custom-control-label" for="iinvoice3">三聯式</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inum" class="col-form-label">統編</label>
+                        <input type="number" class="form-control" name="inum" id="inum">
+                      </div>
+                      <div class="form-group">
+                        <label for="icompanytitle" class="col-form-label">抬頭</label>
+                        <input type="text" class="form-control" name="icompanytitle" id="icompanytitle">
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                         <button type="submit" class="btn btn-primary">確認報名</button>
                       </div>
                   </form>
+                </div>
               </div>
             </div>
-          </div> --}}
+          </div>
         </div>
       </div>
         <div class="row">
@@ -232,9 +304,14 @@
                 <input type="number" class="form-control form-control-sm" id="amount_payable{{ $data['id'] }}" name="amount_payable" value="{{ $data['amount_payable'] }}">
               </td>
               <td class="align-middle" id="amount_paid{{ $data['id'] }}">{{ $data['amount_paid'] }}</td>
-              <td class="align-middle" id="pending{{ $data['id'] }}">{{ $data['amount_payable'] - $data['amount_paid'] }} </td>
+              <td class="align-middle" id="pending{{ $data['id'] }}">
+                @if( $data['amount_payable'] != '')
+                  {{ $data['amount_payable'] - $data['amount_paid'] }} 
+                @else
+                  0
+                @endif
+              </td>
               <td class="align-middle">
-                {{-- <input type="text" id="pay_date{{ $data['id'] }}" name="pay_date" class="form-control form-control-sm datetimepicker-input" data-toggle="datetimepicker" data-target="#pay_date{{ $data['id'] }}" value="{{ $data['pay_date'] }}"/> --}}
                 <input type="date" id="pay_date{{ $data['id'] }}" name="pay_date" class="form-control form-control-sm" value="{{ $data['pay_date'] }}"/>
               </td>
               <td class="align-middle">
@@ -355,6 +432,18 @@
 <!-- Content End -->
 <script>
   $(document).ready(function () {
+    //新增報表 - 報名日期
+    var d = new Date();
+
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+
+    var output = d.getFullYear() + '-' +
+        (month < 10 ? '0' : '') + month + '-' +
+        (day < 10 ? '0' : '') + day;
+
+    $("#idate").val(output);
+
     //日期&時間選擇器 Sandy (2020/02/27)
     // var iconlist = {  time: 'fas fa-clock',
     //                   date: 'fas fa-calendar',
@@ -684,7 +773,7 @@
 
     $.ajax({
         type:'POST',
-        url:'course_return_insert',
+        url:'course_return_insert_payment',
         data:{
           id_registration: id_registration,
           pay_model : pay_model,

@@ -9,6 +9,7 @@ use App\Model\EventsCourse;
 use App\Uer;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
+use App\Model\Register;
 
 class CourseListChartController extends Controller
 {
