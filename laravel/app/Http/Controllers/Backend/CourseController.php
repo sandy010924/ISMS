@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Student;
+use App\Model\Teacher;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Register;
@@ -79,7 +80,24 @@ class CourseController extends Controller
             // 前端資料
             $path = $request->file('import_flie');
             $name = $request->get('import_name');
-            $id_teacher = $request->get('import_teacher');
+
+            // $id_teacher = $request->get('import_teacher');
+            $teacher_name = $request->get('import_teacher');
+
+            $check_teacher = Teacher::where('name', $teacher_name)->first();
+
+            if( $check_teacher != '' ){
+                $id_teacher = $check_teacher->id;
+            }else{
+                $teacher = new Teacher;
+
+                $teacher->name             = $name;          // 講師名稱
+                $teacher->phone             = '';            // 講師電話
+                $teacher->save();
+                $id_teacher = $teacher->id;
+            }
+
+
 
             //如果檔案是空的 -> rturn
             if ($path == "" || $id_teacher == "" || $name == "") {

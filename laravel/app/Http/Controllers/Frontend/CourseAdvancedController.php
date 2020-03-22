@@ -9,6 +9,7 @@ use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Uer;
 use App\Model\Student;
+use App\Model\Teacher;
 
 class CourseAdvancedController extends Controller
 {
@@ -17,13 +18,13 @@ class CourseAdvancedController extends Controller
         //課程資訊
         $id = $request->get('id');
         $course = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
-                        ->join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('events_course.*', 'course.id as id_course', 'course.name as course', 'users.name as teacher')
+                        ->join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                        ->select('events_course.*', 'course.id as id_course', 'course.name as course', 'teacher.name as teacher')
                         ->Where('events_course.id', $id)
                         ->first();
                         
-        $next_course = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('course.id as id_course', 'course.name as course', 'users.name as teacher')
+        $next_course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                        ->select('course.id as id_course', 'course.name as course', 'teacher.name as teacher')
                         ->Where('course.id_type', $course->id_course)
                         ->first();
                         

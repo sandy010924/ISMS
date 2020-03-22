@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
-use App\Uer;
+// use App\Uer;
+use App\Model\Teacher;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Student;
@@ -28,8 +29,8 @@ class CourseListRefundController extends Controller
         
         //課程資訊
         $id = $request->get('id');
-        $course = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('course.*', 'users.name as teacher')
+        $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                        ->select('course.*', 'teacher.name as teacher')
                         ->Where('course.id', $id)
                         ->first();
         

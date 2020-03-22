@@ -30,12 +30,19 @@
                     </div>
                     <div class="form-group required">
                       <label for="import_teacher" class="col-form-label">講師</label>
-                      <select class="custom-select" name="import_teacher" id="import_teacher" required>
+                      {{-- <select class="custom-select" name="import_teacher" id="import_teacher" required>
                         <option selected disabled value="">選擇講師</option>
                         @foreach($teachers as $teacher)
                           <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                         @endforeach
-                      </select>
+                      </select> --}}
+                      <input type="search" list="teacher" id="import_teacher" name="import_teacher" class="form-control" required />
+                      <datalist class="w-100" id="teacher">
+                        @foreach($teachers as $teacher)
+                          {{-- <option value="{{ $teacher->id }}">{{ $teacher->name }}</option> --}}
+                          <option value="{{ $teacher->name }}"></option>
+                        @endforeach
+                      </datalist>
                     </div>
                     <div class="form-group required">
                       <label for="import_flie" class="col-form-label">上傳檔案</label>

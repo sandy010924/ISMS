@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\Student;
-// use App\Model\Teacher;
+use App\Model\Teacher;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\EventsCourse;
-use App\User;
+// use App\User;
 use App\Model\Register;
 
 class CourseListController extends Controller
@@ -21,14 +21,13 @@ class CourseListController extends Controller
         $course = array();
         $teachers = array();
 
-        $course_table = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                         ->select('course.id as id_course', 'course.name as course', 'course.type as type', 'users.id as id_teacher', 'users.name as teacher')
+        $course_table = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                         ->select('course.id as id_course', 'course.name as course', 'course.type as type', 'teacher.id as id_teacher', 'teacher.name as teacher')
                          ->orderBy('id_teacher', 'desc')
                          ->distinct()
                          ->get();
 
-        $teachers = User::Where('role', 'teacher')   
-                        ->get();
+        $teachers = Teacher::all();
 
                                        
         foreach ($course_table as $key => $data) {

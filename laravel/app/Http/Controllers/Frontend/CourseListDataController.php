@@ -10,6 +10,7 @@ use App\Uer;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Register;
+use App\Model\Teacher;
 
 class CourseListDataController extends Controller
 {
@@ -25,8 +26,8 @@ class CourseListDataController extends Controller
 
          //課程資訊
         $id = $request->get('id');
-        $course = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('course.*', 'users.name as teacher')
+        $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                        ->select('course.*', 'teacher.name as teacher')
                         ->Where('course.id', $id)
                         ->first();
                          
