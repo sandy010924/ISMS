@@ -21,6 +21,8 @@ class CourseListRefundController extends Controller
         $course = array();
         $events = array();
         $refund = array();
+        $start = date('Y-m-d');
+        $end = date('Y-m-d');
         
         //課程資訊
         $id = $request->get('id');
@@ -164,28 +166,31 @@ class CourseListRefundController extends Controller
 
             }
 
-            $start = '';
-            $end = '';
 
             //開始時間
-            $start = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
-                            ->select('registration.created_at as date', 
-                                    'refund.id as id')
+            $start_array = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
+                            // ->select('registration.created_at as date', 
+                            //         'refund.id as id')
+                            ->select('registration.created_at as date')
+                            ->where('registration.id_course',$id)
                             ->orderBy('date','asc')
-                            ->get('date')
-                            ->unique('id');
+                            ->first();
 
             //結束時間
-            $end = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
-                            ->select('registration.created_at as date', 
-                                    'refund.id as id')
+            $end_array = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
+                            ->select('registration.created_at as date')
+                            ->where('registration.id_course',$id)
                             ->orderBy('date','desc')
-                            ->get('date')
-                            ->unique('id');
+                            ->first();
+                            // ->get('date')
+                            // ->unique('id');
+
+            if( !empty($start_array) && !empty($end_array) ){
+                $start = date('Y-m-d', strtotime($start_array->date));
+                $end = date('Y-m-d', strtotime($end_array->date));
+            }
         }
-
-
-
+        
         return view('frontend.course_list_refund', compact('course', 'events', 'refund', 'start', 'end'));    
     }
 
