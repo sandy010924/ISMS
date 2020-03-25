@@ -76,7 +76,7 @@
                       </div>
                       <div class="form-group required">
                         <label for="iid" class="col-form-label">身分證字號</label>
-                        <input type="number" class="form-control" name="iid" id="iid" required>
+                        <input type="text" class="form-control" name="iid" id="iid" required>
                       </div>
                       <div class="form-group required">
                         <label for="iphone" class="col-form-label">聯絡電話</label>

@@ -16,6 +16,7 @@ class CourseListEditController extends Controller
     {
         //所有課程
         $course_all = Course::select('name', 'id')
+                        ->where('type', '<>', 1)
                         ->get();
 
          //課程資訊
