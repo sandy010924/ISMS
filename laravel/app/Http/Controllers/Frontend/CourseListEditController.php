@@ -14,10 +14,9 @@ class CourseListEditController extends Controller
     //view
     public function show(Request $request)
     {
-        //所有課程
-        $course_all = Course::select('name', 'id')
-                        ->where('type', '<>', 1)
-                        ->get();
+        // //所有課程
+        // $course_all = Course::select('name', 'id')
+        //                 ->get();
 
          //課程資訊
         $id = $request->get('id');
@@ -25,6 +24,19 @@ class CourseListEditController extends Controller
                         ->select('course.*', 'teacher.name as teacher')
                         ->Where('course.id', $id)
                         ->first();
+
+        //所有對應上階課程
+        $course_all = array();
+        
+        if( $course->type == 2 ){
+            $course_all = Course::select('name', 'id')
+                        ->where('type', 1)
+                        ->get();
+        }elseif (  $course->type == 3 ) {
+            $course_all = Course::select('name', 'id')
+                        ->where('type', 2)
+                        ->get();
+        }
                          
         //場次資訊
         $events_all = EventsCourse::Where('id_course', $id)

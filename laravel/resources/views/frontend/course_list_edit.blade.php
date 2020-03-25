@@ -26,18 +26,20 @@
           </div>
         </div>
         <div class="col align-middle align-self-end">
-          @if( $course->id_type != "") 
+          @if( $course->id_type != "" && ( $course->type == 2 || $course->type == 3 ) ) 
           <a role="button" href="{{ route('course_form',['source_course'=>$course->id_type, 'source_events'=>0]) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
               預覽報名表
             </a>
           @endif
-          <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#newform">    
-            @if( $course->id_type == "")
+          @if( $course->id_type == "" && ( $course->type == 2 || $course->type == 3 ) )
+            <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#newform">    
               新增報名表
-            @else
+            </button>
+          @elseif( $course->id_type != "" && ( $course->type == 2 || $course->type == 3 ) )
+            <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#newform">    
               修改報名表
-            @endif
-          </button>
+            </button>
+          @endif
           <div class="modal fade" id="newform" tabindex="-1" role="dialog" aria-labelledby="newformLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -46,7 +48,7 @@
                   <input type="hidden" id="course_id" name="course_id" value="{{ $course->id }}">
                   <div class="modal-header">
                     <h5 class="modal-title">
-                      @if( $course->id_type == "")
+                      @if( $course->id_type == "" )
                         新增報名表
                       @else
                         修改報名表
