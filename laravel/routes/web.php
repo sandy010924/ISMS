@@ -281,7 +281,7 @@ Route::get('error_authority', function () {
     /*** [學員管理] 細分組編輯 ***/
     // Route::get('student_group_edit/{id}', 'Frontend\StudentGroupController@testshow')->name('student_group_edit');
     /*** 顯示資料 ***/
-    Route::get('student_group_edit', 'Frontend\StudentGroupController@testshow')->name('student_group_edit');
+    Route::get('student_group_edit', 'Frontend\StudentGroupController@showeditdata')->name('student_group_edit');
 
     // Route::get('student_group_edit', function () {
     //     return view('frontend.student_group_edit');

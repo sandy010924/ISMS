@@ -407,7 +407,7 @@ function search(){
       value:value
     },
     success:function(data){
-      console.log(data)
+      // console.log(data)
       show(data);
     },
     error:function(error){
@@ -431,7 +431,6 @@ function show(data){
       }    
     });
   }
-
   $.each(array_studentid, function(index,val) {
       id_student = val['id_student'];
       data +=
@@ -440,7 +439,7 @@ function show(data){
           '<td>' + val['phone'] + '</td>' +
           '<td>' + val['email'] + '</td>' +
           '<td>' + val['datasource'] + '</td>' +
-          '<td>' + val['created_at'] + '</td>' +
+          '<td>' + val['submissiondate'] + '</td>' +
           '</tr>'
   });     
   $('#data_student').html(data);
@@ -451,7 +450,7 @@ function show(data){
 }
 
 // 儲存資料 Rocky(2020/03/19)
-function save(){
+function save(){  
   var title = $('#group_title').val()
   $.ajax({
     type:'POST',
@@ -462,9 +461,10 @@ function save(){
       array_studentid:array_studentid
     },
     success:function(data){
-      if (data = "儲存成功") {         
-          $("#success_alert_text").html("儲存成功");
-          fade($("#success_alert"));
+      if (data = "儲存成功") {       
+        $('#save_newgroup').modal('hide');  
+        $("#success_alert_text").html("儲存成功");
+        fade($("#success_alert"));
       } else {
         $("#error_alert_text").html("儲存失敗");
         fade($("#error_alert"));                 

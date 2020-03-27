@@ -410,15 +410,16 @@ function show(data){
   }
   if (array_old_studentid.length != 1) {
     $.each(array_old_studentid, function(index,val) {
-      id_student = val['id_student'];
-      data +=
+      if (val['name'] != null) {
+        data +=
           '<tr>' +
           '<td>' + val['name'] + '</td>' + 
           '<td>' + val['phone'] + '</td>' +
           '<td>' + val['email'] + '</td>' +
           '<td>' + val['datasource'] + '</td>' +
-          '<td>' + val['created_at'] + '</td>' +
+          '<td>' + val['submissiondate'] + '</td>' +
           '</tr>'
+      }      
     });     
     $('#data_student').html(data); 
   }
