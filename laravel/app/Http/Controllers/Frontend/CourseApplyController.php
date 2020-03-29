@@ -29,34 +29,34 @@ class CourseApplyController extends Controller
 
 
         //未過場次 狀態預設改為已報名
-        if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d"))){
-            if($course->type == 1){
-                SalesRegistration::Where('id_events', $id)
-                                ->where(function($q) { 
-                                    $q->orWhere('id_status', 3)
-                                    ->orWhere('id_status', 4);
-                                })
-                                ->update(['id_status' => 1]);
-            }elseif($course->type == 2 || $course->type == 3){
-                Register::Where('id_events', $id)
-                        ->where(function($q) { 
-                            $q->orWhere('id_status', 3)
-                            ->orWhere('id_status', 4);
-                        })
-                        ->update(['id_status' => 1]);
-            }
-        }else{
-            //已過場次 狀態預設已報到改為未到
-            if($course->type == 1){
-                SalesRegistration::Where('id_events', $id)
-                                ->Where('id_status', 1)
-                                ->update(['id_status' => 3]);
-            }elseif($course->type == 2 || $course->type == 3){
-                Register::Where('id_events', $id)
-                        ->Where('id_status', 1)
-                        ->update(['id_status' => 3]);
-            }
-        }
+        // if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d"))){
+        //     if($course->type == 1){
+        //         SalesRegistration::Where('id_events', $id)
+        //                         ->where(function($q) { 
+        //                             $q->orWhere('id_status', 3)
+        //                             ->orWhere('id_status', 4);
+        //                         })
+        //                         ->update(['id_status' => 1]);
+        //     }elseif($course->type == 2 || $course->type == 3){
+        //         Register::Where('id_events', $id)
+        //                 ->where(function($q) { 
+        //                     $q->orWhere('id_status', 3)
+        //                     ->orWhere('id_status', 4);
+        //                 })
+        //                 ->update(['id_status' => 1]);
+        //     }
+        // }else{
+        //     //已過場次 狀態預設已報到改為未到
+        //     if($course->type == 1){
+        //         SalesRegistration::Where('id_events', $id)
+        //                         ->Where('id_status', 1)
+        //                         ->update(['id_status' => 3]);
+        //     }elseif($course->type == 2 || $course->type == 3){
+        //         Register::Where('id_events', $id)
+        //                 ->Where('id_status', 1)
+        //                 ->update(['id_status' => 3]);
+        //     }
+        // }
         
         //判斷是銷講or正課
         // $type = "";
@@ -68,8 +68,8 @@ class CourseApplyController extends Controller
                 //未過場次 狀態預設改為已報名
                 SalesRegistration::Where('id_events', $id)
                                 ->where(function($q) { 
-                                    $q->orWhere('id_status', 3)
-                                    ->orWhere('id_status', 4);
+                                    $q->orWhere('id_status', 3);
+                                    // ->orWhere('id_status', 4);
                                 })
                                 ->update(['id_status' => 1]);
             }else{
@@ -106,8 +106,8 @@ class CourseApplyController extends Controller
                 //未過場次 狀態預設改為已報名
                 Register::Where('id_events', $id)
                         ->where(function($q) { 
-                            $q->orWhere('id_status', 3)
-                            ->orWhere('id_status', 4);
+                            $q->orWhere('id_status', 3);
+                            // ->orWhere('id_status', 4);
                         })
                         ->update(['id_status' => 1]);
             }else{

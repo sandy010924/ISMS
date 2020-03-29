@@ -24,7 +24,7 @@
                   <th>日期</th>
                   <th>課程名稱</th>
                   <th>場次</th>
-                  <th>報名筆數</th>
+                  <th>報名/取消筆數</th>
                   <th>實到人數</th>
                   <th></th>
                 </tr>
@@ -38,7 +38,7 @@
                     <td>{{ $count_apply[$key] }} / <span style="color:red">{{ $count_cancel[$key] }}</span></td>
                     <td>{{ $count_check[$key] }}</td>
                     <td>
-                      <a href="{{ route('course_check', ['id'=>$course->id]) }}"><button type="button" class="btn btn-success btn-sm">開始報到</button></a>
+                      <a href="{{ route('course_check', ['id'=>$course->id]) }}"><button type="button" class="btn btn-success btn-sm">簽到表</button></a>
                     </td>
                   </tr>
                 @endforeach

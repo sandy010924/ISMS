@@ -100,21 +100,22 @@
                 <td>{{ $event['count_apply'] }} / <span style="color:red">{{ $event['count_cancel'] }}</span></td>
                 <td>{{ $event['count_check'] }}</span></td>
                 <td>
+                  <a href="{{ $event['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">簽到表</button></a>
                   @if( strtotime($event['date']) == strtotime(date("Y-m-d")) )
                     <!-- 今日場次 -->
-                    <a href="{{ $event['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">開始報到</button></a>
+                    {{-- <a href="{{ $event['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">簽到表</button></a> --}}
                     <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                     <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                     <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
                   @elseif( strtotime($event['date']) > strtotime(date("Y-m-d")) )
                     <!-- 未過場次 -->
-                    <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
+                    {{-- <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">簽到表</button></a> --}}
                     <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                     <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                     <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
                     @elseif( strtotime($event['date']) < strtotime(date("Y-m-d")) )
                     <!-- 已過場次 -->
-                    <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">開始報到</button></a>
+                    {{-- <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">簽到表</button></a> --}}
                     <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                     @if( $event['nextLevel'] > 0 )
                       <a href="{{ $event['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>

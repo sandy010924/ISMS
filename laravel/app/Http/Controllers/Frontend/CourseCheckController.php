@@ -51,12 +51,20 @@ class CourseCheckController extends Controller
         if( $course->type == 1 ){
             //銷講
             
-            //已過場次 狀態預設改為未到
-            // if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d"))){
+            //已過或當天場次 狀態預設改為未到
+            if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d"))){
                 SalesRegistration::Where('id_events', $id)
                                 ->Where('id_status', 1)
                                 ->update(['id_status' => 3]);
-            // }
+            }else{
+                //未過
+                SalesRegistration::Where('id_events', $id)
+                                ->where(function($q) { 
+                                    $q->orWhere('id_status', 3);
+                                    // ->orWhere('id_status', 4);
+                                })
+                                ->update(['id_status' => 1]);
+            }
 
             // DB::statement(DB::raw('set @row:=0'));
 
@@ -105,12 +113,21 @@ class CourseCheckController extends Controller
                 ->get());
         }elseif( $course->type == 2 || $course->type == 3){
             //正課
-            //已過場次 狀態預設改為未到
-            // if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d"))){
+            
+            //已過或當天場次 狀態預設改為未到
+            if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d"))){
                 Register::Where('id_events', $id)
                         ->Where('id_status', 1)
                         ->update(['id_status' => 3]);
-            // }
+            }else{
+                //未過
+                Register::Where('id_events', $id)
+                                ->where(function($q) { 
+                                    $q->orWhere('id_status', 3);
+                                    // ->orWhere('id_status', 4);
+                                })
+                                ->update(['id_status' => 1]);
+            }
 
             // DB::statement(DB::raw('set @row:=0'));
 

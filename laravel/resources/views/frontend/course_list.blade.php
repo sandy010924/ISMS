@@ -72,7 +72,7 @@
                         </div>
                         <div class="form-group required">
                           <label for="new_date" class="col-form-label">課程日期</label>
-                          <label class="text-secondary px-2 py-1"><small>(可多選)</small></label>
+                          <label class="text-secondary px-2 py-1"><small>(可選擇多天，一次選擇一組場次)</small></label>
                           <br/>
                           <div class="input-group date" id="new_date" data-target-input="nearest">
                               <input type="text" name="new_date" class="form-control datetimepicker-input" data-target="#new_date" required/>

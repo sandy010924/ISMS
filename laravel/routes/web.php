@@ -191,6 +191,8 @@ Route::get('error_authority', function () {
     Route::post('course_return_delete', 'Backend\CourseReturnController@delete');
     /*** 新增報表資料 Sandy(2020/03/16) ***/
     Route::post('course_return_insert_data', 'Backend\CourseReturnController@insert_data');
+    /*** 新增填入既有學員資料 Sandy(2020/03/29) ***/
+    Route::get('course_return_fill', 'Frontend\CourseReturnController@fill');
 
 
 

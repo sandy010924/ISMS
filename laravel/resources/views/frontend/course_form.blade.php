@@ -348,7 +348,15 @@
         // console.log(data);  
 
         if( data == "nodata" ){          
+          $("#iname").val('');
+          $("#isex1").click();
+          $("#iid").val('');
           $("#iphone").val($('#iphone_verify').val());
+          $("#iemail").val('');
+          $("#ibirthday").val('');
+          $("#icompany").val('');
+          $("#iprofession").val('');
+          $("#iaddress").val('');
         }else{
           $("#iname").val(data[0].name);
           if( data[0].sex == '男'){

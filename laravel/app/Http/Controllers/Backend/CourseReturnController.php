@@ -43,17 +43,37 @@ class CourseReturnController extends Controller
         
         $source_events =  $request->get('form_event_id');
         
+        /* 防錯 */
+        if($cash == ""){
+            $cash = 0; 
+        }
+        if($address == ""){
+            $address = ""; 
+        }
 
         /*學員報名資料 - S*/
 
         //判斷系統是否已有該學員資料
         $check_student = Student::where('phone', $phone)->get();
 
-        // 檢查學生資料
+        // 檢查學員資料
         if (count($check_student) != 0) {
             foreach ($check_student as $data_student) {
                 $id_student = $data_student ->id;
             }
+            
+            //更新學員資料
+            Student::where('phone', $phone)
+                   ->update([
+                       'name' => $data_val,
+                       'sex' => $data_val,
+                       'id_identity' => $data_val,
+                       'email' => $data_val,
+                       'birthday' => $data_val,
+                       'company' => $data_val,
+                       'profession' => $profession,
+                       'address' => $address,
+                   ]);
         } else{
             // 新增學員資料
             $student = new Student;
@@ -66,9 +86,9 @@ class CourseReturnController extends Controller
             $student->birthday      = $birthday;     // 生日
             $student->company       = $company;      // 公司
             $student->profession    = $profession;   // 職業
-            if ($address != "") {
+            // if ($address != "") {
                 $student->address       = $address;  // 居住地
-            }
+            // }
             
             $student->save();
             $id_student = $student->id;
@@ -126,6 +146,15 @@ class CourseReturnController extends Controller
                 foreach ($check_registration as $data) {
                     $id_registration = $data ->id;
                 }
+
+                //更新報名資料
+                Registration::where('id_student', $id_student)
+                            ->where('id_group', $data_group)
+                            ->update([
+                                'type_invoice' => $type_invoice,
+                                'number_taxid' => $number_taxid,
+                                'companytitle' => $companytitle,
+                            ]);
             }
         
 
@@ -181,17 +210,18 @@ class CourseReturnController extends Controller
                 $payment = new Payment;
 
                 $payment->id_student     = $id_student;      // 學員ID
-                if($cash == ""){
-                    $payment->cash       = '';            // 付款金額
-                }else {
-                    $payment->cash           = $cash;            // 付款金額
-                }
+                // if($cash == ""){
+                //     $payment->cash       = 0;            // 付款金額
+                // }else {
+                //     $payment->cash           = $cash;            // 付款金額
+                // }
+                $payment->cash           = $cash;            // 付款金額
                 $payment->pay_model      = $pay_model;       // 付款方式
-                if($number == ""){
+                // if($number == ""){
+                //     $payment->number         = $number;          // 卡號後四碼
+                // }else {
                     $payment->number         = $number;          // 卡號後四碼
-                }else {
-                    $payment->number         = $number;          // 卡號後四碼
-                }
+                // }
                 $payment->id_registration     = $id_registration;      // 報名ID
                 
                 
@@ -201,6 +231,14 @@ class CourseReturnController extends Controller
                 foreach ($check_payment as $data) {
                     $id_payment = $data ->id;
                 }
+
+                //更新付款資料
+                Payment::where('id_registration', $id_registration)
+                        ->update([
+                            'cash' => $cash,
+                            'pay_model' => $pay_model,
+                            'number' => $number,
+                        ]);
             }
             
             

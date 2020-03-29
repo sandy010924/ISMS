@@ -91,7 +91,7 @@ class CourseController extends Controller
             }else{
                 $teacher = new Teacher;
 
-                $teacher->name             = $name;          // 講師名稱
+                $teacher->name             = $teacher_name;  // 講師名稱
                 $teacher->phone             = '';            // 講師電話
                 $teacher->save();
                 $id_teacher = $teacher->id;
