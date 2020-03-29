@@ -248,7 +248,7 @@ Route::get('error_authority', function () {
      Route::get('blacklist_cancel', 'Backend\BlacklistController@cancel');
      /*** 自動新增黑名單學員 Rocky(2020/02/23) ***/
      Route::post('blacklist_add', 'Backend\BlacklistController@add');
-    
+
     /*** 顯示列表資料 Rocky(2020/03/19) ***/
     Route::get('student_group', 'Frontend\StudentGroupController@showgroup')->name('student_group');
     /*** 刪除列表資料 Rocky(2020/03/19) ***/
@@ -400,3 +400,21 @@ Route::get('error_authority', function () {
     Route::post('blacklist_rule', 'Frontend\BlacklistRuleController@show');
     /*** 更新資料 Rocky(2020/03/01) ***/
     Route::post('blacklist_rule_update', 'Backend\BlacklistRuleController@update');
+
+/*
+------------
+|
+| mail server
+|
+------------
+*/
+    // Route::get('sendmail', function() {
+    //     $data = ['name' => 'Test'];
+    //     Mail::send('email.welcome', $data, function($message) {
+    //         $message->to('your@email')->subject('This is test email');
+    //     });
+    //     return 'Your email has been sent successfully!';
+    // });
+
+
+Route::get('/sendMail', 'Backend\MessageController@sendMail');

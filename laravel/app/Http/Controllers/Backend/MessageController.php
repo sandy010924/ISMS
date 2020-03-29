@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // use App\Model\Course;
+use Mail;
 
 class MessageController extends Controller
 {
@@ -52,5 +53,29 @@ class MessageController extends Controller
         curl_exec($curl);
         curl_close($curl);
         return $output;
+    }
+
+    /**
+     * Mail
+     */
+    public function sendMail(Request $request) {
+        // $name = '123';
+        // $flag = Mail::send('frontend.testMail',['name'=>$name],function($message){ $to = 'okokis101@gmail.com'; $message ->to($to)->subject('123'); });
+        // if($flag){
+        //     echo 'SS'; }
+        // else{
+        //     echo 'FF';
+        // }
+
+        // Mail::send('frontend.testMail',['name'=>$name], function ($message) {
+        //     $message->from('CT0013315@mpg668.com','IsmsTest');
+        //     $message->to('okokis101@gmail.com' );
+        //     $message->subject('Contact form submitted on domainname.com ');
+        // });
+
+        Mail::raw('測試使用 Laravel 5 的 Gmail 寄信服務', function($message)
+        {
+            $message->to('okokis101@gmail.com');
+        });
     }
 }

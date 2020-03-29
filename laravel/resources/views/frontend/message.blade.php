@@ -67,9 +67,10 @@
               </div>
 
               <div style="display:flex;" class=" mt-5">
-                <button id="sendMessageBtn"  class="btn btn-primary mr-2">立即傳送</button>
-                <input type="button" class="btn btn-primary mr-2"  value="排程設定" data-toggle="modal" data-target="#scheduleModal">
-                <input type="button" class="btn btn-primary mr-2"  value="儲存為草稿">
+                <button id="sendMessageBtn" class="btn btn-primary mr-2">立即傳送</button>
+                <button id="testMail" class="btn btn-primary mr-2">testMail</button>
+                <input type="button" class="btn btn-primary mr-2" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
+                <input type="button" class="btn btn-primary mr-2" value="儲存為草稿">
                 <span id="displaySchedule"></span>
               </div>
 
@@ -365,6 +366,22 @@ $("document").ready(function() {
         });
        }
 
+
+    });
+
+    // testMail
+    $('#testMail').on('click', function(e) {
+      e.preventDefault();
+      $.ajax({
+          type: "get",
+          url: "sendMail",
+        }).done(function(res) {
+          console.log(res);
+
+        }).fail(function(err) {
+          console.log(err);
+
+        });
 
     });
 
