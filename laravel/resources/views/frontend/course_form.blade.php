@@ -128,13 +128,19 @@
         <div id="step3" style="display:none;">
           <form id="form3">
             @csrf
+            @foreach( $course as $data)
             <div class="form-group mb-5">
                 <h5 class="font-weight-bold text-center my-3">參加課程服務</h5>
-                <textarea class="form-control border-0 bg-white" rows="8" disabled readonly>{{$course->courseservices}}</textarea>
+                <textarea class="form-control border-0 bg-white" rows="8" disabled readonly>{{$data->courseservices}}</textarea>
               <hr>
-              <h3 class="font-weight-bold text-center my-3">{{ $course->name }}</h3>
-              <h4 class="font-weight-bold text-center my-3">一般方案：{{ $course->money }}</h4> 
+              <h3 class="font-weight-bold text-center my-3">{{ $data->name }}</h3>
+              <h4 class="font-weight-bold text-center my-3">一般方案：{{ $data->money }}</h4> 
             </div>
+
+              @if( count($course) > 1)
+                <div class="d-flex" style="margin:5rem auto;"></div>
+              @endif
+            @endforeach
             <div class="form-group mb-5 required">
               <label class="col-form-label" for="ijoin">
                 <b>我想參加課程</b>
@@ -159,19 +165,21 @@
         <div id="step4" style="display:none;">
           <form id="form4">
             @csrf
-            <div class="form-group mb-5">
-              <label class="col-form-label" for="ievent">
-                <b>{{ $course->name }} 的場次</b>
-              </label>
-              <div class="d-block my-2">
-                @foreach( $events as $data )
-                  <div class="custom-control custom-radio my-3">
-                    <input type="radio" id="{{ $data['id_group'] }}" value="{{ $data['id_group'] }}" name="ievent" class="custom-control-input">
-                    <label class="custom-control-label h6" for="{{ $data['id_group'] }}">{{ $data['event'] }}</label>
+            @foreach( $events as $key => $data )
+              <div class="form-group mb-5">
+                <label class="col-form-label" for="ievent">
+                  <b>{{ $data['course_name'] }} 的場次</b>
+                </label>
+                @foreach( $data['events'] as $data_events )
+                  <div class="d-block my-2">
+                    <div class="custom-control custom-radio my-3">
+                      <input type="radio" id="{{ $data_events['id_group'] }}" value="{{ $data_events['id_group'] }}" name="ievent{{ $key+1 }}" class="custom-control-input ievent">
+                      <label class="custom-control-label h6" for="{{ $data_events['id_group'] }}">{{ $data_events['events'] }}</label>
+                    </div>
                   </div>
                 @endforeach
               </div>
-            </div>
+            @endforeach
             <div class="form-group mb-5 required">
               <label class="col-form-label" for="ipay_model">
                 <b>付款方式</b>
@@ -449,8 +457,10 @@
     var iinvoice = $('input[name="iinvoice"]:checked').val();
     var inum = $('#inum').val();
     var icompanytitle = $('#icompanytitle').val();
-    var id_group = $('input[name="ievent"]:checked').val();
-
+    var id_group = $('#form4 .ievent:radio:checked').map(function(){
+      return $(this).val();
+    }).get();
+    
     var source_events = $('#source_events').val();
 
     $.ajax({
@@ -478,7 +488,7 @@
         source_events : source_events
       },
       success:function(data){
-        // console.log(data);  
+        console.log(data);  
 
         if( data == 'success' ){
           alert('報名成功');

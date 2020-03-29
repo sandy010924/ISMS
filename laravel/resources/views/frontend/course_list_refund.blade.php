@@ -56,7 +56,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">日期區間</span>
             </div>
-            <input type="text" class="form-control px-3" name="daterange"> 
+            <input type="text" class="form-control px-3" name="daterange" id="daterange"> 
           </div>
         </div>
         <div class="col-3 text-right">
@@ -150,55 +150,35 @@
           @endforeach
         @endslot
       @endcomponent
-      {{-- <div class="table-responsive">
-        <table class="table table-striped table-sm text-center" id="table_apply">
-        <thead>
-            <tr>
-              <th>Submission Date</th>
-              <th>申請退費日期</th>
-              <th>姓名</th>
-              <th>聯絡電話</th>
-              <th>電子郵件</th>
-              <th>申請退款課程</th>
-              <th>退費原因</th>
-              <th>當時付款方式</th>
-              <th>帳號/卡號後五碼</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a href="#"><button type="button" class="btn btn-secondary btn-sm">刪除</button></a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div> --}}
     </div>
   </div>
   <!-- Content End -->
   <script>
     //DataTable
     var table;
+    var daterange = $('#daterange').val();
     
     $(document).ready(function() {
+
       //日期區間
-      $('input[name="daterange"]').daterangepicker({
-        locale: {
-          format: 'YYYY-MM-DD',
-          separator: ' 至 '
-        }
-      }, function(start, end, label) {
-        console.log(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-      });
+      if( '<?php echo $start?>'=='' && '<?php echo $end?>'=='' ){
+        $('input[name="daterange"]').daterangepicker({
+          autoUpdateInput: false,
+          locale: {
+            format: 'YYYY-MM-DD',
+            separator: ' ~ '
+          }
+        });
+      }else{
+        $('input[name="daterange"]').daterangepicker({
+          startDate: '<?php echo $start?>',
+          endDate: '<?php echo $end?>',
+          locale: {
+            format: 'YYYY-MM-DD',
+            separator: ' ~ '
+          }
+        });
+      }
 
       //日期選擇器 Sandy (2020/03/19)
       $('#form_date').datetimepicker({ 
@@ -227,6 +207,22 @@
           theme: 'bootstrap'
       });
       $.fn.select2.defaults.set( "theme", "bootstrap" );
+
+      //日期區間搜尋
+      $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+        $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+
+            var min = picker.startDate.format('YYYY-MM-DD');
+            var max = picker.endDate.format('YYYY-MM-DD');
+            
+            var startDate = data[0];
+            if (startDate <= max && startDate >= min) { return true; }
+            return false;
+        });
+
+        table.draw();
+      });
 
     });
 

@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
-use App\Uer;
+// use App\Uer;
+use App\Model\Teacher;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Student;
@@ -21,11 +22,15 @@ class CourseListRefundController extends Controller
         $course = array();
         $events = array();
         $refund = array();
+        $start = '';
+        $end = '';
+        $start_array = array();
+        $start_array = array();
         
         //課程資訊
         $id = $request->get('id');
-        $course = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('course.*', 'users.name as teacher')
+        $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                        ->select('course.*', 'teacher.name as teacher')
                         ->Where('course.id', $id)
                         ->first();
         
@@ -163,9 +168,34 @@ class CourseListRefundController extends Controller
                 );
 
             }
-        }
 
-        return view('frontend.course_list_refund', compact('course', 'events', 'refund'));    
+
+            //開始時間
+            $start_array = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
+                            // ->select('registration.created_at as date', 
+                            //         'refund.id as id')
+                            ->select('registration.created_at as date')
+                            ->where('registration.id_course',$id)
+                            ->orderBy('date','asc')
+                            ->first();
+
+            //結束時間
+            $end_array = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
+                            ->select('registration.created_at as date')
+                            ->where('registration.id_course',$id)
+                            ->orderBy('date','desc')
+                            ->first();
+                            // ->get('date')
+                            // ->unique('id');
+
+            
+            if( $start_array!="" && $end_array!="" ){
+                $start = date('Y-m-d', strtotime($start_array->date));
+                $end = date('Y-m-d', strtotime($end_array->date));
+            }
+        }
+        
+        return view('frontend.course_list_refund', compact('course', 'events', 'refund', 'start', 'end'));    
     }
 
     //新增退費form選取場次後搜尋該場次所報名之學員

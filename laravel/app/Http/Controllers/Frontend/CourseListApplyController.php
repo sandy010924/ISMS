@@ -10,6 +10,7 @@ use App\Uer;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Student;
+use App\Model\Teacher;
 
 class CourseListApplyController extends Controller
 {
@@ -18,11 +19,15 @@ class CourseListApplyController extends Controller
     {
         $course = array();
         $apply = array();
+        $start = '';
+        $end = '';
+        $start_array = array();
+        $end_array = array();
         
          //課程資訊
         $id = $request->get('id');
-        $course = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('course.*', 'users.name as teacher')
+        $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                        ->select('course.*', 'teacher.name as teacher')
                         ->Where('course.id', $id)
                         ->first();
         
@@ -52,6 +57,24 @@ class CourseListApplyController extends Controller
                     'content' => $data['course_content'],
                 );
             }
+
+            
+            //開始時間
+            $start_array = SalesRegistration::select('submissiondate as date')
+                            ->where('id_course', $id)
+                            ->orderBy('date','asc')
+                            ->first();
+                            // ->get('date')
+                            // ->unique('id');
+
+            //結束時間
+            $end_array = SalesRegistration::select('submissiondate as date')
+                            ->where('id_course',$id)
+                            ->orderBy('date','desc')
+                            ->first();
+                            // ->get('date')
+                            // ->unique('id');
+
         }elseif( $course->type == 2 || $course->type == 3) {
             //正課
             $apply_table = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
@@ -104,10 +127,29 @@ class CourseListApplyController extends Controller
 
                 // $id_group = $data['id_group']; 
                 // $id_student= $data['id_student'];     
+                
             }
+
+            //開始時間
+            $start_array = Registration::select('created_at as date')
+                            ->where('id_course', $id)
+                            ->orderBy('date','asc')
+                            ->first();
+
+            //結束時間
+            $end_array = Registration::select('created_at as date')
+                            ->where('id_course', $id)
+                            ->orderBy('date','desc')
+                            ->first();
+            
+        }
+        
+        if( $start_array!="" && $end_array!="" ){
+            $start = date('Y-m-d', strtotime($start_array->date));
+            $end = date('Y-m-d', strtotime($end_array->date));
         }
 
-        return view('frontend.course_list_apply', compact('course', 'apply'));    
+        return view('frontend.course_list_apply', compact('course', 'apply', 'start', 'end'));    
     }
 
 }

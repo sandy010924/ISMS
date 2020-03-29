@@ -8,8 +8,9 @@ use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Course;
 use App\Model\EventsCourse;
-use App\Uer;
+// use App\Uer;
 use App\Model\Register;
+use App\Model\Teacher;
 
 class CourseApplyController extends Controller
 {
@@ -18,8 +19,8 @@ class CourseApplyController extends Controller
         //課程資訊
         $id = $request->get('id');
         $course = EventsCourse::rightjoin('course', 'course.id', '=', 'events_course.id_course')
-                            ->join('users', 'users.id', '=', 'course.id_teacher')
-                            ->select('course.name as course', 'course.type as type', 'users.name as teacher', 'events_course.*')
+                            ->join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                            ->select('course.name as course', 'course.type as type', 'teacher.name as teacher', 'events_course.*')
                             ->Where('events_course.id', $id)
                             ->first();
         

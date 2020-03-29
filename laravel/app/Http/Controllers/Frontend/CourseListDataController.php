@@ -10,16 +10,24 @@ use App\Uer;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Register;
+use App\Model\Teacher;
 
 class CourseListDataController extends Controller
 {
     //view
     public function show(Request $request)
     {
+        $course = array();
+        $events = array();
+        $start = '';
+        $end = '';
+        $start_array = array();
+        $start_array = array();
+
          //課程資訊
         $id = $request->get('id');
-        $course = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('course.*', 'users.name as teacher')
+        $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                        ->select('course.*', 'teacher.name as teacher')
                         ->Where('course.id', $id)
                         ->first();
                          
@@ -133,9 +141,31 @@ class CourseListDataController extends Controller
             );
 
         }
-        
 
-        return view('frontend.course_list_data', compact('course', 'events'));    
+        $events_all = EventsCourse::Where('id_course', $id)
+                                  ->get();
+        //開始時間
+        $start_array = EventsCourse::select('course_start_at as date')
+                        ->Where('id_course', $id)
+                        ->orderBy('course_start_at','asc')
+                        ->first();
+                        // ->get('date')
+                        // ->unique('id');
+
+        //結束時間
+        $end_array = EventsCourse::select('course_end_at as date')
+                        ->Where('id_course', $id)
+                        ->orderBy('course_end_at','desc')
+                        ->first();
+                        // ->get('date')
+                        // ->unique('id');
+    
+        if( $start_array!="" && $end_array!="" ){
+            $start = date('Y-m-d', strtotime($start_array->date));
+            $end = date('Y-m-d', strtotime($end_array->date));
+        }
+
+        return view('frontend.course_list_data', compact('course', 'events', 'start', 'end'));    
     }
 
 

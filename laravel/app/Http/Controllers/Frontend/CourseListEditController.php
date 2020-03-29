@@ -7,22 +7,36 @@ use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Uer;
+use App\Model\Teacher;
 
 class CourseListEditController extends Controller
 {
     //view
     public function show(Request $request)
     {
-        //所有課程
-        $course_all = Course::select('name', 'id')
-                        ->get();
+        // //所有課程
+        // $course_all = Course::select('name', 'id')
+        //                 ->get();
 
          //課程資訊
         $id = $request->get('id');
-        $course = Course::join('users', 'users.id', '=', 'course.id_teacher')
-                        ->select('course.*', 'users.name as teacher')
+        $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+                        ->select('course.*', 'teacher.name as teacher')
                         ->Where('course.id', $id)
                         ->first();
+
+        //所有對應上階課程
+        $course_all = array();
+        
+        if( $course->type == 2 ){
+            $course_all = Course::select('name', 'id')
+                        ->where('type', 1)
+                        ->get();
+        }elseif (  $course->type == 3 ) {
+            $course_all = Course::select('name', 'id')
+                        ->where('type', 2)
+                        ->get();
+        }
                          
         //場次資訊
         $events_all = EventsCourse::Where('id_course', $id)
@@ -66,6 +80,7 @@ class CourseListEditController extends Controller
                 $i = 0;
 
                 $events_group = '';
+                $unpublish_group = array();
 
                 foreach( $course_group as $key_group => $data_group ){
                     //日期
@@ -80,6 +95,7 @@ class CourseListEditController extends Controller
                         $events_group .= $date . '（' . $week . '）' . '、';
                     }
 
+                    array_push($unpublish_group, $data_group['unpublish']); 
                 }
                 //時間
                 $time_strat = date('H:i', strtotime($data['course_start_at']));
@@ -90,12 +106,21 @@ class CourseListEditController extends Controller
 
                 // $events[$key] = $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data['Events'] . '（' . $data['location'] . '）';
 
+                //不公開
+                $unpublish = 0;
+                if( in_array(1, $unpublish_group) ){
+                    $unpublish = 1;
+                }else {
+                    $unpublish = 0;
+                }
+
                 $events[$key] = array(
                     'date' => $events_group,
                     'event' => $data['name'],
                     'time' => $time_strat . '-' . $time_end,
                     'location' => $data['location'],
                     'id_group' => $id_group,
+                    'unpublish' => $unpublish,
                 );
 
             // }
@@ -103,31 +128,4 @@ class CourseListEditController extends Controller
 
         return view('frontend.course_list_edit', compact('course', 'course_all', 'events'));    
     }
-
-    
-     // 刪除 Sandy (2020/02/25)
-    //  public function delete(Request $request)
-    //  {
-    //      $status = "";
-    //      $id_group = $request->get('id_group');
-
-    //     // 查詢是否有該筆資料
-    //     $events = EventsCourse::where('id_group', $id_group)->get();
-         
-    //     //  foreach ($id_course as $key => $data) {
-            
-    //     if(!empty($events)){
-    //         //刪除場次  
-    //         $events->delete();
-    //         //刪除報名表
-    //         //刪除追單表
-    //         EventsCourse::where('id_group', $course->id)->delete();       
-
-    //         $status = "ok";
-    //     } else {
-    //         $status = "error";
-    //     }
-    //     //  }
-    //      return json_encode(array('data' => $status));
-    //  }
 }

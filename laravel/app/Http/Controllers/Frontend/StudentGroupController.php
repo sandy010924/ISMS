@@ -83,7 +83,7 @@ class StudentGroupController extends Controller
                             $join->on("student.id", "=", "b.id_student");
                         }
                     )
-                     ->select('student.*', 'b.datasource')
+                     ->select('student.*', 'b.datasource', 'b.submissiondate')
                      ->where(function ($query2) use ($id_course) {
                          $query2->whereIn('b.id_course', $id_course);
                      })
@@ -117,7 +117,7 @@ class StudentGroupController extends Controller
                             $join->on("student.id", "=", "b.id_student");
                         }
                     )
-                    ->select('student.*', 'b.datasource')
+                    ->select('student.*', 'b.datasource', 'b.submissiondate')
                     ->where(function ($query2) use ($id_course) {
                         $query2->whereIn('b.id_course', $id_course);
                     })
@@ -145,7 +145,7 @@ class StudentGroupController extends Controller
                 } else {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
                     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
-                    ->select('student.*', 'b.datasource', 'c.name as name_events')
+                    ->select('student.*', 'b.datasource', 'b.submissiondate', 'c.name as name_events')
                     ->where(function ($query2) use ($id_course) {
                         $query2->whereIn('b.id_course', $id_course);
                     })
@@ -178,7 +178,7 @@ class StudentGroupController extends Controller
                 // 名單動作
                 if ($opt1 == "yes") {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                    ->select('student.*', 'b.datasource', 'b.id_status')
+                    ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
                     ->where(function ($query2) use ($id_course) {
                         $query2->whereIn('b.id_course', $id_course);
                     })
@@ -191,7 +191,7 @@ class StudentGroupController extends Controller
                     ->distinct()->get();
                 } else {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                    ->select('student.*', 'b.datasource', 'b.id_status')
+                    ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
                     ->where(function ($query2) use ($id_course) {
                         $query2->whereNotIn('b.id_course', $id_course);
                     })
@@ -388,5 +388,20 @@ class StudentGroupController extends Controller
         }
         
         return $datas;
+    }
+
+    /* 修改資料 */
+    // 顯示資料
+    public function showeditdata(Request $request)
+    {
+        $id = $request->get('id');
+        $datas = StudentGroup::leftjoin('student_groupdetail as b', 'student_group.id', '=', 'b.id_group')
+                    ->leftjoin('student as c', 'b.id_student', '=', 'c.id')
+                    ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
+                    ->select('c.*', 'd.datasource', 'd.submissiondate', 'student_group.name as name_group')
+                    ->where('student_group.id', $id)
+                    ->groupby('c.id')
+                    ->get();
+        return view('frontend.student_group_edit', compact('datas', 'id'));
     }
 }

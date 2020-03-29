@@ -153,8 +153,10 @@ Route::get('error_authority', function () {
 /*** [課程管理] 編輯 ***/
     /*** 顯示資料 ***/
     Route::get('course_list_edit', 'Frontend\CourseListEditController@show')->name('course_list_edit');
-    /*** 串聯資料 ***/
-    Route::post('course_list_edit_insert', 'Backend\CourseListEditController@insert')->name('course_list_edit_insert');
+    /*** 新增報名表 ***/
+    Route::post('course_list_edit_insert', 'Backend\CourseListEditController@insert');
+    /*** 更新場次 ***/
+    Route::post('course_list_edit_update', 'Backend\CourseListEditController@update');
 
 
 
@@ -183,6 +185,12 @@ Route::get('error_authority', function () {
     Route::get('course_return', 'Frontend\CourseReturnController@show')->name('course_return');
     /*** 更新資料 Sandy(2020/03/16) ***/
     Route::post('course_return_update', 'Backend\CourseReturnController@update');
+    /*** 新增付款資料 Sandy(2020/03/16) ***/
+    Route::post('course_return_insert_payment', 'Backend\CourseReturnController@insert_payment');
+    /*** 刪除資料 Sandy(2020/03/16) ***/
+    Route::post('course_return_delete', 'Backend\CourseReturnController@delete');
+    /*** 新增報表資料 Sandy(2020/03/16) ***/
+    Route::post('course_return_insert_data', 'Backend\CourseReturnController@insert_data');
 
 
 
@@ -249,6 +257,7 @@ Route::get('error_authority', function () {
      /*** 自動新增黑名單學員 Rocky(2020/02/23) ***/
      Route::post('blacklist_add', 'Backend\BlacklistController@add');
 
+/*** [學員管理] 細分組 ***/
     /*** 顯示列表資料 Rocky(2020/03/19) ***/
     Route::get('student_group', 'Frontend\StudentGroupController@showgroup')->name('student_group');
     /*** 刪除列表資料 Rocky(2020/03/19) ***/
@@ -261,7 +270,8 @@ Route::get('error_authority', function () {
     Route::post('search_students', 'Frontend\StudentGroupController@searchstudents');
     /*** 儲存學員 Rocky(2020/03/19) ***/
     Route::post('save', 'Backend\StudentGroupController@save');
-
+    /*** 更新學員 Rocky(2020/03/19) ***/
+    Route::post('update', 'Backend\StudentGroupController@update');
 
      /*** [學員管理] 細分組新增 ***/
     Route::get('student_group_add', function () {
@@ -269,9 +279,17 @@ Route::get('error_authority', function () {
     })->name('student_group_add');
 
     /*** [學員管理] 細分組編輯 ***/
-    Route::get('student_group_edit', function () {
-        return view('frontend.student_group_edit');
-    })->name('student_group_edit');
+    // Route::get('student_group_edit/{id}', 'Frontend\StudentGroupController@testshow')->name('student_group_edit');
+    /*** 顯示資料 ***/
+    Route::get('student_group_edit', 'Frontend\StudentGroupController@showeditdata')->name('student_group_edit');
+
+    // Route::get('student_group_edit', function () {
+    //     return view('frontend.student_group_edit');
+    // })->name('student_group_edit');
+
+    // Route::get('student_group_edit/{id}', function () {
+    //     return view('frontend.student_group_edit/{id}');
+    // })->name('student_group_edit');
 
 
 /*

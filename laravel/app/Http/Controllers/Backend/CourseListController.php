@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Student;
+use App\Model\Teacher;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Register;
@@ -25,8 +26,27 @@ class CourseListController extends Controller
         // try {
             // 前端資料
             $name = $request->get('new_name');
-            $id_teacher = $request->get('new_teacher');
+            // $id_teacher = $request->get('new_teacher');
             $type = $request->get('new_type');
+
+
+            $teacher_name = $request->get('new_teacher');
+
+            $check_teacher = Teacher::where('name', $teacher_name)->first();
+
+            if( $check_teacher != '' ){
+                $id_teacher = $check_teacher->id;
+            }else{
+                $teacher = new Teacher;
+
+                $teacher->name             = $name;          // 講師名稱
+                $teacher->phone             = '';            // 講師電話
+                $teacher->save();
+                $id_teacher = $teacher->id;
+            }
+
+
+
 
             if( $type == 1){
                 // /* 銷講 */
@@ -267,6 +287,7 @@ class CourseListController extends Controller
                         $events_course->course_end_at    = $time_end;            // 課程結束時間
                         $events_course->memo             = '';                   // 課程備註
                         $events_course->id_group         = strtotime($time_start) . $id_course;     // 群組ID
+                        $events_course->unpublish        = 0;                    // 不公開
                         $events_course->save();
                         $id_events = $events_course->id;
                     }
@@ -389,6 +410,7 @@ class CourseListController extends Controller
                     // $events->weather            = '';                // 天氣
                     // $events->staff              = '';                // 工作人員
                     $events->id_group           = strtotime("now");  // 群組ID
+                    $events->unpublish          = 0;                    // 不公開
 
                     // if( count($new_date) != 1 ){
                     //     $events->id_group           = strtotime("now");  // 群組ID

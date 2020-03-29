@@ -26,18 +26,20 @@
           </div>
         </div>
         <div class="col align-middle align-self-end">
-          @if( $course->id_type != "") 
+          @if( $course->id_type != "" && ( $course->type == 2 || $course->type == 3 ) ) 
           <a role="button" href="{{ route('course_form',['source_course'=>$course->id_type, 'source_events'=>0]) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
               預覽報名表
             </a>
           @endif
-          <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#newform">    
-            @if( $course->id_type == "")
+          @if( $course->id_type == "" && ( $course->type == 2 || $course->type == 3 ) )
+            <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#newform">    
               新增報名表
-            @else
+            </button>
+          @elseif( $course->id_type != "" && ( $course->type == 2 || $course->type == 3 ) )
+            <button type="button" class="btn btn-outline-secondary btn_date mr-3" data-toggle="modal" data-target="#newform">    
               修改報名表
-            @endif
-          </button>
+            </button>
+          @endif
           <div class="modal fade" id="newform" tabindex="-1" role="dialog" aria-labelledby="newformLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -46,7 +48,7 @@
                   <input type="hidden" id="course_id" name="course_id" value="{{ $course->id }}">
                   <div class="modal-header">
                     <h5 class="modal-title">
-                      @if( $course->id_type == "")
+                      @if( $course->id_type == "" )
                         新增報名表
                       @else
                         修改報名表
@@ -110,7 +112,11 @@
               <td>{{ $data['time'] }}</td>
               <td>{{ $data['location'] }}</td>
               <td>
-                <button role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete( {{ $data['id_group'] }} );">取消場次</a>
+                @if( $data['unpublish'] == 0)
+                  <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_update( {{ $data['id_group'] }}, 1 );">取消場次</a>
+                @else
+                  <a role="button" class="btn btn-success btn-sm mx-1 text-white" onclick="btn_update( {{ $data['id_group'] }}, 0 );">上架場次</a>
+                @endif
               </td>
             </tr>
           @endforeach
@@ -140,47 +146,59 @@
     $.fn.select2.defaults.set( "theme", "bootstrap" );
     // Sandy(2020/02/26) dt列表 S
 
-    // 取消場次 Sandy(2020/03/08) start
-    function btn_delete(id_group){
-      var msg = "是否取消此場次?";
+    // 取消場次 Sandy(2020/03/21) start
+    function btn_update(id_group, action){
+      var msg;
+      if(action == 0){
+        msg = "是否上架此場次?";
+      }else{
+        msg = "是否取消此場次?";
+      }
+
       if (confirm(msg)==true){
-        // $.ajax({
-        //     type : 'POST',
-        //     url:'course_list_edit_delete', 
-        //     dataType: 'json',    
-        //     data:{
-        //       id_group: id_group
-        //     },
-        //     success:function(data){
-        //       console.log(data);
-        //       if (data['data'] == "ok") {                           
-        //         alert('取消成功！！')
-        //         /** alert **/
-        //         // $("#success_alert_text").html("取消場次成功");
-        //         // fade($("#success_alert"));
+        $.ajax({
+            type : 'POST',
+            url:'course_list_edit_update', 
+            dataType: 'json',    
+            data:{
+              id_group: id_group,
+              action: action
+            },
+            success:function(data){
+              console.log(data);
+              if (data['data'] == "publish_ok") {                           
+                alert('上架場次成功！！')
+                location.reload();
+                /** alert **/
+                // $("#success_alert_text").html("取消場次成功");
+                // fade($("#success_alert"));
+              }else if (data['data'] == "unpublish_ok") {                           
+                alert('取消場次成功！！')
+                location.reload();
+                /** alert **/
+                // $("#success_alert_text").html("取消場次成功");
+                // fade($("#success_alert"));
+              }else{
+                // alert('取消失敗！！')
 
-        //         location.reload();
-        //       }　else {
-        //         // alert('取消失敗！！')
+                /** alert **/ 
+                $("#error_alert_text").html("取消場次失敗");
+                fade($("#error_alert"));       
+              }           
+            },
+            error: function(error){
+              console.log(JSON.stringify(error));   
 
-        //         /** alert **/ 
-        //         $("#error_alert_text").html("取消場次失敗");
-        //         fade($("#error_alert"));       
-        //       }           
-        //     },
-        //     error: function(error){
-        //       console.log(JSON.stringify(error));   
-
-        //       /** alert **/ 
-        //       $("#error_alert_text").html("取消場次失敗");
-        //       fade($("#error_alert"));       
-        //     }
-        // });
+              /** alert **/ 
+              $("#error_alert_text").html("取消場次失敗");
+              fade($("#error_alert"));       
+            }
+        });
       }else{
         return false;
       }    
     }
-    // 取消場次 Sandy(2020/03/08) end
+    // 取消場次 Sandy(2020/03/21) end
 
   </script>
 @endsection

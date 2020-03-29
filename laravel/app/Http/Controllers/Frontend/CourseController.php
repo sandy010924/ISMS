@@ -9,8 +9,9 @@ use App\Model\EventsCourse;
 use App\Model\Student;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
-use App\User;
+// use App\User;
 use App\Model\Register;
+use App\Model\Teacher;
 
 class CourseController extends Controller
 {
@@ -22,8 +23,7 @@ class CourseController extends Controller
                               ->orderBy('events_course.course_start_at', 'desc')
                               ->get();
                               
-        $teachers = User::Where('role', 'teacher')   
-                        ->get();
+        $teachers = Teacher::all();
 
         foreach ($events as $key => $data) {
             $type = "";
