@@ -237,7 +237,7 @@
           <div class="col">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text">現場完款</span>
+                <span class="input-group-text">現場完款金額</span>
               </div>
               <input type="number" id="money" name="money" class="form-control" aria-label="money input" aria-describedby="money input" value="{{ $course->money }}">
             </div>
@@ -245,7 +245,7 @@
           <div class="col">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text">五日內完款</span>
+                <span class="input-group-text">五日內完款金額</span>
               </div>
               <input type="number" id="money_fivedays" name="money_fivedays" class="form-control" aria-label="money_fivedays input" aria-describedby="money_fivedays input" value="{{ $course->money_fivedays }}">
             </div>
@@ -253,7 +253,7 @@
           <div class="col">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text">分期付款</span>
+                <span class="input-group-text">分期付款金額</span>
               </div>
               <input type="number" id="money_installment" name="money_installment" class="form-control" aria-label="money_installment input" aria-describedby="money_installment input" value="{{ $course->money_installment }}">
             </div>
