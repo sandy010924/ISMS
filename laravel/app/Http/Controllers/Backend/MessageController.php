@@ -59,19 +59,69 @@ class MessageController extends Controller
      * Mail
      */
     public function sendMail(Request $request) {
-        $name = '123';
-        $flag = Mail::send('frontend.testMail',['name'=>$name],function($message){ $to = 'okokis101@gmail.com'; $message ->to($to)->subject('123'); });
-        if($flag){
-            echo 'SS'; }
-        else{
-            echo 'FF';
-        }
+        //從表單取得資料
+        $from = [
+            // 'email'=>$input['email'],
+            // 'name'=>$input['name'],
+            // 'subject'=>$input['subject'],
+            'mailTitle' => $request['emailTitle'],
+            'mailAddr' => $request['emailAddr'],
+            'mailAddrLen' => $request['emailAddrLen'],
+            'mailContents' => $request['emailContent']
+        ];
 
-        Mail::send('frontend.testMail',['name'=>$name], function ($message) {
-            // $message->from('CT0013315@mpg668.com','IsmsTest');
-            $message->to('okokis101@gmail.com');
-            $message->subject('Contact form submitted on domainname.com ');
+        // TODO: 細分組那邊選擇MAIL，要把名字帶過來後端
+
+        // //填寫收信人信箱
+        // $to = ['email'=>'xxx@xxx.com',
+        // 'name'=>'xxx'];
+
+        // //信件的內容(即表單填寫的資料)
+        // $data = ['company'=>$input['company'],
+        // 'address'=>$input['address'],
+        // 'email'=>$input['email'],
+        // 'subject'=>$input['subject'],
+        // 'msg'=>$input['message']
+        // ];
+
+        // //寄出信件
+        $name = '123';
+
+        Mail::send('frontend.testMail', ['name'=>$name], function($message) use ($from) {
+            $message->subject($from['mailTitle']);
+            foreach ($from['mailAddr'] as $email) {
+                $message->to($email);
+            }
+            // $message->from($from['email'], $from['name']);
+            // $message->to($from['mailAddr'][$i]));
         });
+
+
+        // $name = '123';
+        // $mailTitle = $request['emailTitle'];
+        // $mailAddr = $request['emailAddr'];
+        // $mailAddrLen= $request['emailAddrLen'];
+        // $mailContents= $request['emailContent'];
+        // echo $mailTitle;
+        // echo $request['emailAddr'][0];
+        // echo $mailAddrLen;
+        // echo $mailContents;
+        // $a = "okokis101@gmail.com";
+
+        // for ($i=0; $i < $mailAddrLen; $i++) {
+        //     $result = Mail::send('frontend.testMail',['name'=>$name], function ($message,$a) {
+        //         echo $a;
+        //         // $message->to($a);
+        //         // $message->subject($mailTitle);
+        //     });
+        // }
+        // $result = Mail::send('frontend.testMail',['name'=>$name], function ($message) {
+        //     // $message->from('CT0013315@mpg668.com','IsmsTest');
+        //     $message->to('okokis101@gmail.com');
+        //     $message->subject('Contact form submitted on domainname.com ');
+        // });
+
+        // return $result;
 
         // Mail::raw('測試使用 Laravel 5 的 Gmail 寄信服務', function($message)
         // {

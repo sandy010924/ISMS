@@ -437,4 +437,4 @@ Route::get('error_authority', function () {
     // });
 
 
-Route::get('/sendMail', 'Backend\MessageController@sendMail');
+Route::post('/sendMail', 'Backend\MessageController@sendMail');
