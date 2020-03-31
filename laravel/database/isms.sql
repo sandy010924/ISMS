@@ -537,3 +537,14 @@ ALTER TABLE `mark` CHANGE COLUMN name_course course_id VARCHAR(50) null COMMENT 
 
 -- 增加場次資料表欄位 - 不公開(針對正課)
 ALTER TABLE `events_course` ADD COLUMN unpublish INT NULL COMMENT '不公開(0:否,1:是)';
+
+
+-- 追單資料表 - 刪掉正課報名表外部鍵連接 Rocky(2020/03/31)
+ALTER TABLE debt DROP FOREIGN KEY `debt_ibfk_3`;
+
+-- 追單資料表 - 增加場次ID Rocky(2020/03/31)
+ALTER TABLE `debt` ADD COLUMN id_events VARCHAR(150) NULL COMMENT '場次ID';
+
+-- 正課資料表 - 刪掉正課報名表外部鍵連接 Rocky(2020/03/31)
+ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_2`;
+ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_5`;
