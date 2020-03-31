@@ -24,19 +24,15 @@
             </div>
             <div class="table-responsive">
             @component('components.datatable')
-              <!-- <table class="table table-striped table-sm text-center"> -->
-                <!-- <thead> -->
-                @slot('thead')
+              @slot('thead')
                   <tr>
                     <th>細分組名稱</th>
                     <th>創建日期</th>
                     <th>名單筆數</th>
                     <th></th>
                   </tr>
-                  @endslot
-                <!-- </thead> -->
-                <!-- <tbody> -->
-                @slot('tbody')             
+              @endslot
+              @slot('tbody')             
                   @foreach($datas as $data)
                     <tr>
                       <td class="align-middle">{{ $data['name'] }}</td>
@@ -53,9 +49,8 @@
                       </td>
                     </tr>
                   @endforeach  
-                @endslot
+              @endslot
             @endcomponent
-              <!-- </table> -->
             </div>
           </div>
         </div>
@@ -96,7 +91,7 @@
   });
 
   $("document").ready(function(){
-    // Sandy (2020/02/26)
+    // Rocky (2020/03/20)
     table = $('#table_list').DataTable({
         "dom": '<l<t>p>',
         "columnDefs": [ {

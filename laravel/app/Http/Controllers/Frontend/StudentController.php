@@ -83,7 +83,7 @@ class StudentController extends Controller
         // 學員資料
 
         $datas_student = Student::leftjoin('sales_registration', 'sales_registration.id_student', '=', 'student.id')
-                                    ->select('student.*', 'sales_registration.datasource as datasource_old')
+                                    ->select('student.*', 'sales_registration.datasource as datasource_old', 'sales_registration.id as sales_registration_old')
                                     ->groupBy('student.id')
                                     ->orderBy('sales_registration.created_at', 'ASC')
                                     ->where('student.id', $id_student)
@@ -92,7 +92,7 @@ class StudentController extends Controller
         $datas = SalesRegistration::leftjoin('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                             ->leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
                             ->leftjoin('events_course', 'events_course.id', '=', 'sales_registration.id_events')
-                            ->select('sales_registration.id as sales_registration_id', 'sales_registration.*', 'isms_status.name as status_sales', 'course.name as course_sales', 'events_course.name as  course_sales_events')
+                            ->select('sales_registration.id as sales_registration_id', 'sales_registration.*', 'isms_status.name as status_sales', 'course.name as course_sales', 'events_course.name as  course_sales_events', 'events_course.course_start_at as  sales_registration_course_start_at')
                             // ->selectRaw('sales_registration.*, COUNT(sales_registration.id) as count_sales')
                             ->selectRaw('(SELECT COUNT(b.id) FROM sales_registration b where b.id_student = '.$id_student. ' ) as count_sales')
                             ->selectRaw("(SELECT SUM(CASE WHEN c.id_status = '4' and c.id_student = " .$id_student. " THEN 1 ELSE 0 END)  FROM sales_registration c) as count_sales_ok")
@@ -109,8 +109,9 @@ class StudentController extends Controller
                             ->leftjoin('isms_status', 'isms_status.id', '=', 'register.id_status')
                             ->leftjoin('course', 'course.id', '=', 'registration.id_course')
                             ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
-                            ->leftjoin('isms_status as t1', 't1.id', '=', 'registration.status_payment')
-                            ->select('registration.*', 'register.id_status', 't1.name as status_payment', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events')
+                            // ->leftjoin('isms_status as t1', 't1.id', '=', 'registration.status_payment')
+                            // ->select('registration.*', 'register.id_status', 't1.name as status_payment', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events')
+                            ->select('registration.*', 'register.id_status', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events')
                             ->where('registration.id_student', $id_student)
                             ->orderBy('registration.created_at', 'desc')
                             ->first();
@@ -194,6 +195,10 @@ class StudentController extends Controller
                                         WHEN register.id_status = 3 THEN "正課未到"
                                         WHEN register.id_status = 4 THEN "正課報到"
                                         WHEN register.id_status = 5 THEN "正課取消"
+                                        WHEN register.id_status = 6 THEN "留單"
+                                        WHEN register.id_status = 7 THEN "完款"
+                                        WHEN register.id_status = 8 THEN "付訂"
+                                        WHEN register.id_status = 9 THEN "退費"
                                     END as status_sales')
                     ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
                     ->where('registration.id_student', $id_student)
