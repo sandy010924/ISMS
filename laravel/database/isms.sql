@@ -545,6 +545,10 @@ ALTER TABLE debt DROP FOREIGN KEY `debt_ibfk_3`;
 -- 追單資料表 - 增加場次ID Rocky(2020/03/31)
 ALTER TABLE `debt` ADD COLUMN id_events VARCHAR(150) NULL COMMENT '場次ID';
 
--- 正課資料表 - 刪掉正課報名表外部鍵連接 Rocky(2020/03/31)
+-- 正課資料表 - 刪掉外部鍵連接 Rocky(2020/03/31)
 ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_2`;
 ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_5`;
+
+-- 銷講資料表 -刪掉外部鍵 Rocky(2020/03/31)
+ALTER TABLE sales_registration DROP FOREIGN KEY `sales_registration_ibfk_2`;
+ALTER TABLE sales_registration DROP FOREIGN KEY `sales_registration_ibfk_4`;
