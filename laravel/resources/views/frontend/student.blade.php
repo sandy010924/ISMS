@@ -9,6 +9,7 @@
     input:read-only {
       background-color: #e0e0e0 !important;
     }
+    .datetimepicker-input { position: relative; margin-top:50px;}
   </style>
 <!-- Content Start -->
         <!--搜尋學員頁面內容-->
@@ -148,7 +149,7 @@
                       <a class="nav-link" id="history-tab" data-toggle="tab" href="#history_data" role="tab" aria-controls="history_data" aria-selected="false" onclick="history_data();">歷史互動</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_data" role="tab" aria-controls="contact_data" aria-selected="false" onclick="contact_data();">聯絡狀況</a>
+                      <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_data" role="tab" aria-controls="contact_data" aria-selected="false" onclick="contact_data();">聯絡狀況</a>  
                     </li>
                   </ul>
                   <!-- tab - E -->
@@ -294,6 +295,10 @@
                         <table class="table table-striped table-sm text-center">
                           <thead>
                             <tr>
+                            <!-- <th class="text-nowrap">
+                            <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#save_contact">新增</button>     
+                              <i class="fa fa-plus" style="cursor:pointer;" id="save_contact" data-toggle="modal" data-target="#save_contact"></i>   
+                            </th> -->
                               <th class="text-nowrap">日期</th>
                               <th class="text-nowrap">追單課程</th>
                               <th class="text-nowrap">付款狀態/日期</th>
@@ -339,6 +344,50 @@
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                    </div>
+                    <div class="modal fade" id="save_contact" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">新增聯絡狀況</h5>
+                            <button type="button" class="close" id="132"  aria-label="Close" data-number="1">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group date" id="new_starttime2" data-target-input="nearest">  
+                              <input type="text" onblur="update_time($(this),2,0);" value="2020-03-31 23:05:03" name="new_starttime2" class="form-control datetimepicker-input " data-target="#new_starttime2" required="">  
+                              <div class="input-group-append" data-target="#new_starttime2" data-toggle="datetimepicker">  
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div> 
+                              </div> 
+                            </div>
+                            <span>輸入追單課程</span>
+                            <input type="text" onblur="status_payment($(this),2,1);" id="2_status_payment" value="" class="border-0 bg-transparent input_width">
+                            <input type="text" onblur="contact($(this),2,2);" id="2_contact" value="" class="border-0 bg-transparent input_width">
+                            <div class="form-group m-0"> 
+                              <select id="2_status" onblur="status($(this),2,3);" class="custom-select border-0 bg-transparent input_width"> 
+                                <option selected="" disabled="" value=""></option>
+                                <option value="11">完款</option>
+                                <option value="10">付訂</option>
+                                <option value="12">待追</option>
+                                <option value="13">退款中</option>
+                                <option value="14">退款完成</option>
+                                <option value="15">無意願</option>
+                                <option value="16">推薦其他講師</option>
+                              </select>
+                            </div> 
+                            <div class="input-group date" id="remind2" data-target-input="nearest">  
+                              <input type="text" onblur="remind($(this),2,4);" value="0000-00-00 00:00:00" name="remind2" class="form-control datetimepicker-input datepicker" data-target="#remind2" required="">  
+                              <div class="input-group-append" data-target="#remind2" data-toggle="datetimepicker">  
+                                <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                </div> 
+                              </div> 
+                            </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="tags_add();">儲存</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                       <!-- 聯絡狀況 -->
@@ -536,12 +585,12 @@ function course_data(id_student){
         id_student: id_student
       },
       success:function(data){
-        console.log(data)
+        // console.log(data)
         // 銷講報到率
         var sales_successful_rate ='0',course_cancel_rate = '0';
         var course_sales_status = '';
         if (data['count_sales_ok'] != 0) {
-          sales_successful_rate = (data['count_sales_ok'] / data['count_sales'] *100).toFixed(0)
+          sales_successful_rate = (data['count_sales_ok'] / (data['count_sales'] - data['count_sales_no']) *100).toFixed(0)
         }
         
         // 銷講取消率
@@ -560,17 +609,38 @@ function course_data(id_student){
         
         // 銷講      
         $('input[name="new_datasource"]').val(data['datasource']);
-        $('input[name="course_sales_events"]').val(data['course_sales'] + data['course_sales_events'] + '(' + data['sales_registration_course_start_at'] +')');
+        if(data['course_sales_events'] != null){
+          $('input[name="course_sales_events"]').val(data['course_sales'] + data['course_sales_events'] + '(' + data['sales_registration_course_start_at'] +')');
+        }
         $('input[name="course_content"]').val(data['course_content']);
         $('input[name="status_payment"]').val('');
         if (typeof(data['status_registration']) != 'undefined' ) {
           course_sales_status = data['status_registration'] +'(' + data['course_registration'] + data['course_events'] + ')' 
         }
         $('input[name="course_sales_status"]').val(course_sales_status);
-        $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['count_sales_ok']);        
-        $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
-        $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['count_sales_no']);
-        $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
+        if (data['count_sales_ok'] == null) {
+          $('h7[name="count_sales_ok"]').text('銷講報名次數 :0');        
+        } else {
+          $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['count_sales_ok']);        
+        }        
+        if (data['count_sales_ok'] == null) {  
+          $('h7[name="sales_successful_rate"]').text('銷講報到率 :0%');    
+        } else {
+          $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');      
+        }
+        if (data['count_sales_no'] == null) {
+          $('h7[name="count_sales_no"]').text('銷講取消次數 :0');
+        } else {
+          $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['count_sales_no']);
+        }
+
+        if (data['count_sales_ok'] == null) {  
+          $('h7[name="sales_cancel_rate"]').text('銷講取消率 :0%');
+        } else {
+          $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');   
+        }
+
+        
         
         // 正課
         $('input[name="course_events"]').val('');
@@ -775,7 +845,6 @@ function contact_data() {
         id_student: id_student_old
       },
       success:function(data){
-        // console.log(data)
         updatetime = '',remindtime='';
         $.each(data, function(index,val) {
           opt1 = '',opt2 = '',opt3 = '',opt4 = '',opt5 = '',opt6 = '',opt7 = '';
@@ -805,6 +874,15 @@ function contact_data() {
           }
           updatetime +="#new_starttime" + id + ','
           remindtime +="#remind" + id + ','
+          var status_payment = '',contact = '';
+          if (val['status_payment'] != 'null'){
+            status_payment = val['status_payment']          
+          }
+
+          if (val['contact'] != null){
+            contact = val['contact']
+          }
+
           data +=
                 '<tr>' +
                 '<td>' + 
@@ -816,8 +894,8 @@ function contact_data() {
                 '</div>' +
                 + '</td>' + 
                 '<td>' + val['name_course'] + '</td>' + 
-                '<td>' + '<input type="text" onblur="status_payment($(this),'+id+',1);" id="' + id +'_status_payment" value="' + val['status_payment'] +'" class="border-0 bg-transparent input_width">' + '</td>' + 
-                '<td>' + '<input type="text" onblur="contact($(this),'+id+',2);" id="' + id +'_contact" value="' + val['contact'] +'"  class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<input type="text" onblur="status_payment($(this),'+id+',1);" id="' + id +'_status_payment" value="' + status_payment +'" class="border-0 bg-transparent input_width">' + '</td>' + 
+                '<td>' + '<input type="text" onblur="contact($(this),'+id+',2);" id="' + id +'_contact" value="' + contact +'"  class="border-0 bg-transparent input_width">' + '</td>' +
                 '<td>' + '<div class="form-group m-0"> <select id="' + id +'_status" onblur="status($(this),'+id+',3);" class="custom-select border-0 bg-transparent input_width"> ' +
                             '<option selected disabled value=""></option>' +
                             '<option value="11" '+　opt2 +'>完款</option>' +
@@ -829,7 +907,7 @@ function contact_data() {
                             '<option value="16" '+　opt7 +'>推薦其他講師</option>' +
                         '</select>' +
                     '</div> </td>' +
-                '<td>' + val['person'] + '</td>' +
+                '<td>' + '<input type="text" onblur="person($(this),'+id+',5);" id="' + id +'_person" value="' + val['person'] +'" class="border-0 bg-transparent input_width">'  + '</td>' +
                 '<td>' + 
                   '<div class="input-group date" id="remind'+ id +'" data-target-input="nearest"> ' +
                       ' <input type="text" onblur="remind($(this),'+id+',4);"  value="' + val['remind_at'] +'"   name="remind'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#remind'+ id +'" required/> ' +
@@ -935,6 +1013,12 @@ function status(data,id,type){
 function remind(data,id,type){    
     save_data(data.val(),id,type)
 }
+
+// 追單人員
+function person(data,id,type){    
+    save_data(data.val(),id,type)
+}
+
 function save_data(data, id,type ){
   $.ajax({
     type:'POST',
@@ -962,7 +1046,8 @@ function save_data(data, id,type ){
   });
 }
 
-/* 自動儲存 - S Rocky(2020/03/08) */
+
+/* 自動儲存 - E Rocky(2020/03/08) */
 
  /*刪除 Rocky(2020/02/23)*/
  function btn_delete(id_student,type){   

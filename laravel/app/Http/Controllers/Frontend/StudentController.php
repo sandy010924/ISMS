@@ -125,8 +125,16 @@ class StudentController extends Controller
                                 ->orderBy('refund.created_at', 'desc')
                                 ->first();
 
-        $datas = $datas->toArray();
-        $datas_student = $datas_student->toArray();
+        if ($datas != "") {
+            $datas = $datas->toArray();
+        } else {
+            $datas = array();
+        }
+
+        if ($datas_student != "") {
+            $datas_student = $datas_student->toArray();
+        }
+        
         
         if ($data_registration != "") {
             $data_registration = $data_registration->toArray();

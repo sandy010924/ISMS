@@ -132,6 +132,11 @@ class StudentController extends Controller
                 Debt::where('id', $id)
                         ->update(['remind_at' => $data]);
                 break;
+            case '5':
+                // 追單人員
+                Debt::where('id', $id)
+                        ->update(['person' => $data]);
+                break;
             default:
                 return 'error';
                 break;
