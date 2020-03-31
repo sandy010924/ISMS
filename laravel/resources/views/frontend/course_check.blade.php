@@ -5,9 +5,10 @@
 
 @section('content')
   <!-- Content Start -->
-  <!--開始報到內容-->
+  <!--簽到表內容-->
   <input type="hidden" id="event_id" value="{{ $course->id }}">
   <input type="hidden" id="course_type" value="{{ $course->type }}">
+  <input type="hidden" id="event_date" value="{{ $course->course_start_at }}">
   <div class="card m-3">
     <div class="card-body">
       <div class="row mb-3 mt-1 align-items-center">
@@ -191,9 +192,9 @@
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body">
+                  <div class="modal-body text-center">
                     <a href="{{ route('course_form',['source_course'=>$course->id_course, 'source_events'=>$course->id]) }}">
-                      <img class="img-thumbnail" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/QRcode_image.svg/1200px-QRcode_image.svg.png"/>
+                      <img class="img-thumbnail" src="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl={{ route('course_form') }}%3Fsource_course={{$course->id_course}}%26source_events={{$course->id }}&choe=UTF-8"/>
                     </a>
                   </div>
                   <div class="modal-footer">
@@ -246,39 +247,6 @@
       @endcomponent
     </div>
   </div>
-      
-  <!-- 現場報名alert -->
-  {{-- @if (session('status') == "報名成功")
-  <div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
-    {{ session('status') }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  @elseif (session('status') == "報名失敗")  
-  <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
-    {{ session('status') }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  @endif --}}
-
-  <!-- alert Start-->
-  {{-- <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
-    <span id="success_alert_text"></span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
-    <span id="error_alert_text"></span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div> --}}
-  <!-- alert End -->
-  <!-- Content End -->
 
   <script>
     var table;
@@ -325,79 +293,142 @@
     // Sandy(2020/01/16)
     // 報到狀態修改 start
     $('body').on('click','.update_status',function(){
-        var update_status = $(this).attr('name');
-        var course_type = $("#course_type").val();
-        if( update_status == 'check_btn' ){
-          var check_id = $(this).attr('id');
-          var check_value = $(this).val();
-          $.ajax({
-            type:'POST',
-            url:'course_check_status',
-            data:{
-              check_id:check_id,
-              course_type:course_type,
-              check_value:check_value,
-              update_status:update_status
-            },
-            success:function(data){
-                // console.log(data);  
-                
-                $("#"+data["list"].check_id).val(data["list"].check_status_val);
-                $("#"+data["list"].check_id).html(data["list"].check_status_name);
-                
-                $("#count_check").html(data.count_check);
-                $("#count_cancel").html(data.count_cancel);
+      var today =  moment().format("YYYY-MM-DD"); 
+      var date = moment($('#event_date').val()).format("YYYY-MM-DD");
 
-                status_style(data["list"].check_id ,data["list"].check_status_val);
+      //非當日更改狀態防呆機制 Sandy(2020/03/29)
+      if(today==date){
+        update_status($(this));
+      }else{
+        var msg = "非當日場次，是否確定要更改狀態?";
+        if (confirm(msg)==true){
+          update_status($(this));
+        }else{
+          return false;
+        }  
+      } 
 
-                /** alert **/
-                $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
-                fade($("#success_alert"));
-            },
-            error: function(jqXHR){
-                console.log("error: "+ JSON.stringify(jqXHR)); 
+      // function update_status(){
+      //   var update_status = $(this).attr('name');
+      //   var course_type = $("#course_type").val();
+      //   if( update_status == 'check_btn' ){
+      //     var check_id = $(this).attr('id');
+      //     var check_value = $(this).val();
+      //     $.ajax({
+      //       type:'POST',
+      //       url:'course_check_status',
+      //       data:{
+      //         check_id:check_id,
+      //         course_type:course_type,
+      //         check_value:check_value,
+      //         update_status:update_status
+      //       },
+      //       success:function(data){
+      //           // console.log(data);  
                 
-                /** alert **/ 
-                $("#error_alert_text").html("報名狀態修改失敗");
-                fade($("#error_alert"));      
-            }
-          });
-        }
-        else{
-          var check_id = this.value;
-          $.ajax({
-            type:'POST',
-            url:'course_check_status',
-            data:{
-              check_id:check_id,
-              course_type:course_type,
-              update_status:update_status
-            },
-            success:function(data){
-                // console.log(data);  
-
-                $("#"+data["list"].check_id).val(data["list"].check_status_val);
-                $("#"+data["list"].check_id).html(data["list"].check_status_name);
+      //           $("#"+data["list"].check_id).val(data["list"].check_status_val);
+      //           $("#"+data["list"].check_id).html(data["list"].check_status_name);
                 
-                $("#count_check").html(data.count_check);
-                $("#count_cancel").html(data.count_cancel);
+      //           $("#count_check").html(data.count_check);
+      //           $("#count_cancel").html(data.count_cancel);
 
-                status_style(data["list"].check_id ,data["list"].check_status_val);
+      //           status_style(data["list"].check_id ,data["list"].check_status_val);
 
-                /** alert **/
-                $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
-                fade($("#success_alert"));
-            },
-            error: function(jqXHR){
-                console.log("error: "+ JSON.stringify(jqXHR)); 
+      //           /** alert **/
+      //           $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
+      //           fade($("#success_alert"));
+      //       },
+      //       error: function(jqXHR){
+      //           console.log("error: "+ JSON.stringify(jqXHR)); 
                 
-                /** alert **/ 
-                $("#error_alert_text").html("報名狀態修改失敗");
-                fade($("#error_alert"));      
-            }
-          });
-        }
+      //           /** alert **/ 
+      //           $("#error_alert_text").html("報名狀態修改失敗");
+      //           fade($("#error_alert"));      
+      //       }
+      //     });
+      //   }
+      //   else{
+      //     var check_id = this.value;
+      //     $.ajax({
+      //       type:'POST',
+      //       url:'course_check_status',
+      //       data:{
+      //         check_id:check_id,
+      //         course_type:course_type,
+      //         update_status:update_status
+      //       },
+      //       success:function(data){
+      //           // console.log(data);  
+
+      //           $("#"+data["list"].check_id).val(data["list"].check_status_val);
+      //           $("#"+data["list"].check_id).html(data["list"].check_status_name);
+                
+      //           $("#count_check").html(data.count_check);
+      //           $("#count_cancel").html(data.count_cancel);
+
+      //           status_style(data["list"].check_id ,data["list"].check_status_val);
+
+      //           /** alert **/
+      //           $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
+      //           fade($("#success_alert"));
+      //       },
+      //       error: function(jqXHR){
+      //           console.log("error: "+ JSON.stringify(jqXHR)); 
+                
+      //           /** alert **/ 
+      //           $("#error_alert_text").html("報名狀態修改失敗");
+      //           fade($("#error_alert"));      
+      //       }
+      //     });
+      //   }
+      // }
     });
+    
+    function update_status(btn){
+      var update_status = btn.attr('name');
+      var course_type = $("#course_type").val();
+
+      var check_id, check_value;
+      if(update_status == 'check_btn'){
+        check_id = btn.attr('id');
+        check_value = btn.val();
+      }else{
+        check_id = btn.val();
+      }
+
+      $.ajax({
+        type:'POST',
+        url:'course_check_status',
+        data:{
+          check_id:check_id,
+          course_type:course_type,
+          check_value:check_value,
+          update_status:update_status
+        },
+        success:function(data){
+            // console.log(data);  
+            
+            $("#"+data["list"].check_id).val(data["list"].check_status_val);
+            $("#"+data["list"].check_id).html(data["list"].check_status_name);
+            
+            $("#count_check").html(data.count_check);
+            $("#count_cancel").html(data.count_cancel);
+
+            status_style(data["list"].check_id ,data["list"].check_status_val);
+
+            /** alert **/
+            $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
+            fade($("#success_alert"));
+        },
+        error: function(jqXHR){
+            console.log("error: "+ JSON.stringify(jqXHR)); 
+            
+            /** alert **/ 
+            $("#error_alert_text").html("報名狀態修改失敗");
+            fade($("#error_alert"));      
+        }
+      });
+    }
     // 報到狀態修改 End
 
 

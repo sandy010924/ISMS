@@ -11,9 +11,6 @@
        <!--搜尋課程頁面內容-->
         <div class="card m-3">
           <div class="card-body">
-            <div class="row mb-3">
-
-            </div>
             <form style="padding: 10px 50px;">
 
               <div class="form-group">
@@ -36,7 +33,7 @@
 
               <div class="form-group">
                 <label for="receiverPhone">訊息名稱</label>
-                <input type="text" class="form-control" id="msgTitle">
+                <input type="text" class="form-control" id="msgTitle" placeholder="請輸入訊息名稱 ...">
               </div>
 
               <div class="form-group">
@@ -56,7 +53,7 @@
 
               <div class="form-group">
                 <label for="emailTitle">E-mail 標題</label>
-                <input type="text" class="form-control" id="emailTitle" placeholder="請輸入標題 ...">
+                <input type="text" class="form-control" id="emailTitle" placeholder="請輸入E-mail標題 ...">
                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
               </div>
 
@@ -67,9 +64,9 @@
               </div>
 
               <div style="display:flex;" class=" mt-5">
-                <button id="sendMessageBtn"  class="btn btn-primary mr-2">立即傳送</button>
-                <input type="button" class="btn btn-primary mr-2"  value="排程設定" data-toggle="modal" data-target="#scheduleModal">
-                <input type="button" class="btn btn-primary mr-2"  value="儲存為草稿">
+                <button id="sendMessageBtn" class="btn btn-primary mr-2">立即傳送</button>
+                <input type="button" class="btn btn-primary mr-2" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
+                <input type="button" class="btn btn-primary mr-2" value="儲存為草稿">
                 <span id="displaySchedule"></span>
               </div>
 
@@ -184,23 +181,178 @@
     min-height: 350px;
 }
 </style>
-<script crossorigin="anonymous">
-ClassicEditor.create(document.querySelector("#content"), {
-		// config
-	})
-		.then( newEditor => {
+
+<!-- crossorigin="anonymous" -->
+<script>
+$("document").ready(function() {
+  init()
+
+  // 簡訊寄送方式被觸發時
+  $('#messageCheckBox').on('click', function() {
+    if( $(this).is(':checked') && $('#mailCheckBox').prop('checked') == false) {
+      // 簡訊方式開始
+      $('#msgTitle').attr('disabled', false);
+      $('#receiverPhone').attr('disabled', false);
+      $('#receiverEmail').attr('disabled', 'disabled');
+      $('#emailTitle').attr('disabled', 'disabled');
+    } else if ( $('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == false)) {
+        $('#msgTitle').attr('disabled', 'disabled');
+        $('#receiverPhone').attr('disabled', 'disabled');
+        $('#receiverEmail').attr('disabled', false);
+        $('#emailTitle').attr('disabled', false);
+    } else if($('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == true)) {
+      $('#msgTitle').attr('disabled', false);
+      $('#receiverPhone').attr('disabled', false);
+      $('#receiverEmail').attr('disabled', false);
+      $('#emailTitle').attr('disabled', false);
+    }else {
+      // 簡訊方式隱藏
+      $('#msgTitle').attr('disabled', 'disabled');
+      $('#receiverPhone').attr('disabled', 'disabled');
+      $('#receiverEmail').attr('disabled', 'disabled');
+      $('#emailTitle').attr('disabled', 'disabled');
+    }
+  });
+
+  // Email寄送方式被觸發時
+  $('#mailCheckBox').on('click', function() {
+    if( $(this).is(':checked') && $('#messageCheckBox').prop('checked') == false ) {
+      // Email方式開始，title隱藏
+      $('#msgTitle').attr('disabled', 'disabled');
+      $('#receiverPhone').attr('disabled', 'disabled');
+      $('#receiverEmail').attr('disabled', false);
+      $('#emailTitle').attr('disabled', false);
+    } else if ( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == false) ) {
+      // Email方式開始、title開啟
+      $('#msgTitle').attr('disabled', false);
+      $('#receiverPhone').attr('disabled', false);
+      $('#receiverEmail').attr('disabled', 'disabled');
+      $('#emailTitle').attr('disabled', 'disabled');
+
+    } else if( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == true) ) {
+      $('#msgTitle').attr('disabled', false);
+      $('#receiverPhone').attr('disabled', false);
+      $('#receiverEmail').attr('disabled', false);
+      $('#emailTitle').attr('disabled', false);
+    }else {
+      // Email方式隱藏
+      $('#msgTitle').attr('disabled', 'disabled');
+      $('#receiverPhone').attr('disabled', 'disabled');
+      $('#receiverEmail').attr('disabled', 'disabled');
+      $('#emailTitle').attr('disabled', 'disabled');
+    }
+  });
+
+
+  // 立即傳送
+  $('#sendMessageBtn').on('click', function(e) {
+    e.preventDefault();
+    if ($('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked')) {
+      // 兩者都發送
+      messageApiType();
+      mailApi();
+    } else if( ($('#messageCheckBox').prop('checked') == true) && ($('#mailCheckBox').prop('checked') == false) ) {
+      // 只發送簡訊
+      messageApiType();
+    } else if( ($('#messageCheckBox').prop('checked') == false) && ($('#mailCheckBox').prop('checked') == true) ) {
+      // 只發送mail
+      mailApi();
+    }
+
+
+  });
+
+ /* 判斷簡訊是單筆、多筆 */
+  function messageApiType() {
+    var msgContent = editor.getData().replace(new RegExp("<p>", "g"),"");
+    msgContent = msgContent.replace(new RegExp("</p>", "g"), "\n");
+    msgContent = msgContent.replace(new RegExp("&nbsp;", "g"), " ");
+
+
+    // 單筆 & 多筆 簡訊判斷
+    $('#receiverPhone').val().indexOf(",") == -1 ? messageApi(msgContent) : messageBulkApi(msgContent);
+  }
+
+  /* 單筆簡訊發送 */
+  function messageApi(msgContent) {
+    $.ajax({
+      type: "POST",
+      url: "messageApi",
+      data: {
+        // messageTitle: '訊息名稱',
+        messageContents: msgContent,
+        phoneNumber: $('#receiverPhone').val()
+      }
+    }).done(function(res) {
+      console.log(res);
+
+    }).fail(function(err) {
+      console.log(err);
+
+    });
+  }
+
+  /* 多筆簡訊發送 */
+  function messageBulkApi(msgContent) {
+    $.ajax({
+      type: "POST",
+      url: "messageBulkApi",
+      data: {
+        // messageTitle: '訊息名稱',
+        messageContents: msgContent,
+        phoneNumber: $('#receiverPhone').val().split(","),
+        msgLen: $('#receiverPhone').val().split(",").length,
+      }
+    }).done(function(res) {
+      console.log(res);
+    }).fail(function(err) {
+      console.log(err);
+    });
+  }
+
+  /* Email發送 */
+  function mailApi() {
+    var emailAddr = $('#receiverEmail').val();
+    var emailContent = editor.getData().replace(new RegExp("<p>", "g"),"");
+    emailContent = emailContent.replace(new RegExp("</p>", "g"), "\n");
+    emailContent = emailContent.replace(new RegExp("&nbsp;", "g"), " ");
+
+    $.ajax({
+      type: "post",
+      url: "sendMail",
+      data: {
+        emailTitle: $('#emailTitle').val(),
+        emailAddr: emailAddr.split(","),
+        emailAddrLen: emailAddr.split(",").length,
+        emailContent: emailContent
+
+      }
+    }).done(function(res) {
+      console.log(res);
+    }).fail(function(err) {
+      console.log(err);
+    });
+  }
+
+  /* 初始化 */
+  function init() {
+    $('#msgTitle').attr('disabled', 'disabled');
+    $('#receiverPhone').attr('disabled', 'disabled');
+    $('#receiverEmail').attr('disabled', 'disabled');
+    $('#emailTitle').attr('disabled', 'disabled');
+
+    ClassicEditor.create(document.querySelector("#content"), {
+      // config
+    })
+    .then( newEditor => {
         editor = newEditor;
     })
-		.catch(err => {
-			console.error(err.stack);
+    .catch(err => {
+      console.error(err.stack);
     });
 
+  }
 
-$("document").ready(function() {
-
-  $('#receiverEmail').attr('disabled', 'disabled');
-  $('#receiverPhone').attr('disabled', 'disabled');
-  $('#emailTitle').attr('disabled', 'disabled');
 
   $('#datetimepicker1').datetimepicker({
     format: "YYYY-MM-DD HH:mm",
@@ -208,39 +360,7 @@ $("document").ready(function() {
     locale:"zh-tw"
   });
 
-      // 簡訊寄送方式被觸發時
-    $('#messageCheckBox').on('click', function() {
-      if( $(this).is(':checked') ) {
-        // 簡訊方式開始
-        $('#receiverPhone').attr('disabled', false);
-        $('#emailTitle').attr('disabled', 'disabled');
-      } else if ( $('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == false)) {
-          $('#receiverPhone').attr('disabled', 'disabled');
-          $('#receiverEmail').attr('disabled', false);
-          $('#emailTitle').attr('disabled', false);
-      } else {
-        // 簡訊方式隱藏
-        $('#receiverPhone').attr('disabled', 'disabled');
-        $('#emailTitle').attr('disabled', 'disabled');
-      }
-    });
 
-    // Email寄送方式被觸發時
-    $('#mailCheckBox').on('click', function() {
-      if( $(this).is(':checked') && $('#messageCheckBox').is(':checked') ) {
-        // Email方式開始，title隱藏
-        $('#receiverEmail').attr('disabled', false);
-        $('#emailTitle').attr('disabled', 'disabled');
-      } else if ( $(this).is(':checked') && ( $('#messageCheckBox').prop('checked') == false) ) {
-        // Email方式開始、title開啟
-        $('#receiverEmail').attr('disabled', false);
-        $('#emailTitle').attr('disabled', false);
-      } else {
-        // Email方式隱藏
-        $('#receiverEmail').attr('disabled', 'disabled');
-        $('#emailTitle').attr('disabled', 'disabled');
-      }
-    });
 
     // 細分組搜尋框
   $('#wndSearchGroupBtn').on('click', function() {
@@ -300,73 +420,7 @@ $("document").ready(function() {
     });
 
 
-    // 立即傳送
-    $('#sendMessageBtn').on('click', function(e) {
-      e.preventDefault();
-      // 發ajax to send mail、message
-      // console.log(`標題 : ${$('#emailTitle').val()}`);
-      // console.log(`Email : ${$('#receiverEmail').val()}`);
-      // console.log(`Phone : ${$('#receiverPhone').val()}`);
 
-      // console.log($(editor.getData()).text());
-
-      var msgContent = editor.getData().replace(new RegExp("<p>", "g"),"");
-      msgContent = msgContent.replace(new RegExp("</p>", "g"), "\n");
-      msgContent = msgContent.replace(new RegExp("&nbsp;", "g"), " ");
-
-
-      // 單筆 & 多筆 簡訊判斷
-      if ($('#receiverPhone').val().indexOf(",") == -1) {
-        messageApi();
-      } else {
-        messageBulkApi();
-      }
-
-      /**
-        單筆簡訊發送
-       */
-      function messageApi() {
-        $.ajax({
-          type: "POST",
-          url: "messageApi",
-          data: {
-            // messageTitle: '訊息名稱',
-            messageContents: msgContent,
-            phoneNumber: $('#receiverPhone').val()
-          }
-        }).done(function(res) {
-          console.log(res);
-
-        }).fail(function(err) {
-          console.log(err);
-
-        });
-      }
-
-      /**
-        多筆簡訊發送
-       */
-       function messageBulkApi() {
-        $.ajax({
-          type: "POST",
-          url: "messageBulkApi",
-          data: {
-            // messageTitle: '訊息名稱',
-            messageContents: msgContent,
-            phoneNumber: $('#receiverPhone').val().split(","),
-            msgLen: $('#receiverPhone').val().split(",").length,
-          }
-        }).done(function(res) {
-          console.log(res);
-
-        }).fail(function(err) {
-          console.log(err);
-
-        });
-       }
-
-
-    });
 
   });
 

@@ -53,9 +53,19 @@
                   <form action="{{ url('course_return_insert_data') }}" name="insert" method="POST" >
                     @csrf
                       <input type="hidden" name="form_event_id" id="form_event_id" value="{{ $course->id }}">
-                      <div class="form-group">
+                      <div class="form-group required">
                         <label class="col-form-label" for="idate">報名日期</label>
-                        <input type="text" id="idate" name="idate" class="form-control" value="" disabled readonly>
+                        {{-- <input type="text" id="idate" name="idate" class="form-control"> --}}
+                        <div class="input-group date" id="idate" data-target-input="nearest">
+                            <input type="text" name="idate" class="form-control datetimepicker-input" data-target="#idate" required/>
+                            <div class="input-group-append" data-target="#idate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label for="iphone" class="col-form-label">聯絡電話</label>
+                        <input type="text" class="form-control" name="iphone" id="iphone" required>
                       </div>
                       <div class="form-group required">
                         <label for="iname" class="col-form-label">姓名</label>
@@ -74,21 +84,23 @@
                           </div>
                         </div>
                       </div>
-                      <div class="form-group required">
+                      <div class="form-group">
                         <label for="iid" class="col-form-label">身分證字號</label>
-                        <input type="text" class="form-control" name="iid" id="iid" required>
+                        <input type="text" class="form-control" name="iid" id="iid">
                       </div>
-                      <div class="form-group required">
-                        <label for="iphone" class="col-form-label">聯絡電話</label>
-                        <input type="text" class="form-control" name="iphone" id="iphone" required>
-                      </div>
-                      <div class="form-group required">
+                      <div class="form-group">
                         <label for="iemail" class="col-form-label">電子郵件</label>
                         <input type="text" class="form-control" name="iemail" id="iemail">
                       </div>
-                      <div class="form-group required">
+                      <div class="form-group">
                         <label for="ibirthday" class="col-form-label">出生日期</label>
-                        <input type="date" class="form-control" name="ibirthday" id="ibirthday" required>
+                        {{-- <input type="date" class="form-control" name="ibirthday" id="ibirthday"> --}}
+                        <div class="input-group date" id="ibirthday" data-target-input="nearest">
+                            <input type="text" name="ibirthday" class="form-control datetimepicker-input" data-target="#ibirthday" required/>
+                            <div class="input-group-append" data-target="#ibirthday" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
                       </div>
                       <div class="form-group">
                         <label for="icompany" class="col-form-label">公司名稱</label>
@@ -98,11 +110,11 @@
                         <label for="iprofession" class="col-form-label">職業</label>
                         <input type="text" class="form-control" name="iprofession" id="iprofession">
                       </div>
-                      <div class="form-group required">
+                      <div class="form-group">
                         <label for="iaddress" class="col-form-label">聯絡地址</label>
                         <input type="text" class="form-control" name="iaddress" id="iaddress">
                       </div>
-                      <div class="form-group required">
+                      <div class="form-group">
                         <label for="ijoin" class="col-form-label">我想參加課程</label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio my-1">
@@ -225,7 +237,7 @@
           <div class="col">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text">現場完款</span>
+                <span class="input-group-text">現場完款金額</span>
               </div>
               <input type="number" id="money" name="money" class="form-control" aria-label="money input" aria-describedby="money input" value="{{ $course->money }}">
             </div>
@@ -233,7 +245,7 @@
           <div class="col">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text">五日內完款</span>
+                <span class="input-group-text">五日內完款金額</span>
               </div>
               <input type="number" id="money_fivedays" name="money_fivedays" class="form-control" aria-label="money_fivedays input" aria-describedby="money_fivedays input" value="{{ $course->money_fivedays }}">
             </div>
@@ -241,7 +253,7 @@
           <div class="col">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text">分期付款</span>
+                <span class="input-group-text">分期付款金額</span>
               </div>
               <input type="number" id="money_installment" name="money_installment" class="form-control" aria-label="money_installment input" aria-describedby="money_installment input" value="{{ $course->money_installment }}">
             </div>
@@ -444,44 +456,71 @@
 
     $("#idate").val(output);
 
-    //日期&時間選擇器 Sandy (2020/02/27)
-    // var iconlist = {  time: 'fas fa-clock',
-    //                   date: 'fas fa-calendar',
-    //                   up: 'fas fa-arrow-up',
-    //                   down: 'fas fa-arrow-down',
-    //                   previous: 'fas fa-arrow-circle-left',
-    //                   next: 'fas fa-arrow-circle-right',
-    //                   today: 'far fa-calendar-check-o',
-    //                   clear: 'fas fa-trash',
-    //                   close: 'far fa-times' } 
-
-    // $('input[name="pay_date"]').datetimepicker({ 
-    //   format: 'YYYY-MM-DD',
-    //   icons: iconlist, 
-    //   pickerPosition: "bottom-left",
-    //   // defaultDate: new Date(), 
-    //   // widgetParent: 'td'
-    // });
-
-
-    // $("#addButton").click(function () {
-    //   if( ($('.form-horizontal .control-group').length+1) > 2) {
-    //     alert("Only 2 control-group allowed");
-    //     return false;
-    //   }
-    //   var id = ($('.form-horizontal .control-group').length + 1).toString();
-    //   $('.form-horizontal').append('<div class="control-group" id="control-group' + id + '"><label class="control-label" for="inputEmail' + id + '">Email' + id + '</label><div class="controls' + id + '"><input type="text" id="inputEmail' + id + '" placeholder="Email"></div></div>');
-    // });
-
-    // $("#removeButton").click(function () {
-    //   if ($('.form-horizontal .control-group').length == 1) {
-    //     alert("No more textbox to remove");
-    //     return false;
-    //   }
-
-    //   $(".form-horizontal .control-group:last").remove();
-    // });
+    //日期&g時間選擇器 Sandy (2020/02/27)
+    var iconlist = {  time: 'fas fa-clock',
+                  date: 'fas fa-calendar',
+                  up: 'fas fa-arrow-up',
+                  down: 'fas fa-arrow-down',
+                  previous: 'fas fa-arrow-circle-left',
+                  next: 'fas fa-arrow-circle-right',
+                  today: 'far fa-calendar-check-o',
+                  clear: 'fas fa-trash',
+                  close: 'far fa-times' } 
+    $('#idate, #ibirthday').datetimepicker({ 
+      defaultDate: new Date(),
+      format: 'YYYY-MM-DD',
+      icons: iconlist, 
+    });
   });
+
+
+  /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
+    // 現場完款
+    $('#iphone').on('blur', function() {
+      var phone = $(this).val();
+      fill_data(phone);
+    });
+    $('#iphone').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        var phone = $(this).val();
+        fill_data(phone);
+      }
+    });
+
+    function fill_data(phone){
+      $.ajax({
+        type:'GET',
+        url:'course_return_fill',
+        data:{
+          phone:phone
+        },
+        success:function(data){
+          // console.log(data);  
+
+          if( data != "nodata" ){    
+            $("#iname").val(data.name);
+            if( data.sex == '男'){
+              $("#isex1").click();
+            }else{
+              $("#isex2").click();
+            }
+            $("#iid").val(data.id_identity);
+            $("#iphone").val(data.phone);
+            $("#iemail").val(data.email);
+            $("#ibirthday").val(data.birthday);
+            $("#icompany").val(data.company);
+            $("#iprofession").val(data.profession);
+            $("#iaddress").val(data.address);
+          }
+
+        },
+        error: function(jqXHR, textStatus, errorMessage){
+            console.log("error: "+ errorMessage);    
+        }
+      });
+    }
+  /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
+
 
   /* 資料儲存 Start */
 

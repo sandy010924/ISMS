@@ -208,4 +208,18 @@ class CourseReturnController extends Controller
         return view('frontend.course_return', compact('course', 'week', 'fill', 'cash', 'count_settle', 'count_deposit', 'count_order', 'events'));    
     }
 
+    // 尋找學員資料做預設填入 Sandy (2020/03/04)
+    public function fill( Request $request )
+    {
+        $phone = $request->input('phone');
+        
+        $student = Student::Where('phone', $phone)
+                          ->first();
+
+        if( !empty($student) ){
+            return Response($student);
+        }else {
+            return 'nodata';
+        }
+    }
 }

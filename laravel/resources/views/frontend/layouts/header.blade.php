@@ -25,7 +25,7 @@
     }
   }
   if( back == 0 ){
-    $("#header_title").prepend('<a href="javascript:history.back();"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
+    $("#header_title").prepend('<a href="javascript:self.location=document.referrer;;"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
   }
   
   //  Rocky (2020/02/17)     
