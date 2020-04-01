@@ -35,11 +35,13 @@
             <span id="count_cancel">{{ $count_cancel }}</span>
           </h6>
         </div>
-        @if( $nextLevel > 0 )
-          <div class="col text-right">
+        <div class="col text-right">
+          @if( $nextLevel > 0 )
             <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
-          </div>
-        @endif
+          @else
+            <button type="button" class="btn btn-primary" onclick="alert('尚未串接下階課程！\n請先到【課程管理】找到該課程的下階課程，進入至下階課程的【編輯】，點選「新增報名表」按鈕，在「對應課程」選擇此課程做串接。');">場次報表</button>
+          @endif
+        </div>
       </div>
       <div class="row">
         <div class="col">
@@ -98,7 +100,7 @@
         <div class="col-3 text-right">
           @if( $course->type == 1 )
             <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#presentApply">現場報名</button>
-          @Endif
+          @endif
           <!-- 現場報名 modal -->
           <div class="modal fade" id="presentApply" tabindex="-1" role="dialog" aria-labelledby="presentApplyLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -203,6 +205,8 @@
                 </div>
               </div>
             </div>
+          @else
+            <button type="button" class="btn btn-outline-secondary mx-1" onclick="alert('尚未串接下階課程！\n請先到【課程管理】找到該課程的下階課程，進入至下階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">下階報名表</button>
           @endif
         </div>
       </div>

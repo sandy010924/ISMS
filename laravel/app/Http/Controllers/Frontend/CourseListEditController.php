@@ -14,10 +14,6 @@ class CourseListEditController extends Controller
     //view
     public function show(Request $request)
     {
-        // //所有課程
-        // $course_all = Course::select('name', 'id')
-        //                 ->get();
-
          //課程資訊
         $id = $request->get('id');
         $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
@@ -41,6 +37,7 @@ class CourseListEditController extends Controller
         //場次資訊
         $events_all = EventsCourse::Where('id_course', $id)
                                   ->get();
+                                  
         
         $events = array();
         $id_group='';
@@ -76,6 +73,7 @@ class CourseListEditController extends Controller
                 $course_group = EventsCourse::Where('id_group', $data['id_group'])
                                             ->Where('id_course', $id)
                                             ->get();
+
                 $numItems = count($course_group);
                 $i = 0;
 
@@ -83,6 +81,13 @@ class CourseListEditController extends Controller
                 $unpublish_group = array();
 
                 foreach( $course_group as $key_group => $data_group ){
+
+                    //已過場次 就取消場次
+                    if(strtotime(date('Y-m-d', strtotime($data_group['course_start_at']))) < strtotime(date("Y-m-d"))){
+                        EventsCourse::Where('id', $data_group['id'])
+                                    ->update(['unpublish' => 1]);
+                    }
+
                     //日期
                     $date = date('Y-m-d', strtotime($data_group['course_start_at']));
                     //星期

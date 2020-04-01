@@ -75,7 +75,7 @@
                         <label for="isex" class="col-form-label">性別</label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="isex1" name="isex" class="custom-control-input" value="男" checked>
+                            <input type="radio" id="isex1" name="isex" class="custom-control-input" value="男">
                             <label class="custom-control-label" for="isex1">男</label>
                           </div>
                           <div class="custom-control custom-radio custom-control-inline">
@@ -96,7 +96,7 @@
                         <label for="ibirthday" class="col-form-label">出生日期</label>
                         {{-- <input type="date" class="form-control" name="ibirthday" id="ibirthday"> --}}
                         <div class="input-group date" id="ibirthday" data-target-input="nearest">
-                            <input type="text" name="ibirthday" class="form-control datetimepicker-input" data-target="#ibirthday" required/>
+                            <input type="text" name="ibirthday" class="form-control datetimepicker-input" data-target="#ibirthday"/>
                             <div class="input-group-append" data-target="#ibirthday" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -118,7 +118,7 @@
                         <label for="ijoin" class="col-form-label">我想參加課程</label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio my-1">
-                            <input type="radio" id="ijoin1" name="ijoin" class="custom-control-input" value="0" checked>
+                            <input type="radio" id="ijoin1" name="ijoin" class="custom-control-input" value="0">
                             <label class="custom-control-label" for="ijoin1">現場最優惠價格</label>
                           </div>
                           <div class="custom-control custom-radio my-1">
@@ -144,7 +144,7 @@
                         <label for="ipay_model" class="col-form-label">付款方式</label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio my-1">
-                            <input type="radio" id="ipay_model1" name="ipay_model" class="custom-control-input" value="0" checked>
+                            <input type="radio" id="ipay_model1" name="ipay_model" class="custom-control-input" value="0">
                             <label class="custom-control-label" for="ipay_model1">現金</label>
                           </div>
                           <div class="custom-control custom-radio my-1">
@@ -161,19 +161,19 @@
                           </div>
                         </div>
                       </div>
-                      <div class="form-group required">
+                      <div class="form-group">
                         <label for="icash" class="col-form-label">付款金額</label>
-                        <input type="number" class="form-control" name="icash" id="icash" required>
+                        <input type="number" class="form-control" name="icash" id="icash">
                       </div>
-                      <div class="form-group required">
+                      <div class="form-group">
                         <label for="inumber" class="col-form-label">匯款帳號/卡號後五碼 </label>
-                        <input type="number" class="form-control" name="inumber" id="inumber" required>
+                        <input type="number" class="form-control" name="inumber" id="inumber">
                       </div>
                       <div class="form-group">
                         <label for="iinvoice" class="col-form-label">統一發票</label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio my-1">
-                            <input type="radio" id="iinvoice1" name="iinvoice" class="custom-control-input" value="0" checked>
+                            <input type="radio" id="iinvoice1" name="iinvoice" class="custom-control-input" value="0">
                             <label class="custom-control-label" for="iinvoice1">捐贈社會福利機構（由無極限國際公司另行辦理）</label>
                           </div>
                           <div class="custom-control custom-radio my-1">
@@ -444,17 +444,17 @@
 <!-- Content End -->
 <script>
   $(document).ready(function () {
-    //新增報表 - 報名日期
-    var d = new Date();
+    // // 新增報表 - 報名日期
+    // var d = new Date();
 
-    var month = d.getMonth() + 1;
-    var day = d.getDate();
+    // var month = d.getMonth() + 1;
+    // var day = d.getDate();
 
-    var output = d.getFullYear() + '-' +
-        (month < 10 ? '0' : '') + month + '-' +
-        (day < 10 ? '0' : '') + day;
+    // var output = d.getFullYear() + '-' +
+    //     (month < 10 ? '0' : '') + month + '-' +
+    //     (day < 10 ? '0' : '') + day;
 
-    $("#idate").val(output);
+    // $("#idate").val(output);
 
     //日期&g時間選擇器 Sandy (2020/02/27)
     var iconlist = {  time: 'fas fa-clock',
@@ -466,11 +466,18 @@
                   today: 'far fa-calendar-check-o',
                   clear: 'fas fa-trash',
                   close: 'far fa-times' } 
-    $('#idate, #ibirthday').datetimepicker({ 
+
+    $('#idate').datetimepicker({ 
       defaultDate: new Date(),
       format: 'YYYY-MM-DD',
       icons: iconlist, 
     });
+
+    $('#ibirthday').datetimepicker({ 
+      format: 'YYYY-MM-DD',
+      icons: iconlist, 
+    });
+    
   });
 
 

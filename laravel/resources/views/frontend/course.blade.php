@@ -113,7 +113,7 @@
                     <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
                     <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
                     <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
-                    @elseif( strtotime($event['date']) < strtotime(date("Y-m-d")) )
+                  @elseif( strtotime($event['date']) < strtotime(date("Y-m-d")) )
                     <!-- 已過場次 -->
                     {{-- <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">簽到表</button></a> --}}
                     <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
@@ -121,8 +121,8 @@
                       <a href="{{ $event['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
                       <a href="{{ $event['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
                     @else
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button></a>
-                      <a><button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button></a>
+                      <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="alert('尚未串接下階課程！\n請先到【課程管理】找到該課程的下階課程，進入至下階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">查看進階填單名單</button>
+                    <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="alert('尚未串接下階課程！\n請先到【課程管理】找到該課程的下階課程，進入至下階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">場次報表</button>
                     @endif
                   @endif
                   <button id="{{ $event['id'] }}" name="{{ $event['id_group'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $event['id'] }});" value="{{ $event['id'] }}" >刪除</button>

@@ -32,7 +32,8 @@ class CourseListController extends Controller
                                        
         foreach ($course_table as $key => $data) {
             //表單上場次
-            $count_form = count(EventsCourse::Where('course_start_at', '>=', date('Y-m-d H:i:s')) 
+            $count_form = count(EventsCourse::Where('unpublish', 0)
+                                            ->Where('course_start_at', '>=', date('Y-m-d H:i:s')) 
                                             ->Where('id_course', $data['id_course'])
                                             ->select('id_group')
                                             ->distinct()

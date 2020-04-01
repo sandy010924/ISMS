@@ -68,7 +68,7 @@
               </label>
               <div class="d-block my-2">
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="isex1" name="isex" class="custom-control-input" value="男" checked>
+                  <input type="radio" id="isex1" name="isex" class="custom-control-input" value="男">
                   <label class="custom-control-label" for="isex1">男</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
@@ -77,29 +77,29 @@
                 </div>
               </div>
             </div>
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="iid">
                 <b>身分證字號</b>
               </label>
-              <input type="text" id="iid" name="iid" class="form-control" required>
+              <input type="text" id="iid" name="iid" class="form-control">
             </div>
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="iphone">
                 <b>聯絡電話</b>
               </label>
-              <input type="text" id="iphone" name="iphone" class="form-control" required>
+              <input type="text" id="iphone" name="iphone" class="form-control">
             </div>
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="iemail">
                 <b>電子郵件</b>
               </label>
-              <input type="text" id="iemail" name="iemail" class="form-control" required>
+              <input type="text" id="iemail" name="iemail" class="form-control">
             </div>
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="ibirthday">
                 <b>出生日期</b>
               </label>           
-              <input type="date" id="ibirthday" name="ibirthday" class="form-control" required> 
+              <input type="date" id="ibirthday" name="ibirthday" class="form-control"> 
             </div>
             <div class="form-group mb-5">
               <label class="col-form-label" for="icompany">
@@ -113,11 +113,11 @@
               </label>
               <input type="text" id="iprofession" name="iprofession" class="form-control">
             </div>
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="iaddress">
                 <b>聯絡地址</b>
               </label>
-              <input type="text" id="iaddress" name="iaddress" class="form-control" required>
+              <input type="text" id="iaddress" name="iaddress" class="form-control">
             </div>
             <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
             <button type="button" name="next" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
@@ -141,13 +141,13 @@
                 <div class="d-flex" style="margin:5rem auto;"></div>
               @endif
             @endforeach
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="ijoin">
                 <b>我想參加課程</b>
               </label>
               <div class="d-block my-2">
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ijoin1" name="ijoin" class="custom-control-input" value="0" checked>
+                  <input type="radio" id="ijoin1" name="ijoin" class="custom-control-input" value="0">
                   <label class="custom-control-label" for="ijoin1">現場最優惠價格</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
@@ -180,13 +180,13 @@
                 @endforeach
               </div>
             @endforeach
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="ipay_model">
                 <b>付款方式</b>
               </label>
               <div class="d-block my-2">
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="ipay_model1" name="ipay_model" class="custom-control-input" value="0" checked>
+                  <input type="radio" id="ipay_model1" name="ipay_model" class="custom-control-input" value="0">
                   <label class="custom-control-label" for="ipay_model1">現金</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
@@ -203,11 +203,11 @@
                 </div>
               </div>
             </div>
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="icash">
                 <b>付款金額</b>
               </label>
-              <input type="number" id="icash" name="icash" class="form-control" required>
+              <input type="number" id="icash" name="icash" class="form-control">
               <label class="text-secondary px-2 py-1"><small>（實際金額以財務確認為準）</small></label>
             </div>
             <hr>
@@ -219,11 +219,11 @@
               <h5 class="font-weight-bold text-center my-5">刷卡連結（會再附上連結）</h5>
             </div>
             <hr>
-            <div class="form-group mb-5 required">
+            <div class="form-group mb-5">
               <label class="col-form-label" for="inumber">
                 <b>匯款帳號/卡號後五碼</b>
               </label>
-              <input type="text" id="inumber" name="inumber" class="form-control" required>
+              <input type="text" id="inumber" name="inumber" class="form-control">
               <label class="text-secondary px-2 py-1"><small>（付款完成請「截圖」回傳LINE@，謝謝）</small></label>
             </div>
             <hr style="border: 0;">
@@ -233,7 +233,7 @@
               </label>
               <div class="d-block my-2">
                 <div class="custom-control custom-radio my-1">
-                  <input type="radio" id="iinvoice1" name="iinvoice" class="custom-control-input" value="0" checked>
+                  <input type="radio" id="iinvoice1" name="iinvoice" class="custom-control-input" value="0">
                   <label class="custom-control-label" for="iinvoice1">捐贈社會福利機構（由無極限國際公司另行辦理）</label>
                 </div>
                 <div class="custom-control custom-radio my-1">
@@ -331,6 +331,12 @@
 <script src="{{ asset('js/signature.js') }}"></script>
 
 <script>
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
   //手機號碼查詢既有學員資料並填入 Sandy (2020/03/05)
   $("form[name='verify']").submit(function(event){
     event.preventDefault();
@@ -449,6 +455,7 @@
     //get data
     var source_course = $('#course_id').val();
     var source_events = $('#events_id').val();
+    var idate = $('#idate').val();
     var iname = $('#iname').val();
     var isex = $('input[name="isex"]:checked').val();
     var iid = $('#iid').val();
@@ -476,6 +483,7 @@
       url:'course_form_insert',
       data:{
         '_token':"{{ csrf_token() }}",
+        idate : idate,
         iname : iname,
         isex : isex,
         iid : iid,

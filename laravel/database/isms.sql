@@ -552,3 +552,6 @@ ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_5`;
 -- 銷講資料表 -刪掉外部鍵 Rocky(2020/03/31)
 ALTER TABLE sales_registration DROP FOREIGN KEY `sales_registration_ibfk_2`;
 ALTER TABLE sales_registration DROP FOREIGN KEY `sales_registration_ibfk_4`;
+
+-- 追單資料表 - 增加場次ID Rocky(2020/04/01)
+ALTER TABLE `registration` ADD COLUMN submissiondate VARCHAR(150) NULL COMMENT 'Submission Date';
