@@ -97,7 +97,44 @@ class StudentController extends Controller
         }
     }
 
-    /*** 課程資料儲存 ***/
+    /*** 聯絡資料 - 儲存 Rocky(2020/04/02) ***/
+    public function debtsave(Request $request)
+    {
+        $id_student = $request->get('id_student');
+        $debt_date = $request->get('debt_date');
+        $debt_course = $request->get('debt_course');
+        $debt_status_date = $request->get('debt_status_date');
+        $debt_contact = $request->get('debt_contact');
+        $debt_status = $request->get('debt_status');
+        $debt_person = $request->get('debt_person');
+        $debt_remind = $request->get('debt_remind');
+
+
+        $debt = new Debt;
+
+        // 新增資料
+        $debt->id_student       = $id_student;
+        // $debt->created_at       = $debt_date;
+        // $debt->updated_at       = $debt_date;
+        $debt->status_payment   = $debt_status_date;
+        $debt->contact          = $debt_contact;
+        $debt->id_status        = $debt_status;
+        $debt->remind_at        = $debt_remind;
+        $debt->person           = $debt_person;
+        $debt->name_course      = $debt_course;
+
+        $debt->save();
+        $id_debt = $debt->id;
+
+        echo $debt_date;
+        // if (!empty($id_debt)) {
+        //     return '儲存成功';
+        // } else {
+        //     return '更新失敗';
+        // }
+    }
+
+    /*** 聯絡資料 - 自動儲存 ***/
     public function updatedata(Request $request)
     {
         //取回data
