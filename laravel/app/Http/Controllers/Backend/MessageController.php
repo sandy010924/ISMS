@@ -70,7 +70,12 @@ class MessageController extends Controller
             'mailContents' => $request['emailContent']
         ];
 
-        // TODO: 細分組那邊選擇MAIL，要把名字帶過來後端
+
+        /*
+        TODO:
+            1. 細分組那邊選擇MAIL，要把名字帶過來後端
+            2. email要帶入名字、在前端打的內容帶到模板上
+        */
 
         // //填寫收信人信箱
         // $to = ['email'=>'xxx@xxx.com',

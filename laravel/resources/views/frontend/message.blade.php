@@ -108,7 +108,7 @@
 
         <!-- mail、手機Modal -->
         <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
+          <div class="modal-dialog" role="document" style="max-width: 45%;">
             <div class="modal-content">
 
               <div class="modal-header">
@@ -118,8 +118,12 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-
-              <div class="modal-body">
+            <div class="container">
+              <div class="transfer" style="margin: 20px auto;">
+                <!-- ListBox -->
+              </div>
+              </div>
+              <!-- <div class="modal-body">
 
                 <div id="Group" style="display: flex;  justify-content: space-around;;">
                   <input type="search"  id="wndSearchGroup" class="form-control" placeholder="輸入細分組名稱" aria-label="Group's name" aria-describedby="btn_search" style="width: 80%;">
@@ -156,12 +160,14 @@
                   </div>
                 </div>
 
-              </div>
+              </div> -->
 
               <div class="modal-footer">
                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                 <button type="button" class="btn btn-primary" id="wndSaveChecked" data-dismiss="modal">確定</button>
               </div>
+
+
 
             </div>
           </div>
@@ -182,10 +188,11 @@
 }
 </style>
 
+
 <!-- crossorigin="anonymous" -->
 <script>
-$("document").ready(function() {
-  init()
+$(document).ready(function () {
+  init();
 
   // 簡訊寄送方式被觸發時
   $('#messageCheckBox').on('click', function() {
@@ -261,6 +268,8 @@ $("document").ready(function() {
 
 
   });
+
+});
 
  /* 判斷簡訊是單筆、多筆 */
   function messageApiType() {
@@ -351,78 +360,236 @@ $("document").ready(function() {
       console.error(err.stack);
     });
 
+
+    // ListBox Setting
+    var languages = [
+        {
+            "language": "jQuery",
+            "value": 122
+        },
+        {
+            "language": "AngularJS",
+            "value": 132
+        },
+        {
+            "language": "ReactJS",
+            "value": 422
+        },
+        {
+            "language": "VueJS",
+            "value": 232
+        },
+        {
+            "language": "JavaScript",
+            "value": 765
+        },
+        {
+            "language": "Java",
+            "value": 876
+        },
+        {
+            "language": "Python",
+            "value": 453
+        },
+        {
+            "language": "TypeScript",
+            "value": 125
+        },
+        {
+            "language": "PHP",
+            "value": 633
+        },
+        {
+            "language": "Ruby on Rails",
+            "value": 832
+        }
+    ];
+
+    var groupData = [
+        {
+            "groupName": "JavaScript",
+            "groupData": [
+                {
+                    "language": "jQuery",
+                    "value": 122
+                },
+                {
+                    "language": "AngularJS",
+                    "value": 643
+                },
+                {
+                    "language": "ReactJS",
+                    "value": 422
+                },
+                {
+                    "language": "VueJS",
+                    "value": 622
+                }
+            ]
+        },
+        {
+            "groupName": "Popular",
+            "groupData": [
+                {
+                    "language": "JavaScript",
+                    "value": 132
+                },
+                {
+                    "language": "Java",
+                    "value": 112
+                },
+                {
+                    "language": "Python",
+                    "value": 124
+                },
+                {
+                    "language": "TypeScript",
+                    "value": 121
+                },
+                {
+                    "language": "PHP",
+                    "value": 432
+                },
+                {
+                    "language": "Ruby on Rails",
+                    "value": 421
+                }
+            ]
+        }
+    ];
+
+
+    var settings22 = {
+        // data item name
+        itemName: "item",
+        // group data item name
+        groupItemName: "groupItem",
+        // group data array name
+        groupArrayName: "groupArray",
+        // data value name
+        valueName: "value",
+        // tab text
+        tabNameText: "items",
+        // right tab text
+        rightTabNameText: "selected items",
+        // search placeholder text
+        searchPlaceholderText: "搜尋細分組成員",
+        // items data array
+        dataArray: languages,
+        // group data array
+        groupDataArray: groupData,
+        callable: function (items) {
+          // your code
+        }
+    };
+
+
+    var settings3 = {
+        "groupDataArray": groupData,
+        "groupItemName": "groupName",
+        "groupArrayName": "groupData",
+        "itemName": "language",
+        "valueName": "value",
+        tabNameText: "細分組成員",
+        rightTabNameText: "已選擇細分組成員",
+        searchPlaceholderText: "搜尋細分組成員",
+        "callable": function (items) {
+            console.dir(items)
+        }
+    };
+
+    var settings4 = {
+        "inputId": "languageInput",
+        "data": languages,
+        "groupData": groupData,
+        "itemName": "language",
+        "groupItemName": "groupName",
+        "groupListName" : "groupData",
+        "container": "transfer",
+        "valueName": "value",
+        "callable" : function (data, names) {
+            console.log("Selected ID：" + data)
+            // $("#selectedItemSpan").text(names)
+        }
+    };
+
+    var myTransfer = $(".transfer").transfer(settings3);
+
+    // myTransfer.getSelectedItems();
+
+    // myTransfer.transfer(settings4);
+
+
   }
 
 
-  $('#datetimepicker1').datetimepicker({
-    format: "YYYY-MM-DD HH:mm",
-    defaultDate:new Date(),
-    locale:"zh-tw"
-  });
 
 
+  // /* 以下均待改 */
+  // $('#datetimepicker1').datetimepicker({
+  //   format: "YYYY-MM-DD HH:mm",
+  //   defaultDate:new Date(),
+  //   locale:"zh-tw"
+  // });
 
-    // 細分組搜尋框
-  $('#wndSearchGroupBtn').on('click', function() {
-    var wndSearchGroupData = $('#wndSearchGroup').val();
-    console.log(wndSearchGroupData);
-    // 發ajax 搜尋細分組成員
+  //   // 細分組搜尋框
+  // $('#wndSearchGroupBtn').on('click', function() {
+  //   var wndSearchGroupData = $('#wndSearchGroup').val();
+  //   console.log(wndSearchGroupData);
+  //   // 發ajax 搜尋細分組成員
 
-  });
+  // });
 
-  // 暫時假資料代替搜尋完的結果render上頁面
-  var fakeData = [{
-      id: 'jc-1',
-      email: 'jc-1@gmail.com',
-      phone: '0989555555'
-    },
-    {
-      id: 'jc-2',
-      email: 'jc-2@gmail.com',
-      phone: '0989666666'
-    }]
+  // // 暫時假資料代替搜尋完的結果render上頁面
+  // var fakeData = [{
+  //     id: 'jc-1',
+  //     email: 'jc-1@gmail.com',
+  //     phone: '0989555555'
+  //   },
+  //   {
+  //     id: 'jc-2',
+  //     email: 'jc-2@gmail.com',
+  //     phone: '0989666666'
+  //   }]
 
-    // wnd細分組成員被勾選起來後顯示在input中
-     $('#wndSaveChecked').on('click', function() {
-      // 防呆
-      if ( $('#messageCheckBox').prop('checked') || $('#mailCheckBox').prop('checked' ) ) {
-        var checkedMail = [], checkedPhone = [];
-        for (let index = 0; index <= fakeData.length; index++) {
+  //   // wnd細分組成員被勾選起來後顯示在input中
+  //    $('#wndSaveChecked').on('click', function() {
+  //     // 防呆
+  //     if ( $('#messageCheckBox').prop('checked') || $('#mailCheckBox').prop('checked' ) ) {
+  //       var checkedMail = [], checkedPhone = [];
+  //       for (let index = 0; index <= fakeData.length; index++) {
 
-          if ($('#GroupData input').eq(index).prop('checked')) {
-            checkedMail.push(fakeData[index].email);
-            checkedPhone.push(fakeData[index].phone);
-            console.log( $('#GroupData input').eq(index).attr('id') ) ;
-          }
+  //         if ($('#GroupData input').eq(index).prop('checked')) {
+  //           checkedMail.push(fakeData[index].email);
+  //           checkedPhone.push(fakeData[index].phone);
+  //           console.log( $('#GroupData input').eq(index).attr('id') ) ;
+  //         }
 
-        }
+  //       }
 
-        console.log(checkedMail);
-        console.log(checkedPhone);
+  //       console.log(checkedMail);
+  //       console.log(checkedPhone);
 
-        if ( $('#mailCheckBox').prop('checked') ) {
-          $('#receiverEmail').val(checkedMail);
-        }
+  //       if ( $('#mailCheckBox').prop('checked') ) {
+  //         $('#receiverEmail').val(checkedMail);
+  //       }
 
-        if ( $('#messageCheckBox').prop('checked') ) {
-          $('#receiverPhone').val(checkedPhone);
-        }
-      } else {
-        alert('請先勾選發送方式!');
-        return false;
-      }
-      });
-
-
-    $('#saveScheduleBtn').on('click', function() {
-
-      $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
-    });
-
-
+  //       if ( $('#messageCheckBox').prop('checked') ) {
+  //         $('#receiverPhone').val(checkedPhone);
+  //       }
+  //     } else {
+  //       alert('請先勾選發送方式!');
+  //       return false;
+  //     }
+  //     });
 
 
-  });
+  //   $('#saveScheduleBtn').on('click', function() {
+
+  //     $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
+  //   });
+
+  // });
 
 
 </script>

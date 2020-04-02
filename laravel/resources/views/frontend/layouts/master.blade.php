@@ -30,14 +30,14 @@
   <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
   <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/feather.min.js') }}"></script>
-  
+
   <!-- DataTable Sandy(2020/02/25) -->
   <script src="{{ asset('js/dataTables.js') }}"></script>
   <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script>
   {{-- <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script> --}}
 
   <script src="{{ asset('js/popper.min.js') }}" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  
+
   <!-- tempusdominus Sandy(2020/02/27) -->
   <script src="{{ asset('js/bootstrap.min.js') }}"></script>
   <script src="{{ asset('js/moment.min.js') }}"></script>
@@ -49,14 +49,19 @@
   <script src="{{ asset('js/select2.min.js') }}"></script>
   <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
   <link href="{{ asset('css/select2-bootstrap.min.css') }}" rel="stylesheet">
-  
+
   <!-- daterangepicker -->
   <script src="{{ asset('js/daterangepicker.min.js') }}"></script>
   <link href="{{ asset('css/daterangepicker.css') }}" rel="stylesheet">
-  
+
   <!-- 下拉多選 Rocky (2020/03/19) -->
   <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
   <script src="{{ asset('js/bootstrap-select.min.js') }} "></script>
+
+   <!-- message 細分組搜尋 Joanna (2020/04/01) -->
+  <link rel="stylesheet" href="{{ asset('css/icon_font.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/jquery.transfer.css') }}">
+  <script src="{{ asset('js/jquery.transfer.js') }} "></script>
 </head>
 
 <body>
@@ -78,7 +83,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            @elseif (session('status') == "報名失敗")  
+            @elseif (session('status') == "報名失敗")
             <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
               {{ session('status') }}
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -107,14 +112,14 @@
   {{-- </div> --}}
 
   <!-- Rocky(2020/02/17) -->
-  <script>  
+  <script>
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
   </script>
-  
+
   <!-- Web js -->
   <script src="{{ asset('js/style.js') }}"></script>
   <script src="{{ asset('js/otd.js') }}"></script>
