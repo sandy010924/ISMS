@@ -9,8 +9,7 @@
     input:read-only {
       background-color: #e0e0e0 !important;
     }
-    .datetime_show .datetimepicker-input { position: relative; margin-top:50px;}
-    .datetimepicker-input {z-index: 1000;}
+    .bootstrap-datetimepicker-widget {position: relative;z-index: 1000;top:0 !important;}
   </style>
 <!-- Content Start -->
         <!--搜尋學員頁面內容-->
@@ -936,12 +935,21 @@ function contact_data() {
                 //         ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
                 //     '</div> ' +
                 // '</div>' +
-                '<div class="input-group date"  id="new_starttime'+ id +'" ata-target-input="nearest"> ' +
-                    '<input type="text" data-format="YYYY/MM/DD" id="new_starttime'+ id +'" onblur="update_time($(this),'+id+',0);" name="new_starttime'+ id +'"  class="form-control datetimepicker-input"' + ' data-target="#new_starttime'+ id +'"  value="' + val['updated_at'] +'" >' +
-                    '<div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> ' +
-                        '<div class="input-group-text"><i class="fa fa-calendar"></i></div>' +
-                    '</div>' + 
-                '</div>'+ 
+                '<div class="input-group date" id="new_starttime'+ id +'" data-target-input="nearest"> ' +
+                      ' <input type="text" onblur="update_time($(this),'+id+',0);"  value="' + val['updated_at'] +'"   name="new_starttime'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#new_starttime'+ id +'" required/> ' +
+                      ' <div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> '+
+                          ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
+                      '</div> ' +
+                  '</div>' 
+
+
+
+                // '<div class="input-group date"  id="new_starttime'+ id +'" ata-target-input="nearest"> ' +
+                //     '<input type="text" id="new_starttime'+ id +'" onblur="update_time($(this),'+id+',0);" name="new_starttime'+ id +'"  class="form-control datetimepicker-input"' + ' data-target="#new_starttime'+ id +'"  value="' + val['updated_at'] +'" >' +
+                //     '<div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> ' +
+                //         '<div class="input-group-text"><i class="fa fa-calendar"></i></div>' +
+                //     '</div>' + 
+                // '</div>'+ 
                 + '</td>' + 
                 '<td>' + '<input type="text"  class="form-control" onblur="name_course($(this),'+id+',6);" id="' + id +'_name_course" value="' + val['name_course'] +'" class="border-0 bg-transparent input_width">' +  '</td>' + 
                 '<td>' + '<input type="text"  class="form-control" onblur="status_payment($(this),'+id+',1);" id="' + id +'_status_payment" value="' + status_payment +'" class="border-0 bg-transparent input_width">' + '</td>' + 
@@ -965,7 +973,13 @@ function contact_data() {
                           ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
                       '</div> ' +
                   '</div>' +
-                 + '</td>' +
+                  // '<div class="input-group date"  id="remind'+ id +'" ata-target-input="nearest"> ' +
+                  //   '<input type="text" onblur="remind($(this),'+id+',4);"  value="' + val['remind_at'] +'"   name="remind'+ id +'" name="new_starttime'+ id +'"  class="form-control datetimepicker-input"' + ' data-target="#remind'+ id +'" >' +
+                  //   '<div class="input-group-append" data-target="#remind'+ id +'" data-toggle="datetimepicker"> ' +
+                  //       '<div class="input-group-text"><i class="fa fa-calendar"></i></div>' +
+                  //   '</div>' +
+                  // '</div>' + 
+                '</td>' +
                 '</tr>'
         });
         $('#contact_data_detail').html(data);  
@@ -983,8 +997,7 @@ function contact_data() {
           format: "YYYY-MM-DD",
           icons: iconlist, 
           defaultDate:new Date(),
-          pickerPosition: "bottom-left" ,
-          container:'new_starttime19'
+          pickerPosition: "bottom-left"
         });
         $(remindtime.substring(0, remindtime.length-1)).datetimepicker({
           format: "YYYY-MM-DD",
@@ -1069,7 +1082,7 @@ function debt_add(){
         success:function(data){    
           if (data = "儲存成功") {
             contact_data();
-            $('#save_contact').modal('hide');
+            // $('#save_contact').modal('hide');
             $("#success_alert_text").html("儲存成功");
             fade($("#success_alert"));
           } else {
