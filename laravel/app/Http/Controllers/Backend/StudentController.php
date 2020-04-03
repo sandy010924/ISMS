@@ -114,8 +114,8 @@ class StudentController extends Controller
 
         // 新增資料
         $debt->id_student       = $id_student;
-        // $debt->created_at       = $debt_date;
-        // $debt->updated_at       = $debt_date;
+        $debt->created_at       = $debt_date;
+        $debt->updated_at       = $debt_date;
         $debt->status_payment   = $debt_status_date;
         $debt->contact          = $debt_contact;
         $debt->id_status        = $debt_status;
@@ -126,12 +126,24 @@ class StudentController extends Controller
         $debt->save();
         $id_debt = $debt->id;
 
-        echo $debt_date;
-        // if (!empty($id_debt)) {
-        //     return '儲存成功';
-        // } else {
-        //     return '更新失敗';
-        // }
+        if (!empty($id_debt)) {
+            return '儲存成功';
+        } else {
+            return '儲存失敗';
+        }
+    }
+    /*** 聯絡資料 - 儲存 Rocky(2020/04/02) ***/
+
+    public function debtdelete(Request $request)
+    {
+        $id = $request->get('id');
+        $id_debt = Debt::where('id', $id)->delete();
+            
+        if (!empty($id_debt)) {
+            return '刪除成功';
+        } else {
+            return '刪除失敗';
+        }
     }
 
     /*** 聯絡資料 - 自動儲存 ***/
@@ -173,6 +185,11 @@ class StudentController extends Controller
                 // 追單人員
                 Debt::where('id', $id)
                         ->update(['person' => $data]);
+                break;
+            case '6':
+                // 追單課程
+                Debt::where('id', $id)
+                        ->update(['name_course' => $data]);
                 break;
             default:
                 return 'error';

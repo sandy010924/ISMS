@@ -9,7 +9,8 @@
     input:read-only {
       background-color: #e0e0e0 !important;
     }
-    /* .datetimepicker-input { position: relative; margin-top:50px;} */
+    .datetime_show .datetimepicker-input { position: relative; margin-top:50px;}
+    .datetimepicker-input {z-index: 1000;}
   </style>
 <!-- Content Start -->
         <!--搜尋學員頁面內容-->
@@ -296,8 +297,7 @@
                           <thead>
                             <tr>
                               <th class="text-nowrap">
-                                <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#save_contact">新增</button>     
-                              <!-- <i class="fa fa-plus" style="cursor:pointer;" id="save_contact" data-toggle="modal" data-target="#save_contact"></i>    -->
+                                <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#save_contact"><i class="fa fa-plus" aria-hidden="true"></i></button>     
                               </th>
                               <th class="text-nowrap">日期</th>
                               <th class="text-nowrap">追單課程</th>
@@ -356,57 +356,59 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <div class="form-group">
-                              <label for="recipient-name" class="col-form-label">日期:</label>
-                              <div class="input-group date"  data-target-input="nearest">
-                                    <input type="text" id="debt_date" name="debt_date" class="form-control datetimepicker-input" data-target="#debt_date" placeholder="日期">
-                                    <div class="input-group-append" data-target="#debt_date" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
+                            <form id ="form_debt">
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">日期:</label>
+                                <div class="input-group date"  data-target-input="nearest">
+                                      <input type="text" id="debt_date" name="debt_date" class="form-control datetimepicker-input" data-target="#debt_date" placeholder="日期">
+                                      <div class="input-group-append" data-target="#debt_date" data-toggle="datetimepicker">
+                                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                      </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                              <label for="recipient-name" class="col-form-label">追單課程:</label>
-                              <input type="text"  id="debt_course" class="form-control" placeholder="請輸入追單課程" value="" class="border-0 bg-transparent input_width">
-                            </div>
-                            <div class="form-group">
-                              <label for="recipient-name" class="col-form-label">付款狀態 / 日期:</label>
-                              <input type="text"  id="debt_status_date" class="form-control" placeholder="請輸入付款狀態 / 日期"  value="" class="border-0 bg-transparent input_width">
-                            </div>
-                            <div class="form-group">
-                              <label for="recipient-name" class="col-form-label">聯絡內容:</label>
-                              <input type="text" id="debt_contact" class="form-control" value="" placeholder="請輸入聯絡內容" class="border-0 bg-transparent input_width">
-                            </div>
-                            <div class="form-group">
-                              <label for="recipient-name" class="col-form-label">付款狀態:</label>
-                              <select id="debt_status" class="form-control custom-select border-0 bg-transparent input_width"> 
-                                  <option selected="" disabled="" value=""></option>
-                                  <option value="11">完款</option>
-                                  <option value="10">付訂</option>
-                                  <option value="12">待追</option>
-                                  <option value="13">退款中</option>
-                                  <option value="14">退款完成</option>
-                                  <option value="15">無意願</option>
-                                  <option value="16">推薦其他講師</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                              <label for="recipient-name" class="col-form-label">追單人員:</label>
-                              <input type="text"  id="debt_person" class="form-control" placeholder="請輸入追單人員"   value="" class="border-0 bg-transparent input_width">
-                            </div>
-                            <div class="form-group">
-                              <label for="recipient-name" class="col-form-label">設提醒:</label>
-                              <div class="input-group date"  data-target-input="nearest">  
-                                <input type="text" id="debt_remind"  name="debt_remind" class="form-control datetimepicker-input datepicker" data-target="#debt_remind" required="">  
-                                <div class="input-group-append" data-target="#debt_remind" data-toggle="datetimepicker">  
-                                  <div class="input-group-text"><i class="fa fa-calendar"></i>
-                                  </div> 
-                                </div> 
                               </div>
-                            </div>                          
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-primary" onclick="debt_add();">儲存</button>
-                            </div>
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">追單課程:</label>
+                                <input type="text"  id="debt_course" class="form-control" placeholder="請輸入追單課程" value="" class="border-0 bg-transparent input_width" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">付款狀態 / 日期:</label>
+                                <input type="text"  id="debt_status_date" class="form-control" placeholder="請輸入付款狀態 / 日期"  value="" class="border-0 bg-transparent input_width">
+                              </div>
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">聯絡內容:</label>
+                                <input type="text" id="debt_contact" class="form-control" value="" placeholder="請輸入聯絡內容" class="border-0 bg-transparent input_width">
+                              </div>
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">付款狀態:</label>
+                                <select id="debt_status" class="form-control custom-select border-0 bg-transparent input_width"> 
+                                    <option selected="" disabled="" value=""></option>
+                                    <option value="11">完款</option>
+                                    <option value="10">付訂</option>
+                                    <option value="12">待追</option>
+                                    <option value="13">退款中</option>
+                                    <option value="14">退款完成</option>
+                                    <option value="15">無意願</option>
+                                    <option value="16">推薦其他講師</option>
+                                  </select>
+                              </div>
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">追單人員:</label>
+                                <input type="text"  id="debt_person" class="form-control" placeholder="請輸入追單人員"   value="" class="border-0 bg-transparent input_width" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">設提醒:</label>
+                                <div class="input-group date"  data-target-input="nearest">  
+                                  <input type="text" id="debt_remind"  name="debt_remind" class="form-control datetimepicker-input datepicker" data-target="#debt_remind">  
+                                  <div class="input-group-append" data-target="#debt_remind" data-toggle="datetimepicker">  
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                    </div> 
+                                  </div> 
+                                </div>
+                              </div>                          
+                              <div class="modal-footer">
+                              <input id="btnSubmit" type="submit" class="btn btn-primary" onclick=" debt_add();" value="儲存" />
+                              </div>
+                            </form>
                         </div>
                       </div>
                     </div>
@@ -907,29 +909,43 @@ function contact_data() {
           }
           updatetime +="#new_starttime" + id + ','
           remindtime +="#remind" + id + ','
-          var status_payment = '',contact = '';
-          if (val['status_payment'] != 'null'){
-            status_payment = val['status_payment']          
+          var status_payment = '',contact = '',person = '';
+          
+          if ( typeof(val['status_payment']) == 'object'){
+            status_payment = ''
+          }else{
+            status_payment = val['status_payment']
           }
 
           if (val['contact'] != null){
             contact = val['contact']
           }
-          console.log(updatetime)
+
+          if (val['person'] != null){
+            person = val['person']
+          }
+          
+          // console.log(updatetime)
           data +=
                 '<tr>' +
-                '<td></td>' +
+                '<td><i class="fa fa-trash" aria-hidden="true" onclick="debt_delete(' + id +');" style="cursor:pointer;padding-top: 20%; color:#eb6060"></i></td>' +
                 '<td>' + 
-                '<div class="input-group date"  id="new_starttime'+ id +'" data-target-input="nearest"> ' +
-                    ' <input type="text" onblur="update_time($(this),'+id+',0);" value="' + val['updated_at'] +'"   name="new_starttime'+ id +'" class="form-control datetimepicker-input " data-target="#new_starttime'+ id +'" required/> ' +
-                    ' <div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> '+
-                        ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
-                    '</div> ' +
-                '</div>' +
+                // '<div class="input-group date datetime_show"  id="new_starttime'+ id +'" data-target-input="nearest"> ' +
+                //     ' <input type="text" id="new_starttime'+ id +'"  onblur="update_time($(this),'+id+',0);" value="' + val['updated_at'] +'"   name="new_starttime'+ id +'" class="form-control datetimepicker-input " data-target="#new_starttime'+ id +'" required/> ' +
+                //     ' <div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> '+
+                //         ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
+                //     '</div> ' +
+                // '</div>' +
+                '<div class="input-group date"  id="new_starttime'+ id +'" ata-target-input="nearest"> ' +
+                    '<input type="text" data-format="YYYY/MM/DD" id="new_starttime'+ id +'" onblur="update_time($(this),'+id+',0);" name="new_starttime'+ id +'"  class="form-control datetimepicker-input"' + ' data-target="#new_starttime'+ id +'"  value="' + val['updated_at'] +'" >' +
+                    '<div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> ' +
+                        '<div class="input-group-text"><i class="fa fa-calendar"></i></div>' +
+                    '</div>' + 
+                '</div>'+ 
                 + '</td>' + 
-                '<td>' + val['name_course'] + '</td>' + 
-                '<td>' + '<input type="text" onblur="status_payment($(this),'+id+',1);" id="' + id +'_status_payment" value="' + status_payment +'" class="border-0 bg-transparent input_width">' + '</td>' + 
-                '<td>' + '<input type="text" onblur="contact($(this),'+id+',2);" id="' + id +'_contact" value="' + contact +'"  class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<input type="text"  class="form-control" onblur="name_course($(this),'+id+',6);" id="' + id +'_name_course" value="' + val['name_course'] +'" class="border-0 bg-transparent input_width">' +  '</td>' + 
+                '<td>' + '<input type="text"  class="form-control" onblur="status_payment($(this),'+id+',1);" id="' + id +'_status_payment" value="' + status_payment +'" class="border-0 bg-transparent input_width">' + '</td>' + 
+                '<td>' + '<input type="text"  class="form-control" onblur="contact($(this),'+id+',2);" id="' + id +'_contact" value="' + contact +'"  class="border-0 bg-transparent input_width">' + '</td>' +
                 '<td>' + '<div class="form-group m-0"> <select id="' + id +'_status" onblur="status($(this),'+id+',3);" class="custom-select border-0 bg-transparent input_width"> ' +
                             '<option selected disabled value=""></option>' +
                             '<option value="11" '+　opt2 +'>完款</option>' +
@@ -941,7 +957,7 @@ function contact_data() {
                             '<option value="16" '+　opt7 +'>推薦其他講師</option>' +
                         '</select>' +
                     '</div> </td>' +
-                '<td>' + '<input type="text" onblur="person($(this),'+id+',5);" id="' + id +'_person" value="' + val['person'] +'" class="border-0 bg-transparent input_width">'  + '</td>' +
+                '<td>' + '<input type="text"  class="form-control" onblur="person($(this),'+id+',5);" id="' + id +'_person" value="' + person +'" class="border-0 bg-transparent input_width">'  + '</td>' +
                 '<td>' + 
                   '<div class="input-group date" id="remind'+ id +'" data-target-input="nearest"> ' +
                       ' <input type="text" onblur="remind($(this),'+id+',4);"  value="' + val['remind_at'] +'"   name="remind'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#remind'+ id +'" required/> ' +
@@ -964,13 +980,14 @@ function contact_data() {
                       clear: 'fas fa-trash',
                       close: 'far fa-times' } 
         $(updatetime.substring(0, updatetime.length-1)).datetimepicker({
-          format: "YYYY-MM-DD HH:mm:ss",
+          format: "YYYY-MM-DD",
           icons: iconlist, 
           defaultDate:new Date(),
-          pickerPosition: "bottom-left" 
+          pickerPosition: "bottom-left" ,
+          container:'new_starttime19'
         });
         $(remindtime.substring(0, remindtime.length-1)).datetimepicker({
-          format: "YYYY-MM-DD HH:mm:ss",
+          format: "YYYY-MM-DD",
           icons: iconlist, 
           defaultDate:new Date(),
           pickerPosition: "bottom-left" 
@@ -1025,43 +1042,81 @@ function save() {
 
 /*聯絡狀況 - 新增 - S Rocky(2020/04/02)*/
 function debt_add(){
-  debt_date = $("#debt_date").val();
-  debt_course = $("#debt_course").val();
-  debt_status_date = $("#debt_status_date").val();
-  debt_contact = $("#debt_contact").val();
-  debt_status = $("#debt_status").val();
-  debt_person = $("#debt_person").val();
-  debt_remind = $("#debt_remind").val();
-  id_student = id_student_old;
-  $.ajax({
+  var isValidForm = document.forms['form_debt'].checkValidity();
+  if (isValidForm)
+  {
+    debt_date = $("#debt_date").val();
+    debt_course = $("#debt_course").val();
+    debt_status_date = $("#debt_status_date").val();
+    debt_contact = $("#debt_contact").val();
+    debt_status = $("#debt_status").val();
+    debt_person = $("#debt_person").val();
+    debt_remind = $("#debt_remind").val();
+    id_student = id_student_old;
+    $.ajax({
+        type : 'POST',
+        url:'debt_save',    
+        data:{            
+          id_student:id_student,
+          debt_date:debt_date,
+          debt_course:debt_course,
+          debt_status_date:debt_status_date,
+          debt_contact:debt_contact,
+          debt_status:debt_status,
+          debt_person:debt_person,
+          debt_remind:debt_remind
+        },
+        success:function(data){    
+          if (data = "儲存成功") {
+            contact_data();
+            $('#save_contact').modal('hide');
+            $("#success_alert_text").html("儲存成功");
+            fade($("#success_alert"));
+          } else {
+            $("#error_alert_text").html("儲存失敗");
+            fade($("#error_alert"));                 
+          }
+        },
+        error: function(error){
+          console.log(JSON.stringify(error));     
+        }
+    });
+  }else
+  {
+    return false;
+  }
+}
+/*聯絡狀況 - 新增 - E*/
+
+/*聯絡狀況 - 刪除 - S Rocky(2020/04/02)*/
+function debt_delete(id){
+   var msg = "是否刪除此筆資料?";
+  if (confirm(msg)==true){
+    $.ajax({
       type : 'POST',
-      url:'debt_save',    
+      url:'debt_delete',    
       data:{            
-        id_student:id_student,
-        debt_date:debt_date,
-        debt_course:debt_course,
-        debt_status_date:debt_status_date,
-        debt_contact:debt_contact,
-        debt_status:debt_status,
-        debt_person:debt_person,
-        debt_remind:debt_remind
+        id:id
       },
       success:function(data){    
-        if (data = "儲存成功") {
+        if (data = "刪除成功") {
           contact_data();
-          $("#success_alert_text").html("儲存成功");
+          $("#success_alert_text").html("刪除成功");
           fade($("#success_alert"));
         } else {
-          $("#error_alert_text").html("儲存失敗");
+          $("#error_alert_text").html("刪除失敗");
           fade($("#error_alert"));                 
         }
       },
       error: function(error){
         console.log(JSON.stringify(error));     
       }
-  });
+    });
+  }else{
+    return false;
+  }    
 }
-/*聯絡狀況 - 新增 - E*/
+/*聯絡狀況 - 刪除 - E*/
 
 /* 自動儲存 - S Rocky(2020/03/08) */
 
@@ -1094,6 +1149,10 @@ function person(data,id,type){
     save_data(data.val(),id,type)
 }
 
+// 追單課程
+function name_course(data, id,type ){
+  save_data(data.val(),id,type)
+}
 function save_data(data, id,type ){
   $.ajax({
     type:'POST',
@@ -1120,6 +1179,8 @@ function save_data(data, id,type ){
     }
   });
 }
+
+
 
 /* 自動儲存 - E Rocky(2020/03/08) */
 

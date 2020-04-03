@@ -243,6 +243,8 @@ Route::get('error_authority', function () {
     Route::post('contact_data', 'Frontend\StudentController@contactdata');
     /*** 完整內容-聯絡狀況-儲存 Rocky(2020/03/08) ***/
     Route::post('debt_save', 'Backend\StudentController@debtsave');
+    /*** 完整內容-聯絡狀況-刪除 Rocky(2020/03/08) ***/
+    Route::post('debt_delete', 'Backend\StudentController@debtdelete');
     /*** 完整內容-聯絡狀況-自動儲存 Rocky(2020/03/08) ***/
     Route::post('contact_data_save', 'Backend\StudentController@updatedata');
     /*** 完整內容-歷史互動 Rocky(2020/03/06) ***/
