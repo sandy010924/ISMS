@@ -166,7 +166,9 @@
                       </a>
                       <div class="dropdown-menu dropdown_status" aria-labelledby="dropdownMenu2">
                         <a role="button" class="dropdown-item" href="{{ route('course_list_apply', [ 'id' => $data['id'] ]) }}">報名名單</a>
-                        <a role="button" class="dropdown-item" href="{{ route('course_list_refund', [ 'id' => $data['id'] ]) }}">退費名單</a>
+                        @if( $data['type'] != "銷講" )
+                          <a role="button" class="dropdown-item" href="{{ route('course_list_refund', [ 'id' => $data['id'] ]) }}">退費名單</a>
+                        @endif
                       </div>
                       <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data', [ 'id' => $data['id'] ] ) }}">場次數據</a>
                       <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit', [ 'id' => $data['id'] ] ) }}">編輯</a>

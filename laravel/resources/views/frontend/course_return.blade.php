@@ -57,11 +57,12 @@
                         <label class="col-form-label" for="idate">報名日期</label>
                         {{-- <input type="text" id="idate" name="idate" class="form-control"> --}}
                         <div class="input-group date" id="idate" data-target-input="nearest">
-                            <input type="text" name="idate" class="form-control datetimepicker-input" data-target="#idate" required/>
+                            <input type="text" name="idate" class="form-control datetimepicker-input" data-target="#idate" autocomplete="off" required/>
                             <div class="input-group-append" data-target="#idate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                        {{-- <input type="text" class="form-control" id="idate" name="idate" data-provide="datepicker" autocomplete="off"> --}}
                       </div>
                       <div class="form-group required">
                         <label for="iphone" class="col-form-label">聯絡電話</label>
@@ -95,12 +96,14 @@
                       <div class="form-group">
                         <label for="ibirthday" class="col-form-label">出生日期</label>
                         {{-- <input type="date" class="form-control" name="ibirthday" id="ibirthday"> --}}
-                        <div class="input-group date" id="ibirthday" data-target-input="nearest">
+                        {{-- <div class="input-group date" id="ibirthday" data-target-input="nearest">
                             <input type="text" name="ibirthday" class="form-control datetimepicker-input" data-target="#ibirthday"/>
                             <div class="input-group-append" data-target="#ibirthday" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
-                        </div>
+                        </div> --}}
+                        <input type="text" class="form-control" id="ibirthday" name="ibirthday" data-provide="datepicker" autocomplete="off">
+                        <label class="text-secondary px-2 py-1"><small>(民國年-月-日)</small></label>
                       </div>
                       <div class="form-group">
                         <label for="icompany" class="col-form-label">公司名稱</label>
@@ -469,17 +472,32 @@
 
     $('#idate').datetimepicker({ 
       defaultDate: new Date(),
+      languate: 'zh-TW',
       format: 'YYYY-MM-DD',
       icons: iconlist, 
     });
 
-    $('#ibirthday').datetimepicker({ 
-      format: 'YYYY-MM-DD',
-      icons: iconlist, 
-    });
+    // $('#ibirthday').datetimepicker({ 
+    //   // locale : 'zh-tw',
+    //   languate: 'zh-TW',
+    //   format: 'twy-MM-DD',
+    //   icons: iconlist, 
+    // });
     
+    $('#ibirthday').datepicker({ 
+      // defaultDate: new Date(),
+      languate: 'zh-TW',
+      format: 'twy-mm-dd',
+    });
+
   });
 
+  /* 日期選擇器位置 */
+  $(document).on('show', $('.datepicker').datepicker(), function() {
+    $('.datepicker').removeClass('datepicker-orient-top');
+    $('.datepicker').addClass('datepicker-orient-bottom');
+  });
+  /* 日期選擇器位置 */
 
   /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
     // 現場完款

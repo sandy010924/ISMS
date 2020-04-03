@@ -9,7 +9,7 @@ use App\Model\EventsCourse;
 
 class CourseListEditController extends Controller
 {
-    //新增報名表
+    /* 新增報名表 s */
     public function insert(Request $request)
     {
         try{
@@ -28,9 +28,10 @@ class CourseListEditController extends Controller
         }
 
     }
+    /* 新增報名表 e */
 
 
-    // 取消場次 Sandy (2020/03/21)
+    /* 取消場次Sandy (2020/03/21) s */
     public function update(Request $request)
     {
         $status = "";
@@ -58,4 +59,46 @@ class CourseListEditController extends Controller
         //  }
         return json_encode(array('data' => $status));
     }
+    /* 取消場次Sandy (2020/03/21) e */
+
+    
+    /* 更新資料(講師、課程名稱)Sandy (2020/04/02) s */
+    public function update_data(Request $request)
+    {
+        $status='';
+
+        //取回data
+        $id_course = $request->input('id_course');
+        $data_type = $request->input('data_type');
+        $data_val = $request->input('data_val');
+
+        try{
+            switch($data_type){
+                case 'teacher':
+                    //講師
+                    Course::join('teacher', 'teacher.id', '=', 'course.id_teacher' )
+                          ->where('course.id', $id_course)
+                          ->update(['teacher.name' => $data_val]);
+                    $status = "success";
+                    break;
+                case 'course':
+                    //課程
+                    Course::where('id', $id_course)
+                          ->update(['name' => $data_val]);
+                    $status = "success";
+                    break;
+                default:
+                    $status = "error";
+                    break;
+            }
+        }catch (Exception $e) {
+            // return json_encode(array(
+            //     'errorMsg' => '報到狀態修改失敗'
+            // ));
+            $status = "error";
+        }
+
+        return $status;
+    }
+    /*  更新資料(講師、課程名稱)Sandy (2020/04/02) e */
 }

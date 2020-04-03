@@ -7,6 +7,7 @@
 <!-- Content Start -->
 <!--課程總覽編輯頁面內容-->
   <div class="card m-3">
+    <input type="hidden" id="id_course" value="{{ $course->id }}">
     <div class="card-body">
       <div class="row">
         <div class="col-3">
@@ -14,7 +15,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">講師名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $course->teacher }}" disabled readonly>
+            <input type="text" class="form-control bg-white" aria-label="Teacher name" id="teacher" value="{{ $course->teacher }}">
           </div>
         </div>
         <div class="col-5">
@@ -22,7 +23,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">課程名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->name }}" disabled readonly>
+            <input type="text" class="form-control bg-white" aria-label="Course name" id="course" value="{{ $course->name }}">
           </div>
         </div>
         <div class="col align-middle align-self-end">
@@ -199,6 +200,67 @@
       }    
     }
     // 取消場次 Sandy(2020/03/21) end
+
+    /* 資料自動儲存 start */
+    // 講師
+    $('#teacher').on('blur', function() {
+      var data_type = 'teacher';
+      save_data($(this), data_type);
+    });
+    $('#teacher').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        var data_type = 'teacher';
+        save_data($(this), data_type);
+      }
+    });
+
+    // 課程
+    $('#course').on('blur', function() {
+      var data_type = 'course';
+      save_data($(this), data_type);
+    });
+    $('#course').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        var data_type = 'course';
+        save_data($(this), data_type);
+      }
+    });
+
+    function save_data(data, data_type){
+      var id_course = $("#id_course").val();
+      var data_val = data.val();
+      $.ajax({
+        type:'POST',
+        url:'course_list_edit_updatedata',
+        data:{
+          id_course: id_course,
+          data_type: data_type, 
+          data_val: data_val,
+        },
+        success:function(data){
+          // console.log(JSON.stringify(data));
+
+          if( data == "success" ){
+            /** alert **/
+            $("#success_alert_text").html("資料儲存成功");
+            fade($("#success_alert"));
+          }else{
+            /** alert **/ 
+            $("#error_alert_text").html("資料儲存失敗");
+            fade($("#error_alert"));    
+          }
+
+        },
+        error: function(jqXHR){
+          console.log(JSON.stringify(jqXHR));  
+
+          /** alert **/ 
+          $("#error_alert_text").html("資料儲存失敗");
+          fade($("#error_alert"));      
+        }
+      });
+    }
+    /* 資料自動儲存 end */
 
   </script>
 @endsection

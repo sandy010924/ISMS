@@ -39,7 +39,7 @@
           @if( $nextLevel > 0 )
             <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary" >場次報表</button></a>
           @else
-            <button type="button" class="btn btn-primary" onclick="alert('尚未串接下階課程！\n請先到【課程管理】找到該課程的下階課程，進入至下階課程的【編輯】，點選「新增報名表」按鈕，在「對應課程」選擇此課程做串接。');">場次報表</button>
+            <button type="button" class="btn btn-primary" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」按鈕，在「對應課程」選擇此課程做串接。');">場次報表</button>
           @endif
         </div>
       </div>
@@ -206,7 +206,7 @@
               </div>
             </div>
           @else
-            <button type="button" class="btn btn-outline-secondary mx-1" onclick="alert('尚未串接下階課程！\n請先到【課程管理】找到該課程的下階課程，進入至下階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">下階報名表</button>
+            <button type="button" class="btn btn-outline-secondary mx-1" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">下階報名表</button>
           @endif
         </div>
       </div>
@@ -311,81 +311,6 @@
           return false;
         }  
       } 
-
-      // function update_status(){
-      //   var update_status = $(this).attr('name');
-      //   var course_type = $("#course_type").val();
-      //   if( update_status == 'check_btn' ){
-      //     var check_id = $(this).attr('id');
-      //     var check_value = $(this).val();
-      //     $.ajax({
-      //       type:'POST',
-      //       url:'course_check_status',
-      //       data:{
-      //         check_id:check_id,
-      //         course_type:course_type,
-      //         check_value:check_value,
-      //         update_status:update_status
-      //       },
-      //       success:function(data){
-      //           // console.log(data);  
-                
-      //           $("#"+data["list"].check_id).val(data["list"].check_status_val);
-      //           $("#"+data["list"].check_id).html(data["list"].check_status_name);
-                
-      //           $("#count_check").html(data.count_check);
-      //           $("#count_cancel").html(data.count_cancel);
-
-      //           status_style(data["list"].check_id ,data["list"].check_status_val);
-
-      //           /** alert **/
-      //           $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
-      //           fade($("#success_alert"));
-      //       },
-      //       error: function(jqXHR){
-      //           console.log("error: "+ JSON.stringify(jqXHR)); 
-                
-      //           /** alert **/ 
-      //           $("#error_alert_text").html("報名狀態修改失敗");
-      //           fade($("#error_alert"));      
-      //       }
-      //     });
-      //   }
-      //   else{
-      //     var check_id = this.value;
-      //     $.ajax({
-      //       type:'POST',
-      //       url:'course_check_status',
-      //       data:{
-      //         check_id:check_id,
-      //         course_type:course_type,
-      //         update_status:update_status
-      //       },
-      //       success:function(data){
-      //           // console.log(data);  
-
-      //           $("#"+data["list"].check_id).val(data["list"].check_status_val);
-      //           $("#"+data["list"].check_id).html(data["list"].check_status_name);
-                
-      //           $("#count_check").html(data.count_check);
-      //           $("#count_cancel").html(data.count_cancel);
-
-      //           status_style(data["list"].check_id ,data["list"].check_status_val);
-
-      //           /** alert **/
-      //           $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
-      //           fade($("#success_alert"));
-      //       },
-      //       error: function(jqXHR){
-      //           console.log("error: "+ JSON.stringify(jqXHR)); 
-                
-      //           /** alert **/ 
-      //           $("#error_alert_text").html("報名狀態修改失敗");
-      //           fade($("#error_alert"));      
-      //       }
-      //     });
-      //   }
-      // }
     });
     
     function update_status(btn){

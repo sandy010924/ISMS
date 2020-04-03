@@ -553,5 +553,9 @@ ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_5`;
 ALTER TABLE sales_registration DROP FOREIGN KEY `sales_registration_ibfk_2`;
 ALTER TABLE sales_registration DROP FOREIGN KEY `sales_registration_ibfk_4`;
 
--- 追單資料表 - 增加場次ID Rocky(2020/04/01)
+-- 追單資料表 - 報名日期 Sandy(2020/04/01)
 ALTER TABLE `registration` ADD COLUMN submissiondate VARCHAR(150) NULL COMMENT 'Submission Date';
+
+-- 退費資料表 - 增加退費審核 Sandy(2020/04/02)
+ALTER TABLE `refund` ADD COLUMN review INT NULL COMMENT '審核(0:審核中,1:通過,2:未通過)' DEFAULT 0;
+

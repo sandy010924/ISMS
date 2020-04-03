@@ -157,6 +157,8 @@ Route::get('error_authority', function () {
     Route::post('course_list_edit_insert', 'Backend\CourseListEditController@insert');
     /*** 更新場次 ***/
     Route::post('course_list_edit_update', 'Backend\CourseListEditController@update');
+    /*** 更新資料 ***/
+    Route::post('course_list_edit_updatedata', 'Backend\CourseListEditController@update_data');
 
 
 

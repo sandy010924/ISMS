@@ -41,7 +41,7 @@
   <!-- tempusdominus Sandy(2020/02/27) -->
   <script src="{{ asset('js/bootstrap.min.js') }}"></script>
   <script src="{{ asset('js/moment.min.js') }}"></script>
-  {{-- <script src="{{ asset('js/zh-tw.js') }}"></script> --}}
+  <script src="{{ asset('js/zh-tw.js') }}"></script>
   <script src="{{ asset('js/tempusdominus-bootstrap-4.js') }}"></script>
   <link href="{{ asset('css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
 
@@ -62,6 +62,11 @@
   <link rel="stylesheet" href="{{ asset('css/icon_font.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jquery.transfer.css') }}">
   <script src="{{ asset('js/jquery.transfer.js') }} "></script>
+
+  <!-- 民國年日期選擇器 Sandy (2020/04/02) -->
+  <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+  <script src="{{ asset('js/bootstrap-datepicker.js') }} "></script>
+
 </head>
 
 <body>
