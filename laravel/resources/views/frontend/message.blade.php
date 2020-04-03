@@ -361,104 +361,165 @@ $(document).ready(function () {
     });
 
 
+    $.ajax({
+      type: "post",
+      url: "messageDetailGroup"
+    }).done(function(res) {
+      console.log(res);
+      debugger;
+      var groupData = res;
+
+      var settings111 = {
+        "groupDataArray": groupData,
+        "groupItemName": "groupName",
+        "groupArrayName": "groupData",
+        "itemName": "name",
+        "valueName": "id",
+        tabNameText: "細分組成員",
+        rightTabNameText: "已選擇細分組成員",
+        searchPlaceholderText: "搜尋細分組成員",
+        "callable": function (items) {
+            console.dir(items)
+        }
+      };
+      $(".transfer").transfer(settings111);
+
+    }).fail(function(err) {
+      console.log(err);
+    });
+
+    // var testGroupData = [
+    //   {
+    //     "groupName": "test",
+    //     "groupData": [
+    //       {
+    //         "id": 1,
+    //         "name": "測試資料_1",
+    //       }, {
+    //         "id": 2,
+    //         "name": "測試資料_2",
+    //       }
+    //     ]
+    //   }
+    // ]
+
+    // var testSettings = {
+    //     "groupDataArray": testGroupData,
+    //     "groupItemName": "groupName",
+    //     "groupArrayName": "groupData",
+    //     "itemName": "name",
+    //     "valueName": "id",
+    //     tabNameText: "細分組成員",
+    //     rightTabNameText: "已選擇細分組成員",
+    //     searchPlaceholderText: "搜尋細分組成員",
+    //     "callable": function (items) {
+    //         console.dir(items)
+    //     }
+    // }
+
+    // $(".transfer").transfer(testSettings);
+}
+
+
+
     // ListBox Setting
-    var languages = [
-        {
-            "language": "jQuery",
-            "value": 122
-        },
-        {
-            "language": "AngularJS",
-            "value": 132
-        },
-        {
-            "language": "ReactJS",
-            "value": 422
-        },
-        {
-            "language": "VueJS",
-            "value": 232
-        },
-        {
-            "language": "JavaScript",
-            "value": 765
-        },
-        {
-            "language": "Java",
-            "value": 876
-        },
-        {
-            "language": "Python",
-            "value": 453
-        },
-        {
-            "language": "TypeScript",
-            "value": 125
-        },
-        {
-            "language": "PHP",
-            "value": 633
-        },
-        {
-            "language": "Ruby on Rails",
-            "value": 832
-        }
-    ];
+    // var languages = [
+    //     {
+    //         "language": "jQuery",
+    //         "value": 122
+    //     },
+    //     {
+    //         "language": "AngularJS",
+    //         "value": 132
+    //     },
+    //     {
+    //         "language": "ReactJS",
+    //         "value": 422
+    //     },
+    //     {
+    //         "language": "VueJS",
+    //         "value": 232
+    //     },
+    //     {
+    //         "language": "JavaScript",
+    //         "value": 765
+    //     },
+    //     {
+    //         "language": "Java",
+    //         "value": 876
+    //     },
+    //     {
+    //         "language": "Python",
+    //         "value": 453
+    //     },
+    //     {
+    //         "language": "TypeScript",
+    //         "value": 125
+    //     },
+    //     {
+    //         "language": "PHP",
+    //         "value": 633
+    //     },
+    //     {
+    //         "language": "Ruby on Rails",
+    //         "value": 832
+    //     }
+    // ];
 
-    var groupData = [
-        {
-            "groupName": "JavaScript",
-            "groupData": [
-                {
-                    "language": "jQuery",
-                    "value": 122
-                },
-                {
-                    "language": "AngularJS",
-                    "value": 643
-                },
-                {
-                    "language": "ReactJS",
-                    "value": 422
-                },
-                {
-                    "language": "VueJS",
-                    "value": 622
-                }
-            ]
-        },
-        {
-            "groupName": "Popular",
-            "groupData": [
-                {
-                    "language": "JavaScript",
-                    "value": 132
-                },
-                {
-                    "language": "Java",
-                    "value": 112
-                },
-                {
-                    "language": "Python",
-                    "value": 124
-                },
-                {
-                    "language": "TypeScript",
-                    "value": 121
-                },
-                {
-                    "language": "PHP",
-                    "value": 432
-                },
-                {
-                    "language": "Ruby on Rails",
-                    "value": 421
-                }
-            ]
-        }
-    ];
+    // var groupData = [
+    //     {
+    //         "groupName": "JavaScript",
+    //         "groupData": [
+    //             {
+    //                 "language": "jQuery",
+    //                 "value": 122
+    //             },
+    //             {
+    //                 "language": "AngularJS",
+    //                 "value": 643
+    //             },
+    //             {
+    //                 "language": "ReactJS",
+    //                 "value": 422
+    //             },
+    //             {
+    //                 "language": "VueJS",
+    //                 "value": 622
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         "groupName": "Popular",
+    //         "groupData": [
+    //             {
+    //                 "language": "JavaScript",
+    //                 "value": 132
+    //             },
+    //             {
+    //                 "language": "Java",
+    //                 "value": 112
+    //             },
+    //             {
+    //                 "language": "Python",
+    //                 "value": 124
+    //             },
+    //             {
+    //                 "language": "TypeScript",
+    //                 "value": 121
+    //             },
+    //             {
+    //                 "language": "PHP",
+    //                 "value": 432
+    //             },
+    //             {
+    //                 "language": "Ruby on Rails",
+    //                 "value": 421
+    //             }
+    //         ]
+    //     }
+    // ];
 
-
+    /*
     var settings22 = {
         // data item name
         itemName: "item",
@@ -500,7 +561,7 @@ $(document).ready(function () {
 
     var settings4 = {
         "inputId": "languageInput",
-        "data": languages,
+        // "data": languages,
         "groupData": groupData,
         "itemName": "language",
         "groupItemName": "groupName",
@@ -513,14 +574,17 @@ $(document).ready(function () {
         }
     };
 
-    var myTransfer = $(".transfer").transfer(settings3);
+    */
+
+    // var myTransfer = $(".transfer").transfer(settings3);
 
     // myTransfer.getSelectedItems();
 
     // myTransfer.transfer(settings4);
 
 
-  }
+
+
 
 
 

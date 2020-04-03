@@ -333,6 +333,9 @@ Route::get('error_authority', function () {
         return view('frontend.message');
     })->name('message');
 
+    /*** [訊息推播] 撈出細分組資料 ***/
+    Route::post('messageDetailGroup', 'Frontend\MessageController@showDetailGroup')->name('messageDetailGroup');
+
     /*** [訊息推播] 訊息列表 ***/
     Route::get('message_list', function () {
         return view('frontend.message_list');
@@ -358,7 +361,6 @@ Route::get('error_authority', function () {
 
     /*** [訊息推播] 多筆簡訊API***/
     Route::post('messageBulkApi', 'Backend\MessageController@messageBulkApi');
-
 
 /*
 ------------
