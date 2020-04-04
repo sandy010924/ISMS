@@ -4,11 +4,37 @@ namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-// use App\Model\Course;
+use App\Model\StudentGroupdetail;
+use App\Model\StudentGroup;
 use Mail;
 
 class MessageController extends Controller
 {
+    /**
+     * 顯示細分組資料
+     */
+    public function showDetailGroup(Request $request)
+    {
+        $groupData = StudentGroup::get();
+
+        $array_group = array();
+
+        foreach ($groupData as $key => $value) {
+            $groupData_detail = StudentGroup::leftjoin('student_groupdetail as b', 'student_group.id', '=', 'b.id_group')
+                            ->leftjoin('student as c', 'c.id', '=', 'b.id_student')
+                            ->select('c.id', 'c.name', 'c.email', 'c.phone')
+                            ->where('b.id_group', $value['id'])
+                            ->get();
+            array_push($array_group, array(
+                'groupName' => $value['name'],
+                'groupData' => $groupData_detail
+            ));
+        }
+        $result = $array_group;
+        return $result;
+
+    }
+
     /**
      * 單筆發送
      */

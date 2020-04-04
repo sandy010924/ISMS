@@ -334,7 +334,7 @@ Route::get('error_authority', function () {
     })->name('message');
 
     /*** [訊息推播] 撈出細分組資料 ***/
-    Route::post('messageDetailGroup', 'Frontend\MessageController@showDetailGroup')->name('messageDetailGroup');
+    Route::post('messageDetailGroup', 'Backend\MessageController@showDetailGroup')->name('messageDetailGroup');
 
     /*** [訊息推播] 訊息列表 ***/
     Route::get('message_list', function () {

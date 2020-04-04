@@ -27,7 +27,7 @@
               <div class="form-group">
                 <label for="">發送對象</label>
                 <div>
-                  <input id="aa" type="button" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
+                  <input id="groupDetailBtn" type="button" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
                 </div>
               </div>
 
@@ -193,6 +193,94 @@
 <script>
 $(document).ready(function () {
   init();
+  var groupData;
+  var allDataPhone = [];
+  var allDataEmail = [];
+  var selectedDataId = [];
+
+  $.ajax({
+    type: "post",
+    url: "messageDetailGroup"
+  }).done(function(res) {
+    groupData = res;
+
+    var settings = {
+    "groupDataArray": groupData,
+    "groupItemName": "groupName",
+    "groupArrayName": "groupData",
+    "itemName": "name",
+    "valueName": "id",
+    tabNameText: "細分組成員",
+    rightTabNameText: "已選擇細分組成員",
+    searchPlaceholderText: "搜尋細分組成員",
+    "callable": function (data, names) {
+      selectedDataId = [];
+      data.forEach(item => {
+        selectedDataId.push(parseInt(item.id,10))
+      });
+      // console.log(selectedDataId);
+    }
+  };
+
+    var transfer = $(".transfer").transfer(settings);
+      // get selected items
+    var items = transfer.getSelectedItems();
+    // console.log(items);
+
+  }).fail(function(err) {
+    console.log(err);
+  });
+
+
+  // 防呆
+  $('#groupDetailBtn').on('click', function() {
+    if ( !($('#messageCheckBox').prop('checked') || $('#mailCheckBox').prop('checked' ) )) {
+      alert('請先勾選發送方式!');
+        return false;
+    }
+  });
+
+
+  // 細分組搜尋確定Btn
+  $('#wndSaveChecked').on('click', function() {
+    // 清空data
+    allDataPhone = [];
+    allDataEmail = [];
+
+    // 比對id 撈出phone、email
+    for( var i = 0; i<groupData.length;i++) {
+      for( var j = 0; j<groupData[i].groupData.length; j++) {
+        for( var z = 0; z<selectedDataId.length; z++) {
+          if (selectedDataId[z] == groupData[i].groupData[j].id) {
+            console.log(groupData[i].groupData[j].phone);
+            allDataPhone.push(groupData[i].groupData[j].phone);
+            allDataEmail.push(groupData[i].groupData[j].email);
+          }
+
+        }
+      }
+    }
+    console.log(allDataPhone);
+    console.log(allDataEmail);
+
+    if ( $('#mailCheckBox').prop('checked') ) {
+      $('#receiverEmail').val(allDataEmail);
+    }
+
+    if ( $('#messageCheckBox').prop('checked') ) {
+      $('#receiverPhone').val(allDataPhone);
+    }
+
+    // 找傳送給哪一個細分組，後端做紀錄
+    // for (var i = 0; i< $(".group-select-all-1e5364e841u5i1m541urm1b0tblg0").length; i++) {
+    //   if ($(".group-select-all-1e5364e841u5i1m541urm1b0tblg0").eq(i).prop("checked")) {
+    //     console.log($(this).id);
+
+    //   }
+    // }
+
+
+  });
 
   // 簡訊寄送方式被觸發時
   $('#messageCheckBox').on('click', function() {
@@ -265,6 +353,8 @@ $(document).ready(function () {
       // 只發送mail
       mailApi();
     }
+
+
 
 
   });
@@ -359,233 +449,7 @@ $(document).ready(function () {
     .catch(err => {
       console.error(err.stack);
     });
-
-
-    $.ajax({
-      type: "post",
-      url: "messageDetailGroup"
-    }).done(function(res) {
-      console.log(res);
-      debugger;
-      var groupData = res;
-
-      var settings111 = {
-        "groupDataArray": groupData,
-        "groupItemName": "groupName",
-        "groupArrayName": "groupData",
-        "itemName": "name",
-        "valueName": "id",
-        tabNameText: "細分組成員",
-        rightTabNameText: "已選擇細分組成員",
-        searchPlaceholderText: "搜尋細分組成員",
-        "callable": function (items) {
-            console.dir(items)
-        }
-      };
-      $(".transfer").transfer(settings111);
-
-    }).fail(function(err) {
-      console.log(err);
-    });
-
-    // var testGroupData = [
-    //   {
-    //     "groupName": "test",
-    //     "groupData": [
-    //       {
-    //         "id": 1,
-    //         "name": "測試資料_1",
-    //       }, {
-    //         "id": 2,
-    //         "name": "測試資料_2",
-    //       }
-    //     ]
-    //   }
-    // ]
-
-    // var testSettings = {
-    //     "groupDataArray": testGroupData,
-    //     "groupItemName": "groupName",
-    //     "groupArrayName": "groupData",
-    //     "itemName": "name",
-    //     "valueName": "id",
-    //     tabNameText: "細分組成員",
-    //     rightTabNameText: "已選擇細分組成員",
-    //     searchPlaceholderText: "搜尋細分組成員",
-    //     "callable": function (items) {
-    //         console.dir(items)
-    //     }
-    // }
-
-    // $(".transfer").transfer(testSettings);
-}
-
-
-
-    // ListBox Setting
-    // var languages = [
-    //     {
-    //         "language": "jQuery",
-    //         "value": 122
-    //     },
-    //     {
-    //         "language": "AngularJS",
-    //         "value": 132
-    //     },
-    //     {
-    //         "language": "ReactJS",
-    //         "value": 422
-    //     },
-    //     {
-    //         "language": "VueJS",
-    //         "value": 232
-    //     },
-    //     {
-    //         "language": "JavaScript",
-    //         "value": 765
-    //     },
-    //     {
-    //         "language": "Java",
-    //         "value": 876
-    //     },
-    //     {
-    //         "language": "Python",
-    //         "value": 453
-    //     },
-    //     {
-    //         "language": "TypeScript",
-    //         "value": 125
-    //     },
-    //     {
-    //         "language": "PHP",
-    //         "value": 633
-    //     },
-    //     {
-    //         "language": "Ruby on Rails",
-    //         "value": 832
-    //     }
-    // ];
-
-    // var groupData = [
-    //     {
-    //         "groupName": "JavaScript",
-    //         "groupData": [
-    //             {
-    //                 "language": "jQuery",
-    //                 "value": 122
-    //             },
-    //             {
-    //                 "language": "AngularJS",
-    //                 "value": 643
-    //             },
-    //             {
-    //                 "language": "ReactJS",
-    //                 "value": 422
-    //             },
-    //             {
-    //                 "language": "VueJS",
-    //                 "value": 622
-    //             }
-    //         ]
-    //     },
-    //     {
-    //         "groupName": "Popular",
-    //         "groupData": [
-    //             {
-    //                 "language": "JavaScript",
-    //                 "value": 132
-    //             },
-    //             {
-    //                 "language": "Java",
-    //                 "value": 112
-    //             },
-    //             {
-    //                 "language": "Python",
-    //                 "value": 124
-    //             },
-    //             {
-    //                 "language": "TypeScript",
-    //                 "value": 121
-    //             },
-    //             {
-    //                 "language": "PHP",
-    //                 "value": 432
-    //             },
-    //             {
-    //                 "language": "Ruby on Rails",
-    //                 "value": 421
-    //             }
-    //         ]
-    //     }
-    // ];
-
-    /*
-    var settings22 = {
-        // data item name
-        itemName: "item",
-        // group data item name
-        groupItemName: "groupItem",
-        // group data array name
-        groupArrayName: "groupArray",
-        // data value name
-        valueName: "value",
-        // tab text
-        tabNameText: "items",
-        // right tab text
-        rightTabNameText: "selected items",
-        // search placeholder text
-        searchPlaceholderText: "搜尋細分組成員",
-        // items data array
-        dataArray: languages,
-        // group data array
-        groupDataArray: groupData,
-        callable: function (items) {
-          // your code
-        }
-    };
-
-
-    var settings3 = {
-        "groupDataArray": groupData,
-        "groupItemName": "groupName",
-        "groupArrayName": "groupData",
-        "itemName": "language",
-        "valueName": "value",
-        tabNameText: "細分組成員",
-        rightTabNameText: "已選擇細分組成員",
-        searchPlaceholderText: "搜尋細分組成員",
-        "callable": function (items) {
-            console.dir(items)
-        }
-    };
-
-    var settings4 = {
-        "inputId": "languageInput",
-        // "data": languages,
-        "groupData": groupData,
-        "itemName": "language",
-        "groupItemName": "groupName",
-        "groupListName" : "groupData",
-        "container": "transfer",
-        "valueName": "value",
-        "callable" : function (data, names) {
-            console.log("Selected ID：" + data)
-            // $("#selectedItemSpan").text(names)
-        }
-    };
-
-    */
-
-    // var myTransfer = $(".transfer").transfer(settings3);
-
-    // myTransfer.getSelectedItems();
-
-    // myTransfer.transfer(settings4);
-
-
-
-
-
+  }
 
 
 
@@ -595,57 +459,6 @@ $(document).ready(function () {
   //   defaultDate:new Date(),
   //   locale:"zh-tw"
   // });
-
-  //   // 細分組搜尋框
-  // $('#wndSearchGroupBtn').on('click', function() {
-  //   var wndSearchGroupData = $('#wndSearchGroup').val();
-  //   console.log(wndSearchGroupData);
-  //   // 發ajax 搜尋細分組成員
-
-  // });
-
-  // // 暫時假資料代替搜尋完的結果render上頁面
-  // var fakeData = [{
-  //     id: 'jc-1',
-  //     email: 'jc-1@gmail.com',
-  //     phone: '0989555555'
-  //   },
-  //   {
-  //     id: 'jc-2',
-  //     email: 'jc-2@gmail.com',
-  //     phone: '0989666666'
-  //   }]
-
-  //   // wnd細分組成員被勾選起來後顯示在input中
-  //    $('#wndSaveChecked').on('click', function() {
-  //     // 防呆
-  //     if ( $('#messageCheckBox').prop('checked') || $('#mailCheckBox').prop('checked' ) ) {
-  //       var checkedMail = [], checkedPhone = [];
-  //       for (let index = 0; index <= fakeData.length; index++) {
-
-  //         if ($('#GroupData input').eq(index).prop('checked')) {
-  //           checkedMail.push(fakeData[index].email);
-  //           checkedPhone.push(fakeData[index].phone);
-  //           console.log( $('#GroupData input').eq(index).attr('id') ) ;
-  //         }
-
-  //       }
-
-  //       console.log(checkedMail);
-  //       console.log(checkedPhone);
-
-  //       if ( $('#mailCheckBox').prop('checked') ) {
-  //         $('#receiverEmail').val(checkedMail);
-  //       }
-
-  //       if ( $('#messageCheckBox').prop('checked') ) {
-  //         $('#receiverPhone').val(checkedPhone);
-  //       }
-  //     } else {
-  //       alert('請先勾選發送方式!');
-  //       return false;
-  //     }
-  //     });
 
 
   //   $('#saveScheduleBtn').on('click', function() {
