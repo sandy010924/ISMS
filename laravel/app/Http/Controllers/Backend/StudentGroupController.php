@@ -37,6 +37,7 @@ class StudentGroupController extends Controller
     {
         $id_StudentGroupdetail = "";
         $title = $request->get('title');
+        $condition = $request->get('log');
         $array_studentid = $request->get('array_studentid');
         // return $array_studentid;
         
@@ -46,7 +47,8 @@ class StudentGroupController extends Controller
        
         // 新增細分組資料
         $StudentGroup->name       = $title;         // 細分組名稱
-                        
+        $StudentGroup->condition  = $condition;     // 條件
+
         $StudentGroup->save();
         $id_StudentGroup = $StudentGroup->id;
 

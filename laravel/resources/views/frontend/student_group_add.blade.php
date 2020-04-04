@@ -91,7 +91,14 @@
           <div class="card-body">
             <div class="row mt-2 mb-3">
               <div class="col">
+                <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#model_show_log" aria-expanded="false" aria-controls="model_show_log" onclick="show_log();">
+                <i class="fa fa-search" aria-hidden="true"></i>查看條件
+                </button>               
                 <button class="btn btn-outline-secondary mr-2 " type="button" id="btn_newgroup" data-toggle="modal" data-target="#save_newgroup">保存為細分組</button>
+                <div class="collapse" id="model_show_log" style="padding-top:15px;">
+                  <div class="card card-body" id="show_log">
+                  </div>
+                </div>
                 <div class="modal fade" id="save_newgroup" tabindex="-1" role="dialog" aria-labelledby="save_newgroupTitle" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -112,7 +119,7 @@
                   </div>
                 </div>
                 <button class="btn btn-outline-secondary" type="button" id="btn_newgroup" hidden>添加條件組</button>
-              </div>
+              </div>           
             </div>
             <div class="table-responsive">
               <table class="table table-striped table-sm text-center">
@@ -170,7 +177,7 @@
 <script>  
 // 宣告
 var array_studentid = new Array();
-//  $('select').selectpicker();
+var search_log = '',count_log = 0
 $("document").ready(function(){
   //  // 顯示細分條件資料 Rocky(2020/03/14)
   //  show_requirement();
@@ -375,7 +382,48 @@ $.ajax({
       }
   });  
 }
+function write_log(){
+  var log = ''
+  type = $('#select_type :selected').text()
+  course = $('#select_course :selected').text()
+  date = $('#input_date').val()  
+  type_condition = $('#condition :selected').text()  
+  opt1 = $('#condition_option1 :selected').text()
+  opt2 = $('#condition_option2 :selected').text()
+  value = $('#condition_input3').val()
 
+  log += count_log + '. '
+  if(type != "") {
+    log += type + '/' 
+  } 
+  if(course != "") {
+    log += course + '/' 
+  }
+  if(date != "") {
+    log += date + '/' 
+  }
+  if(type_condition != "") {
+    log += type_condition + '/' 
+  }
+  if(opt1 != "請選擇") {
+    log += opt1 + '/' 
+  }
+  if(opt2 != "請選擇") {
+    log += opt2 + '/' 
+  }
+  if(value != "") {
+    log += value + '/' 
+  }
+  log = log.slice(0,-1) + "<br>"
+  search_log += log
+}
+
+function show_log(){
+  if(count_log != 0){
+    $("#show_log").html('');
+    $("#show_log").html(search_log);
+  }
+}
 // 尋找資料 Rocky(2020/03/14)
 function search(){
   // 課程類型
@@ -392,6 +440,8 @@ function search(){
   opt2 = $('#condition_option2').val()
   // 內容
   value = $('#condition_input3').val()
+  
+  
 
   $.ajax({
     type:'POST',
@@ -409,6 +459,10 @@ function search(){
     success:function(data){
       // console.log(data)
       show(data);
+      /*log Rocky(2020/04/04)*/
+      count_log++;
+      write_log()
+      show_log()  
     },
     error:function(error){
       console.log(JSON.stringify(error))
@@ -458,7 +512,8 @@ function save(){
     // dataType:'json',
     data:{
       title:title,
-      array_studentid:array_studentid
+      array_studentid:array_studentid,
+      log:search_log
     },
     success:function(data){
       if (data = "儲存成功") {       
