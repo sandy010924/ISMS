@@ -9,7 +9,9 @@
     input:read-only {
       background-color: #e0e0e0 !important;
     }
-    .bootstrap-datetimepicker-widget {position: relative;z-index: 1000;top:0 !important;}
+    .show_datetime .bootstrap-datetimepicker-widget {position: relative;z-index: 1000;top:0 !important;}
+    .show_select select { width: 400px; text-align:center; }
+    .show_select select .lt { text-align:center; }
   </style>
 <!-- Content Start -->
         <!--搜尋學員頁面內容-->
@@ -466,17 +468,13 @@ $("#btn_search").click(function(){
 });
 
 $("document").ready(function(){
-
-  // 2020-01-05 15:33:46
-  // var test = new Date("2020-01-05 15:33:46").format("m/dd/yy")
-  // console.log(jQuery.format.prettyDate("2020-01-05 15:33:46", "yyyy/MM/dd"))
   //日期選擇器
   $('#debt_date').datetimepicker({ 
-        format: 'YYYY-MM-DD',
+    format: 'YYYY-MM-DD'
   });
 
   $('#debt_remind').datetimepicker({ 
-        format: 'YYYY-MM-DD',
+      format: 'YYYY-MM-DD'
   });
   
   // Rocky (2020/03/27)
@@ -924,37 +922,21 @@ function contact_data() {
             person = val['person']
           }
           
-          // console.log(updatetime)
           data +=
                 '<tr>' +
                 '<td><i class="fa fa-trash" aria-hidden="true" onclick="debt_delete(' + id +');" style="cursor:pointer;padding-top: 20%; color:#eb6060"></i></td>' +
                 '<td>' + 
-                // '<div class="input-group date datetime_show"  id="new_starttime'+ id +'" data-target-input="nearest"> ' +
-                //     ' <input type="text" id="new_starttime'+ id +'"  onblur="update_time($(this),'+id+',0);" value="' + val['updated_at'] +'"   name="new_starttime'+ id +'" class="form-control datetimepicker-input " data-target="#new_starttime'+ id +'" required/> ' +
-                //     ' <div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> '+
-                //         ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
-                //     '</div> ' +
-                // '</div>' +
-                '<div class="input-group date" id="new_starttime'+ id +'" data-target-input="nearest"> ' +
+                '<div class="input-group date show_datetime" id="new_starttime'+ id +'" data-target-input="nearest"> ' +
                       ' <input type="text" onblur="update_time($(this),'+id+',0);"  value="' + val['updated_at'] +'"   name="new_starttime'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#new_starttime'+ id +'" required/> ' +
                       ' <div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> '+
                           ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
                       '</div> ' +
                   '</div>' 
-
-
-
-                // '<div class="input-group date"  id="new_starttime'+ id +'" ata-target-input="nearest"> ' +
-                //     '<input type="text" id="new_starttime'+ id +'" onblur="update_time($(this),'+id+',0);" name="new_starttime'+ id +'"  class="form-control datetimepicker-input"' + ' data-target="#new_starttime'+ id +'"  value="' + val['updated_at'] +'" >' +
-                //     '<div class="input-group-append" data-target="#new_starttime'+ id +'" data-toggle="datetimepicker"> ' +
-                //         '<div class="input-group-text"><i class="fa fa-calendar"></i></div>' +
-                //     '</div>' + 
-                // '</div>'+ 
                 + '</td>' + 
                 '<td>' + '<input type="text"  class="form-control" onblur="name_course($(this),'+id+',6);" id="' + id +'_name_course" value="' + val['name_course'] +'" class="border-0 bg-transparent input_width">' +  '</td>' + 
                 '<td>' + '<input type="text"  class="form-control" onblur="status_payment($(this),'+id+',1);" id="' + id +'_status_payment" value="' + status_payment +'" class="border-0 bg-transparent input_width">' + '</td>' + 
                 '<td>' + '<input type="text"  class="form-control" onblur="contact($(this),'+id+',2);" id="' + id +'_contact" value="' + contact +'"  class="border-0 bg-transparent input_width">' + '</td>' +
-                '<td>' + '<div class="form-group m-0"> <select id="' + id +'_status" onblur="status($(this),'+id+',3);" class="custom-select border-0 bg-transparent input_width"> ' +
+                '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id +'_status" onblur="status($(this),'+id+',3);" class="custom-select border-0 bg-transparent input_width"> ' +
                             '<option selected disabled value=""></option>' +
                             '<option value="11" '+　opt2 +'>完款</option>' +
                             '<option value="10" '+　opt1 +'>付訂</option>' +
@@ -967,20 +949,14 @@ function contact_data() {
                     '</div> </td>' +
                 '<td>' + '<input type="text"  class="form-control" onblur="person($(this),'+id+',5);" id="' + id +'_person" value="' + person +'" class="border-0 bg-transparent input_width">'  + '</td>' +
                 '<td>' + 
-                  '<div class="input-group date" id="remind'+ id +'" data-target-input="nearest"> ' +
+                  '<div class="input-group date show_datetime" id="remind'+ id +'" data-target-input="nearest"> ' +
                       ' <input type="text" onblur="remind($(this),'+id+',4);"  value="' + val['remind_at'] +'"   name="remind'+ id +'" class="form-control datetimepicker-input datepicker" data-target="#remind'+ id +'" required/> ' +
                       ' <div class="input-group-append" data-target="#remind'+ id +'" data-toggle="datetimepicker"> '+
                           ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> '+
                       '</div> ' +
                   '</div>' +
-                  // '<div class="input-group date"  id="remind'+ id +'" ata-target-input="nearest"> ' +
-                  //   '<input type="text" onblur="remind($(this),'+id+',4);"  value="' + val['remind_at'] +'"   name="remind'+ id +'" name="new_starttime'+ id +'"  class="form-control datetimepicker-input"' + ' data-target="#remind'+ id +'" >' +
-                  //   '<div class="input-group-append" data-target="#remind'+ id +'" data-toggle="datetimepicker"> ' +
-                  //       '<div class="input-group-text"><i class="fa fa-calendar"></i></div>' +
-                  //   '</div>' +
-                  // '</div>' + 
                 '</td>' +
-                '</tr>'
+            '</tr>'
         });
         $('#contact_data_detail').html(data);  
         // 日期
@@ -1005,9 +981,6 @@ function contact_data() {
           defaultDate:new Date(),
           pickerPosition: "bottom-left" 
         });       
-
-        // $(".datepicker").datepicker();
-        // $('.ui-datepicker').addClass('notranslate'); 
       },
       error: function(error){
         console.log(JSON.stringify(error));     
@@ -1082,7 +1055,6 @@ function debt_add(){
         success:function(data){    
           if (data = "儲存成功") {
             contact_data();
-            // $('#save_contact').modal('hide');
             $("#success_alert_text").html("儲存成功");
             fade($("#success_alert"));
           } else {
