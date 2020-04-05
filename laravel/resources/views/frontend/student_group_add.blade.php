@@ -6,29 +6,99 @@
 @section('content')
 
 <!-- Content Start -->
-        <!--學員細分組內容-->
-        <div class="card m-3">
-          <div class="card-body">
-            <!-- <div class="row">
-              <div class="col form-inline">
-                <span class="p-1 border border-secondary rounded-pill ">
-                  <small class="text-secondary">篩選器1</small>
-                </span>
-                <h5 class="mx-2 mb-0">符合下列</h5>
-                <div class="form-group m-0">
-                  <select class="custom-select border-0 bg-transparent" name="filter">
-                    <option value="1">全部</option>
-                    <option value="2">姓名</option>
-                    <option value="3">聯絡電話</option>
-                    <option value="4">電子郵件</option>
-                    <option value="5">來源</option>
-                    <option value="6">加入日期</option>
-                  </select>
-                 </div>                
-              </div>
-            </div> -->
+  <!--學員細分組內容-->
+  <div class="card m-3">
+    <div class="card-body">
+      <!-- <div class="row">
+        <div class="col form-inline">
+          <span class="p-1 border border-secondary rounded-pill ">
+            <small class="text-secondary">篩選器1</small>
+          </span>
+          <h5 class="mx-2 mb-0">符合下列</h5>
+          <div class="form-group m-0">
+            <select class="custom-select border-0 bg-transparent" name="filter">
+              <option value="1">全部</option>
+              <option value="2">姓名</option>
+              <option value="3">聯絡電話</option>
+              <option value="4">電子郵件</option>
+              <option value="5">來源</option>
+              <option value="6">加入日期</option>
+            </select>
+            </div>                
+        </div>
+      </div> -->
+      <form id="form_condition1">
+        <div class="row">
+          <div class="col-3">
+              <select  class="form-control" id="select_type">
+                <option value="0">請選擇</option>
+                <option value="1">銷講</option>
+                <option value="2">正課</option>
+                <option value="3">活動</option>
+              </select> 
+          </div>
+          <div class="col-3">
+              <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course"></select> 
+          </div>
+          <div class="col-3">
+            <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date">                
+          </div>             
+          <div class="col-3">
+            <select class="form-control" id="condition">
+              <option value="information">名單資料</option>
+              <option value="action">名單動作</option>
+              <option value="tag">標籤</option>
+            </select>                
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <select class="form-control mt-2" id="condition_option1">
+              <option value="">請選擇</option>
+              <option value="datasource_old">原始來源</option>
+              <option value="datasource_new">最新來源</option>
+              <option value="id_events">報名場次</option>
+              <option value="profession">目前職業</option>
+              <option value="address">居住地址</option>
+              <option>銷講後最新狀態</option>
+              <option value="course_content">想了解的內容</option>
+            </select>                
+          </div>
+          <div class="col-3">
+            <select class="form-control mt-2" id="condition_option2">
+              <option value="">請選擇</option>
+              <option value="yes">是</option>
+              <option value="no">未</option>
+              <option value="like">包含</option>
+              <option value="notlike">不包含</option>
+            </select>                
+          </div>
+          <div class="col-3">
+            <input type="text" class="form-control mt-2" style="display:block;" id="condition_input3">
+            <!-- <select class="form-control m-1" id="condition_option3" style="display:none;">
+              <option value="">請選擇</option>
+              
+            </select> -->
+          </div>              
+        </div>
+      </form>
+      <!-- 添加另一條件 Rocky (2020/04/04) -->
+      <div class="row">
+        <div class="col-3 mt-2">
+          <button class="btn btn-primary" type="button" onclick="condition2();" data-toggle="collapse" data-target="#condition2" aria-expanded="false" aria-controls="condition2">
+            <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>  
+          </button>                 
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- 條件篩選器2 -->
+  <div class="collapse" id="condition2">
+      <div class="card m-3">
+        <div class="card-body">
+          <form id="form_condition2">
             <div class="row">
-            <div class="col-3">
+              <div class="col-3">
                   <select  class="form-control" id="select_type">
                     <option value="0">請選擇</option>
                     <option value="1">銷講</option>
@@ -41,8 +111,7 @@
               </div>
               <div class="col-3">
                 <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date">                
-              </div>
-             
+              </div>             
                 <div class="col-3">
                   <select class="form-control" id="condition">
                     <option value="information">名單資料</option>
@@ -50,122 +119,184 @@
                     <option value="tag">標籤</option>
                   </select>                
                 </div>
-                </div>
-                <div class="row">
-                <div class="col-3">
-                  <select class="form-control mt-2" id="condition_option1">
-                    <option value="">請選擇</option>
-                    <option value="datasource_old">原始來源</option>
-                    <option value="datasource_new">最新來源</option>
-                    <option value="id_events">報名場次</option>
-                    <option value="profession">目前職業</option>
-                    <option value="address">居住地址</option>
-                    <option>銷講後最新狀態</option>
-                    <option value="course_content">想了解的內容</option>
-                  </select>                
-                </div>
-                <div class="col-3">
-                  <select class="form-control mt-2" id="condition_option2">
-                    <option value="">請選擇</option>
-                    <option value="yes">是</option>
-                    <option value="no">未</option>
-                    <option value="like">包含</option>
-                    <option value="notlike">不包含</option>
-                  </select>                
-                </div>
-                <div class="col-3">
-                  <input type="text" class="form-control mt-2" style="display:block;" id="condition_input3">
-                  <!-- <select class="form-control m-1" id="condition_option3" style="display:none;">
-                    <option value="">請選擇</option>
-                    
-                  </select> -->
-                  </div>
-                  <div class="col-3">
-                  <button type="button" class="btn btn-primary btn-sm mt-3 float-right" onclick="search();">確定</button>                
-                </div>
             </div>
-            <!-- <h7 class="ml-1">添加另一條件+</h7> -->
-          </div>
-        </div>
-        <div class="card m-3">
-          <div class="card-body">
-            <div class="row mt-2 mb-3">
-              <div class="col">
-                <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#model_show_log" aria-expanded="false" aria-controls="model_show_log" onclick="show_log();">
-                <i class="fa fa-search" aria-hidden="true"></i>查看條件
-                </button>               
-                <button class="btn btn-outline-secondary mr-2 " type="button" id="btn_newgroup" data-toggle="modal" data-target="#save_newgroup">保存為細分組</button>
-                <div class="collapse" id="model_show_log" style="padding-top:15px;">
-                  <div class="card card-body" id="show_log">
-                  </div>
-                </div>
-                <div class="modal fade" id="save_newgroup" tabindex="-1" role="dialog" aria-labelledby="save_newgroupTitle" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">細分組名稱</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <input type="text" id="group_title" class="input_width">
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" onclick="save();">保存</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button class="btn btn-outline-secondary" type="button" id="btn_newgroup" hidden>添加條件組</button>
-              </div>           
+            <div class="row">
+              <div class="col-3">
+                <select class="form-control mt-2" id="condition_option1">
+                  <option value="">請選擇</option>
+                  <option value="datasource_old">原始來源</option>
+                  <option value="datasource_new">最新來源</option>
+                  <option value="id_events">報名場次</option>
+                  <option value="profession">目前職業</option>
+                  <option value="address">居住地址</option>
+                  <option>銷講後最新狀態</option>
+                  <option value="course_content">想了解的內容</option>
+                </select>                
+              </div>
+              <div class="col-3">
+                <select class="form-control mt-2" id="condition_option2">
+                  <option value="">請選擇</option>
+                  <option value="yes">是</option>
+                  <option value="no">未</option>
+                  <option value="like">包含</option>
+                  <option value="notlike">不包含</option>
+                </select>                
+              </div>
+              <div class="col-3">
+                <input type="text" class="form-control mt-2" style="display:block;" id="condition_input3">
+              </div>
             </div>
-            <div class="table-responsive">
-              <table class="table table-striped table-sm text-center">
-                <thead>
-                  <tr>
-                    <th>姓名</th>
-                    <th>聯絡電話</th>
-                    <th>電子郵件</th>
-                    <th>來源</th>
-                    <th>加入日期</th>
-                  </tr>
-                </thead>
-                <tbody id= "data_student">
-                  <!-- <tr>
-                    <td class="align-middle">王小名</td>
-                    <td class="align-middle">0912345678</td>
-                    <td class="align-middle">a123@gmail.com</td>
-                    <td class="align-middle">ad</td>
-                    <td class="align-middle">2019年12月31日</td>
-                  </tr>
-                  <tr>
-                    <td class="align-middle">陳小美</td>
-                    <td class="align-middle">0987654321</td>
-                    <td class="align-middle">fd546@gmail.com</td>
-                    <td class="align-middle">ellen</td>
-                    <td class="align-middle">2019年08月17日</td>
-                  </tr> -->
-                </tbody>
-              </table>
+          </form>
+          <!-- 添加另一條件 Rocky (2020/04/04) -->
+          <div class="row">
+            <div class="col-3  mt-2">
+              <button class="btn btn-primary" type="button" onclick="condition3();" data-toggle="collapse" data-target="#condition3" aria-expanded="false" aria-controls="condition3">
+                <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>  
+              </button>   
+              </i>  
             </div>
           </div>
         </div>
-         <!-- alert Start-->
-         <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
-          <span id="success_alert_text"></span>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
-          <span id="error_alert_text"></span>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>     
-        <!-- alert End -->   
+      </div>
+  </div>
+  <!-- 條件篩選器3 -->
+  <div class="collapse" id="condition3">
+    <div class="card m-3">
+      <div class="card-body">
+        <form id="form_condition3">             
+          <div class="row">
+            <div class="col-3">
+                <select  class="form-control" id="select_type">
+                  <option value="0">請選擇</option>
+                  <option value="1">銷講</option>
+                  <option value="2">正課</option>
+                  <option value="3">活動</option>
+                </select> 
+            </div>
+            <div class="col-3">
+                <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course"></select> 
+            </div>
+            <div class="col-3">
+              <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date">                
+            </div>             
+              <div class="col-3">
+                <select class="form-control" id="condition">
+                  <option value="information">名單資料</option>
+                  <option value="action">名單動作</option>
+                  <option value="tag">標籤</option>
+                </select>                
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <select class="form-control mt-2" id="condition_option1">
+                <option value="">請選擇</option>
+                <option value="datasource_old">原始來源</option>
+                <option value="datasource_new">最新來源</option>
+                <option value="id_events">報名場次</option>
+                <option value="profession">目前職業</option>
+                <option value="address">居住地址</option>
+                <option>銷講後最新狀態</option>
+                <option value="course_content">想了解的內容</option>
+              </select>                
+            </div>
+            <div class="col-3">
+              <select class="form-control mt-2" id="condition_option2">
+                <option value="">請選擇</option>
+                <option value="yes">是</option>
+                <option value="no">未</option>
+                <option value="like">包含</option>
+                <option value="notlike">不包含</option>
+              </select>                
+            </div>
+            <div class="col-3">
+              <input type="text" class="form-control mt-2" style="display:block;" id="condition_input3">
+            </div>
+          </div>
+        </form>              
+      </div>
+    </div>
+  </div>
+  <div class="card m-3">
+    <div class="card-body">
+      <div class="row mt-2 mb-3">
+        <div class="col">
+          <button type="button" class="btn btn-primary mr-2" onclick="search();">搜尋</button> 
+          <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#model_show_log" aria-expanded="false" aria-controls="model_show_log" onclick="show_log();">
+          <i class="fa fa-search" aria-hidden="true"></i>查看條件
+          </button>               
+          <button class="btn btn-outline-secondary mr-2 " type="button" id="btn_newgroup" data-toggle="modal" data-target="#save_newgroup">保存為細分組</button>
+          <div class="collapse" id="model_show_log" style="padding-top:15px;">
+            <div class="card card-body" id="show_log">
+            </div>
+          </div>
+          <div class="modal fade" id="save_newgroup" tabindex="-1" role="dialog" aria-labelledby="save_newgroupTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalCenterTitle">細分組名稱</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input type="text" id="group_title" class="input_width">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                  <button type="button" class="btn btn-primary" onclick="save();">保存</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary" type="button" id="btn_newgroup" hidden>添加條件組</button>
+        </div>           
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm text-center">
+          <thead>
+            <tr>
+              <th>姓名</th>
+              <th>聯絡電話</th>
+              <th>電子郵件</th>
+              <th>來源</th>
+              <th>加入日期</th>
+            </tr>
+          </thead>
+          <tbody id= "data_student">
+            <!-- <tr>
+              <td class="align-middle">王小名</td>
+              <td class="align-middle">0912345678</td>
+              <td class="align-middle">a123@gmail.com</td>
+              <td class="align-middle">ad</td>
+              <td class="align-middle">2019年12月31日</td>
+            </tr>
+            <tr>
+              <td class="align-middle">陳小美</td>
+              <td class="align-middle">0987654321</td>
+              <td class="align-middle">fd546@gmail.com</td>
+              <td class="align-middle">ellen</td>
+              <td class="align-middle">2019年08月17日</td>
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+    <!-- alert Start-->
+    <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+    <span id="success_alert_text"></span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+    <span id="error_alert_text"></span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>     
+  <!-- alert End -->   
 <!-- Content End -->
 <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script> -->
 <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script> -->
@@ -178,6 +309,7 @@
 // 宣告
 var array_studentid = new Array();
 var search_log = '',count_log = 0
+var check_condition2 = 0,check_condition3 = 0;
 $("document").ready(function(){
   //  // 顯示細分條件資料 Rocky(2020/03/14)
   //  show_requirement();
@@ -187,6 +319,20 @@ $("document").ready(function(){
 		noneSelectedText : '請選擇'//預設顯示內容
   });
 });
+
+/*增加條件*/
+function condition2 (){
+  check_condition2++;
+  if(check_condition2 > 1){
+    check_condition2 = 0
+  }  
+}
+function condition3 (){
+  check_condition3++;
+  if(check_condition3 > 1){
+    check_condition3 = 0
+  }  
+}
 
 //時間範圍
 $(function() {
@@ -440,34 +586,97 @@ function search(){
   opt2 = $('#condition_option2').val()
   // 內容
   value = $('#condition_input3').val()
-  
-  
 
-  $.ajax({
-    type:'POST',
-    url:'search_students',
-    dataType:'json',
-    data:{
-      type_course:type_course,
-      id_course:id_course,
-      date:date,
-      type_condition:type_condition,
-      opt1:opt1,
-      opt2:opt2,
-      value:value
-    },
-    success:function(data){
-      // console.log(data)
-      show(data);
-      /*log Rocky(2020/04/04)*/
-      count_log++;
-      write_log()
-      show_log()  
-    },
-    error:function(error){
-      console.log(JSON.stringify(error))
+  var array_search = [],array_condition1 = [],array_condition2 = [],array_condition3 = []; 
+  
+  // 抓取條件篩選器1
+  $("#form_condition1 :input").each(function(){
+    if ($(this).attr('id') != undefined) {      
+      array_condition1.push($(this).val())
     }
-  })
+  });
+
+  // 抓取條件篩選器2
+  if(check_condition2 == 1){
+    $("#form_condition2 :input").each(function(){
+      if ($(this).attr('id') != undefined) {      
+        array_condition2.push($(this).val())
+      }
+    });
+  }
+
+  // 抓取條件篩選器3
+  if(check_condition3 == 1){
+    $("#form_condition3 :input").each(function(){
+      if ($(this).attr('id') != undefined) {      
+        array_condition3.push($(this).val())
+      }
+    });
+  }
+
+  // 將資料push到array
+  array_search.push({
+    type_course: array_condition1[0], 
+    id_course:  array_condition1[1],
+    date:array_condition1[2],
+    type_condition:array_condition1[3],
+    opt1:array_condition1[4],
+    opt2:array_condition1[5],
+    value:array_condition1[6]
+  });
+
+  if(check_condition2 == 1){
+    array_search.push({
+      type_course: array_condition2[0], 
+      id_course:  array_condition2[1],
+      date:array_condition2[2],
+      type_condition:array_condition2[3],
+      opt1:array_condition2[4],
+      opt2:array_condition2[5],
+      value:array_condition2[6]
+    });
+  }
+
+  if(check_condition3 == 1){
+    array_search.push({
+      type_course: array_condition3[0], 
+      id_course:  array_condition3[1],
+      date:array_condition3[2],
+      type_condition:array_condition3[3],
+      opt1:array_condition3[4],
+      opt2:array_condition3[5],
+      value:array_condition3[6]
+    });
+  }
+
+  console.log(array_search)
+
+
+  // $.ajax({
+  //   type:'POST',
+  //   url:'search_students',
+  //   dataType:'json',
+  //   data:{
+  //     type_course:type_course,
+  //     id_course:id_course,
+  //     date:date,
+  //     type_condition:type_condition,
+  //     opt1:opt1,
+  //     opt2:opt2,
+  //     value:value
+  //   },
+  //   success:function(data){
+  //     // console.log(data)
+  //     show(data);
+  //     /*log Rocky(2020/04/04)*/
+  //     count_log++;
+  //     write_log()
+  //     show_log()  
+  //   },
+  //   error:function(error){
+  //     console.log(JSON.stringify(error))
+  //   }
+  // })
 }
 
 // 顯示資料 Rocky(2020/03/19)
