@@ -384,45 +384,73 @@ $.ajax({
 
 /*條件顯示 - S Rocky(2020/04/05)*/
 function write_log(){
-  var log = ''
-  // // 抓取條件篩選器1
-  // $("#form_condition1 :input").each(function(){
-  //   if ($(this).attr('id') != undefined) {      
-  //     // array_condition1.push($(this).val())
-      
-  //     if($(this).val() != "" || $(this).val() != "請選擇") {
-  //       console.log($(this).attr('id') + '\n') 
-  //     }
-  //   }
-  // });
+  var log_id = []
+  // 抓取條件篩選器1
+  $("#form_condition1 :input").each(function(){
+    if ($(this).attr('id') != undefined) {      
+      if($(this).val() != "" || $(this).val() != "請選擇") {
+        if ($(this).attr('id') == "input_date" || $(this).attr('id') == "condition_input3") {
+          id = '#' + $(this).attr('id')
+        } else{
+          id = '#' + $(this).attr('id') + ' :selected'
+        }
+        log_id.push(id)
+      }
+    }
+  });
 
-  // // 抓取條件篩選器2
-  // if(check_condition2 == 1){
-  //   $("#form_condition2 :input").each(function(){
-  //     if ($(this).attr('id') != undefined) {      
-  //       // array_condition2.push($(this).val())
-  //     }
-  //   });
-  // }
+  get_log(log_id,"篩選器1")
 
-  // // 抓取條件篩選器3
-  // if(check_condition3 == 1){
-  //   $("#form_condition3 :input").each(function(){
-  //     if ($(this).attr('id') != undefined) {      
-  //       // array_condition3.push($(this).val())
-  //     }
-  //   });
-  // }
+  // 抓取條件篩選器2
+  if(check_condition2 == 1){
+    log_id = []
+    $("#form_condition2 :input").each(function(){    
+    if ($(this).attr('id') != undefined) {      
+      if($(this).val() != "" || $(this).val() != "請選擇") {
+        if ($(this).attr('id') == "input_date2" || $(this).attr('id') == "condition_input3_2") {
+          id = '#' + $(this).attr('id')
+        } else{
+          id = '#' + $(this).attr('id') + ' :selected'
+        }
+        log_id.push(id)
+      }
+    }
+    });
+    get_log(log_id,"篩選器2")
+  }
 
-  type = $('#select_type :selected').text()
-  course = $('#select_course :selected').text()
-  date = $('#input_date').val()  
-  type_condition = $('#condition :selected').text()  
-  opt1 = $('#condition_option1 :selected').text()
-  opt2 = $('#condition_option2 :selected').text()
-  value = $('#condition_input3').val()
+  // 抓取條件篩選器3
+  if(check_condition3 == 1){
+    log_id = []
+    $("#form_condition3 :input").each(function(){    
+    if ($(this).attr('id') != undefined) {      
+      if($(this).val() != "" || $(this).val() != "請選擇") {
+        if ($(this).attr('id') == "input_date3" || $(this).attr('id') == "condition_input3_3") {
+          id = '#' + $(this).attr('id')
+        } else{
+          id = '#' + $(this).attr('id') + ' :selected'
+        }
+        log_id.push(id)
+      }
+    }
+    });
+    get_log(log_id,"篩選器3")
+  }
+}
 
-  log += count_log + '. '
+function get_log(log_id,condition_name){
+
+  var log = '';
+
+  type = $(log_id[0]).text()
+  course = $(log_id[1]).text()
+  date = $(log_id[2]).val()  
+  type_condition = $(log_id[3]).text()  
+  opt1 = $(log_id[4]).text()
+  opt2 = $(log_id[5]).text()
+  value = $(log_id[6]).val()
+
+  // log += count_log + '. '
   if(type != "") {
     log += type + '/' 
   } 
@@ -444,10 +472,10 @@ function write_log(){
   if(value != "") {
     log += value + '/' 
   }
-  log = log.slice(0,-1) + "<br>"
+  
+  log = count_log + " - " + condition_name + ":" + log.slice(0,-1) + "<br>"
   search_log += log
 }
-
 function show_log(){
   if(count_log != 0){
     $("#show_log").html('');
