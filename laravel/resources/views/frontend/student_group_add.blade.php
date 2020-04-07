@@ -308,7 +308,7 @@
 <script>  
 // 宣告
 var array_studentid = new Array();
-var search_log = '',count_log = 0
+var search_log = '',count_log = 0,old_count_log = 0
 var check_condition2 = 0,check_condition3 = 0;
 $("document").ready(function(){
   //  // 顯示細分條件資料 Rocky(2020/03/14)
@@ -399,7 +399,7 @@ function write_log(){
     }
   });
 
-  get_log(log_id,"篩選器1")
+  get_log(log_id,"篩選器1",1)
 
   // 抓取條件篩選器2
   if(check_condition2 == 1){
@@ -416,7 +416,7 @@ function write_log(){
       }
     }
     });
-    get_log(log_id,"篩選器2")
+    get_log(log_id,"篩選器2",2)
   }
 
   // 抓取條件篩選器3
@@ -434,11 +434,11 @@ function write_log(){
       }
     }
     });
-    get_log(log_id,"篩選器3")
+    get_log(log_id,"篩選器3",3)
   }
 }
 
-function get_log(log_id,condition_name){
+function get_log(log_id,condition_name,condition_id){
 
   var log = '';
 
@@ -473,9 +473,18 @@ function get_log(log_id,condition_name){
     log += value + '/' 
   }
   
-  log = count_log + " - " + condition_name + ":" + log.slice(0,-1) + "<br>"
+  if (check_condition3 == 1 && condition_id == 1) {
+    tag = "<hr>"
+  } else if(check_condition2 == 1 && condition_id == 1){
+    tag = "<hr>"
+  } else{
+    tag = ""
+  }
+  // log = tag + count_log + " - " + condition_name + ":" + log.slice(0,-1) + "<br>" 
+  log = tag + condition_name + ":" + log.slice(0,-1) + "<br>"
   search_log += log
 }
+
 function show_log(){
   if(count_log != 0){
     $("#show_log").html('');
@@ -486,21 +495,6 @@ function show_log(){
 
 // 尋找資料 Rocky(2020/03/14)
 function search(){
-  // 課程類型
-  type_course = $('#select_type').val()
-  // 課程選擇
-  id_course = $('#select_course').val()
-  // 日期選擇
-  date = $('#input_date').val()  
-  // 類別
-  type_condition = $('#condition').val()  
-  // 選項一
-  opt1 = $('#condition_option1').val()
-  // 選項二
-  opt2 = $('#condition_option2').val()
-  // 內容
-  value = $('#condition_input3').val()
-
   var array_search = [],array_condition1 = [],array_condition2 = [],array_condition3 = []; 
   
   // 抓取條件篩選器1
