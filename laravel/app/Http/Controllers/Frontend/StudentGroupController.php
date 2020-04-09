@@ -454,7 +454,7 @@ class StudentGroupController extends Controller
         $datas = StudentGroup::leftjoin('student_groupdetail as b', 'student_group.id', '=', 'b.id_group')
                     ->leftjoin('student as c', 'b.id_student', '=', 'c.id')
                     ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
-                    ->select('c.*', 'd.datasource', 'd.submissiondate', 'student_group.name as name_group')
+                    ->select('student_group.condition', 'c.*', 'd.datasource', 'd.submissiondate', 'student_group.name as name_group')
                     ->where('student_group.id', $id)
                     ->groupby('c.id')
                     ->get();

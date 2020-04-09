@@ -293,7 +293,7 @@ var array_upate_studentid = new Array();
 $("document").ready(function(){
   array_old_studentid = JSON.parse($('#data_groupdetail').val())
   // 顯示資料
-  show(JSON.parse($('#data_groupdetail').val()))
+  show(JSON.parse($('#data_groupdetail').val()),'show')
 
   // console.log($('#data_groupdetail').val())
   //  // 顯示細分條件資料 Rocky(2020/03/14)
@@ -463,6 +463,8 @@ function get_log(log_id,condition_name,condition_id){
     tag = "<hr>"
   } else if(check_condition2 == 1 && condition_id == 1){
     tag = "<hr>"
+  } else if (condition_id == 1){
+    tag = "<hr>"
   } else{
     tag = ""
   }
@@ -562,7 +564,7 @@ function search(){
     },
     success:function(data){
       // console.log(data)
-      show(data);
+      show(data,"search");
       /*log Rocky(2020/04/04)*/
       count_log++;
       write_log()
@@ -575,7 +577,18 @@ function search(){
 }
 
 // 顯示資料 Rocky(2020/03/19)
-function show(data){
+function show(data,type_show){
+  
+  if(type_show == "show") {    
+    if(data[0]['condition'] != null) {
+      search_log = data[0]['condition']
+      $("#show_log").html('');
+      $("#show_log").html(search_log);
+    }
+    
+  }
+  
+  
   if (data.length > 0)
   {
     $.each(data, function(index,val) {
@@ -610,6 +623,7 @@ function show(data){
 function update(){
   var name_group = $('#name_group').val()
   var id = $('#id_group').val()
+  var condition = search_log
   $.ajax({
     type:'POST',
     url:'update',
@@ -617,6 +631,7 @@ function update(){
     data:{
       id:id,
       name_group:name_group,
+      condition:condition,
       array_upate_studentid:array_upate_studentid
     },
     success:function(data){
