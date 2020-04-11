@@ -93,6 +93,7 @@
                 {{-- </h6> --}}
               </a>
               <a class="nav-link nav-sub-item" href="{{ route('authority') }}">權限管理</a>
+              <a class="nav-link nav-sub-item" href="{{ route('database') }}">備份管理</a>
               <a class="nav-link nav-sub-item" href="{{ route('blacklist_rule') }}">黑名單規則</a>
             </li>
             @endcan

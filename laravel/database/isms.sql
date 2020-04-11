@@ -559,3 +559,17 @@ ALTER TABLE `registration` ADD COLUMN submissiondate VARCHAR(150) NULL COMMENT '
 -- 退費資料表 - 增加退費審核 Sandy(2020/04/02)
 ALTER TABLE `refund` ADD COLUMN review INT NULL COMMENT '審核(0:審核中,1:通過,2:未通過)' DEFAULT 0;
 
+
+
+
+-- m_database  備份資料表 Rocky (2020/04/10)
+CREATE TABLE IF NOT EXISTS `m_database`(
+   `id` INT  AUTO_INCREMENT COMMENT 'id',
+   `filename`  VARCHAR(150) COMMENT '檔名',  
+   `created_at` timestamp not null default  CURRENT_TIMESTAMP	 COMMENT '創建日期',
+   `updated_at` timestamp not null default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `m_database` (`filename`,`created_at`) VALUES ('0410.sql','	2020-04-10 23:00:37');
+
