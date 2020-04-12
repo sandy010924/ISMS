@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ifsnop\Mysqldump as IMysqldump;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
 /* Rocky (2020/02/18) */
@@ -27,24 +26,7 @@ class DatabaseController extends Controller
 
 
     public function backup()
-    {
-        // //备份数据库
-        // $backup = Artisan::call('backup:run', ['--only-db' => true]);
-        // //这里注意 参数是以数组的形式
-        // if ($backup == 0) {
-        //     $arr = [
-        //         'error' => 0,
-        //         'msg' => '数据库备份成功'
-        //     ];
-        // } else {
-        //     $arr = [
-        //         'error' => 1,
-        //         'msg' => '数据库备份失败'
-        //     ];
-        // }
-        // return $arr;
-
-        // 資料庫設定
+    {        // 資料庫設定
         $dumpSettings = array(
             'compress' => IMysqldump\Mysqldump::NONE,
             'no-data' => false,
