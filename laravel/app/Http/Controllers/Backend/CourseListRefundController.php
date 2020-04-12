@@ -21,7 +21,11 @@ class CourseListRefundController extends Controller
             $id_group = $request->get('form_events');
             $id_student = $request->get('form_student');
             $reason = $request->get('form_reason');
+            $reason_other = $request->get('form_reason_other');
             
+            if( $reason == "其他"){
+                $reason = $reason_other;
+            }
 
             $registration = Registration::select('id')
                                         ->where('id_student', $id_student)

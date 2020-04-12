@@ -58,15 +58,16 @@
             <!-- 訊息推播 -->
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer')
             <li class="nav-item border-top">
-              <a class="nav-link" href="{{ route('message') }}">
+              <a class="nav-link" href="{{ route('message_list') }}">
                 {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
                   <i data-feather="mail"></i>
                   訊息推播
                 {{-- </h6> --}}
               </a>
-              <a class="nav-link nav-sub-item" href="{{ route('message_cost') }}">推播成本</a>
+              <a class="nav-link nav-sub-item" href="#">自動訊息</a>
+              {{-- <a class="nav-link nav-sub-item" href="{{ route('message_cost') }}">推播成本</a> --}}
               <a class="nav-link nav-sub-item" href="{{ route('message_result') }}">推播成效</a>
-              <a class="nav-link nav-sub-item" href="{{ route('message_list') }}">訊息列表</a>
+              {{-- <a class="nav-link nav-sub-item" href="{{ route('message_list') }}">訊息列表</a> --}}
             </li>
             @endif
             <!-- 訊息推播 -->

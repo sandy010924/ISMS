@@ -127,3 +127,16 @@ main > .header .logout:hover{
 #table_list_paginate ul.pagination{
     display: inline-flex;
 }
+
+/* message nav */
+/* .message_nav .nav-tabs  {
+    white-space:nowrap;
+    overflow-x:scroll;
+    overflow-y: hidden;
+    height: 50px !important;
+}*/
+.message_nav .nav-tabs > a {
+    /* float:none;
+    display:inline-block; */
+    cursor: pointer;
+} 

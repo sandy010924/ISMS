@@ -15,13 +15,26 @@
 
               <div class="form-group">
                 <label>發送方式</label>
-                <div>
-                  <input type="checkbox" id="messageCheckBox">
-                  <label class="form-check-label" for="messageCheckBox">簡訊</label>
-                  <input type="checkbox" id="mailCheckBox">
-                  <label class="form-check-label" for="mailCheckBox">E-mail</label>
+                <div class="d-block">
+                  <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" id="messageCheckBox">
+                    <label class="custom-control-label" for="messageCheckBox">簡訊</label>
+                    {{-- <input type="checkbox" id="messageCheckBox">
+                    <label class="form-check-label" for="messageCheckBox">簡訊</label> --}}
+                  </div>
+                  <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" id="mailCheckBox">
+                    <label class="custom-control-label" for="mailCheckBox">E-mail</label>
+                    {{-- <input type="checkbox" id="mailCheckBox">
+                    <label class="form-check-label" for="mailCheckBox">E-mail</label> --}}
+                  </div>
                 </div>
                 <small id="emailHelp" class="form-text " style="color:red;">若選擇簡訊發送、簡訊及Email發送皆只能輸入純文字(不可包含圖片及表格)。只有選擇Email發送才可使用圖片及表格。</small>
+              </div>
+
+              <div class="form-group">
+                <label for="receiverPhone">訊息名稱</label>
+                <input type="text" class="form-control" id="msgTitle" placeholder="請輸入訊息名稱 ...">
               </div>
 
               <div class="form-group">
@@ -29,11 +42,6 @@
                 <div>
                   <input id="groupDetailBtn" type="button" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
                 </div>
-              </div>
-
-              <div class="form-group">
-                <label for="receiverPhone">訊息名稱</label>
-                <input type="text" class="form-control" id="msgTitle" placeholder="請輸入訊息名稱 ...">
               </div>
 
               <div class="form-group">
@@ -60,10 +68,10 @@
               <!-- ckeditor -->
               <div class="form-group">
                 <label for="emailTitle">內容</label>
-                <textarea name="content" id="content" rows="10" cols="80"></textarea>
+                <textarea name="transfer" id="content" rows="10" cols="80"></textarea>
               </div>
 
-              <div style="display:flex;" class=" mt-5">
+              <div class="d-flex mt-5">
                 <button id="sendMessageBtn" class="btn btn-primary mr-2">立即傳送</button>
                 <input type="button" class="btn btn-primary mr-2" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
                 <input type="button" class="btn btn-primary mr-2" value="儲存為草稿">
@@ -113,15 +121,15 @@
 
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">細分組名單</h5>
-                <button class="btn btn-outline-secondary ml-2" type="button" onclick="javascript:location.href='{{ route('student_group') }}'">新增細分組</button>
+                <button class="btn btn-sm btn-outline-secondary ml-3" type="button" onclick="javascript:location.href='{{ route('student_group') }}'">新增細分組</button>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-            <div class="container">
-              <div class="transfer" style="margin: 20px auto;">
-                <!-- ListBox -->
-              </div>
+              <div class="container">
+                <div class="transfer" style="margin: 20px auto;">
+                  <!-- ListBox -->
+                </div>
               </div>
               <!-- <div class="modal-body">
 

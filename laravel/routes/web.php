@@ -327,7 +327,7 @@ Route::get('finance_return', function () {
 */
 
 /*** [訊息推播] ***/
-Route::get('message_cost', 'Frontend\MessageController@show')->name('message_cost');
+// Route::get('message_cost', 'Frontend\MessageController@show')->name('message_cost');
 
 
 Route::get('message', function () {
@@ -338,14 +338,15 @@ Route::get('message', function () {
 Route::post('messageDetailGroup', 'Backend\MessageController@showDetailGroup')->name('messageDetailGroup');
 
 /*** [訊息推播] 訊息列表 ***/
-Route::get('message_list', function () {
-    return view('frontend.message_list');
-})->name('message_list');
+// Route::get('message_list', function () {
+//     return view('frontend.message_list');
+// })->name('message_list');
+Route::get('message_list', 'Frontend\MessageListController@show')->name('message_list');
 
 /*** [訊息推播] 詳細內容 ***/
-Route::get('message_data', function () {
-    return view('frontend.message_data');
-})->name('message_data');
+// Route::get('message_data', function () {
+//     return view('frontend.message_data');
+// })->name('message_data');
 
 /*** [訊息推播] 推播成本***/
 // Route::get('message_cost', function () {
@@ -353,9 +354,10 @@ Route::get('message_data', function () {
 // })->name('message_cost');
 
 /*** [訊息推播] 推播成效***/
-Route::get('message_result', function () {
-    return view('frontend.message_result');
-})->name('message_result');
+// Route::get('message_result', function () {
+//     return view('frontend.message_result');
+// })->name('message_result');
+Route::get('message_result', 'Frontend\MessageListResultController@show')->name('message_result');
 
 /*** [訊息推播] 單筆簡訊API***/
 Route::post('messageApi', 'Backend\MessageController@messageApi');

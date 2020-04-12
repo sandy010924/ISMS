@@ -38,7 +38,7 @@
                     <td>台北下午場</td>
                     <td>56/3</td>
                     <td></td>
-                    <td><a href="{{ route('ots_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+                    <td><a href="{{ route('ots_check') }}"><button type="button" class="btn btn-secondary btn-sm">簽到表</button></a>
                     </td>
                   </tr>
                   <tr>
@@ -47,7 +47,7 @@
                     <td>台北晚上場</td>
                     <td>98/5</td>
                     <td></td>
-                    <td><a href="{{ route('ots_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+                    <td><a href="{{ route('ots_check') }}"><button type="button" class="btn btn-secondary btn-sm">簽到表</button></a>
                     </td>
                   </tr>
                   <tr>
@@ -56,7 +56,7 @@
                     <td>台北晚上場</td>
                     <td>47</td>
                     <td></td>
-                    <td><a href="{{ route('ots_check') }}"><button type="button" class="btn btn-secondary btn-sm">開始報到</button></a>
+                    <td><a href="{{ route('ots_check') }}"><button type="button" class="btn btn-secondary btn-sm">簽到表</button></a>
                     </td>
                   </tr>
 
