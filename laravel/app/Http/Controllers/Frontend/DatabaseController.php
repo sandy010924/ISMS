@@ -62,10 +62,9 @@ class DatabaseController extends Controller
             echo 'mysqldump-php error: ' . $e->getMessage();
         }
 
-        // 新增學員資料
+        // 新增資料
         $mdatabase = new Mdatabase();
         $mdatabase->filename       = $name;             // 檔案名稱
-        //$mdatabase->reason           = '';              // 日期
 
         $mdatabase->save();
         $id_mdatabase = $mdatabase->id;
