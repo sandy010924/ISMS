@@ -4,9 +4,9 @@
 @section('header', '備份管理')
 
 @section('content')
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script> -->
 <!-- Content Start -->
 <!--備份管理頁面內容-->
 <div class="card m-3">
@@ -16,16 +16,20 @@
       <div class="col-7">
         <div class="input-group">
           <div class="col-md-4">
-            <input type="search" class="form-control" name="name" placeholder="搜尋姓名" aria-describedby="btn_search" id="search_keyword">
+            <div class="input-group date" data-target-input="nearest">
+              <input type="text" id="search_keyword" name="debt_date" class="form-control datetimepicker-input" data-target="#search_keyword" placeholder="日期">
+              <div class="input-group-append" data-target="#search_keyword" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
           </div>
           <div class="col-md-3">
             <button type="button" class="btn btn-outline-secondary" id="btn_search">搜尋</button>
           </div>
           <div class="col-md-3">
-            <button type="button" class="btn btn-outline-secondary" id="btn_backup" onclick="backup();">點我備份</button>
+            <!-- <button type="button" class="btn btn-outline-secondary" id="btn_backup" onclick="backup();">點我備份</!-->
           </div>
         </div>
-        {{-- </form> --}}
       </div>
     </div>
     @component('components.datatable')
@@ -50,11 +54,25 @@
     @endcomponent
   </div>
 </div>
-<!-- <div id="dialog" title="Basic dialog">
-  <p>Image:</p>
-  <img src="http://placehold.it/50x50" alt="Placeholder Image" />
-
-</div> -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="btn_save" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Content End -->
 
 <!-- alert Start-->
@@ -73,43 +91,36 @@
 <!-- alert End -->
 
 <script>
-  // Sandy(2020/02/26) dt列表搜尋 S
+  // dt列表搜尋 S
   var table;
-  //針對姓名與角色搜尋 Sandy(2020/02/26)
   $.fn.dataTable.ext.search.push(
     function(settings, data, dataIndex) {
       var keyword = $('#search_keyword').val();
-      var role = $('#search_role').val();
       var tname = data[1];
-      var trole = data[2];
 
-      if ((isNaN(keyword) && isNaN(role)) || (tname.includes(keyword) && isNaN(role)) || (trole.includes(role) && isNaN(keyword)) || (trole.includes(role) && tname.includes(keyword))) {
+      if ((isNaN(keyword)) || (tname.includes(keyword))) {
         return true;
       }
-
       return false;
     }
   );
 
   $("document").ready(function() {
-    // Sandy (2020/02/26)
     table = $('#table_list').DataTable({
       "dom": '<l<t>p>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
       }]
-      // "ordering": false,
+    });
+
+    $('#search_keyword').datetimepicker({
+      format: 'YYYY-MM-DD'
     });
   });
 
-  // 輸入框 Sandy(2020/02/25)
+  // 輸入框 
   $('#search_keyword').on('keyup', function(e) {
-    if (e.keyCode === 13) {
-      $('#btn_search').click();
-    }
-  });
-  $('#search_role').on('keyup', function(e) {
     if (e.keyCode === 13) {
       $('#btn_search').click();
     }
@@ -118,7 +129,7 @@
   $("#btn_search").click(function() {
     table.columns(1).search($('#search_keyword').val()).columns(2).search($("#search_role").val()).draw();
   });
-  // Sandy(2020/02/26) dt列表搜尋 E
+  //  dt列表搜尋 E
 
   // 備份
   function backup() {
@@ -135,46 +146,43 @@
     });
   }
 
-
   // 還原資料 Rocky(2020/04/10)
   function btn_recover(id) {
     var msg = "是否還原資料?";
-    var msg_check = "你確定要還原資料? 若還原錯資料一概不負責";
-    // if (confirm(msg) == true) {
-    // $("#dialog").dialog();
-    // if (confirm(msg_check) == true) {
+    var msg_check = "再給你一次機會，點擊「確定」後就會「還原資料」，你確定還原資料?";
+    if (confirm(msg) == true) {
+      if (confirm(msg_check) == true) {
+        $.ajax({
+          type: 'POST',
+          url: 'database_recover',
+          dataType: 'text',
+          data: {
+            id: id
+          },
+          success: function(data) {
+            if (data == "ok") {
+              /** alert **/
+              $("#success_alert_text").html("還原成功");
+              fade($("#success_alert"));
 
-    // }
-    $.ajax({
-      type: 'POST',
-      url: 'database_recover',
-      dataType: 'text',
-      data: {
-        id: id
-      },
-      success: function(data) {
-        if (data == "ok") {
-          /** alert **/
-          $("#success_alert_text").html("還原成功");
-          fade($("#success_alert"));
+            } else {
+              /** alert **/
+              $("#error_alert_text").html("還原失敗");
+              fade($("#error_alert"));
+            }
+          },
+          error: function(error) {
+            console.log(JSON.stringify(error));
 
-        } else {
-          /** alert **/
-          $("#error_alert_text").html("還原失敗");
-          fade($("#error_alert"));
-        }
-      },
-      error: function(error) {
-        console.log(JSON.stringify(error));
-
-        /** alert **/
-        $("#error_alert_text").html("還原失敗");
-        fade($("#error_alert"));
+            /** alert **/
+            $("#error_alert_text").html("還原失敗");
+            fade($("#error_alert"));
+          }
+        });
       }
-    });
-    // } else {
-    //   return false;
-    // }
+    } else {
+      return false;
+    }
   }
 </script>
 @endsection
