@@ -144,11 +144,30 @@ class CourseListRefundController extends Controller
                 $pay_model = '';
                 $number = '';
                 foreach( $payment_table as $key_payment => $data_payment ){
+                    $pay_model_item = '' ;
+                    switch ($data_payment['pay_model']) {
+                        case 0:
+                            $pay_model_item = '現金';
+                            break;
+                        case 1:
+                            $pay_model_item = '匯款';
+                            break;
+                        case 2:
+                            $pay_model_item = '刷卡：輕鬆付';
+                            break;
+                        case 3:
+                            $pay_model_item = '刷卡：一次付';
+                            break;
+                        default:
+                            $pay_model_item = '現金';
+                            break;
+                    }
+
                     if( ++$i_payment === $numItems_payment){
-                        $pay_model .= $data_payment['pay_model'];
+                        $pay_model .= $pay_model_item;
                         $number .= $data_payment['number'];
                     }else {
-                        $pay_model .= $data_payment['pay_model'] . '、';
+                        $pay_model .= $pay_model_item . '、';
                         $number .= $data_payment['number'] . '、';
                     }
                 }
@@ -234,18 +253,25 @@ class CourseListRefundController extends Controller
         $course = array();
         
         $student = Student::join('registration', 'registration.id_student', '=', 'student.id')
+                          ->select('student.*')
                           ->Where('phone', $phone)
                           ->Where('id_course', $id)
                           ->first();
 
         if( !empty($student) ){
-            $course = Registration::join('course', 'course.id', '=', 'registration.id_course')
-                                    ->select('course.*')  
-                                    ->Where('id_student', $student->id)
-                                    ->distinct()
-                                    ->get();
+            // $course = Registration::join('course', 'course.id', '=', 'registration.id_course')
+            //                         ->select('course.*')  
+            //                         ->Where('id_student', $student->id)
+            //                         ->Where('id_course', $id)
+            //                         ->distinct()
+            //                         ->get();
+
+            // return Response(array('student' => $student, 'course' => $course));
+
+            return Response(array('student' => $student));
+        }else{
+            return 'nodata';
         }
 
-        return Response(array('student' => $student, 'course' => $course));
     }
 }

@@ -85,6 +85,7 @@
                     </div>
                     <div class="form-group required">
                       <label for="form_name" class="col-form-label">姓名</label>
+                      <input type="hidden" class="form-control" id="form_student" name="form_student">
                       <input type="text" class="form-control" id="form_name" name="form_stuform_namedent" readonly required>
                     </div>
                     <div class="form-group required">
@@ -137,13 +138,13 @@
                       <div class="custom-control custom-radio my-1">
                         <input type="radio" class="custom-control-input" id="form_reason5" name="form_reason" value="其他">
                         <label class="custom-control-label" for="form_reason5">其他</label>
-                        <input type="text" id="form_reason_other" name="form_reason_other" class="form-control form-control-sm" required>
+                        <input type="text" id="form_reason_other" name="form_reason_other" class="form-control form-control-sm" disabled>
                       </div>
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-primary">確認</button>
+                    <button type="submit" class="btn btn-primary" id="btn_refund" disabled>確認</button>
                   </div>
                 </form>
               </div>
@@ -241,11 +242,11 @@
       //     width: 'resolve', // need to override the changed default
       //     theme: 'bootstrap'
       // });
-      $("#form_course").select2({
-          width: 'resolve', // need to override the changed default
-          theme: 'bootstrap'
-      });
-      $.fn.select2.defaults.set( "theme", "bootstrap" );
+      // $("#form_course").select2({
+      //     width: 'resolve', // need to override the changed default
+      //     theme: 'bootstrap'
+      // });
+      // $.fn.select2.defaults.set( "theme", "bootstrap" );
 
       //日期區間搜尋
       $('#daterange').on('apply.daterangepicker', function(ev, picker) {
@@ -263,11 +264,22 @@
         table.draw();
       });
 
+
     });
 
     // $('#form').modal(function(){
       
     // });
+
+    $('input[name="form_reason"]').on( "change", function() {
+      if($('#form_reason5').prop('checked')){
+        $('#form_reason_other').prop("disabled", false);
+        $('#form_reason_other').prop("required", true);
+      }else{
+        $('#form_reason_other').prop("disabled", true);
+        $('#form_reason_other').prop("required", false);
+      }
+    });
 
     $('#form_phone').on('blur', function() {
       // if (form.checkValidity() === false) {
@@ -289,35 +301,46 @@
     });
 
     function fill(phone){
+      var course_id = $("#course_id").val();
       $.ajax({
         type : 'GET',
         url:'course_list_refund_form', 
-        dataType: 'json',    
+        // dataType: 'json',    
         data:{
-          phone: phone
+          phone: phone,
+          course_id: course_id
         },
         success:function(data){
-          console.log(data);
+          // console.log(data);
           
-          if( data['student'] != null ){
+          if( data != 'nodata'){
+            $('#form_student').val(data['student']['id']);
             $('#form_name').val(data['student']['name']);
             $('#form_email').val(data['student']['email']);
+            $('#btn_refund').prop("disabled", false);
+            // if( data['student'] != null ){
+            //   $('#form_name').val(data['student']['name']);
+            //   $('#form_email').val(data['student']['email']);
+            // }else{
+            //   $('#form_name').val('');
+            //   $('#form_email').val('');
+            // }
           }else{
-            $('#form_name').val('');
-            $('#form_email').val('');
+            alert('此學員未報名此課程！');
+            $('#btn_refund').prop("disabled", true);
           }
 
-          $('#form_course').children().remove();
+          // $('#form_course').children().remove();
 
-          if( data['course'].length !=0 ){
-            var res = '';
-            $.each (data['course'], function (key, value) {
-              res +=`'<option id="${value['id']}" value="${value['name']}">${value['name']}</option>'`
-            });
+          // if( data['course'].length !=0 ){
+          //   var res = '';
+          //   $.each (data['course'], function (key, value) {
+          //     res +=`'<option id="${value['id']}" value="${value['name']}">${value['name']}</option>'`
+          //   });
 
-            $('#form_course').html(res);
-            $('#form_course').attr('disabled', false);   
-          }      
+          //   $('#form_course').html(res);
+          //   $('#form_course').attr('disabled', false);   
+          // }      
           
         },
         error: function(error){
