@@ -330,9 +330,11 @@ Route::get('finance_return', function () {
 // Route::get('message_cost', 'Frontend\MessageController@show')->name('message_cost');
 
 
-Route::get('message', function () {
-    return view('frontend.message');
-})->name('message');
+/*** [建立訊息] ***/
+// Route::get('message', function () {
+//     return view('frontend.message');
+// })->name('message');
+Route::get('message', 'Frontend\MessageController@show')->name('message');
 
 /*** [訊息推播] 撈出細分組資料 ***/
 Route::post('messageDetailGroup', 'Backend\MessageController@showDetailGroup')->name('messageDetailGroup');

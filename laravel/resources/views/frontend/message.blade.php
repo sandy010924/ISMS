@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 
 @section('title', '訊息推播')
-@section('header', '訊息推播')
+@section('header', '建立訊息')
 
 @section('content')
 
@@ -35,6 +35,26 @@
               <div class="form-group">
                 <label for="receiverPhone">訊息名稱</label>
                 <input type="text" class="form-control" id="msgTitle" placeholder="請輸入訊息名稱 ...">
+              </div>
+
+              <div class="form-group">
+                <label for="receiverPhone">講師選擇</label>
+                <select class="custom-select" id="msgTeacher" name="msgTeacher">
+                  <option selected value="">選擇講師</option>
+                  @foreach($teacher as $data)
+                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                  @endforeach
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="receiverPhone">課程選擇</label>
+                <select class="custom-select" id="msgCourse" name="msgCourse">
+                  <option selected value="">選擇課程</option>
+                  @foreach($course as $data)
+                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                  @endforeach
+                </select>
               </div>
 
               <div class="form-group">
@@ -362,10 +382,15 @@ $(document).ready(function () {
       mailApi();
     }
 
-
-
-
   });
+
+  
+  //select2 講師及課程下拉式搜尋 Sandy(2020/04/14)
+  $("#msgTeacher, #msgCourse").select2({
+      width: 'resolve', // need to override the changed default
+      theme: 'bootstrap'
+  });
+  $.fn.select2.defaults.set( "theme", "bootstrap" );
 
 });
 
