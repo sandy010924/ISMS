@@ -553,5 +553,54 @@ ALTER TABLE registration DROP FOREIGN KEY `registration_ibfk_5`;
 ALTER TABLE sales_registration DROP FOREIGN KEY `sales_registration_ibfk_2`;
 ALTER TABLE sales_registration DROP FOREIGN KEY `sales_registration_ibfk_4`;
 
--- 追單資料表 - 增加場次ID Rocky(2020/04/01)
+-- 追單資料表 - 報名日期 Sandy(2020/04/01)
 ALTER TABLE `registration` ADD COLUMN submissiondate VARCHAR(150) NULL COMMENT 'Submission Date';
+
+-- 退費資料表 - 增加退費審核 Sandy(2020/04/02)
+ALTER TABLE `refund` ADD COLUMN review INT NULL COMMENT '審核(0:審核中,1:通過,2:未通過)' DEFAULT 0;
+
+
+
+
+-- m_database  備份資料表 Rocky (2020/04/10)
+CREATE TABLE IF NOT EXISTS `m_database`(
+   `id` INT  AUTO_INCREMENT COMMENT 'id',
+   `filename`  VARCHAR(150) COMMENT '檔名',  
+   `created_at` timestamp not null default  CURRENT_TIMESTAMP	 COMMENT '創建日期',
+   `updated_at` timestamp not null default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `m_database` (`filename`,`created_at`) VALUES ('0410.sql','	2020-04-10 23:00:37');
+
+
+
+-- 新增狀態資料 Sandy(2020/04/12)
+ALTER TABLE `isms_status` modify COLUMN type VARCHAR(50) NULL COMMENT '類型(0:銷講、正課,1:追單,2:付款狀態,4:活動狀態,5:訊息狀態)';
+INSERT INTO isms_status (`name`,`type`)  VALUES ('已建立','5');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('草稿','5');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('已傳送','5');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('無法傳送','5');
+INSERT INTO isms_status (`name`,`type`)  VALUES ('已預約','5');
+
+-- 訊息資料表 - 狀態ID Sandy(2020/04/12)
+ALTER TABLE `message` ADD COLUMN name VARCHAR(65535) NULL COMMENT '訊息名稱';
+ALTER TABLE `message` ADD COLUMN id_status INT NULL COMMENT '狀態ID';
+ALTER TABLE `message` ADD COLUMN id_teacher INT NULL COMMENT '講師ID';
+ALTER TABLE `message` ADD COLUMN id_course INT NULL COMMENT '課程ID';
+ALTER TABLE `message` ADD COLUMN memo INT NULL COMMENT '狀態備註(傳送失敗用)';
+
+-- sender 寄件人資料表 Sandy (2020/04/12)
+CREATE TABLE IF NOT EXISTS `sender`(
+   `id` INT  AUTO_INCREMENT COMMENT 'id',
+   `id_message`  INT COMMENT '訊息ID',  
+   `id_student` INT NULL COMMENT '學員ID',
+   `phone` VARCHAR(100) NULL COMMENT '發送號碼',
+   `email` VARCHAR(100) NULL COMMENT '發送信箱',
+   `created_at` timestamp not null default  CURRENT_TIMESTAMP	 COMMENT '創建日期',
+   `updated_at` timestamp not null default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 標記資料表 - 狀態ID Sandy(2020/04/12)
+ALTER TABLE `mark` ADD COLUMN id_course VARCHAR(150) NULL COMMENT '課程ID';

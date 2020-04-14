@@ -37,6 +37,7 @@ class StudentGroupController extends Controller
     {
         $id_StudentGroupdetail = "";
         $title = $request->get('title');
+        $condition = $request->get('log');
         $array_studentid = $request->get('array_studentid');
         // return $array_studentid;
         
@@ -46,7 +47,8 @@ class StudentGroupController extends Controller
        
         // 新增細分組資料
         $StudentGroup->name       = $title;         // 細分組名稱
-                        
+        $StudentGroup->condition  = $condition;     // 條件
+
         $StudentGroup->save();
         $id_StudentGroup = $StudentGroup->id;
 
@@ -80,13 +82,14 @@ class StudentGroupController extends Controller
         $id_StudentGroup = "";
         $id = $request->get('id');
         $name_group = $request->get('name_group');
+        $condition = $request->get('condition');
         $array_studentid = $request->get('array_upate_studentid');
        
 
 
         if (!empty($id)) {
             $id_StudentGroup = StudentGroup::where('id', $id)
-                                ->update(['name' => $name_group]);
+                                ->update(['name' => $name_group, 'condition' => $condition]);
 
             if (!empty($array_studentid)) {
                 foreach ($array_studentid as $key => $data) {

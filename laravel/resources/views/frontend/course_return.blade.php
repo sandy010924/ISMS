@@ -54,25 +54,26 @@
                     @csrf
                       <input type="hidden" name="form_event_id" id="form_event_id" value="{{ $course->id }}">
                       <div class="form-group required">
-                        <label class="col-form-label" for="idate">報名日期</label>
+                        <label class="col-form-label" for="idate"><strong>報名日期</strong></label>
                         {{-- <input type="text" id="idate" name="idate" class="form-control"> --}}
                         <div class="input-group date" id="idate" data-target-input="nearest">
-                            <input type="text" name="idate" class="form-control datetimepicker-input" data-target="#idate" required/>
+                            <input type="text" name="idate" class="form-control datetimepicker-input" data-target="#idate" autocomplete="off" required/>
                             <div class="input-group-append" data-target="#idate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                        {{-- <input type="text" class="form-control" id="idate" name="idate" data-provide="datepicker" autocomplete="off"> --}}
                       </div>
                       <div class="form-group required">
-                        <label for="iphone" class="col-form-label">聯絡電話</label>
+                        <label for="iphone" class="col-form-label"><strong>聯絡電話</strong></label>
                         <input type="text" class="form-control" name="iphone" id="iphone" required>
                       </div>
                       <div class="form-group required">
-                        <label for="iname" class="col-form-label">姓名</label>
+                        <label for="iname" class="col-form-label"><strong>姓名</strong></label>
                         <input type="text" class="form-control" name="iname" id="iname" required>
                       </div>
                       <div class="form-group">
-                        <label for="isex" class="col-form-label">性別</label>
+                        <label for="isex" class="col-form-label"><strong>性別</strong></label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio custom-control-inline">
                             <input type="radio" id="isex1" name="isex" class="custom-control-input" value="男">
@@ -85,37 +86,39 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="iid" class="col-form-label">身分證字號</label>
+                        <label for="iid" class="col-form-label"><strong>身分證字號</strong></label>
                         <input type="text" class="form-control" name="iid" id="iid">
                       </div>
                       <div class="form-group">
-                        <label for="iemail" class="col-form-label">電子郵件</label>
+                        <label for="iemail" class="col-form-label"><strong>電子郵件</strong></label>
                         <input type="text" class="form-control" name="iemail" id="iemail">
                       </div>
                       <div class="form-group">
-                        <label for="ibirthday" class="col-form-label">出生日期</label>
+                        <label for="ibirthday" class="col-form-label"><strong>出生日期</strong></label>
                         {{-- <input type="date" class="form-control" name="ibirthday" id="ibirthday"> --}}
-                        <div class="input-group date" id="ibirthday" data-target-input="nearest">
+                        {{-- <div class="input-group date" id="ibirthday" data-target-input="nearest">
                             <input type="text" name="ibirthday" class="form-control datetimepicker-input" data-target="#ibirthday"/>
                             <div class="input-group-append" data-target="#ibirthday" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
-                        </div>
+                        </div> --}}
+                        <input type="text" class="form-control" id="ibirthday" name="ibirthday" data-provide="datepicker" autocomplete="off">
+                        <label class="text-secondary px-2 py-1"><small>(民國年-月-日)</small></label>
                       </div>
                       <div class="form-group">
-                        <label for="icompany" class="col-form-label">公司名稱</label>
+                        <label for="icompany" class="col-form-label"><strong>公司名稱</strong></label>
                         <input type="text" class="form-control" name="icompany" id="icompany">
                       </div>
                       <div class="form-group">
-                        <label for="iprofession" class="col-form-label">職業</label>
+                        <label for="iprofession" class="col-form-label"><strong>職業</strong></label>
                         <input type="text" class="form-control" name="iprofession" id="iprofession">
                       </div>
                       <div class="form-group">
-                        <label for="iaddress" class="col-form-label">聯絡地址</label>
+                        <label for="iaddress" class="col-form-label"><strong>聯絡地址</strong></label>
                         <input type="text" class="form-control" name="iaddress" id="iaddress">
                       </div>
                       <div class="form-group">
-                        <label for="ijoin" class="col-form-label">我想參加課程</label>
+                        <label for="ijoin" class="col-form-label"><strong>我想參加課程</strong></label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio my-1">
                             <input type="radio" id="ijoin1" name="ijoin" class="custom-control-input" value="0">
@@ -127,21 +130,29 @@
                           </div>
                         </div>
                       </div>
+                      <input type="hidden" id="events_len" name="events_len" value="{{ count($events) }}">
                       @foreach( $events as $key => $data )
                         <div class="form-group">
-                          <label class="col-form-label" for="ievent">{{ $data['course_name'] }} 的場次</label>
+                          <label class="col-form-label" for="ievent"><strong>{{ $data['course_name'] }} 的場次</strong></label>
                           @foreach( $data['events'] as $data_events )
                             <div class="d-block my-2">
                               <div class="custom-control custom-radio my-3">
-                                <input type="radio" id="{{ $data_events['id_group'] }}" value="{{ $data_events['id_group'] }}" name="ievent" class="custom-control-input ievent">
+                                <input type="radio" id="{{ $data_events['id_group'] }}" value="{{ $data_events['id_group'] }}" name="ievent{{ $key }}" class="custom-control-input ievent">
                                 <label class="custom-control-label" for="{{ $data_events['id_group'] }}">{{ $data_events['events'] }}</label>
                               </div>
                             </div>
                           @endforeach
+                            <div class="d-block my-2">
+                              <div class="custom-control custom-radio my-3">
+                                <input type="radio" id="other{{ $key }}" value="other_val{{ $key }}" name="ievent{{ $key }}" class="custom-control-input ievent">
+                                <input type="hidden" id="other_val{{ $key }}" name="other_val{{ $key }}" value="{{ $data['id_course'] }}">
+                                <label class="custom-control-label" for="other{{ $key }}">我要選擇其他場次</label>
+                              </div>
+                            </div>
                         </div>
                       @endforeach
                       <div class="form-group">
-                        <label for="ipay_model" class="col-form-label">付款方式</label>
+                        <label for="ipay_model" class="col-form-label"><strong>付款方式</strong></label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio my-1">
                             <input type="radio" id="ipay_model1" name="ipay_model" class="custom-control-input" value="0">
@@ -162,15 +173,15 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="icash" class="col-form-label">付款金額</label>
+                        <label for="icash" class="col-form-label"><strong>付款金額</strong></label>
                         <input type="number" class="form-control" name="icash" id="icash">
                       </div>
                       <div class="form-group">
-                        <label for="inumber" class="col-form-label">匯款帳號/卡號後五碼 </label>
+                        <label for="inumber" class="col-form-label"><strong>匯款帳號/卡號後五碼</strong></label>
                         <input type="number" class="form-control" name="inumber" id="inumber">
                       </div>
                       <div class="form-group">
-                        <label for="iinvoice" class="col-form-label">統一發票</label>
+                        <label for="iinvoice" class="col-form-label"><strong>統一發票</strong></label>
                         <div class="d-block my-2">
                           <div class="custom-control custom-radio my-1">
                             <input type="radio" id="iinvoice1" name="iinvoice" class="custom-control-input" value="0">
@@ -187,11 +198,11 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inum" class="col-form-label">統編</label>
+                        <label for="inum" class="col-form-label"><strong>統編</strong></label>
                         <input type="number" class="form-control" name="inum" id="inum">
                       </div>
                       <div class="form-group">
-                        <label for="icompanytitle" class="col-form-label">抬頭</label>
+                        <label for="icompanytitle" class="col-form-label"><strong>抬頭</strong></label>
                         <input type="text" class="form-control" name="icompanytitle" id="icompanytitle">
                       </div>
                       <div class="modal-footer">
@@ -469,17 +480,32 @@
 
     $('#idate').datetimepicker({ 
       defaultDate: new Date(),
+      languate: 'zh-TW',
       format: 'YYYY-MM-DD',
       icons: iconlist, 
     });
 
-    $('#ibirthday').datetimepicker({ 
-      format: 'YYYY-MM-DD',
-      icons: iconlist, 
-    });
+    // $('#ibirthday').datetimepicker({ 
+    //   // locale : 'zh-tw',
+    //   languate: 'zh-TW',
+    //   format: 'twy-MM-DD',
+    //   icons: iconlist, 
+    // });
     
+    $('#ibirthday').datepicker({ 
+      // defaultDate: new Date(),
+      languate: 'zh-TW',
+      format: 'twy-mm-dd',
+    });
+
   });
 
+  /* 日期選擇器位置 */
+  $(document).on('show', $('.datepicker').datepicker(), function() {
+    $('.datepicker').removeClass('datepicker-orient-top');
+    $('.datepicker').addClass('datepicker-orient-bottom');
+  });
+  /* 日期選擇器位置 */
 
   /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
     // 現場完款

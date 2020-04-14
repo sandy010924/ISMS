@@ -97,7 +97,7 @@
 
     $(document).ready(function() {
       
-      var daterange = $('#daterange').val();
+      // var daterange = $('#daterange').val();
 
        //日期區間
       if( '<?php echo $start?>'=='' && '<?php echo $end?>'=='' ){

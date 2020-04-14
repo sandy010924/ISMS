@@ -46,19 +46,76 @@ class StudentGroupController extends Controller
 
         return $datas;
     }
-
+    private static function compareDeepValue($val1, $val2)
+    {
+        return strcmp($val1['value'], $val2['value']);
+    }
     // 搜尋符合條件的學員資料 Rock(2020/03/16)
     public function searchstudents(Request $request)
     {
+        $array_search_successful = [];
+        $array_search_deal = [];
+        $array_search1 = [];
+        $array_search2 = [];
+        $array_search3 = [];
         // request data
-        $type_course = $request->get('type_course');
-        $id_course = $request->get('id_course');
-        $date = $request->get('date');
-        $type_condition = $request->get('type_condition');
-        $opt1 = $request->get('opt1');
-        $opt2 = $request->get('opt2');
-        $value = $request->get('value');
+        $array_search = $request->get('array_search');
 
+        for ($i = 0; $i < count($array_search); $i++) {
+            if ($i == 0) {
+                if (!empty($this->search($array_search[$i]))) {
+                    $array_search1 = $this->search($array_search[$i]);
+                    $array_search_deal = array_merge($array_search_deal, json_decode($array_search1, true));
+                }
+            } elseif ($i == 1) {
+                if (!empty($this->search($array_search[$i]))) {
+                    $array_search2 = $this->search($array_search[$i]);
+                    $array_search_deal = array_merge($array_search_deal, json_decode($array_search2, true));
+                }
+            } elseif ($i == 2) {
+                if (!empty($this->search($array_search[$i]))) {
+                    $array_search3 = $this->search($array_search[$i]);
+                    $array_search_deal = array_merge($array_search_deal, json_decode($array_search3, true));
+                }
+            }
+        }
+
+        // 找到相同資料
+        foreach ($array_search_deal as $current_key => $current_array) {
+            $search_key = array_search($current_array, $array_search_deal);
+            if ($current_key != $search_key) {
+                array_push($array_search_successful, $array_search_deal[$search_key]);
+            }
+        }
+        if (count($array_search_successful) == 0) {
+            $array_search_successful = $array_search_deal;
+        }
+        
+        return $array_search_successful;
+    }
+
+    
+
+    public function search($array_search)
+    {
+        $type_course = "";
+        $id_course = "";
+        $date = "";
+        $type_condition = "";
+        $opt1 = "";
+        $opt2 = "";
+        $value = "";
+        $datas = "";
+
+        $type_course = $array_search['type_course'];
+        $id_course = $array_search['id_course'];
+        
+        $date = $array_search['date'];
+        $type_condition = $array_search['type_condition'];
+        $opt1 = $array_search['opt1'];
+        $opt2 = $array_search['opt2'];
+        $value = $array_search['value'];
+        
         // 看日期有沒有'-'，變成陣列
         $date = str_replace(" ", "", explode("-", $date));
         $sdate = $date[0];
@@ -389,7 +446,6 @@ class StudentGroupController extends Controller
         
         return $datas;
     }
-
     /* 修改資料 */
     // 顯示資料
     public function showeditdata(Request $request)
@@ -398,7 +454,7 @@ class StudentGroupController extends Controller
         $datas = StudentGroup::leftjoin('student_groupdetail as b', 'student_group.id', '=', 'b.id_group')
                     ->leftjoin('student as c', 'b.id_student', '=', 'c.id')
                     ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
-                    ->select('c.*', 'd.datasource', 'd.submissiondate', 'student_group.name as name_group')
+                    ->select('student_group.condition', 'c.*', 'd.datasource', 'd.submissiondate', 'student_group.name as name_group')
                     ->where('student_group.id', $id)
                     ->groupby('c.id')
                     ->get();
