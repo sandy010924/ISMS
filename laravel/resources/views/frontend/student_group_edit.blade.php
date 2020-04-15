@@ -24,7 +24,7 @@
               <option value="5">來源</option>
               <option value="6">加入日期</option>
             </select>
-            </div>                
+            </div>
         </div>
       </div> -->
       <form id="form_condition1">
@@ -35,20 +35,20 @@
                 <option value="1">銷講</option>
                 <option value="2">正課</option>
                 <option value="3">活動</option>
-              </select> 
+              </select>
           </div>
           <div class="col-3">
-              <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course"></select> 
+              <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course"></select>
           </div>
           <div class="col-3">
-            <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date">                
-          </div>             
+            <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date">
+          </div>
           <div class="col-3">
             <select class="form-control" id="condition">
               <option value="information">名單資料</option>
               <option value="action">名單動作</option>
               <option value="tag">標籤</option>
-            </select>                
+            </select>
           </div>
         </div>
         <div class="row">
@@ -62,7 +62,7 @@
               <option value="address">居住地址</option>
               <option>銷講後最新狀態</option>
               <option value="course_content">想了解的內容</option>
-            </select>                
+            </select>
           </div>
           <div class="col-3">
             <select class="form-control mt-2" id="condition_option2">
@@ -71,23 +71,23 @@
               <option value="no">未</option>
               <option value="like">包含</option>
               <option value="notlike">不包含</option>
-            </select>                
+            </select>
           </div>
           <div class="col-3">
             <input type="text" class="form-control mt-2" style="display:block;" id="condition_input3">
             <!-- <select class="form-control m-1" id="condition_option3" style="display:none;">
               <option value="">請選擇</option>
-              
+
             </select> -->
-          </div>              
+          </div>
         </div>
       </form>
       <!-- 添加另一條件 Rocky (2020/04/04) -->
       <div class="row">
         <div class="col-3 mt-2">
           <button class="btn btn-primary" type="button" onclick="condition2();" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
-            <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>  
-          </button>                 
+            <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>
+          </button>
         </div>
       </div>
     </div>
@@ -104,20 +104,20 @@
                     <option value="1">銷講</option>
                     <option value="2">正課</option>
                     <option value="3">活動</option>
-                  </select> 
+                  </select>
               </div>
               <div class="col-3">
-                  <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course2"></select> 
+                  <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course2"></select>
               </div>
               <div class="col-3">
-                <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date2">                
-              </div>             
+                <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date2">
+              </div>
                 <div class="col-3">
                   <select class="form-control" id="condition2">
                     <option value="information">名單資料</option>
                     <option value="action">名單動作</option>
                     <option value="tag">標籤</option>
-                  </select>                
+                  </select>
                 </div>
             </div>
             <div class="row">
@@ -131,7 +131,7 @@
                   <option value="address">居住地址</option>
                   <option>銷講後最新狀態</option>
                   <option value="course_content">想了解的內容</option>
-                </select>                
+                </select>
               </div>
               <div class="col-3">
                 <select class="form-control mt-2" id="condition_option2_2">
@@ -140,7 +140,7 @@
                   <option value="no">未</option>
                   <option value="like">包含</option>
                   <option value="notlike">不包含</option>
-                </select>                
+                </select>
               </div>
               <div class="col-3">
                 <input type="text" class="form-control mt-2" style="display:block;" id="condition_input3_2">
@@ -151,9 +151,9 @@
           <div class="row">
             <div class="col-3  mt-2">
               <button class="btn btn-primary" type="button" onclick="condition3();" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
-                <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>  
-              </button>   
-              </i>  
+                <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>
+              </button>
+              </i>
             </div>
           </div>
         </div>
@@ -163,7 +163,7 @@
   <div class="collapse" id="dev_condition3">
     <div class="card m-3">
       <div class="card-body">
-        <form id="form_condition3">             
+        <form id="form_condition3">
           <div class="row">
             <div class="col-3">
                 <select  class="form-control" id="select_type3">
@@ -171,20 +171,20 @@
                   <option value="1">銷講</option>
                   <option value="2">正課</option>
                   <option value="3">活動</option>
-                </select> 
+                </select>
             </div>
             <div class="col-3">
-                <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course3"></select> 
+                <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course3"></select>
             </div>
             <div class="col-3">
-              <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date3">                
-            </div>             
+              <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date3">
+            </div>
               <div class="col-3">
                 <select class="form-control" id="condition3">
                   <option value="information">名單資料</option>
                   <option value="action">名單動作</option>
                   <option value="tag">標籤</option>
-                </select>                
+                </select>
               </div>
           </div>
           <div class="row">
@@ -198,7 +198,7 @@
                 <option value="address">居住地址</option>
                 <option>銷講後最新狀態</option>
                 <option value="course_content">想了解的內容</option>
-              </select>                
+              </select>
             </div>
             <div class="col-3">
               <select class="form-control mt-2" id="condition_option2_3">
@@ -207,13 +207,13 @@
                 <option value="no">未</option>
                 <option value="like">包含</option>
                 <option value="notlike">不包含</option>
-              </select>                
+              </select>
             </div>
             <div class="col-3">
               <input type="text" class="form-control mt-2" style="display:block;" id="condition_input3_3">
             </div>
           </div>
-        </form>              
+        </form>
       </div>
     </div>
   </div>
@@ -222,17 +222,17 @@
     <div class="card-body">
       <div class="row">
           <div class="col-4">
-            <button type="button" class="btn btn-primary mr-2" onclick="search();">搜尋</button> 
+            <button type="button" class="btn btn-primary mr-2" onclick="search();">搜尋</button>
             <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#model_show_log" aria-expanded="false" aria-controls="model_show_log" onclick="show_log();">
             <i class="fa fa-search" aria-hidden="true"></i>查看條件
-            </button>    
+            </button>
           </div>
           <div class="col-3">
             <input type="text" id="name_group" class="m-2 form-control"  value="{{$datas[0]['name_group']}}">
           </div>
           <div class="col-2">
             <button class="btn btn-outline-secondary m-2" type="button" id="btn_update"  onclick="update();">儲存</button>
-          </div>        
+          </div>
       </div>
       <div class="row">
         <div class="col-12">
@@ -242,7 +242,7 @@
             </div>
           </div>
       </div>
-      <div class="table-responsive">       
+      <div class="table-responsive">
         <input type="hidden" id="id_group"  value="{{$id}}">
         <input type="hidden" id="data_groupdetail"  value="{{$datas}}">
         <table class="table table-striped table-sm text-center">
@@ -255,7 +255,7 @@
               <th>加入日期</th>
             </tr>
           </thead>
-          <tbody id= "data_student">                  
+          <tbody id= "data_student">
           </tbody>
         </table>
       </div>
@@ -273,15 +273,15 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
-  </div>     
-  <!-- alert End -->  
+  </div>
+  <!-- alert End -->
 <!-- Content End -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 
 
-<script>  
+<script>
 // 宣告
 var array_studentid = new Array();
 var search_log = '',count_log = 0,old_count_log = 0
@@ -316,13 +316,13 @@ function condition2 (){
   check_condition2++;
   if(check_condition2 > 1){
     check_condition2 = 0
-  }  
+  }
 }
 function condition3 (){
   check_condition3++;
   if(check_condition3 > 1){
     check_condition3 = 0
-  }  
+  }
 }
 
 //時間範圍
@@ -332,7 +332,7 @@ $(function() {
     locale: {
       format: "YYYY/MM/DD"
     }
-    
+
   }, function(start, end, label) {
     // console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
   });
@@ -347,25 +347,25 @@ show_condition3();
 function show_requirement_course(type){
 $.ajax({
       type : 'POST',
-      url:'show_requirement_course', 
-      dataType: 'json',    
+      url:'show_requirement_course',
+      dataType: 'json',
       data:{
         type:type
       },
       success:function(data){
         // console.log(data);
         $('#select_course').find('option').remove();
-        $.each(data, function(index,val) {           
+        $.each(data, function(index,val) {
           $('#select_course').append(new Option(val['name'], val['id']))
-        }); 
+        });
 
         $('#select_course').selectpicker('refresh');
-                 
+
       },
       error: function(error){
-        console.log(JSON.stringify(error));     
+        console.log(JSON.stringify(error));
       }
-  });  
+  });
 }
 
 /*條件顯示 - S Rocky(2020/04/05)*/
@@ -373,7 +373,7 @@ function write_log(){
   var log_id = []
   // 抓取條件篩選器1
   $("#form_condition1 :input").each(function(){
-    if ($(this).attr('id') != undefined) {      
+    if ($(this).attr('id') != undefined) {
       if($(this).val() != "" || $(this).val() != "請選擇") {
         if ($(this).attr('id') == "input_date" || $(this).attr('id') == "condition_input3") {
           id = '#' + $(this).attr('id')
@@ -390,8 +390,8 @@ function write_log(){
   // 抓取條件篩選器2
   if(check_condition2 == 1){
     log_id = []
-    $("#form_condition2 :input").each(function(){    
-    if ($(this).attr('id') != undefined) {      
+    $("#form_condition2 :input").each(function(){
+    if ($(this).attr('id') != undefined) {
       if($(this).val() != "" || $(this).val() != "請選擇") {
         if ($(this).attr('id') == "input_date2" || $(this).attr('id') == "condition_input3_2") {
           id = '#' + $(this).attr('id')
@@ -408,8 +408,8 @@ function write_log(){
   // 抓取條件篩選器3
   if(check_condition3 == 1){
     log_id = []
-    $("#form_condition3 :input").each(function(){    
-    if ($(this).attr('id') != undefined) {      
+    $("#form_condition3 :input").each(function(){
+    if ($(this).attr('id') != undefined) {
       if($(this).val() != "" || $(this).val() != "請選擇") {
         if ($(this).attr('id') == "input_date3" || $(this).attr('id') == "condition_input3_3") {
           id = '#' + $(this).attr('id')
@@ -430,35 +430,35 @@ function get_log(log_id,condition_name,condition_id){
 
   type = $(log_id[0]).text()
   course = $(log_id[1]).text()
-  date = $(log_id[2]).val()  
-  type_condition = $(log_id[3]).text()  
+  date = $(log_id[2]).val()
+  type_condition = $(log_id[3]).text()
   opt1 = $(log_id[4]).text()
   opt2 = $(log_id[5]).text()
   value = $(log_id[6]).val()
 
   // log += count_log + '. '
   if(type != "") {
-    log += type + '/' 
-  } 
+    log += type + '/'
+  }
   if(course != "") {
-    log += course + '/' 
+    log += course + '/'
   }
   if(date != "") {
-    log += date + '/' 
+    log += date + '/'
   }
   if(type_condition != "") {
-    log += type_condition + '/' 
+    log += type_condition + '/'
   }
   if(opt1 != "請選擇") {
-    log += opt1 + '/' 
+    log += opt1 + '/'
   }
   if(opt2 != "請選擇") {
-    log += opt2 + '/' 
+    log += opt2 + '/'
   }
   if(value != "") {
-    log += value + '/' 
+    log += value + '/'
   }
-  
+
   if (check_condition3 == 1 && condition_id == 1) {
     tag = "<hr>"
   } else if(check_condition2 == 1 && condition_id == 1){
@@ -466,7 +466,7 @@ function get_log(log_id,condition_name,condition_id){
   } else{
     tag = ""
   }
-  // log = tag + count_log + " - " + condition_name + ":" + log.slice(0,-1) + "<br>" 
+  // log = tag + count_log + " - " + condition_name + ":" + log.slice(0,-1) + "<br>"
   log = tag + condition_name + ":" + log.slice(0,-1) + "<br>"
   search_log += log
 }
@@ -481,11 +481,11 @@ function show_log(){
 
 // 尋找資料 Rocky(2020/03/14)
 function search(){
-  var array_search = [],array_condition1 = [],array_condition2 = [],array_condition3 = []; 
-  
+  var array_search = [],array_condition1 = [],array_condition2 = [],array_condition3 = [];
+
   // 抓取條件篩選器1
   $("#form_condition1 :input").each(function(){
-    if ($(this).attr('id') != undefined) {      
+    if ($(this).attr('id') != undefined) {
       array_condition1.push($(this).val())
     }
   });
@@ -493,7 +493,7 @@ function search(){
   // 抓取條件篩選器2
   if(check_condition2 == 1){
     $("#form_condition2 :input").each(function(){
-      if ($(this).attr('id') != undefined) {      
+      if ($(this).attr('id') != undefined) {
         array_condition2.push($(this).val())
       }
     });
@@ -502,7 +502,7 @@ function search(){
   // 抓取條件篩選器3
   if(check_condition3 == 1){
     $("#form_condition3 :input").each(function(){
-      if ($(this).attr('id') != undefined) {      
+      if ($(this).attr('id') != undefined) {
         array_condition3.push($(this).val())
       }
     });
@@ -512,9 +512,9 @@ function search(){
   if(array_condition1[1].length == 0){
     array_condition1[1] = ['']
   }
-  
+
   array_search.push({
-    type_course: array_condition1[0], 
+    type_course: array_condition1[0],
     id_course:  array_condition1[1],
     date:array_condition1[2],
     type_condition:array_condition1[3],
@@ -528,7 +528,7 @@ function search(){
       array_condition2[1] = ['']
     }
     array_search.push({
-      type_course: array_condition2[0], 
+      type_course: array_condition2[0],
       id_course:  array_condition2[1],
       date:array_condition2[2],
       type_condition:array_condition2[3],
@@ -543,7 +543,7 @@ function search(){
       array_condition3[1] = ['']
     }
     array_search.push({
-      type_course: array_condition3[0], 
+      type_course: array_condition3[0],
       id_course:  array_condition3[1],
       date:array_condition3[2],
       type_condition:array_condition3[3],
@@ -566,7 +566,7 @@ function search(){
       /*log Rocky(2020/04/04)*/
       count_log++;
       write_log()
-      show_log()  
+      show_log()
     },
     error:function(error){
       console.log(JSON.stringify(error))
@@ -585,8 +585,8 @@ function show(data){
       });
       if(check_array_student.length == 0 ){
         array_old_studentid.push(data[index]);
-        array_upate_studentid.push(data[index]);        
-      }    
+        array_upate_studentid.push(data[index]);
+      }
     });
   }
   if (array_old_studentid.length != 1) {
@@ -594,15 +594,15 @@ function show(data){
       if (val['name'] != null) {
         data +=
           '<tr>' +
-          '<td>' + val['name'] + '</td>' + 
+          '<td>' + val['name'] + '</td>' +
           '<td>' + val['phone'] + '</td>' +
           '<td>' + val['email'] + '</td>' +
           '<td>' + val['datasource'] + '</td>' +
           '<td>' + val['submissiondate'] + '</td>' +
           '</tr>'
-      }      
-    });     
-    $('#data_student').html(data); 
+      }
+    });
+    $('#data_student').html(data);
   }
 }
 
@@ -620,12 +620,12 @@ function update(){
       array_upate_studentid:array_upate_studentid
     },
     success:function(data){
-      if (data = "儲存成功") {         
+      if (data = "儲存成功") {
           $("#success_alert_text").html("儲存成功");
           fade($("#success_alert"));
       } else {
         $("#error_alert_text").html("儲存失敗");
-        fade($("#error_alert"));                 
+        fade($("#error_alert"));
       }
     },
     error:function(error){
@@ -636,14 +636,14 @@ function update(){
 
 
 
-function show_condition1(){  
+function show_condition1(){
   //條件類別判斷
   document.getElementById('condition').onchange=function(){
     var condition_option1=document.getElementById('condition_option1')
     ,condition_option2=document.getElementById('condition_option2')
     // ,condition_option3=document.getElementById('condition_option3')
     ,condition_input3=document.getElementById('condition_input3');
-    
+
     if(this.value=='information'){
       // 選項一
       $('#condition_option1').empty();
@@ -730,8 +730,8 @@ function show_condition1(){
         $('#condition_option1').append(new Option('目前職業', 'profession'));
         $('#condition_option1').append(new Option('居住地址', 'address'));
         $('#condition_option1').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1').append(new Option('想了解的內容', 'course_content'));  
-      }    
+        $('#condition_option1').append(new Option('想了解的內容', 'course_content'));
+      }
       } else if(this.value=='2') {
         // 正課
         // 選項一
@@ -760,7 +760,7 @@ function show_condition1(){
         $('#condition_option1').append(new Option('居住地址', 'address'));
         $('#condition_option1').append(new Option('銷講後最新狀態', ''));
         $('#condition_option1').append(new Option('想了解的內容', 'course_content'));
-      }  
+      }
   }
 
   // 選項一 Rocky(2020/03/20)
@@ -769,7 +769,7 @@ function show_condition1(){
       condition_option2.style.display='block';
     } else if(this.value=='no') {
       condition_option2.style.display='none';
-      condition_input3.style.display='none';    
+      condition_input3.style.display='none';
     }
   }
 
@@ -795,13 +795,13 @@ function show_condition1(){
 }
 
 
-function show_condition2(){  
+function show_condition2(){
   //條件類別判斷
   document.getElementById('condition2').onchange=function(){
     var condition_option1=document.getElementById('condition_option1_2')
     ,condition_option2_2=document.getElementById('condition_option2_2')
     ,condition_input3_2=document.getElementById('condition_input3_2');
-    
+
     if(this.value=='information'){
       // 選項一
       $('#condition_option1_2').empty();
@@ -829,7 +829,7 @@ function show_condition2(){
       $('#condition_option1_2').append(new Option('請選擇', ''));
       $('#condition_option1_2').append(new Option('是', 'yes'));
       $('#condition_option1_2').append(new Option('未', 'no'));
-      
+
       // 選項二
       $('#condition_option2_2').empty();
       $('#condition_option2_2').append(new Option('請選擇', ''));
@@ -851,7 +851,7 @@ function show_condition2(){
       $('#condition_option1_2').append(new Option('請選擇', ''));
       $('#condition_option1_2').append(new Option('已分配', 'yes'));
       $('#condition_option1_2').append(new Option('未分配', 'no'));
-      
+
       // 選項二
       $('#condition_option2_2').empty();
       $('#condition_option2_2').append(new Option('請選擇', ''));
@@ -877,8 +877,8 @@ function show_condition2(){
         $('#condition_option1_2').append(new Option('目前職業', 'profession'));
         $('#condition_option1_2').append(new Option('居住地址', 'address'));
         $('#condition_option1_2').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1_2').append(new Option('想了解的內容', 'course_content'));  
-      }    
+        $('#condition_option1_2').append(new Option('想了解的內容', 'course_content'));
+      }
       } else if(this.value=='2') {
         // 正課
         // 選項一
@@ -907,7 +907,7 @@ function show_condition2(){
         $('#condition_option1_2').append(new Option('居住地址', 'address'));
         $('#condition_option1_2').append(new Option('銷講後最新狀態', ''));
         $('#condition_option1_2').append(new Option('想了解的內容', 'course_content'));
-      }  
+      }
   }
 
   // 選項一 Rocky(2020/03/20)
@@ -916,7 +916,7 @@ function show_condition2(){
       condition_option2_2.style.display='block';
     } else if(this.value=='no') {
       condition_option2_2.style.display='none';
-      condition_input3_2.style.display='none';    
+      condition_input3_2.style.display='none';
     }
   }
 
@@ -941,13 +941,13 @@ function show_condition2(){
   });
 }
 
-function show_condition3(){  
+function show_condition3(){
   //條件類別判斷
   document.getElementById('condition3').onchange=function(){
     var condition_option3=document.getElementById('condition_option1_3')
     ,condition_option2_3=document.getElementById('condition_option2_3')
     ,condition_input3_3=document.getElementById('condition_input3_3');
-    
+
     if(this.value=='information'){
       // 選項一
       $('#condition_option1_3').empty();
@@ -975,7 +975,7 @@ function show_condition3(){
       $('#condition_option1_3').append(new Option('請選擇', ''));
       $('#condition_option1_3').append(new Option('是', 'yes'));
       $('#condition_option1_3').append(new Option('未', 'no'));
-      
+
       // 選項二
       $('#condition_option2_3').empty();
       $('#condition_option2_3').append(new Option('請選擇', ''));
@@ -997,7 +997,7 @@ function show_condition3(){
       $('#condition_option1_3').append(new Option('請選擇', ''));
       $('#condition_option1_3').append(new Option('已分配', 'yes'));
       $('#condition_option1_3').append(new Option('未分配', 'no'));
-      
+
       // 選項二
       $('#condition_option2_3').empty();
       $('#condition_option2_3').append(new Option('請選擇', ''));
@@ -1023,8 +1023,8 @@ function show_condition3(){
         $('#condition_option1_3').append(new Option('目前職業', 'profession'));
         $('#condition_option1_3').append(new Option('居住地址', 'address'));
         $('#condition_option1_3').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1_3').append(new Option('想了解的內容', 'course_content'));  
-      }    
+        $('#condition_option1_3').append(new Option('想了解的內容', 'course_content'));
+      }
       } else if(this.value=='2') {
         // 正課
         // 選項一
@@ -1053,7 +1053,7 @@ function show_condition3(){
         $('#condition_option1_3').append(new Option('居住地址', 'address'));
         $('#condition_option1_3').append(new Option('銷講後最新狀態', ''));
         $('#condition_option1_3').append(new Option('想了解的內容', 'course_content'));
-      }  
+      }
   }
 
   // 選項一 Rocky(2020/03/20)
@@ -1062,7 +1062,7 @@ function show_condition3(){
       condition_option2_3.style.display='block';
     } else if(this.value=='no') {
       condition_option2_3.style.display='none';
-      condition_input3_3.style.display='none';    
+      condition_input3_3.style.display='none';
     }
   }
 
@@ -1092,4 +1092,3 @@ function show_condition3(){
 
 @endsection
 
-     
