@@ -5,7 +5,7 @@
 
 @section('content')
 <!-- Content Start -->
-        <!--開始報到內容-->
+        <!--簽到表內容-->
         <div class="card m-3">
           <div class="card-body">
             <div class="row check_title">

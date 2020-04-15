@@ -14,12 +14,6 @@
 
   <!-- Fontawesome Icon -->
   <link href="{{ asset('font-awesome/css/all.css') }}" rel="stylesheet">
-  <!-- Custom styles -->
-  <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/web.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/form.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-  <link href="{{ asset('css/course_list_chart.css') }}" rel="stylesheet">
 
   <!-- DataTable styles Sandy(2020/02/25) -->
   {{-- <link href="{{ asset('css/dataTables.css') }}" rel="stylesheet"> --}}
@@ -58,14 +52,17 @@
   <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
   <script src="{{ asset('js/bootstrap-select.min.js') }} "></script>
 
-   <!-- message 細分組搜尋 Joanna (2020/04/01) -->
-  <link rel="stylesheet" href="{{ asset('css/icon_font.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jquery.transfer.css') }}">
-  <script src="{{ asset('js/jquery.transfer.js') }} "></script>
 
   <!-- 民國年日期選擇器 Sandy (2020/04/02) -->
   <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
   <script src="{{ asset('js/bootstrap-datepicker.js') }} "></script>
+  
+  <!-- Custom styles -->
+  <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/web.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/form.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/course_list_chart.css') }}" rel="stylesheet">
 
 </head>
 

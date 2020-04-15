@@ -477,6 +477,8 @@ function get_log(log_id,condition_name,condition_id){
     tag = "<hr>"
   } else if(check_condition2 == 1 && condition_id == 1){
     tag = "<hr>"
+  } else if (condition_id == 1){
+    tag = "<hr>"
   } else{
     tag = ""
   }
@@ -566,7 +568,7 @@ function search(){
       value:array_condition3[6]
     });
   }
-
+  
   $.ajax({
     type:'POST',
     url:'search_students',

@@ -17,6 +17,20 @@
   <link href="{{ asset('css/web.css') }}" rel="stylesheet">
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
+<style>
+    /* 日期選擇器位置調整 */
+    .table-responsive{
+      /* z-index: 0; */
+      overflow: visible;
+    }
+    table td{
+      position: relative;
+    }
+    .bootstrap-datetimepicker-widget{
+      bottom: 0;
+      z-index: 9999 !important;
+    }
+  </style>
 
 <body>
   <main role="main" class="mw-100">
@@ -28,7 +42,7 @@
       <div id="course_form" class="card-body container px-4 p-3">
         {{-- <div id="firstpage"> --}}
         <div id="step1">
-          <form id="form1" name="verify">
+          <form id="form1" name="verify" >
             @csrf
             <div class="form-group mb-5">
                 <h5 class="font-weight-bold text-center my-3">課程服務報名表</h5>
@@ -37,7 +51,7 @@
               <label class="col-form-label" for="iphone_verify">
                 <b>聯絡電話</b>
               </label>
-              <input type="text" id="iphone_verify" name="iphone_verify" class="form-control" required>
+              <input type="number" id="iphone_verify" name="iphone_verify" class="form-control" required>
             </div>
             {{-- <button type="button" id="page1_next" class="btn btn-dark w-25 mt-3 float-right" onclick="firstnext(),topFunction()">下一步</button> --}}
             <button type="submit" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
@@ -45,7 +59,7 @@
           </form>
         </div>
         <div id="step2" style="display:none;">
-          <form id="form2">
+          <form id="form2" class="needs-validation" novalidate>
             @csrf
             <div class="form-group mb-5">
                 <h5 class="font-weight-bold text-center my-3">課程服務報名表</h5>
@@ -60,7 +74,10 @@
               <label class="col-form-label" for="iname">
                 <b>姓名</b>
               </label>
-              <input type="text" id="iname" name="iname" class="form-control" value="" required>
+              <input type="text" id="iname" name="iname" class="form-control" required>
+              <div class="invalid-feedback">
+                請輸入姓名
+              </div>
             </div>
             <div class="form-group mb-5">
               <label class="col-form-label" for="isex">
@@ -82,24 +99,39 @@
                 <b>身分證字號</b>
               </label>
               <input type="text" id="iid" name="iid" class="form-control">
+              <div class="invalid-feedback">
+                身分證字號格式有誤
+              </div>
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-5 required">
               <label class="col-form-label" for="iphone">
                 <b>聯絡電話</b>
               </label>
-              <input type="text" id="iphone" name="iphone" class="form-control">
+              <input type="text" id="iphone" name="iphone" class="form-control" required>
+              <div class="invalid-feedback">
+                請輸入正確的聯絡電話
+              </div>
             </div>
             <div class="form-group mb-5">
               <label class="col-form-label" for="iemail">
                 <b>電子郵件</b>
               </label>
               <input type="text" id="iemail" name="iemail" class="form-control">
+              <div class="invalid-feedback">
+              電子信箱格式有誤
+              </div>
             </div>
             <div class="form-group mb-5">
-              <label class="col-form-label" for="ibirthday">
+              <label class="col-form-label" for="ibirthday2">
                 <b>出生日期</b>
-              </label>           
-              <input type="date" id="ibirthday" name="ibirthday" class="form-control"> 
+              </label>     
+              <input type="date" class="form-control" name="ibirthday" id="ibirthday">      
+              {{--<div class="input-group date" id="ibirthday" data-target-input="nearest">
+                <input type="text" name="ibirthday" class="form-control datetimepicker-input" data-target="#ibirthday"/>
+                <div class="input-group-append" data-target="#ibirthday" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div> --}}
             </div>
             <div class="form-group mb-5">
               <label class="col-form-label" for="icompany">
@@ -120,10 +152,10 @@
               <input type="text" id="iaddress" name="iaddress" class="form-control">
             </div>
             <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
-            <button type="button" name="next" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
+            <button type="button" name="check_next" id="second_next" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
           </form>
             {{-- <button type="button" class="btn btn-dark w-25 mt-3 float-left" onclick="secondlast(),topFunction()">上一步</button>
-          <button type="submit" class="btn btn-dark w-25 mt-3 float-right" onclick="secondnext(),topFunction()">下一步</button> --}}
+          <button type="button" class="btn btn-dark w-25 mt-3 float-right" onclick="secondnext(),topFunction()">下一步</button> --}}
         </div>
         <div id="step3" style="display:none;">
           <form id="form3">
@@ -223,8 +255,11 @@
               <label class="col-form-label" for="inumber">
                 <b>匯款帳號/卡號後五碼</b>
               </label>
-              <input type="text" id="inumber" name="inumber" class="form-control">
+              <input type="number" id="inumber" name="inumber" class="form-control">
               <label class="text-secondary px-2 py-1"><small>（付款完成請「截圖」回傳LINE@，謝謝）</small></label>
+              <div class="invalid-feedback">
+                請輸入正確的匯款帳號/卡號後五碼
+              </div>
             </div>
             <hr style="border: 0;">
             <div class="form-group mb-5">
@@ -250,7 +285,7 @@
               <label class="col-form-label" for="inum">
                 <b>統編</b>
               </label>
-              <input type="text" id="inum" name="inum" class="form-control">
+              <input type="number" id="inum" name="inum" class="form-control">
             </div>
             <div class="form-group mb-5">
               <label class="col-form-label" for="icompanytitle">
@@ -259,7 +294,7 @@
               <input type="text" id="icompanytitle" name="icompanytitle" class="form-control">
             </div>
             <button type="button" name="last" class="btn btn-dark w-25 mt-3 float-left">上一步</button>
-            <button type="button" name="next" id="events_check" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
+            <button type="button" id="events_check" class="btn btn-dark w-25 mt-3 float-right">下一步</button>
           </form>
         </div>
         <div id="step5" style="display:none;">
@@ -405,6 +440,7 @@
   $("button[name='next']").click(function(){
     var now = parseInt($(this).parent().attr("id").split("form").pop());
     next(now);
+    
 
     // alert($("#step" + now + " input[required='required']")[0]].val());
     // if( $("#step" + now + " input[required='required']").val() == ""){
@@ -415,6 +451,145 @@
     // }
   });
 
+
+
+//第二頁必填及輸入規則防呆
+$(function(){
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      document.getElementById("second_next").addEventListener("click", function(event) {
+        var btn_next=this
+        second_judge(btn_next,true)
+        $("#form2 input").blur(function(){
+          second_judge(btn_next,false)
+        })
+      
+    });
+  }, false);
+
+})
+
+function second_judge(x,send){
+  console.log(x)
+        var successful=true
+        if($('#iname').val()==""){
+            console.log("NR");
+            $("#iname").addClass("is-invalid");
+            successful=false
+        }
+        else{
+          $("#iname").removeClass("is-invalid");
+    
+        }
+        
+        if($('#iphone').val()==""){
+            console.log("NR");
+            $("#iphone").addClass("is-invalid");
+            successful=false
+        }
+        else{
+          var rule1=/^\d*$/
+          if(!rule1.test($('#iphone').val())){
+            $("#iphone").addClass("is-invalid");
+            successful=false
+          }
+          else{
+            $("#iphone").removeClass("is-invalid");
+            
+          }
+        }
+
+        
+          if($('#iid').val()!=""){
+              
+              var rule1=/^[A-Z]1|2\d{8}/
+              if(!rule1.test($('#iid').val())){
+                $("#iid").addClass("is-invalid");
+                successful=false
+              }
+              else{
+                $("#iid").removeClass("is-invalid");
+              }
+          }
+          else{
+            $("#iid").removeClass("is-invalid");
+          }
+
+          if($('#iemail').val()!=""){
+              
+              var rule1=/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/
+              if(!rule1.test($('#iemail').val())){
+                $("#iemail").addClass("is-invalid");
+                successful=false
+              }
+              else{
+                $("#iemail").removeClass("is-invalid");
+              }
+          }
+          else{
+            $("#iemail").removeClass("is-invalid");
+          }
+          
+          if(successful && send){
+            console.log("IR");
+            
+            var now = parseInt($(x).parent().attr("id").split("form").pop());
+            console.log(now)
+            next(now);
+          }
+        
+}
+//匯款帳號/卡號後五碼規則防呆
+$("#events_check").click(function(){
+          var now = parseInt($(this).parent().attr("id").split("form").pop());
+          if($('#inumber').val()!=""){
+              
+              var rule1=/^\d{5}$/
+              if(!rule1.test($('#inumber').val())){
+                $("#inumber").addClass("is-invalid");
+                
+              }
+              else{
+                $("#inumber").removeClass("is-invalid");
+                console.log("IR");   
+                next(now);
+              }
+          }
+          else{
+            $("#inumber").removeClass("is-invalid");
+            console.log("IR"); 
+            next(now);
+          }
+	});
+
+  //我同意checkbox防呆
+  $("#preview").click(function(){
+			var check2=$("input[name='agree']:checked").length;//判斷有多少個方框被勾選
+			if(check2==0){
+        console.log("NR");
+				alert("您尚未勾選任何項目");
+				
+			}else if(check2==1){
+        console.log("NR");
+				alert("您只勾選1個項目");
+				
+      }else if(check2==2){
+        console.log("NR");
+				alert("您只勾選2個項目");
+				
+			}else{
+          //預覽 Sandy (2020/03/05)
+            $("form").parent().show()
+            $("form").parent().find("button").hide()
+            $("input").prop( "disabled" , true );
+            $("#step1").hide();
+            $("#step6").show();
+            $("body").scrollTop(0);
+			}
+	});
+
+  
   //下一步跳頁 Sandy (2020/03/05)
   function next(now){ 
     $("#step" + now).hide()
@@ -428,16 +603,6 @@
     
     $("#step" + now).hide()
     $("#step" + (now - 1)).show()
-  });
-  
-  //預覽 Sandy (2020/03/05)
-  $("#preview").click(function(){
-    $("form").parent().show()
-    $("form").parent().find("button").hide()
-    $("input").prop( "disabled" , true );
-    $("#step1").hide();
-    $("#step6").show();
-    $("body").scrollTop(0);
   });
   
   //編輯 Sandy (2020/03/05)
@@ -552,6 +717,7 @@
 
 
   });
+
 
 </script>
 

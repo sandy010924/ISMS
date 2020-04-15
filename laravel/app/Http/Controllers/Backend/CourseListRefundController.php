@@ -18,16 +18,22 @@ class CourseListRefundController extends Controller
             //讀取data
             $id = $request->get('course_id');
             $date = $request->get('form_date');
-            $id_group = $request->get('form_events');
+            // $id_group = $request->get('form_events');
             $id_student = $request->get('form_student');
             $reason = $request->get('form_reason');
+            $reason_other = $request->get('form_reason_other');
             
+            if( $reason == "其他"){
+                $reason = $reason_other;
+            }
 
             $registration = Registration::select('id')
                                         ->where('id_student', $id_student)
-                                        ->where('id_group', $id_group)
+                                        // ->where('id_group', $id_group)
+                                        ->where('id_course', $id)
+                                        ->orderBy('created_at', 'desc')
                                         ->first();
-                                            
+                                        
             //判斷退費是否已有該學員資料
             $check_refund = Refund::where('id_registration', $registration->id)
                                   ->get();
@@ -36,6 +42,14 @@ class CourseListRefundController extends Controller
                 foreach ($check_refund as $data_refund) {
                     $id_refund = $data_refund ->id;
                 }
+                
+                //更新退費資料
+                Refund::where('id_registration',  $registration->id)
+                    ->update([
+                        'refund_date' => $date,
+                        'refund_reason' => $reason,
+                    ]);
+
             } else{
                 $refund = new Refund;
 

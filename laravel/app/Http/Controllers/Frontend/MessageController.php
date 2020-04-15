@@ -6,18 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Model\Message;
 use App\Model\Student;
 use App\Model\Teacher;
+use App\Model\Course;
 use App\User;
 
 class MessageController extends Controller
 {
-    // 顯示frontend.message_cost資訊
     public function show()
     {
-      $data = Message::Where('id_student_group', '股票分組') -> get();
+      $course = Course::all();
 
-      $teachers = Teacher::Where('phone', ' ') -> get();
+      $teacher = Teacher::all();
 
-      return view('frontend.message_cost', compact('data', 'teachers'));
+      return view('frontend.message', compact('course', 'teacher'));
     }
 
     // 登入

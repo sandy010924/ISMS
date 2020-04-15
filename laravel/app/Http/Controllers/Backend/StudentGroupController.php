@@ -82,13 +82,14 @@ class StudentGroupController extends Controller
         $id_StudentGroup = "";
         $id = $request->get('id');
         $name_group = $request->get('name_group');
+        $condition = $request->get('condition');
         $array_studentid = $request->get('array_upate_studentid');
        
 
 
         if (!empty($id)) {
             $id_StudentGroup = StudentGroup::where('id', $id)
-                                ->update(['name' => $name_group]);
+                                ->update(['name' => $name_group, 'condition' => $condition]);
 
             if (!empty($array_studentid)) {
                 foreach ($array_studentid as $key => $data) {

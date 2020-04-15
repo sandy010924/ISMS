@@ -101,6 +101,7 @@ class CourseListRefundController extends Controller
                                           'refund.id as id', 
                                           'refund.refund_date as refund_date', 
                                           'refund.refund_reason as refund_reason', 
+                                          'refund.review as review',
                                           'events_course.name as event', 
                                           'events_course.id_group as id_group')
                                  ->Where('registration.id_course', $id)
@@ -143,15 +144,49 @@ class CourseListRefundController extends Controller
                 $pay_model = '';
                 $number = '';
                 foreach( $payment_table as $key_payment => $data_payment ){
+                    $pay_model_item = '' ;
+                    switch ($data_payment['pay_model']) {
+                        case 0:
+                            $pay_model_item = '現金';
+                            break;
+                        case 1:
+                            $pay_model_item = '匯款';
+                            break;
+                        case 2:
+                            $pay_model_item = '刷卡：輕鬆付';
+                            break;
+                        case 3:
+                            $pay_model_item = '刷卡：一次付';
+                            break;
+                        default:
+                            $pay_model_item = '現金';
+                            break;
+                    }
+
                     if( ++$i_payment === $numItems_payment){
-                        $pay_model .= $data_payment['pay_model'];
+                        $pay_model .= $pay_model_item;
                         $number .= $data_payment['number'];
                     }else {
-                        $pay_model .= $data_payment['pay_model'] . '、';
+                        $pay_model .= $pay_model_item . '、';
                         $number .= $data_payment['number'] . '、';
                     }
                 }
 
+                $review = '';
+                switch ($data['review']) {
+                    case 0:
+                        $review = '審核中';
+                        break;
+                    case 1:
+                        $review = '通過';
+                        break;
+                    case 2:
+                        $review = '未通過';
+                        break;
+                    default:
+                        $review = '審核中';
+                        break;
+                }
 
                 //refund
                 $refund[$key] = array(
@@ -165,6 +200,7 @@ class CourseListRefundController extends Controller
                     'pay_model' => $pay_model,
                     'refund_reason' => $data['refund_reason'],
                     'event' => $event,
+                    'review' => $review,
                 );
 
             }
@@ -201,14 +237,41 @@ class CourseListRefundController extends Controller
     //新增退費form選取場次後搜尋該場次所報名之學員
     public function form(Request $request)
     {
-        $id_group = $request->get('id_group');
+        // $id_group = $request->get('id_group');
         
-        $student = Registration::join('student', 'student.id', '=', 'registration.id_student')
-                                ->select('student.name as name', 'registration.id_student as id_student')  
-                                ->Where('id_group', $id_group)
-                                ->get();
+        // $student = Registration::join('student', 'student.id', '=', 'registration.id_student')
+        //                         ->select('student.name as name', 'registration.id_student as id_student')  
+        //                         ->Where('id_group', $id_group)
+        //                         ->get();
 
-        return Response($student);
+        // return Response($student);
+
+        $phone = $request->get('phone');
+        $id = $request->get('course_id');
+
+        $student = array();
+        $course = array();
+        
+        $student = Student::join('registration', 'registration.id_student', '=', 'student.id')
+                          ->select('student.*')
+                          ->Where('phone', $phone)
+                          ->Where('id_course', $id)
+                          ->first();
+
+        if( !empty($student) ){
+            // $course = Registration::join('course', 'course.id', '=', 'registration.id_course')
+            //                         ->select('course.*')  
+            //                         ->Where('id_student', $student->id)
+            //                         ->Where('id_course', $id)
+            //                         ->distinct()
+            //                         ->get();
+
+            // return Response(array('student' => $student, 'course' => $course));
+
+            return Response(array('student' => $student));
+        }else{
+            return 'nodata';
+        }
 
     }
 }
