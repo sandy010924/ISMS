@@ -197,6 +197,7 @@
         <div id="step4" style="display:none;">
           <form id="form4">
             @csrf
+            {{-- <input type="hidden" id="events_len" name="events_len" value="{{ count($events) }}"> --}}
             @foreach( $events as $key => $data )
               <div class="form-group mb-5">
                 <label class="col-form-label" for="ievent">
@@ -205,11 +206,18 @@
                 @foreach( $data['events'] as $data_events )
                   <div class="d-block my-2">
                     <div class="custom-control custom-radio my-3">
-                      <input type="radio" id="{{ $data_events['id_group'] }}" value="{{ $data_events['id_group'] }}" name="ievent{{ $key+1 }}" class="custom-control-input ievent">
+                      <input type="radio" id="{{ $data_events['id_group'] }}" value="{{ $data_events['id_group'] }}" name="ievent{{ $key }}" class="custom-control-input ievent" data-idcourse="{{ $data['id_course'] }}">
                       <label class="custom-control-label h6" for="{{ $data_events['id_group'] }}">{{ $data_events['events'] }}</label>
                     </div>
                   </div>
                 @endforeach
+                <div class="d-block my-2">
+                  <div class="custom-control custom-radio my-3">
+                    <input type="radio" id="other{{ $key }}" value="other_val{{ $key }}" name="ievent{{ $key }}" class="custom-control-input ievent" data-idcourse="{{ $data['id_course'] }}">
+                    {{-- <input type="hidden" id="other_val{{ $key }}" name="other_val{{ $key }}" value="{{ $data['id_course'] }}"> --}}
+                    <label class="custom-control-label" for="other{{ $key }}">我要選擇其他場次</label>
+                  </div>
+                </div>
               </div>
             @endforeach
             <div class="form-group mb-5">
@@ -471,10 +479,10 @@ $(function(){
 })
 
 function second_judge(x,send){
-  console.log(x)
+  // console.log(x)
         var successful=true
         if($('#iname').val()==""){
-            console.log("NR");
+            // console.log("NR");
             $("#iname").addClass("is-invalid");
             successful=false
         }
@@ -484,7 +492,7 @@ function second_judge(x,send){
         }
         
         if($('#iphone').val()==""){
-            console.log("NR");
+            // console.log("NR");
             $("#iphone").addClass("is-invalid");
             successful=false
         }
@@ -532,10 +540,10 @@ function second_judge(x,send){
           }
           
           if(successful && send){
-            console.log("IR");
+            // console.log("IR");
             
             var now = parseInt($(x).parent().attr("id").split("form").pop());
-            console.log(now)
+            // console.log(now)
             next(now);
           }
         
@@ -552,13 +560,13 @@ $("#events_check").click(function(){
               }
               else{
                 $("#inumber").removeClass("is-invalid");
-                console.log("IR");   
+                // console.log("IR");   
                 next(now);
               }
           }
           else{
             $("#inumber").removeClass("is-invalid");
-            console.log("IR"); 
+            // console.log("IR"); 
             next(now);
           }
 	});
@@ -567,16 +575,16 @@ $("#events_check").click(function(){
   $("#preview").click(function(){
 			var check2=$("input[name='agree']:checked").length;//判斷有多少個方框被勾選
 			if(check2==0){
-        console.log("NR");
-				alert("您尚未勾選任何項目");
+        // console.log("NR");
+				alert("請詳細閱讀三項課程服務須知，完成請勾選我同意。");
 				
 			}else if(check2==1){
-        console.log("NR");
-				alert("您只勾選1個項目");
+        // console.log("NR");
+				alert("請詳細閱讀三項課程服務須知，完成請勾選我同意，您只勾選一項。");
 				
       }else if(check2==2){
-        console.log("NR");
-				alert("您只勾選2個項目");
+        // console.log("NR");
+				alert("請詳細閱讀三項課程服務須知，完成請勾選我同意，您只勾選兩項。");
 				
 			}else{
           //預覽 Sandy (2020/03/05)
@@ -620,7 +628,7 @@ $("#events_check").click(function(){
     //get data
     var source_course = $('#course_id').val();
     var source_events = $('#events_id').val();
-    var idate = $('#idate').val();
+    // var idate = new Date();
     var iname = $('#iname').val();
     var isex = $('input[name="isex"]:checked').val();
     var iid = $('#iid').val();
@@ -640,7 +648,10 @@ $("#events_check").click(function(){
     var id_group = $('#form4 .ievent:radio:checked').map(function(){
       return $(this).val();
     }).get();
-    
+    var array_course = $('#form4 .ievent:radio:checked').map(function(){
+      return $(this).data('idcourse');
+    }).get();
+    // var events_len = $('#events_len').val();
     var source_events = $('#source_events').val();
 
     $.ajax({
@@ -648,7 +659,7 @@ $("#events_check").click(function(){
       url:'course_form_insert',
       data:{
         '_token':"{{ csrf_token() }}",
-        idate : idate,
+        // idate : idate,
         iname : iname,
         isex : isex,
         iid : iid,
@@ -666,17 +677,18 @@ $("#events_check").click(function(){
         inum : inum,
         icompanytitle : icompanytitle,
         id_group : id_group,
-        source_events : source_events
+        source_events : source_events,
+        array_course: array_course
       },
       success:function(data){
         console.log(data);  
 
         if( data == 'success' ){
           alert('報名成功');
-          location.reload();
+          // location.reload();
         }else{
           alert('報名失敗');
-          // location.reload();
+          location.reload();
         }
 
       },

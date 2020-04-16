@@ -196,7 +196,7 @@ class CourseReturnController extends Controller
             }
 
             $events[$key_course] = [
-                'id_course' => $data_course['id_course'],
+                'id_course' => $data_course['id'],
                 'course_name' => $data_course['name'],
                 'events' => $events_list
             ];
