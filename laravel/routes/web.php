@@ -77,8 +77,8 @@ Route::get('course_form', 'Frontend\CourseFormController@show')->name('course_fo
 Route::post('course_form_insert', 'Backend\CourseFormController@insert');
 /*** 填入學員資料 Sandy(2020/03/04) ***/
 Route::get('course_form_fill', 'Frontend\CourseFormController@fill');
-/*** joanna 後端下載電子簽章圖片 ***/
-Route::post('signature', 'Backend\CourseFormController@signature');
+// /*** joanna 後端下載電子簽章圖片 ***/
+// Route::post('signature', 'Backend\CourseFormController@signature');
 
 
 /*** [課程管理] 查詢名單 ***/

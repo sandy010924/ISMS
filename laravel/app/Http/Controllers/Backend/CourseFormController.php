@@ -58,8 +58,28 @@ class CourseFormController extends Controller
         }
 
 
+
         
         try{
+
+
+            /*電子簽章 - S*/
+
+            $sign = '';
+
+            $base64Str = str_replace('data:image/png;base64,', '', $request['imgBase64']);
+            $image = base64_decode($base64Str);
+            $saveName = "signature-".time().".".'png';
+            $success = file_put_contents(public_path().'/sign/'.$saveName, $image) ? 'success save' : 'fail save';
+            
+            if( $success == 'success save'){
+                $sign = $saveName;
+            }else{
+                return 'error : sign';
+            }
+
+            /*電子簽章 - E*/
+
 
             /*學員報名資料 - S*/
 
@@ -169,7 +189,7 @@ class CourseFormController extends Controller
                             $registration->amount_payable    = '';                            // 應付金額
                             #// $registration->amount_paid       = '';                            // 已付金額
                             // $registration->memo              = '';                            // 備註
-                            $registration->sign              = '';                            // 簽名檔案
+                            $registration->sign              = $sign;                            // 簽名檔案
                             $registration->status_payment    = 6;                             // 付款狀態
 
                             if(strpos($array_group, 'other') !== false){
@@ -382,7 +402,7 @@ class CourseFormController extends Controller
                         $registration->amount_payable    = '';                            // 應付金額
                         #// $registration->amount_paid       = '';                            // 已付金額
                         // $registration->memo              = '';                            // 備註
-                        $registration->sign              = '';                            // 簽名檔案
+                        $registration->sign              = $sign;                            // 簽名檔案
                         $registration->status_payment    = 6;                             // 付款狀態
                         $registration->id_events         = -99;                           // 場次ID
                         $registration->registration_join = $join;                         // 我想參加課程
@@ -500,13 +520,13 @@ class CourseFormController extends Controller
         
     }
 
-     // joanna 下載電子簽章圖片
-     public function signature(Request $request) {
-        $base64Str = str_replace('data:image/png;base64,', '', $request['imgBase64']);
-        $image = base64_decode($base64Str);
-        $saveName = "signature-".time().".".'png';
-        $success = file_put_contents(public_path().'/sign/'.$saveName, $image) ? 'success save' : 'fail save';
+    //  // joanna 下載電子簽章圖片
+    //  public function signature(Request $request) {
+    //     $base64Str = str_replace('data:image/png;base64,', '', $request['imgBase64']);
+    //     $image = base64_decode($base64Str);
+    //     $saveName = "signature-".time().".".'png';
+    //     $success = file_put_contents(public_path().'/sign/'.$saveName, $image) ? 'success save' : 'fail save';
 
-        return $success ;
-     }
+    //     return $success ;
+    //  }
 }

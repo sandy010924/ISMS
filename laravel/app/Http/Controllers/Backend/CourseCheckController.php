@@ -11,6 +11,7 @@ use App\Model\ISMSStatus;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Register;
+use App\Model\Mark;
 
 class CourseCheckController extends Controller
 {
@@ -141,6 +142,64 @@ class CourseCheckController extends Controller
             }elseif($course_type == 2 || $course_type == 3){
                 //正課
                 $db_check = Register::where('id', $check_id);
+
+
+                /* 正課報到標籤 */
+                $register = Register::join('registration', 'registration.id', '=', 'register.id_registration')
+                                    // ->join('course', 'course.id', '=', 'registration.id_course')
+                                    ->select('register.*', 'registration.id_course as id_course')
+                                    ->where('register.id', $check_id)
+                                    ->first();
+                                    
+                if($update_status=='dropdown_check' || ($update_status=='check_btn' && $check_value != 4)){
+                    
+                        // 檢查是否標記過
+                        $check_mark = Mark::where('id_course', $register->id_course)
+                                        ->where('id_student', $register->id_student)
+                                        ->get();
+
+                        $course = Course::select('id', 'name')->where('id', $register->id_course)->first();
+
+                        if ( count($check_mark) == 0 ) {
+
+                            // 新增標記資料
+                            $mark = new Mark;
+
+                            $mark->id_student    = $register->id_student;         // 學員ID
+                            $mark->name_mark     = $course->name . '學員';          // 標記名稱
+                            // $mark->name_course   = $name_course;  // 課程名稱
+                            $mark->id_course     = $course->id;        // 課程ID
+                            $mark->id_events     = $register->id_events;        // 場次ID
+                            
+                            $mark->save();
+                            $id_mark = $mark->id;
+                        }else{
+                            //更新付款資料
+                            Mark::where('id_course', $course->id)
+                                ->where('id_student', $register ->id_student)
+                                ->update([
+                                    'id_events' => $register->id_events,
+                                ]);
+                        }
+                    // $group = Register::where('id_registration' ,$register->id_registration)
+                    //                 ->orderby('id_events', desc)
+                    //                 ->first();
+
+                    // $registration = Registration::where('id' ,$register->id_registration)
+                    //                 ->first();
+
+                    
+
+                }
+                // else{
+                //     /* 刪除標記 */
+                //     Mark::where('id_course', $register ->id_course)
+                //         ->where('id_student', $register ->id_student)
+                //         ->delete();
+                // }
+            
+
+                    
                 
             }
             switch($update_status){
@@ -170,6 +229,7 @@ class CourseCheckController extends Controller
                     $db_check->update(['id_status' => 4]);
                     break;
             }
+                       
             
             
             //判斷是銷講or正課

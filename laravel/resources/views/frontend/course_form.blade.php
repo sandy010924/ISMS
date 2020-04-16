@@ -337,7 +337,7 @@
             </div>
             <hr>
             <div class="form-group my-5 required">
-              <p>本人保證上述資料之真實性並願遵守本「課程服務合約」之內容（請簽中文正楷）</p>
+              <p>本人保證上述資料之真實性並願遵守本「課程服務合約」之內容（請簽中文正楷）<span class="required_span"></span></p>
               <!-- 電子簽章 -->
               {{-- <div> --}}
                 <canvas id="signature_pad" class="signature_pad border border-secondary" width="600" height="300"></canvas>
@@ -573,6 +573,13 @@ $("#events_check").click(function(){
 
   //我同意checkbox防呆
   $("#preview").click(function(){
+    
+    //電子簽名驗證
+    if(signaturePad.isEmpty()) {
+      alert("請中文正楷簽章!");
+      return false ;
+    }
+
 			var check2=$("input[name='agree']:checked").length;//判斷有多少個方框被勾選
 			if(check2==0){
         // console.log("NR");
@@ -625,6 +632,13 @@ $("#events_check").click(function(){
   
   //送出報名 Sandy (2020/03/05)
   $("#submit").click(function(){
+
+    //電子簽名驗證
+    if(signaturePad.isEmpty()) {
+      alert("請中文正楷簽章!");
+      return false ;
+    }
+
     //get data
     var source_course = $('#course_id').val();
     var source_events = $('#events_id').val();
@@ -654,6 +668,11 @@ $("#events_check").click(function(){
     // var events_len = $('#events_len').val();
     var source_events = $('#source_events').val();
 
+    //電子簽名
+    var canvas = document.getElementById('signature_pad');
+    var dataURL = canvas.toDataURL();
+    
+
     $.ajax({
       type:'POST',
       url:'course_form_insert',
@@ -678,13 +697,17 @@ $("#events_check").click(function(){
         icompanytitle : icompanytitle,
         id_group : id_group,
         source_events : source_events,
-        array_course: array_course
+        array_course: array_course,
+        imgBase64: dataURL
       },
       success:function(data){
         console.log(data);  
 
         if( data == 'success' ){
-          alert('報名成功');
+          alert('報名成功！');
+          location.reload();
+        }else if( data == 'error : sign'){
+          alert('報名失敗，電子簽章有誤。');
           location.reload();
         }else{
           alert('報名失敗');
@@ -705,30 +728,28 @@ $("#events_check").click(function(){
    * 要驗證有無簽名 才可以送出
    */
 
-  $('#confirmRegistration').on('click', function() {
+  // $('#confirmRegistration').on('click', function() {
     // 驗證有無簽章
-    if(signaturePad.isEmpty()) {
-      alert("請中文正楷簽章!");
-      return false ;
-    } else {
-      var canvas = document.getElementById('signature_pad');
-      var dataURL = canvas.toDataURL();
-      $.ajax({
-        type: "POST",
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "signature",
-        data: {
-          imgBase64: dataURL
-        }
-      }).done(function(res) {
-        console.log(res);
-      });
-    }
-
-
-  });
+  //   if(signaturePad.isEmpty()) {
+  //     alert("請中文正楷簽章!");
+  //     return false ;
+  //   } else {
+  //     var canvas = document.getElementById('signature_pad');
+  //     var dataURL = canvas.toDataURL();
+  //     $.ajax({
+  //       type: "POST",
+  //       headers: {
+  //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //       },
+  //       url: "signature",
+  //       data: {
+  //         imgBase64: dataURL
+  //       }
+  //     }).done(function(res) {
+  //       console.log(res);
+  //     });
+  //   }
+  // });
 
 
 </script>

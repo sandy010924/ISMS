@@ -624,3 +624,7 @@ UPDATE users set name = '財務人員' WHERE email = 'accountant@gmail.com';
 INSERT INTO users (`account`,`name`,`role`,`email`,`password`) VALUES ('saleser','業務人員','saleser','saleser@gmail.com','$2y$10$NEehULmc8BofwNXy0a/Lve99pvz41NA7iE2.Sm0OfRoMk3X5FRi9S');
 INSERT INTO users (`account`,`name`,`role`,`email`,`password`) VALUES ('msaleser','業務主管','msaleser','msaleser@gmail.com','$2y$10$NEehULmc8BofwNXy0a/Lve99pvz41NA7iE2.Sm0OfRoMk3X5FRi9S');
 INSERT INTO users (`account`,`name`,`role`,`email`,`password`) VALUES ('officestaff','行政人員','officestaff','officestaff@gmail.com','$2y$10$NEehULmc8BofwNXy0a/Lve99pvz41NA7iE2.Sm0OfRoMk3X5FRi9S');
+
+
+-- 標記資料表 - 課程ID Sandy(2020/04/17)
+ALTER TABLE `mark` ADD COLUMN id_events VARCHAR(50) NULL COMMENT '場次ID';

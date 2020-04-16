@@ -55,7 +55,7 @@
                       <option value="1">銷講</option>
                       <option value="2">二階課程</option>
                       <option value="3">三階課程</option>
-                      <option value="4">活動</option>
+                      {{-- <option value="4">活動</option> --}}
                     </select>
                   </div>
                   <div id="sales" style="display:none">
