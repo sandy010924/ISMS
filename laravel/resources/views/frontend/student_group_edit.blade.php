@@ -602,7 +602,7 @@ function show(data,type_show){
       }
     });
   }
-  if (array_old_studentid.length != 1) {
+  if (array_old_studentid.length != 0) {
     $.each(array_old_studentid, function(index,val) {
       if (val['name'] != null) {
         data +=
