@@ -30,7 +30,7 @@
   <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script>
   {{-- <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script> --}}
 
-  <script src="{{ asset('js/popper.min.js') }}" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="{{ asset('js/popper.min.js') }}"></script>
 
   <!-- tempusdominus Sandy(2020/02/27) -->
   <script src="{{ asset('js/bootstrap.min.js') }}"></script>

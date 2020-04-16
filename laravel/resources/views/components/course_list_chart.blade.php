@@ -171,5 +171,8 @@
 
 
 </script>
-<script src="/js/Chart.min.js"></script>
-<script src="/js/course_list_chart.js"></script>
+<!-- <script src="../js/Chart.min.js"></script>
+<script src="../js/course_list_chart.js"></script> -->
+<script src="{{ asset('js/Chart.min.js') }} "></script>
+<script src="{{ asset('js/course_list_chart.js') }} "></script>
+
