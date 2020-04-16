@@ -45,10 +45,16 @@ class CourseFormController extends Controller
                                 ->select('events_course.*')
                                 ->Where('events_course.id_course', $data_course['id'])
                                 ->get();
-
+                                
             $id_group='';
+            $events_list = array();
             
             foreach( $events_table as $key_events => $data_events ){
+                
+                if(strtotime(date('Y-m-d', strtotime($data_events['course_start_at']))) <= strtotime(date("Y-m-d"))){
+                    $id_group = $data_events['id_group'];
+                    continue;
+                }
                 // if($data['id_group'] == ""){
                 //     //日期
                 //     $date = date('Y-m-d', strtotime($data['course_start_at']));

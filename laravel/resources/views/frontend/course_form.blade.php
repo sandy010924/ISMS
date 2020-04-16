@@ -685,7 +685,7 @@ $("#events_check").click(function(){
 
         if( data == 'success' ){
           alert('報名成功');
-          // location.reload();
+          location.reload();
         }else{
           alert('報名失敗');
           location.reload();
