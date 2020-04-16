@@ -52,6 +52,10 @@
   <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
   <script src="{{ asset('js/bootstrap-select.min.js') }} "></script>
 
+   <!-- message 細分組搜尋 Joanna (2020/04/01) -->
+  <link rel="stylesheet" href="{{ asset('css/icon_font.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/jquery.transfer.css') }}">
+  <script src="{{ asset('js/jquery.transfer.js') }} "></script>
 
   <!-- 民國年日期選擇器 Sandy (2020/04/02) -->
   <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">

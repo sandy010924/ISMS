@@ -17,13 +17,13 @@
                 <label>發送方式</label>
                 <div class="d-block">
                   <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" id="messageCheckBox">
+                    <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="messageCheckBox">
                     <label class="custom-control-label" for="messageCheckBox">簡訊</label>
                     {{-- <input type="checkbox" id="messageCheckBox">
                     <label class="form-check-label" for="messageCheckBox">簡訊</label> --}}
                   </div>
                   <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" id="mailCheckBox">
+                    <input type="checkbox" class="custom-control-input" id="mailCheckBox" name="mailCheckBox">
                     <label class="custom-control-label" for="mailCheckBox">E-mail</label>
                     {{-- <input type="checkbox" id="mailCheckBox">
                     <label class="form-check-label" for="mailCheckBox">E-mail</label> --}}
@@ -34,7 +34,7 @@
 
               <div class="form-group">
                 <label for="receiverPhone">訊息名稱</label>
-                <input type="text" class="form-control" id="msgTitle" placeholder="請輸入訊息名稱 ...">
+                <input type="text" class="form-control" id="msgTitle" name="msgTitle" placeholder="請輸入訊息名稱 ...">
               </div>
 
               <div class="form-group">
@@ -67,21 +67,21 @@
               <div class="form-group">
                 <label for="receiverPhone">收件者手機號碼</label>
                 <!-- <input id="receiverPhoneMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#messageModal"> -->
-                <input type="text" class="form-control" id="receiverPhone" placeholder="請輸入收件者手機號碼 ..." >
+                <input type="text" class="form-control" id="receiverPhone" name="receiverPhone" placeholder="請輸入收件者手機號碼 ..." >
                 <small id="phoneNumber" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
 
               <div class="form-group">
                 <label for="receiverEmail">收件者 E-mail</label>
                 <!-- <input id="receiverEmailMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#mailModal"> -->
-                <input type="email" class="form-control" id="receiverEmail" placeholder="請輸入收件者 E-mail ...">
+                <input type="email" class="form-control" id="receiverEmail" name="receiverEmail" placeholder="請輸入收件者 E-mail ...">
                 <small id="" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
 
 
               <div class="form-group">
                 <label for="emailTitle">E-mail 標題</label>
-                <input type="text" class="form-control" id="emailTitle" placeholder="請輸入E-mail標題 ...">
+                <input type="text" class="form-control" id="emailTitle" name="emailTitle" placeholder="請輸入E-mail標題 ...">
                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
               </div>
 
@@ -93,8 +93,8 @@
 
               <div class="d-flex mt-5">
                 <button id="sendMessageBtn" class="btn btn-primary mr-2">立即傳送</button>
-                <input type="button" class="btn btn-primary mr-2" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
-                <input type="button" class="btn btn-primary mr-2" value="儲存為草稿">
+                <input type="button" class="btn btn-secondary mr-2" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
+                <input type="button" id="draftBtn" class="btn btn-secondary mr-2" value="儲存為草稿">
                 <span id="displaySchedule"></span>
               </div>
 
@@ -246,7 +246,7 @@ $(document).ready(function () {
       data.forEach(item => {
         selectedDataId.push(parseInt(item.id,10))
       });
-      // console.log(selectedDataId);
+      console.log(selectedDataId);
     }
   };
 
@@ -384,6 +384,52 @@ $(document).ready(function () {
 
   });
 
+
+  $('#draftBtn').on('click', function(e) {
+    $.ajax({
+      type: "POST",
+      url: "draftInsert",
+      data: {
+        // messageTitle: '訊息名稱',
+        mailCheckBox: $('#mailCheckBox').val();
+        messageContents: msgContent,
+        phoneNumber: $('#receiverPhone').val(),
+        name: $('#msgTitle').val(),
+        id_teacher: $('#msgTeacher').val(),
+        id_course: $('#msgCourse').val(),
+        emailTitle: $('#emailTitle').val(),
+        emailAddr: emailAddr.split(","),
+        emailAddrLen: emailAddr.split(",").length,
+        emailContent: emailContent
+      }
+    }).done(function(res) {
+      console.log(res);
+
+      if( res == 'success' ){
+        /** alert **/
+        $("#success_alert_text").html("儲存草稿成功");
+        fade($("#success_alert"));
+      }else if( res == 'error: sms error.' ){
+        /** alert **/ 
+        $("#error_alert_text").html("儲存草稿失敗");
+        fade($("#error_alert"));    
+      }
+      else{
+        /** alert **/ 
+        $("#error_alert_text").html("儲存草稿失敗");
+        fade($("#error_alert"));     
+      }
+
+    }).fail(function(err) {
+      console.log(err);
+      
+      /** alert **/ 
+      $("#error_alert_text").html("發送簡訊失敗");
+      fade($("#error_alert"));       
+
+    });
+  });
+
   
   //select2 講師及課程下拉式搜尋 Sandy(2020/04/14)
   $("#msgTeacher, #msgCourse").select2({
@@ -405,21 +451,45 @@ $(document).ready(function () {
     $('#receiverPhone').val().indexOf(",") == -1 ? messageApi(msgContent) : messageBulkApi(msgContent);
   }
 
+
   /* 單筆簡訊發送 */
   function messageApi(msgContent) {
+    
     $.ajax({
       type: "POST",
       url: "messageApi",
       data: {
         // messageTitle: '訊息名稱',
         messageContents: msgContent,
-        phoneNumber: $('#receiverPhone').val()
+        phoneNumber: $('#receiverPhone').val(),
+        name: $('#msgTitle').val(),
+        id_teacher: $('#msgTeacher').val(),
+        id_course: $('#msgCourse').val()
       }
     }).done(function(res) {
       console.log(res);
 
+      if( res == 'success' ){
+        /** alert **/
+        $("#success_alert_text").html("發送簡訊成功");
+        fade($("#success_alert"));
+      }else if( res == 'error: sms error.' ){
+        /** alert **/ 
+        $("#error_alert_text").html("發送簡訊失敗");
+        fade($("#error_alert"));    
+      }
+      else{
+        /** alert **/ 
+        $("#error_alert_text").html("發送簡訊成功，資料儲存失敗");
+        fade($("#error_alert"));     
+      }
+
     }).fail(function(err) {
       console.log(err);
+      
+      /** alert **/ 
+      $("#error_alert_text").html("發送簡訊失敗");
+      fade($("#error_alert"));       
 
     });
   }
@@ -434,6 +504,9 @@ $(document).ready(function () {
         messageContents: msgContent,
         phoneNumber: $('#receiverPhone').val().split(","),
         msgLen: $('#receiverPhone').val().split(",").length,
+        name: $('#msgTitle').val(),
+        id_teacher: $('#msgTeacher').val(),
+        id_course: $('#msgCourse').val()
       }
     }).done(function(res) {
       console.log(res);

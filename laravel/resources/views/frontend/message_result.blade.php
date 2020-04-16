@@ -289,11 +289,11 @@
                     {{-- <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist"> --}}
                     <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                     @foreach($teachers as $key => $item )
-                      @if($loop->index == 0)
-                        <a class="nav-item nav-link active" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
-                      @else
-                      <a class="nav-item nav-link" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
-                      @endif
+                      {{-- @if($loop->index == 0)
+                        <a class="nav-item nav-link active" data-toggle="tab" name="teacher_tab" data-id="{{ $item->id }}" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
+                      @else --}}
+                      <a class="nav-item nav-link" data-toggle="tab" name="teacher_tab" data-id="{{ $item->id }}" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
+                      {{-- @endif --}}
                     @endforeach
                       <!-- <a class="nav-item nav-link active" data-toggle="tab" data-target="Jack" role="tab"></a>
                       <a class="nav-item nav-link" data-toggle="tab" data-target="Juila" role="tab"></a>
@@ -313,20 +313,22 @@
                         <th>報名人數</th>
                         <th>報名成本</th>
                         <th>報名率</th>
+                        <th class="d-none"></th>
                       </tr>
                     @endslot
                     @slot('tbody')
-                      @foreach($data as $key => $item )
+                      @foreach($msg as $key => $data )
                       <tr>
-                        <td> {{ $item['send_at'] }}</td>
-                        <td> {{ $item['title'] }}</td>
-                        <td> {{ $item['content'] }}</td>
-                        <td> {{ $item['type'] }}</td>
-                        <td> 100 </td>
-                        <td> 100 </td>
-                        <td> 100 </td>
-                        <td> 100 </td>
-                        <td> 100 </td>
+                        <td>{{ $data['send_at'] }}</td>
+                        <td>{{ $data['name'] }}</td>
+                        <td>{{ $data['content'] }}</td>
+                        <td>{{ $data['type'] }}</td>
+                        <td>{{ $data['count_sender'] }}</td>
+                        <td>{{ $data['cost_sms'] }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="d-none"> {{ $data['id_teacher'] }}</td>
                       </tr>
                       @endforeach
                     @endslot
@@ -535,7 +537,17 @@
 
     table = $('#table_list').DataTable({
         "dom": '<l<t>p>',
-        "ordering": false
+        // "ordering": false,
+        "order": [ 0 , 'desc']
+    });
+
+
+
+    $('a[name="teacher_tab"]').on('click', function() {
+      table
+        .columns( 9 )
+        .search( $(this).data('id') )
+        .draw();
     });
 
 
@@ -546,32 +558,32 @@
     // });
 
 
-    fakeData.forEach((data, idx) => {
-      // $('#nav-tab a').eq(idx).text(data.name);
+    // fakeData.forEach((data, idx) => {
+    //   // $('#nav-tab a').eq(idx).text(data.name);
 
-      var dataLen = fakeData[idx].data.length;
-
-
-      var tdData = ``;
-
-      for (let index = 0; index < dataLen; index++) {
-        tdData += `<tr ${ idx != 0 ? `class='fade_row ${ fakeData[idx].name }'` : `class='fade_row show_row ${ fakeData[idx].name }'` }>
-        <td>${ fakeData[idx].data[index].sendTime }</td>
-        <td>${ fakeData[idx].data[index].msgTitle }</td>
-        <td>${ fakeData[idx].data[index].contents }</td>
-        <td>${ fakeData[idx].data[index].sendType }</td>
-        <td>${ fakeData[idx].data[index].sendPeople }</td>
-        <td>${ fakeData[idx].data[index].msgFee }</td>
-        <td>${ fakeData[idx].data[index].registerTotal }</td>
-        <td>${ fakeData[idx].data[index].registrationCost }</td>
-        <td>${ fakeData[idx].data[index].registerRate }</td>
-        </tr>`;
-      }
+    //   var dataLen = fakeData[idx].data.length;
 
 
-      //  $('tbody').append(tdData);
+    //   var tdData = ``;
 
-    });
+    //   for (let index = 0; index < dataLen; index++) {
+    //     tdData += `<tr ${ idx != 0 ? `class='fade_row ${ fakeData[idx].name }'` : `class='fade_row show_row ${ fakeData[idx].name }'` }>
+    //     <td>${ fakeData[idx].data[index].sendTime }</td>
+    //     <td>${ fakeData[idx].data[index].msgTitle }</td>
+    //     <td>${ fakeData[idx].data[index].contents }</td>
+    //     <td>${ fakeData[idx].data[index].sendType }</td>
+    //     <td>${ fakeData[idx].data[index].sendPeople }</td>
+    //     <td>${ fakeData[idx].data[index].msgFee }</td>
+    //     <td>${ fakeData[idx].data[index].registerTotal }</td>
+    //     <td>${ fakeData[idx].data[index].registrationCost }</td>
+    //     <td>${ fakeData[idx].data[index].registerRate }</td>
+    //     </tr>`;
+    //   }
+
+
+    //   //  $('tbody').append(tdData);
+
+    // });
 
 
   })

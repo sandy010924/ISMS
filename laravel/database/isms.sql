@@ -590,7 +590,7 @@ ALTER TABLE `message` ADD COLUMN id_teacher INT NULL COMMENT '講師ID';
 ALTER TABLE `message` ADD COLUMN id_course INT NULL COMMENT '課程ID';
 ALTER TABLE `message` ADD COLUMN memo INT NULL COMMENT '狀態備註(傳送失敗用)';
 
--- sender 寄件人資料表 Sandy (2020/04/12)
+-- sender 寄件資料表 Sandy (2020/04/12)
 CREATE TABLE IF NOT EXISTS `sender`(
    `id` INT  AUTO_INCREMENT COMMENT 'id',
    `id_message`  INT COMMENT '訊息ID',  
@@ -602,5 +602,13 @@ CREATE TABLE IF NOT EXISTS `sender`(
    PRIMARY KEY ( `id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 標記資料表 - 狀態ID Sandy(2020/04/12)
+-- 標記資料表 - 課程ID Sandy(2020/04/12)
 ALTER TABLE `mark` ADD COLUMN id_course VARCHAR(150) NULL COMMENT '課程ID';
+
+-- 寄件資料表 更新學員ID欄位 Sandy(2020/04/15)
+ALTER TABLE `sender` modify COLUMN id_student VARCHAR(10) NULL COMMENT '學員ID';
+
+-- 寄件資料表 - 新增狀態ID、備註、簡訊序號 Sandy(2020/04/15)
+ALTER TABLE `sender` ADD COLUMN id_status INT NULL COMMENT '狀態ID';
+ALTER TABLE `sender` ADD COLUMN memo VARCHAR(150) NULL COMMENT '狀態備註(傳送失敗用)';
+ALTER TABLE `sender` ADD COLUMN msgid VARCHAR(50) NULL COMMENT '簡訊序號';

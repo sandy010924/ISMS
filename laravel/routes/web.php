@@ -349,6 +349,7 @@ Route::get('message_list', 'Frontend\MessageListController@show')->name('message
 // Route::get('message_data', function () {
 //     return view('frontend.message_data');
 // })->name('message_data');
+Route::get('message_data', 'Frontend\MessageDataController@show')->name('message_data');
 
 /*** [訊息推播] 推播成本***/
 // Route::get('message_cost', function () {
@@ -359,7 +360,7 @@ Route::get('message_list', 'Frontend\MessageListController@show')->name('message
 // Route::get('message_result', function () {
 //     return view('frontend.message_result');
 // })->name('message_result');
-Route::get('message_result', 'Frontend\MessageListResultController@show')->name('message_result');
+Route::get('message_result', 'Frontend\MessageResultController@show')->name('message_result');
 
 /*** [訊息推播] 單筆簡訊API***/
 Route::post('messageApi', 'Backend\MessageController@messageApi');
