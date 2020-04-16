@@ -238,36 +238,36 @@ class CourseFormController extends Controller
 
 
 
-                    /*報到資料 - S*/
                     if(strpos($array_group, 'other') === false){
-                        // 檢查是否報名過
-                        $check_register = Register::where('id_registration', $id_registration)
-                                                ->get();
+                        /*報到資料 - S*/
+                        // // 檢查是否報名過
+                        // $check_register = Register::where('id_registration', $id_registration)
+                        //                         ->get();
                                                 
-                        if (count($check_register) == 0 && $id_student != "" && $id_registration != "" && $id_registration != 0) {
+                        // if (count($check_register) == 0 && $id_student != "" && $id_registration != "" && $id_registration != 0) {
 
-                            $events_group = EventsCourse::where('id_group', $data_group)->get();
+                        //     $events_group = EventsCourse::where('id_group', $data_group)->get();
                             
-                            foreach( $events_group as $data_group){
-                                // 報到資料
-                                $register = new Register;
-                                // $date = date('Y-m-d H:i:s');
+                        //     foreach( $events_group as $data_group){
+                        //         // 報到資料
+                        //         $register = new Register;
+                        //         // $date = date('Y-m-d H:i:s');
 
-                                $register->id_registration   = $id_registration;      // 報名ID
-                                $register->id_student        = $id_student;           // 學員ID
-                                $register->id_status         = 1;                     // 報名狀態ID
-                                $register->id_events         = $data_group['id'];     // 場次ID               
-                                $register->memo              = '';                    // 備註
+                        //         $register->id_registration   = $id_registration;      // 報名ID
+                        //         $register->id_student        = $id_student;           // 學員ID
+                        //         $register->id_status         = 1;                     // 報名狀態ID
+                        //         $register->id_events         = $data_group['id'];     // 場次ID               
+                        //         $register->memo              = '';                    // 備註
                             
-                                $register->save();
-                                $id_register = $register->id;
-                            }
+                        //         $register->save();
+                        //         $id_register = $register->id;
+                        //     }
                                 
-                        }else{
-                            foreach ($check_register as $data) {
-                                $id_register = $data ->id;
-                            }
-                        }
+                        // }else{
+                        //     foreach ($check_register as $data) {
+                        //         $id_register = $data ->id;
+                        //     }
+                        // }
 
                         /*報到資料 - E*/
 
@@ -350,13 +350,13 @@ class CourseFormController extends Controller
                             }
                         }
                     }else{
-                        $id_register = 0;
+                        // $id_register = 0;
                         $id_payment = 0;
                         $id_debt = 0;
                     }
                     /*追單資料 - E*/
 
-                    if ($id_student != "" && $id_registration != "" && $id_register != "" && $id_payment != "" && $id_debt != "") {
+                    if ($id_student != "" && $id_registration != "" && $id_payment != "" && $id_debt != "") {
                         $success++;
                     } 
 
