@@ -23,10 +23,20 @@ class CourseAdvancedController extends Controller
                         ->Where('events_course.id', $id)
                         ->first();
                         
-        $next_course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
+        $next_course_all = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
                         ->select('course.id as id_course', 'course.name as course', 'teacher.name as teacher')
                         ->Where('course.id_type', $course->id_course)
-                        ->first();
+                        ->get();
+
+        $teacher = $next_course_all[0]['teacher'];
+        $next_course ='';
+        foreach( $next_course_all as $key => $data){
+            if($key!=0){
+                $next_course .= '、' . $data['course'] ;
+            }else{
+                $next_course .= $data['course'] ;
+            }
+        }
                         
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($course->course_start_at))];
@@ -93,6 +103,6 @@ class CourseAdvancedController extends Controller
             // $id_group = $data['id_group'];
         }              
                                         
-        return view('frontend.course_advanced', compact('course', 'next_course', 'week', 'fill'));
+        return view('frontend.course_advanced', compact('course', 'teacher', 'next_course', 'week', 'fill'));
     }
 }

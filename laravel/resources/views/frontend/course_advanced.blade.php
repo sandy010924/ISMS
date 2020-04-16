@@ -14,15 +14,15 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">講師名稱</span>
                   </div>
-                  <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $next_course->teacher }}" disabled readonly>
+                  <input type="text" class="form-control bg-white" aria-label="Teacher name" value="{{ $teacher }}" disabled readonly>
                 </div>
               </div>
-              <div class="col-5">
+              <div class="col">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">課程名稱</span>
                   </div>
-                  <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $next_course->course }}" disabled readonly>
+                  <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $next_course }}" disabled readonly>
                 </div>
               </div>
               <hr/>
