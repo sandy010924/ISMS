@@ -15,15 +15,13 @@
 
     <ul class="nav flex-column">
       <!-- 學員管理 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'accountant')
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'accountant' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff')
       <li class="nav-item border-top">
         <a class="nav-link" href="{{ route('student') }}">
-          {{-- <h6 class="sidebar-heading d-flex justify-content-start align-items-center px-3 mt-2 mb-1 text-muted"> --}}
           <i data-feather="users"></i>
           學員管理
-          {{-- </h6> --}}
         </a>
-        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' )
+        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff')
         <a class="nav-link nav-sub-item" href="{{ route('student_blacklist') }}">黑名單</a>
         <a class="nav-link nav-sub-item" href="{{ route('student_group') }}">細分組</a>
         @endif
@@ -32,13 +30,13 @@
       <!-- 學員管理 -->
 
       <!-- 課程管理 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' || Auth::user()->role == 'staff' )
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' || Auth::user()->role == 'staff' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' )
       <li class="nav-item border-top">
         <a class="nav-link" href="{{ route('course_list') }}">
           <i data-feather="book-open"></i>
           課程管理
         </a>
-        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' )
+        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff')
         <a class="nav-link nav-sub-item" href="{{ route('course') }}">場次總覽</a>
         @endif
         <a class="nav-link nav-sub-item" href="{{ route('course_today') }}">今日課程</a>
@@ -47,7 +45,7 @@
       <!-- 課程管理 -->
 
       <!-- 財務管理 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant' || Auth::user()->role == 'marketer')
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff')
       <li class="nav-item border-top">
         <a class="nav-link" href="{{ route('finance') }}">
           <i data-feather="dollar-sign"></i>
@@ -58,9 +56,9 @@
       <!-- 財務管理 -->
 
       <!-- 訊息推播 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'accountant')
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'accountant' || Auth::user()->role == 'officestaff')
       <li class="nav-item border-top">
-        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' )
+        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' )
         <a class="nav-link" href="{{ route('message_list') }}">
           <i data-feather="mail"></i>
           訊息推播
@@ -80,7 +78,7 @@
       <!-- 訊息推播 -->
 
       <!-- 數據報表 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'dataanalysis' || Auth::user()->role == 'accountant')
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'dataanalysis' || Auth::user()->role == 'accountant' || Auth::user()->role == 'officestaff')
       <li class="nav-item border-top">
         <a class="nav-link" href="{{ route('report') }}">
           <i data-feather="pie-chart"></i>
@@ -91,7 +89,7 @@
       <!-- 數據報表 -->
 
       <!-- 系統設定 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' )
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff')
       <li class="nav-item border-top">
         {{-- <a class="nav-link" href="{{ route('system') }}"> --}}
         <a class="nav-link" href="#">
@@ -99,7 +97,7 @@
           系統設定
         </a>
         <a class="nav-link nav-sub-item" href="{{ route('authority') }}">權限管理</a>
-        @if (Auth::user()->role == 'admin')
+        @if (Auth::user()->role == 'admin' )
         <a class="nav-link nav-sub-item" href="{{ route('database') }}">備份管理</a>
         @endif
         <a class="nav-link nav-sub-item" href="{{ route('blacklist_rule') }}">黑名單規則</a>

@@ -612,3 +612,15 @@ ALTER TABLE `sender` modify COLUMN id_student VARCHAR(10) NULL COMMENT '學員ID
 ALTER TABLE `sender` ADD COLUMN id_status INT NULL COMMENT '狀態ID';
 ALTER TABLE `sender` ADD COLUMN memo VARCHAR(150) NULL COMMENT '狀態備註(傳送失敗用)';
 ALTER TABLE `sender` ADD COLUMN msgid VARCHAR(50) NULL COMMENT '簡訊序號';
+
+-- user資料表 - 刪掉資料 Rocky(2020/04/16)
+DELETE FROM users WHERE email = 'dataanalysis@gmail.com';
+
+-- user資料表 - 更新資料 Rocky(2020/04/16)
+UPDATE users set name = '臨時人員' WHERE email = 'staff@gmail.com';
+UPDATE users set name = '財務人員' WHERE email = 'accountant@gmail.com';
+
+-- user資料表 - 新增資料 Rocky(2020/04/16)
+INSERT INTO users (`account`,`name`,`role`,`email`,`password`) VALUES ('saleser','業務人員','saleser','saleser@gmail.com','$2y$10$NEehULmc8BofwNXy0a/Lve99pvz41NA7iE2.Sm0OfRoMk3X5FRi9S');
+INSERT INTO users (`account`,`name`,`role`,`email`,`password`) VALUES ('msaleser','業務主管','msaleser','msaleser@gmail.com','$2y$10$NEehULmc8BofwNXy0a/Lve99pvz41NA7iE2.Sm0OfRoMk3X5FRi9S');
+INSERT INTO users (`account`,`name`,`role`,`email`,`password`) VALUES ('officestaff','行政人員','officestaff','officestaff@gmail.com','$2y$10$NEehULmc8BofwNXy0a/Lve99pvz41NA7iE2.Sm0OfRoMk3X5FRi9S');

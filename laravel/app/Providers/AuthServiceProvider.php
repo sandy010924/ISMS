@@ -31,22 +31,17 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role === User::ROLE_ADMIN;
         });
 
-        // 數據分析人員 Gate 規則
-        Gate::define('dataanalysis', function ($user) {
-            return $user->role === User::ROLE_DATAANALYSIS;
-        });
-
         // 行銷人員 Gate 規則
         Gate::define('marketer', function ($user) {
             return $user->role === User::ROLE_MARKETER;
         });
 
-         // 財會人員 Gate 規則
-         Gate::define('accountant', function ($user) {
+        // 財務人員 Gate 規則
+        Gate::define('accountant', function ($user) {
             return $user->role === User::ROLE_ACCOUNTANT;
         });
 
-        // 現場人員 Gate 規則
+        // 臨時人員 Gate 規則
         Gate::define('staff', function ($user) {
             return $user->role === User::ROLE_STAFF;
         });
@@ -54,6 +49,21 @@ class AuthServiceProvider extends ServiceProvider
         // 講師 Gate 規則
         Gate::define('teacher', function ($user) {
             return $user->role === User::ROLE_TEACHER;
+        });
+
+        // 業務人員 Gate 規則
+        Gate::define('saleser', function ($user) {
+            return $user->role === User::ROLE_SALSER;
+        });
+
+        // 業務主管 Gate 規則
+        Gate::define('msaleser', function ($user) {
+            return $user->role === User::ROLE_MSALSER;
+        });
+
+        // 行政人員 Gate 規則
+        Gate::define('officestaff', function ($user) {
+            return $user->role === User::ROLE_OFFICESTAFF;
         });
     }
 }

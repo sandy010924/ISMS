@@ -58,11 +58,11 @@
         <td class="align-middle">{{ $student['datasource'] }}</td>
         <td class="align-middle">
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
-          @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer')
+          @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' )
           <button id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}"><i class="fa fa-bug"></i>列入黑名單</button>
           @endif
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
-          @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer')
+          @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' )
           <button id="{{ $student['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student['id'] }});" value="{{ $student['id'] }}">刪除</button>
           @endif
         </td>
@@ -509,7 +509,7 @@
       });
     });
 
-    // 追但資料關閉
+    // 追單資料關閉
     $("#contact_close").click(function() {
       $('#save_contact').modal('hide');
     });
@@ -850,18 +850,26 @@
           $('#table_thead').html('');
           // console.log(data)
           $.each(data, function(index, val) {
-            var status = '';
+            var status = '',
+              course_sales = '';
             if (val['status_sales'] == null) {
               status = '無'
             } else {
               status = val['status_sales']
             }
+
+            if (val['course_sales'] == null) {
+              course_sales = '無'
+            } else {
+              course_sales = val['course_sales']
+            }
+
             id_student = val['id_student'];
             data +=
               '<tr>' +
               '<td>' + val['created_at'] + '</td>' +
               '<td>' + status + '</td>' +
-              '<td>' + val['course_sales'] + '</td>' +
+              '<td>' + course_sales + '</td>' +
               '</tr>'
           });
           data_thead =
@@ -1188,8 +1196,6 @@
         }
       });
     }
-
-
 
     /* 自動儲存 - E Rocky(2020/03/08) */
 
