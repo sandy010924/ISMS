@@ -280,7 +280,7 @@ Route::post('search_students', 'Frontend\StudentGroupController@searchstudents')
 /*** 儲存學員 Rocky(2020/03/19) ***/
 Route::post('save', 'Backend\StudentGroupController@save');
 /*** 更新學員 Rocky(2020/03/19) ***/
-Route::post('update', 'Backend\StudentGroupController@update');
+Route::post('studentgroup_update', 'Backend\StudentGroupController@update');
 
 /*** [學員管理] 細分組新增 ***/
 Route::get('student_group_add', function () {

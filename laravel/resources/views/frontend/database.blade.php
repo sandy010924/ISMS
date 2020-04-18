@@ -27,7 +27,7 @@
             <button type="button" class="btn btn-outline-secondary" id="btn_search">搜尋</button>
           </div>
           <div class="col-md-3">
-            <!-- <button type="button" class="btn btn-outline-secondary" id="btn_backup" onclick="backup();">點我備份</!-->
+            <!-- <button type="button" class="btn btn-outline-secondary" id="btn_backup" onclick="backup();">點我備份</button> -->
           </div>
         </div>
       </div>
@@ -160,6 +160,7 @@
             id: id
           },
           success: function(data) {
+            console.log(data)
             if (data == "ok") {
               /** alert **/
               $("#success_alert_text").html("還原成功");

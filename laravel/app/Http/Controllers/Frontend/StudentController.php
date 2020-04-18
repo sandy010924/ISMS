@@ -65,7 +65,7 @@ class StudentController extends Controller
             // 正課
             $datas = Registration::leftjoin('course', 'course.id', '=', 'registration.id_course')
                                     ->leftjoin('student', 'student.id', '=', 'registration.id_student')
-                                    ->leftjoin('payment', 'payment.id', '=', 'registration.id_payment')
+                                    ->leftjoin('payment', 'payment.id_student', '=', 'registration.id_student')
                                     ->select('registration.*', 'student.*', 'payment.*', 'course.name as course')
                                     ->where('registration.id', $id)
                                     ->get();
@@ -115,7 +115,7 @@ class StudentController extends Controller
                             ->where('registration.id_student', $id_student)
                             ->orderBy('registration.created_at', 'desc')
                             ->first();
-        // 退費                    
+        // 退費
         $data_refund = Refund::where('refund.id_student', $id_student)
                                 ->leftjoin('registration as r1', 'r1.id', '=', 'refund.id_registration')
                                 ->leftjoin('events_course as r2', 'r2.id', '=', 'r1.id_events')
@@ -160,7 +160,7 @@ class StudentController extends Controller
         $datas = Debt::select('debt.*')
                         ->where('debt.id_student', $id_student)
                         ->get();
-                            // ->leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
+        // ->leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
                             
         
 
@@ -212,7 +212,7 @@ class StudentController extends Controller
                     ->where('registration.id_student', $id_student)
                     ->orderBy('registration.created_at', 'desc')
                     ->get();
-        // 活動資料            
+        // 活動資料
         if ($datas_registration != "") {
             $datas_registration = $datas_registration->toArray();
             $datas_SalesRegistration = $datas_SalesRegistration->toArray();
@@ -232,8 +232,7 @@ class StudentController extends Controller
     ) {
         if ($a["created_at"] > $b["created_at"]) {
             return -1;
-        }
-        elseif ($a["created_at"] < $b["created_at"]) {
+        } elseif ($a["created_at"] < $b["created_at"]) {
             return 1;
         }
         return 0;

@@ -624,9 +624,10 @@ function update(){
   var name_group = $('#name_group').val()
   var id = $('#id_group').val()
   var condition = search_log
+  // console.log(id)
   $.ajax({
     type:'POST',
-    url:'update',
+    url:'studentgroup_update',
     // dataType:'json',
     data:{
       id:id,
@@ -635,6 +636,7 @@ function update(){
       array_upate_studentid:array_upate_studentid
     },
     success:function(data){
+      console.log(data)
       if (data = "儲存成功") {
           $("#success_alert_text").html("儲存成功");
           fade($("#success_alert"));

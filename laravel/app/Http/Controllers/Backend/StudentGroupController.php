@@ -18,7 +18,7 @@ class StudentGroupController extends Controller
         // 查詢是否有該筆資料
         $StudentGroup = StudentGroup::where('id', $id)->get();
         
-         // 刪除資料
+        // 刪除資料
         
         if (!empty($StudentGroup)) {
             StudentGroup::where('id', $id)->delete();
@@ -86,10 +86,11 @@ class StudentGroupController extends Controller
         $array_studentid = $request->get('array_upate_studentid');
        
 
+       
 
-        if (!empty($id)) {
+        if ($id != "") {
             $id_StudentGroup = StudentGroup::where('id', $id)
-                                ->update(['name' => $name_group, 'condition' => $condition]);
+                                ->update(['name' => $name_group,'condition' => $condition]);
 
             if (!empty($array_studentid)) {
                 foreach ($array_studentid as $key => $data) {
@@ -117,9 +118,9 @@ class StudentGroupController extends Controller
     {
         $id = $request->get('id');
 
-         // 查詢細分組名稱
-         $name_group = StudentGroup::where('id', $id)
-                        ->select('student_group.name')
+        // 查詢細分組名稱
+        $name_group = StudentGroup::where('id', $id)
+                        ->select('student_group.*')
                         ->get();
         
         // 查詢細分組學員資料
@@ -131,8 +132,10 @@ class StudentGroupController extends Controller
         $StudentGroup = new StudentGroup;
               
         // 新增細分組資料
-        $StudentGroup->name       = $name_group[0]['name'];         // 細分組名稱
-                        
+        $StudentGroup->name       = $name_group[0]['name'];                   // 細分組名稱
+        $StudentGroup->condition       = $name_group[0]['condition'];         // 細分組條件
+
+
         $StudentGroup->save();
         $id_StudentGroup = $StudentGroup->id;
 

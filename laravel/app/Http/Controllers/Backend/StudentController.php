@@ -9,6 +9,7 @@ use App\Model\SalesRegistration;
 use App\Model\Payment;
 use App\Model\Registration;
 use App\Model\Debt;
+use App\Model\Refund;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,12 +28,15 @@ class StudentController extends Controller
         $payment = Payment::where('id_student', $id_student)->get();
         
         
-         // 刪除資料
+        // 刪除資料
         
         if (!empty($student) || !empty($sales_registration) || !empty($payment) || !empty($registration)) {
             $sales_registration = SalesRegistration::where('id_student', $id_student)->delete();
             $registration= Registration::where('id_student', $id_student)->delete();
             $payment= Payment::where('id_student', $id_student)->delete();
+            Refund::where('id_student', $id_student)->delete();
+            Debt::where('id_student', $id_student)->delete();
+            Blacklist::where('id_student', $id_student)->delete();
             $student = Student::where('id', $id_student)->delete();
             
             $status = "ok";
@@ -50,25 +54,34 @@ class StudentController extends Controller
         $id_student = $request->get('id_student');
         $blacklist = new Blacklist;
         
-        // 更新資料 -> 學員資料
-        $student = Student::where('id', $id_student)
-                    ->update(['check_blacklist' => '1']);
 
-        // 新增資料 -> 黑名單資料表
-        if ($student != 0) {
-            // 新增學員資料
-            $blacklist->id_student       = $id_student;         // 學員ID
-            $blacklist->reason           = '';                  // 原因
-           
-            $blacklist->save();
-            $id_blacklist = $blacklist->id;
-        }
-        
-        if (!empty($id_blacklist)) {
-            $status = "ok";
+        // 查詢是否有該筆資料
+        $student_data = Blacklist::where('id_student', $id_student)->get();
+
+        if (count($student_data) == 0) {
+            // 更新資料 -> 學員資料
+            $student = Student::where('id', $id_student)
+                        ->update(['check_blacklist' => '1']);
+
+            // 新增資料 -> 黑名單資料表
+            if ($student != 0) {
+                // 新增學員資料
+                $blacklist->id_student       = $id_student;         // 學員ID
+                $blacklist->reason           = '';                  // 原因
+            
+                $blacklist->save();
+                $id_blacklist = $blacklist->id;
+            }
+            
+            if (!empty($id_blacklist)) {
+                $status = "ok";
+            } else {
+                $status = "error";
+            }
         } else {
-            $status = "error";
+            $status = '已加入';
         }
+
         return json_encode(array('data' => $status));
     }
 
@@ -196,7 +209,7 @@ class StudentController extends Controller
                 break;
         }
         
-            return 'success';
+        return 'success';
 
         // }catch (Exception $e) {
         //     return 'error';
@@ -214,12 +227,12 @@ class StudentController extends Controller
 
         $mark = new Mark;
 
-         // 新增學員資料
+        // 新增學員資料
          $mark->id_student       = $id_student;         // 學員ID
          $mark->name_mark        = $name;               // 標記名稱
         
          $mark->save();
-         $id_mark = $mark->id;
+        $id_mark = $mark->id;
 
 
         if (!empty($id_mark)) {
@@ -238,7 +251,7 @@ class StudentController extends Controller
         // 查詢是否有該筆資料
         $mark = Mark::where('id', $id)->get();
         
-         // 刪除資料
+        // 刪除資料
         
         if (!empty($mark)) {
             $mark = Mark::where('id', $id)->delete();

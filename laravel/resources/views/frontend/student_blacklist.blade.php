@@ -33,8 +33,10 @@
                 </div> -->
     </div>
     <div class="table-responsive">
-      <table class="table table-striped table-sm text-center">
-        <thead>
+     @component('components.datatable')
+      <!-- <table class="table table-striped table-sm text-center"> -->
+        <!-- <thead> -->
+         @slot('thead')
           <tr>
             <th>姓名</th>
             <th>連絡電話</th>
@@ -42,8 +44,10 @@
             <th>原因</th>
             <th></th>
           </tr>
-        </thead>
-        <tbody>
+        <!-- </thead>
+        <tbody> -->
+        @endslot
+      @slot('tbody')
           @foreach($blacklists as $blacklist)
           <tr>
             <td>{{$blacklist->name }}</td>
@@ -57,8 +61,10 @@
             </td>
           </tr>
           @endforeach
-        </tbody>
-      </table>
+        <!-- </tbody>
+      </table> -->
+        @endslot
+      @endcomponent
     </div>
     <div class="modal fade bd-example-modal-xl text-left" id="student_information" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl" role="document">
@@ -203,25 +209,15 @@
             <!-- 歷史互動 -->
             <div class="tab-pane fade" id="history_data" role="tabpanel" aria-labelledby="history-tab">
               <div class="table-responsive">
-                <!-- <table class="table table-striped table-sm text-center"> -->
                 @component('components.datatable_history')
-                <!-- <thead> -->
                 @slot('thead')
-
+                  <tr>
+                    <th>時間</th>
+                    <th>動作</th>
+                    <th>內容</th>
+                  </tr>
                 @endslot
-                <!-- </thead> -->
-                <!-- <tbody id = "history_data_detail"> -->
                 @slot('tbody')
-                <!-- <tr>
-                              <td>2019年05月19日 19:50:39</td>
-                              <td>參與</td>
-                              <td>60天財富計畫課後第一次線上輔導</td>
-                            </tr>
-                            <tr>
-                              <td>2019年05月19日 19:50:39</td>
-                              <td>參與</td>
-                              <td>60天財富計畫課後第一次線上輔導</td>
-                            </tr> -->
                 @endslot
                 @endcomponent
                 <!-- </table> -->
@@ -359,6 +355,21 @@
 <script>
   var id_student_old = '';
   var elt = $('#isms_tags');
+  var table;
+
+  // 搜尋 Rocky(2020/03/27)
+    $.fn.dataTable.ext.search.push(
+      function(settings, data, dataIndex) {
+        var keyword = $('#search_input').val();
+        var phone = data[1];
+        var email = data[2];
+
+        if ((isNaN(keyword)) || (phone.includes(keyword)) || (email.includes(keyword))) {
+          return true;
+        }
+        return false;
+      }
+    );
 
   $("document").ready(function() {
     btn_blackadd();
@@ -366,7 +377,29 @@
     $('#search_input').on('blur', function() {
       // console.log(`search_input: ${$(this).val()}`);
     });
+
+    // Rocky (2020/03/27)
+    table = $('#table_list').DataTable({
+      "dom": '<l<t>p>',
+      "columnDefs": [{
+        "targets": 'no-sort',
+        "orderable": false,
+      }]
+      // "ordering": false,
+    });
+
+    // Rocky (2020/04/17)
+    $('#table_list_history').DataTable({
+      "dom": '<l<td>p>',
+      "destroy": true,
+      "ordering": true,
+      "columnDefs": [{
+        "targets": 'no-sort',
+      }]
+    });
   });
+
+  
 
   // 輸入框
   $('#search_input').on('keyup', function(e) {
@@ -377,20 +410,22 @@
 
   /*搜尋 Rocky(2020/02/23)*/
   $("#btn_search").click(function(e) {
-    var search_data = $("#search_input").val();
-    $.ajax({
-      type: 'GET',
-      url: 'blacklist_search',
-      data: {
-        search_data: search_data,
-      },
-      success: function(data) {
-        $('body').html(data);
-      },
-      error: function(jqXHR) {
-        console.log('error: ' + JSON.stringify(jqXHR));
-      }
-    });
+    // var search_data = $("#search_input").val();
+    // $.ajax({
+    //   type: 'GET',
+    //   url: 'blacklist_search',
+    //   data: {
+    //     search_data: search_data,
+    //   },
+    //   success: function(data) {
+    //     $('body').html(data);
+    //   },
+    //   error: function(jqXHR) {
+    //     console.log('error: ' + JSON.stringify(jqXHR));
+    //   }
+    // });
+    
+    table.search($('#search_input').val()).draw();
   });
 
 
@@ -622,10 +657,10 @@
       },
       success: function(data) {
         var id_student = '';
-        $('#table_list_history').html('');
-        $('#table_list_history').append('<thead id="table_thead"></thead> <tbody id="history_data_detail"></tbody>');
+        // $('#table_list_history').html('');
+        // $('#table_list_history').append('<thead id="table_thead"></thead> <tbody id="history_data_detail"></tbody>');
         $('#history_data_detail').html('');
-        $('#table_thead').html('');
+        // $('#table_thead').html('');
         // console.log(data)
         $.each(data, function(index, val) {
           var status = '',
@@ -650,22 +685,15 @@
             '<td>' + course_sales + '</td>' +
             '</tr>'
         });
-        data_thead =
-          '<tr>' +
-          '<th>時間</th>' +
-          '<th>動作</th>' +
-          '<th>內容</th>' +
-          '</tr>'
+        // data_thead =
+        //   '<tr>' +
+        //   '<th>時間</th>' +
+        //   '<th>動作</th>' +
+        //   '<th>內容</th>' +
+        //   '</tr>'
         $('#history_data_detail').html(data);
-        $('#table_thead').html(data_thead);
-        $('#table_list_history').DataTable({
-          "dom": '<l<td>p>',
-          "destroy": true,
-          "ordering": true,
-          "columnDefs": [{
-            "targets": 'no-sort',
-          }]
-        });
+        // $('#table_thead').html(data_thead);
+       
       },
       error: function(error) {
         console.log(JSON.stringify(error));

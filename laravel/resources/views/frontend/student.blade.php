@@ -278,26 +278,16 @@
             </div>
             <!-- 歷史互動 -->
             <div class="tab-pane fade" id="history_data" role="tabpanel" aria-labelledby="history-tab">
-              <div class="table-responsive">
-                <!-- <table class="table table-striped table-sm text-center"> -->
+              <div class="table-responsive">              
                 @component('components.datatable_history')
-                <!-- <thead> -->
                 @slot('thead')
-
-                @endslot
-                <!-- </thead> -->
-                <!-- <tbody id = "history_data_detail"> -->
+                   <tr>
+                    <th>時間</th>
+                    <th>動作</th>
+                    <th>內容</th>
+                  </tr>
+                @endslot              
                 @slot('tbody')
-                <!-- <tr>
-                              <td>2019年05月19日 19:50:39</td>
-                              <td>參與</td>
-                              <td>60天財富計畫課後第一次線上輔導</td>
-                            </tr>
-                            <tr>
-                              <td>2019年05月19日 19:50:39</td>
-                              <td>參與</td>
-                              <td>60天財富計畫課後第一次線上輔導</td>
-                            </tr> -->
                 @endslot
                 @endcomponent
                 <!-- </table> -->
@@ -451,8 +441,8 @@
   </div>
   <!-- alert End -->
   <!-- Content End -->
-  <script src="{{ asset('js/jquery-dateformat.min.js') }}"></script>
-  <script src="{{ asset('js/dateFormat.min.js') }}"></script>
+  <!-- <script src="{{ asset('js/jquery-dateformat.min.js') }}"></script>
+  <script src="{{ asset('js/dateFormat.min.js') }}"></script> -->
   <!-- <script src="{{ asset('js/date.format.js') }}"></script> -->
   <script src="{{ asset('js/typeahead.bundle.min.js') }}"></script>
   <script src="{{ asset('js/angular.min.js') }}"></script>
@@ -501,6 +491,16 @@
         // "ordering": false,
       });
 
+      // Rocky (2020/04/17)
+      $('#table_list_history').DataTable({
+        "dom": '<l<td>p>',
+        "destroy": true,
+        "ordering": true,
+        "columnDefs": [{
+          "targets": 'no-sort',
+        }]
+      });
+
       $(".demo2").tooltip();
 
       // 學員管理搜尋 (只能輸入數字、字母、_、.、@)
@@ -540,7 +540,8 @@
         success: function(data) {
           var course = '';
           $.each(data, function(index, val) {
-            if (typeof(val['id_payment']) != 'undefined') {
+            // if (typeof(val['id_payment']) != 'undefined') {
+              if (typeof(val['status_payment']) != 'undefined') {
               // 正課資料
               course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
             } else {
@@ -574,9 +575,55 @@
           // console.log(data)
           $.each(data, function(index, val) {
             // 學員資料
-            student = '<div style="text-align:left"><b>課程服務報名表</b>' + '<br>' + '姓名:' + val['name'] + '<br>' + '性別:' + val['sex'] + '<br>' + '身分證字號:' + val['id_identity'] + '<br>' +
-              '聯絡電話:' + val['phone'] + '<br>' + '電子郵件:' + val['email'] + '<br>' + '出生日期:' + val['birthday'] + '<br>' +
-              '公司名稱:' + val['company'] + '<br>' + '職業:' + val['profession'] + '<br>' + '聯絡地址:' + val['address'] +
+            var id_identity,sex,phone,email,birthday,company,profession,address
+            if(val['id_identity'] != null){
+              id_identity =val['id_identity'];
+            } else{
+              id_identity = '無'
+            }
+            if(val['sex']  != null){
+              sex = val['sex'] ;
+            } else{
+              sex = '無'
+            }
+            if(val['phone']  != null){
+              phone = val['phone'] ;
+            } else{
+              phone = '無'
+            }
+
+            if(val['email'] != null){
+              email =val['email'];
+            } else{
+              email = '無'
+            }
+
+            if(val['birthday'] != null){
+              birthday =val['birthday'];
+            } else{
+              birthday = '無'
+            }
+
+            if(val['company'] != null){
+              company =val['company'];
+            } else{
+              company = '無'
+            }
+
+            if(val['profession'] != null){
+              profession =val['profession'];
+            } else{
+              profession = '無'
+            }
+
+            if(val['address'] != null){
+              address =val['address'];
+            } else{
+              address = '無'
+            }
+            student = '<div style="text-align:left"><b>課程服務報名表</b>' + '<br>' + '姓名:' + val['name'] + '<br>' + '性別:' + sex + '<br>' + '身分證字號:' + id_identity + '<br>' +
+              '聯絡電話:' + phone + '<br>' + '電子郵件:' + email + '<br>' + '出生日期:' + birthday + '<br>' +
+              '公司名稱:' + company + '<br>' + '職業:' + profession + '<br>' + '聯絡地址:' + address +
               '</div>'
 
             if (type == 1) {
@@ -699,8 +746,16 @@
 
           // 退款
           $('input[name="course_refund"]').val('');
+
+          var refund_reason = ''
+          if(data['refund_reason'] != null){
+            refund_reason = data['refund_reason']
+          }else{
+            refund_reason = "無"
+          }
+
           if (typeof(data['refund_course']) != 'undefined') {
-            $('input[name="course_refund"]').val(data['refund_course'] + '(' + data['refund_reason'] + ')');
+            $('input[name="course_refund"]').val(data['refund_course'] + '(' + refund_reason + ')');
           } else {
             $('#dev_refund').hide();
 
@@ -844,10 +899,10 @@
         success: function(data) {
           var id_student = '';
 
-          $('#table_list_history').html('');
-          $('#table_list_history').append('<thead id="table_thead"></thead> <tbody id="history_data_detail"></tbody>');
+          // $('#table_list_history').html('');
+          // $('#table_list_history').append('<thead id="table_thead"></thead> <tbody id="history_data_detail"></tbody>');
           $('#history_data_detail').html('');
-          $('#table_thead').html('');
+          // $('#table_thead').html('');
           // console.log(data)
           $.each(data, function(index, val) {
             var status = '',
@@ -872,22 +927,22 @@
               '<td>' + course_sales + '</td>' +
               '</tr>'
           });
-          data_thead =
-            '<tr>' +
-            '<th>時間</th>' +
-            '<th>動作</th>' +
-            '<th>內容</th>' +
-            '</tr>'
+          // data_thead =
+          //   '<tr>' +
+          //   '<th>時間</th>' +
+          //   '<th>動作</th>' +
+          //   '<th>內容</th>' +
+          //   '</tr>'
           $('#history_data_detail').html(data);
-          $('#table_thead').html(data_thead);
-          $('#table_list_history').DataTable({
-            "dom": '<l<td>p>',
-            "destroy": true,
-            "ordering": true,
-            "columnDefs": [{
-              "targets": 'no-sort',
-            }]
-          });
+          // $('#table_thead').html(data_thead);
+          // $('#table_list_history').DataTable({
+          //   "dom": '<l<td>p>',
+          //   "destroy": true,
+          //   "ordering": true,
+          //   "columnDefs": [{
+          //     "targets": 'no-sort',
+          //   }]
+          // });
         },
         error: function(error) {
           console.log(JSON.stringify(error));
@@ -1242,8 +1297,6 @@
 
     /*加入黑名單 Rocky(2020/02/23)*/
     function btn_blacklist(id_student) {
-      // var msg = "是否刪除此筆資料?";
-      // if (confirm(msg)==true){
       $.ajax({
         type: 'GET',
         url: 'student_addblacklist',
@@ -1256,11 +1309,15 @@
             /** alert **/
             $("#success_alert_text").html("加入黑名單成功");
             fade($("#success_alert"));
-
-            location.reload();
-          } else {
+            // location.reload();
+          } else if(data['data'] == "已加入") {
+             /** alert **/
+            $("#error_alert_text").html("此學員已入黑名單");
+            fade($("#error_alert"));
+          }
+          else {
             /** alert **/
-            $("#error_alert_text").html("入黑名單失敗");
+            $("#error_alert_text").html("加入黑名單失敗");
             fade($("#error_alert"));
           }
         },
@@ -1268,13 +1325,10 @@
           console.log(JSON.stringify(error));
 
           /** alert **/
-          $("#error_alert_text").html("刪除資料失敗");
+          $("#error_alert_text").html("加入黑名單失敗");
           fade($("#error_alert"));
         }
-      });
-      // }else{
-      // return false;
-      // }    
+      }); 
     }
 
     /*學員修改基本資料button*/

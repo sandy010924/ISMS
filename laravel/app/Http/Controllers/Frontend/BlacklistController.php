@@ -12,11 +12,11 @@ class BlacklistController extends Controller
     // 顯示資料
     public function show()
     {
-        $pagesize = 15;
+        // $pagesize = 15;
        
         $blacklists =  Blacklist::leftJoin('student', 'Blacklist.id_student', '=', 'student.id')
                         ->select('Blacklist.id as blacklist_id', 'Blacklist.reason', 'student.*')
-                        ->paginate($pagesize);
+                        ->get();
         // dd($blacklists);
         return view('frontend.student_blacklist', compact('blacklists'));
     }

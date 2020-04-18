@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Storage;
 
 class DatabaseController extends Controller
 {
-
     protected $directory = 'backup';
 
     // 顯示資訊
@@ -33,20 +32,10 @@ class DatabaseController extends Controller
             'no-create-info' => true,
             'lock-tables' => false,
             'no-autocommit' => false,
-            // 'include-tables' => array(),
-            // 'exclude-tables' => array(),
-            // 'add-drop-table' => true,
             'add-drop-table' => false,
-            // 'single-transaction' => true,
-            // 'lock-tables' => true,
             'add-locks' => false,
-            // 'extended-insert' => true,
             'disable-foreign-keys-check' => true,
             'skip-triggers' => false,
-            // 'add-drop-trigger' => true,
-            // 'databases' => true,
-            // 'add-drop-database' => true,
-            // 'hex-blob' => true
         );
         try {
             $dump = new IMysqldump\Mysqldump(
@@ -96,14 +85,12 @@ class DatabaseController extends Controller
         // SELECT concat('DELETE FROM ', table_name, ';') FROM information_schema.tables WHERE table_schema = 'isms'
 
         $sql_drop = "
-        SET GLOBAL  FOREIGN_KEY_CHECKS = 0;
         TRUNCATE `blacklist`;
         TRUNCATE `events_course`;
         TRUNCATE `debt`;
         TRUNCATE `mark`;
         TRUNCATE `message`;
         TRUNCATE `migrations`;
-        TRUNCATE `m_database`;
         TRUNCATE `notification`;
         TRUNCATE `payment`;
         TRUNCATE `refund`;
@@ -117,14 +104,19 @@ class DatabaseController extends Controller
         TRUNCATE `student_groupdetail`;
         TRUNCATE `teacher`;
         TRUNCATE `users`; 
-        TRUNCATE `course`; ";
+        TRUNCATE `course`;
+        TRUNCATE `m_database`;";
 
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         $resul_drop = DB::unprepared($sql_drop);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         if ($resul_drop == 1) {
-            $result = DB::unprepared("SET FOREIGN_KEY_CHECKS = 0; " . $sql . "SET FOREIGN_KEY_CHECKS = 1; ");
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            $result = DB::unprepared($sql);
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
-
+        
         if ($result != 1) {
             return '失敗';
         } else {
