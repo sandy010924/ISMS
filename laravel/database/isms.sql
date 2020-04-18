@@ -628,3 +628,7 @@ INSERT INTO users (`account`,`name`,`role`,`email`,`password`) VALUES ('officest
 
 -- 標記資料表 - 課程ID Sandy(2020/04/17)
 ALTER TABLE `mark` ADD COLUMN id_events VARCHAR(50) NULL COMMENT '場次ID';
+
+
+-- 修改細分組資料表 - 條件欄位長度大小 Rocky (2020/04/18)
+ALTER TABLE `student_group` CHANGE COLUMN `condition` `condition` VARCHAR(65535) null COMMENT '條件';
