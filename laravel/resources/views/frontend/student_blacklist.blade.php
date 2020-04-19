@@ -33,37 +33,37 @@
                 </div> -->
     </div>
     <div class="table-responsive">
-     @component('components.datatable')
+      @component('components.datatable')
       <!-- <table class="table table-striped table-sm text-center"> -->
-        <!-- <thead> -->
-         @slot('thead')
-          <tr>
-            <th>姓名</th>
-            <th>連絡電話</th>
-            <th>電子郵件</th>
-            <th>原因</th>
-            <th></th>
-          </tr>
-        <!-- </thead>
+      <!-- <thead> -->
+      @slot('thead')
+      <tr>
+        <th>姓名</th>
+        <th>連絡電話</th>
+        <th>電子郵件</th>
+        <th>原因</th>
+        <th></th>
+      </tr>
+      <!-- </thead>
         <tbody> -->
-        @endslot
+      @endslot
       @slot('tbody')
-          @foreach($blacklists as $blacklist)
-          <tr>
-            <td>{{$blacklist->name }}</td>
-            <td>{{$blacklist->phone}}</td>
-            <td>{{$blacklist->email}}</td>
-            <td>{{$blacklist->reason}}</td>
+      @foreach($blacklists as $blacklist)
+      <tr>
+        <td>{{$blacklist->name }}</td>
+        <td>{{$blacklist->phone}}</td>
+        <td>{{$blacklist->email}}</td>
+        <td>{{$blacklist->reason}}</td>
 
-            <td>
-              <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $blacklist->id }});">完整內容</button>
-              <button id="{{ $blacklist->blacklist_id }}" class="btn btn-dark btn-sm mx-1" onclick="btn_blacklist({{ $blacklist->blacklist_id }});" value="{{ $blacklist->blacklist_id }}"><i class="fa fa-ban"></i>取消黑名單</button>
-            </td>
-          </tr>
-          @endforeach
-        <!-- </tbody>
+        <td>
+          <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $blacklist->id }});">完整內容</button>
+          <button id="{{ $blacklist->blacklist_id }}" class="btn btn-dark btn-sm mx-1" onclick="btn_blacklist({{ $blacklist->blacklist_id }});" value="{{ $blacklist->blacklist_id }}"><i class="fa fa-ban"></i>取消黑名單</button>
+        </td>
+      </tr>
+      @endforeach
+      <!-- </tbody>
       </table> -->
-        @endslot
+      @endslot
       @endcomponent
     </div>
     <div class="modal fade bd-example-modal-xl text-left" id="student_information" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -73,10 +73,12 @@
             <div class="col-5 py-2">
               <h5 id="student_name"></h5>
               <h5 id="student_email"></h5>
+              <h5 id="title_student_phone"></h5>
             </div>
             <div class="col-4">
             </div>
             <div class="col-4 py-3">
+              <h7 id="title_old_datasource"></h7><br>
               <h7 id="student_date"></h7><br>
               <h7 id="student_datasource"></h7>
             </div>
@@ -211,11 +213,11 @@
               <div class="table-responsive">
                 @component('components.datatable_history')
                 @slot('thead')
-                  <tr>
-                    <th>時間</th>
-                    <th>動作</th>
-                    <th>內容</th>
-                  </tr>
+                <tr>
+                  <th>時間</th>
+                  <th>動作</th>
+                  <th>內容</th>
+                </tr>
                 @endslot
                 @slot('tbody')
                 @endslot
@@ -358,18 +360,18 @@
   var table;
 
   // 搜尋 Rocky(2020/03/27)
-    $.fn.dataTable.ext.search.push(
-      function(settings, data, dataIndex) {
-        var keyword = $('#search_input').val();
-        var phone = data[1];
-        var email = data[2];
+  $.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex) {
+      var keyword = $('#search_input').val();
+      var phone = data[1];
+      var email = data[2];
 
-        if ((isNaN(keyword)) || (phone.includes(keyword)) || (email.includes(keyword))) {
-          return true;
-        }
-        return false;
+      if ((isNaN(keyword)) || (phone.includes(keyword)) || (email.includes(keyword))) {
+        return true;
       }
-    );
+      return false;
+    }
+  );
 
   $("document").ready(function() {
     btn_blackadd();
@@ -399,7 +401,7 @@
     });
   });
 
-  
+
 
   // 輸入框
   $('#search_input').on('keyup', function(e) {
@@ -424,7 +426,7 @@
     //     console.log('error: ' + JSON.stringify(jqXHR));
     //   }
     // });
-    
+
     table.search($('#search_input').val()).draw();
   });
 
@@ -462,6 +464,9 @@
         // 學員資料
         $('#student_name').text(data[0]['name']);
         $('#student_email').text(data[0]['email']);
+        $('#title_student_phone').text(data[0]['phone']);
+        $('#title_old_datasource').text('原始來源:' +
+          data[0]['datasource_old']);
         $('#student_date').text('加入日期 :' + data['submissiondate']);
         $('#student_profession').val(data[0]['profession']);
         $('#student_address').val(data[0]['address']);
@@ -693,7 +698,7 @@
         //   '</tr>'
         $('#history_data_detail').html(data);
         // $('#table_thead').html(data_thead);
-       
+
       },
       error: function(error) {
         console.log(JSON.stringify(error));

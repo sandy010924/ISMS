@@ -26,19 +26,19 @@ class StudentController extends Controller
         $registration = Registration::where('id_student', $id_student)->get();
         $sales_registration = SalesRegistration::where('id_student', $id_student)->get();
         $payment = Payment::where('id_student', $id_student)->get();
-        
-        
+
+
         // 刪除資料
-        
+
         if (!empty($student) || !empty($sales_registration) || !empty($payment) || !empty($registration)) {
             $sales_registration = SalesRegistration::where('id_student', $id_student)->delete();
-            $registration= Registration::where('id_student', $id_student)->delete();
-            $payment= Payment::where('id_student', $id_student)->delete();
+            $registration = Registration::where('id_student', $id_student)->delete();
+            $payment = Payment::where('id_student', $id_student)->delete();
             Refund::where('id_student', $id_student)->delete();
             Debt::where('id_student', $id_student)->delete();
             Blacklist::where('id_student', $id_student)->delete();
             $student = Student::where('id', $id_student)->delete();
-            
+
             $status = "ok";
         } else {
             $status = "error";
@@ -52,8 +52,9 @@ class StudentController extends Controller
         $status = "";
         $id_blacklist = "";
         $id_student = $request->get('id_student');
+        $reason = $request->get('reason');
         $blacklist = new Blacklist;
-        
+
 
         // 查詢是否有該筆資料
         $student_data = Blacklist::where('id_student', $id_student)->get();
@@ -61,18 +62,18 @@ class StudentController extends Controller
         if (count($student_data) == 0) {
             // 更新資料 -> 學員資料
             $student = Student::where('id', $id_student)
-                        ->update(['check_blacklist' => '1']);
+                ->update(['check_blacklist' => '1']);
 
             // 新增資料 -> 黑名單資料表
             if ($student != 0) {
                 // 新增學員資料
                 $blacklist->id_student       = $id_student;         // 學員ID
-                $blacklist->reason           = '';                  // 原因
-            
+                $blacklist->reason           = $reason;             // 原因
+
                 $blacklist->save();
                 $id_blacklist = $blacklist->id;
             }
-            
+
             if (!empty($id_blacklist)) {
                 $status = "ok";
             } else {
@@ -97,11 +98,11 @@ class StudentController extends Controller
 
         // 更新學員資料
         $data = Student::where('id', $id)
-        ->update(['profession' => $profession,'address' => $address, 'phone' => $student_phone]);
-        
+            ->update(['profession' => $profession, 'address' => $address, 'phone' => $student_phone]);
+
         // 更新原始來源
         $data_datasource = SalesRegistration::where('id', $sales_registration_old)
-        ->update(['datasource' => $old_datasource]);
+            ->update(['datasource' => $old_datasource]);
 
         if ($data && $data_datasource) {
             return '更新成功';
@@ -151,7 +152,7 @@ class StudentController extends Controller
     {
         $id = $request->get('id');
         $id_debt = Debt::where('id', $id)->delete();
-            
+
         if (!empty($id_debt)) {
             return '刪除成功';
         } else {
@@ -172,43 +173,43 @@ class StudentController extends Controller
             case '0':
                 // 日期時間
                 Debt::where('id', $id)
-                        ->update(['updated_at' => $data]);
+                    ->update(['updated_at' => $data]);
                 break;
             case '1':
                 // 付款狀態/日期
                 Debt::where('id', $id)
-                        ->update(['status_payment' => $data]);
+                    ->update(['status_payment' => $data]);
                 break;
             case '2':
                 // 聯絡內容
                 Debt::where('id', $id)
-                        ->update(['contact' => $data]);
+                    ->update(['contact' => $data]);
                 break;
             case '3':
                 // 最新狀態
                 Debt::where('id', $id)
-                        ->update(['id_status' => $data]);
+                    ->update(['id_status' => $data]);
                 break;
             case '4':
                 // 設提醒
                 Debt::where('id', $id)
-                        ->update(['remind_at' => $data]);
+                    ->update(['remind_at' => $data]);
                 break;
             case '5':
                 // 追單人員
                 Debt::where('id', $id)
-                        ->update(['person' => $data]);
+                    ->update(['person' => $data]);
                 break;
             case '6':
                 // 追單課程
                 Debt::where('id', $id)
-                        ->update(['name_course' => $data]);
+                    ->update(['name_course' => $data]);
                 break;
             default:
                 return 'error';
                 break;
         }
-        
+
         return 'success';
 
         // }catch (Exception $e) {
@@ -228,10 +229,10 @@ class StudentController extends Controller
         $mark = new Mark;
 
         // 新增學員資料
-         $mark->id_student       = $id_student;         // 學員ID
-         $mark->name_mark        = $name;               // 標記名稱
-        
-         $mark->save();
+        $mark->id_student       = $id_student;         // 學員ID
+        $mark->name_mark        = $name;               // 標記名稱
+
+        $mark->save();
         $id_mark = $mark->id;
 
 
@@ -250,12 +251,12 @@ class StudentController extends Controller
 
         // 查詢是否有該筆資料
         $mark = Mark::where('id', $id)->get();
-        
+
         // 刪除資料
-        
+
         if (!empty($mark)) {
             $mark = Mark::where('id', $id)->delete();
-            
+
             $status = "ok";
         } else {
             $status = "error";

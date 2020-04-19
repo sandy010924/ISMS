@@ -22,8 +22,8 @@
           學員管理
         </a>
         @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff')
+        <a class="nav-link nav-sub-item" href="{{ route('student_group') }}">名單列表</a>
         <a class="nav-link nav-sub-item" href="{{ route('student_blacklist') }}">黑名單</a>
-        <a class="nav-link nav-sub-item" href="{{ route('student_group') }}">細分組</a>
         @endif
       </li>
       @endif
