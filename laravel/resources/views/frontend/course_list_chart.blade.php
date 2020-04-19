@@ -21,6 +21,7 @@
     @slot('settle') {{ $events_data['settle']}} @endslot
     @slot('deposit') {{ $events_data['deposit']}} @endslot
     @slot('order') {{ $events_data['order']}} @endslot
+    @slot('refund') {{ $events_data['refund']}} @endslot
     @slot('count_apply') {{ $events_data['count_apply']}} @endslot
     @slot('count_check') {{ $events_data['count_check']}} @endslot
     @slot('count_cancel') {{ $events_data['count_cancel']}} @endslot

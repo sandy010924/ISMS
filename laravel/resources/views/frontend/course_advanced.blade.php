@@ -69,6 +69,7 @@
                       <th>電子郵件</th>
                       <th>我想參加課程</th>
                       <th>報名場次</th>
+                      <th>付款狀態</th>
                       <th class=" no-sort"></th>
                     </tr>
                   @endslot
@@ -82,6 +83,7 @@
                         <td class="align-middle">{{ $data['email'] }}</td>
                         <td class="align-middle">{{ $data['join'] }}</td>
                         <td class="align-middle">{{ $data['event'] }}</td>
+                        <td class="align-middle">{{ $data['status_payment'] }}</td>
                         <td class="align-middle"><button id="{{ $data['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data['id'] }});">刪除</button></td>
                       </tr>
                     @endforeach

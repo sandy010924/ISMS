@@ -83,14 +83,14 @@
                         學員尚未報名此課程
                       </div> --}}
                     </div>
-                    <div class="form-group required">
+                    <div class="form-group">
                       <label for="form_name" class="col-form-label">姓名</label>
                       <input type="hidden" class="form-control" id="form_student" name="form_student">
-                      <input type="text" class="form-control" id="form_name" name="form_stuform_namedent" readonly required>
+                      <input type="text" class="form-control" id="form_name" name="form_stuform_namedent" readonly>
                     </div>
-                    <div class="form-group required">
+                    <div class="form-group">
                       <label for="form_email" class="col-form-label">電子郵件</label>
-                      <input type="text" class="form-control" id="form_email" name="form_email" readonly required>
+                      <input type="text" class="form-control" id="form_email" name="form_email" readonly>
                     </div>
                     {{-- <div class="form-group required">
                       <label for="form_events" class="col-form-label">退費場次選擇</label>

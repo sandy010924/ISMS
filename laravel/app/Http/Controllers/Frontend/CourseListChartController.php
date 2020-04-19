@@ -145,6 +145,13 @@ class CourseListChartController extends Controller
         $order = count(Registration::Where('source_events', $events->id )
                                 ->Where('status_payment', 6)
                                 ->get());   
+
+        
+        /* 退費數 */
+        $refund = 0;
+        $refund = count(Registration::Where('source_events', $events->id )
+                                ->Where('status_payment', 9)
+                                ->get());   
         
 
         $events_data = [
@@ -157,6 +164,7 @@ class CourseListChartController extends Controller
             'settle' => $settle,
             'deposit' => $deposit,
             'order' => $order,
+            'refund' => $refund,
             'rate_check' => $rate_check . '%',
             'rate_settle' => $rate_settle . '%',
         ];

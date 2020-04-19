@@ -57,6 +57,10 @@
                 <label class="custom_label">留單數：</label>
                 <span>{{ $order }}</span>
               </div>
+              <div class="row custom_row">
+                <label class="custom_label">退費數：</label>
+                <span>{{ $refund }}</span>
+              </div>
             </div>
           </div>
         </div>

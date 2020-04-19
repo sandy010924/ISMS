@@ -250,7 +250,7 @@ class CourseListDataController extends Controller
                     
     //                 /* 成交數 */
     //                 $deal = 0;
-    //                 //判斷是否有下階
+    //                 //判斷是否有進階
     //                 $next_course = Course::join('events_course', 'events_course.id_course', '=', 'course.id')
     //                                     ->select('events_course.id as id_events', 'course.id_type as id_type','events_course.course_start_at as course_start_at')
     //                                     ->Where('course.id_type', $course->id)
@@ -306,7 +306,7 @@ class CourseListDataController extends Controller
                     
     //                 /* 成交數 */
     //                 $deal = 0;
-    //                 //判斷是否有下階
+    //                 //判斷是否有進階
     //                 $next_course = Course::join('events_course', 'events_course.id_course', '=', 'course.id')
     //                                     ->select('course.id as id_course', 'events_course.course_start_at as course_start_at')
     //                                     ->Where('course.id_type', $course->id_course)

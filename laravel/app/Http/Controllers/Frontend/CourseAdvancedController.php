@@ -82,11 +82,32 @@ class CourseAdvancedController extends Controller
                 }
             }
 
+            //我想參加課程
             $join = ''; 
             if( $data['registration_join'] == 0){
                 $join = '現場最優惠價格';
             }elseif( $data['join'] == 1){
                 $join = '五日內優惠價格';
+            }
+
+            //付款狀態
+            $status_payment ='';
+            switch ( $data['status_payment'] ) {
+                case 6:
+                    $status_payment ='留單';
+                    break;
+                case 7:
+                    $status_payment ='完款';
+                    break;
+                case 8:
+                    $status_payment ='付訂';
+                    break;
+                case 9:
+                    $status_payment ='退費';
+                    break;
+                default:
+                    $status_payment ='';
+                    break;
             }
 
             $fill[$key] = array(
@@ -98,6 +119,7 @@ class CourseAdvancedController extends Controller
                 'email' => $data['email'],
                 'join' => $join,
                 'event' => $data['event'],
+                'status_payment' => $status_payment,
             );
 
             // $id_group = $data['id_group'];

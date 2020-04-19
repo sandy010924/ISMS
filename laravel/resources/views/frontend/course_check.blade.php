@@ -182,14 +182,14 @@
             </div>
           </div>
           @if( $nextLevel > 0 )
-            <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">下階報名表</button>
+            <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#nextForm">進階報名表</button>
             {{-- <a href="{{ route('course_return') }}"><button type="button" class="btn btn-outline-secondary" >回報表單</button></a> --}}
             <!-- 二階報名表 modal -->
             <div class="modal fade" id="nextForm" tabindex="-1" role="dialog" aria-labelledby="nextFormLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="nextFormLabel">下階報名表</h5>
+                    <h5 class="modal-title" id="nextFormLabel">進階報名表</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -206,7 +206,7 @@
               </div>
             </div>
           @else
-            <button type="button" class="btn btn-outline-secondary mx-1" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">下階報名表</button>
+            <button type="button" class="btn btn-outline-secondary mx-1" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">進階報名表</button>
           @endif
         </div>
       </div>

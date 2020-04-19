@@ -435,9 +435,9 @@
                     <label for="add_cash" class="col-form-label">金額</label>
                     <input type="number" class="form-control" name="add_cash" id="add_cash" required>
                   </div>
-                  <div class="form-group required">
+                  <div class="form-group">
                     <label for="add_number" class="col-form-label">帳號/卡號後四碼</label>
-                    <input type="number" class="form-control" name="add_number" id="add_number" required>
+                    <input type="number" class="form-control" name="add_number" id="add_number">
                   </div>
                   </div>
                   <div class="modal-footer">
