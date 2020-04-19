@@ -105,7 +105,7 @@
                   <nav class="message_nav mb-3">
                     {{-- <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist"> --}}
                     <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                      <a class="nav-item nav-link" data-toggle="tab" id="reserve" data-target="reserve" role="tab">已預約</a>
+                      <a class="nav-item nav-link active" data-toggle="tab" id="reserve" data-target="reserve" role="tab">已預約</a>
                       <a class="nav-item nav-link" data-toggle="tab" id="draft" data-target="draft" role="tab">草稿</a>
                       <a class="nav-item nav-link" data-toggle="tab" id="sent" data-target="sent" role="tab">已傳送</a>
                       {{-- <a class="nav-item nav-link" data-toggle="tab" data-target="fail" role="tab">無法傳送</a> --}}
@@ -130,24 +130,25 @@
                             <th>內容</th>
                             {{-- <th>對象</th> --}}
                             <th>媒介</th>
-                            <th>傳送人數</th>
-                            <th>傳送時間</th>
-                            <th class="d-none" name="table_btn"></th>
+                            <th id="th_count"></th>
+                            <th id="th_time" name="col_time"></th>
+                            <th name="col_btn"></th>
                             <th class="d-none"></th>
                           </tr>
                         @endslot
                         @slot('tbody')
                           @foreach($msg as $key => $data )
                           <tr href="{{ route('message_data', ['id' => $data['id']]) }}">
+                          {{-- <tr> --}}
                             <td>{{ $data['name'] }}</td>
                             <td>{{ $data['content'] }}</td>
                             {{-- <td>{{ $data['id_student_group'] }}</td> --}}
                             <td>{{ $data['type'] }}</td>
                             <td>{{ $data['count_sender'] }}</td>
-                            <td>{{ $data['send_at'] }}</td>
-                            <td class="d-none" name="table_btn">
-                              <button type="button" class="btn btn-secondary btn-sm mx-1">編輯</button>
-                              <button type="button" class="btn btn-danger btn-sm mx-1">刪除</button>
+                            <td name="col_time">{{ $data['send_at'] }}</td>
+                            <td name="col_btn">
+                              <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
+                              <a role="button" class="btn btn-danger btn-sm mx-1 text-white">刪除</a>
                             </td>
                             <td class="d-none"> {{ $data['id_status'] }}</td>
                           </tr>
@@ -423,10 +424,6 @@
 
   $("document").ready(function() {
 
-    $('table tr').click(function(){
-        window.location = $(this).attr('href');
-        return false;
-    });
 
     // $('input[name="daterange"]').daterangepicker({
     //   opens: 'left'
@@ -440,8 +437,9 @@
       locale: {
         format: 'YYYY-MM-DD',
         separator: ' ~ '
-      }
+      },
     });
+
 
     //日期區間搜尋
     $('#daterange').on('apply.daterangepicker', function(ev, picker) {
@@ -463,30 +461,14 @@
     table = $('#table_list').DataTable({
         "dom": '<l<t>p>',
         // "ordering": false,
+        "autoWidth": false,
         "order": [ 4 , 'desc']
     });
-
-
-    $('#reserve').on('click', function() {
-      table
-        .columns( 6 )
-        .search( 21 )
-        .draw();
-    });
     
-    $('#draft').on('click', function() {
-      table
-        .columns( 6 )
-        .search( 18 )
-        .draw();
-    });
-    
-    $('#sent').on('click', function() {
-      table
-        .columns( 6 )
-        .search( 19 )
-        .draw();
-    });
+    table
+      .columns( 6 )
+      .search( 21 )
+      .draw();
 
     // $('.nav-item').on('click', function() {
     //   var target = $(this).attr('data-target');
@@ -522,8 +504,56 @@
 
     // });
 
+    $('[name="col_time"]').show();
+    $('[name="col_btn"]').show();
+    $('#th_time').html('預約時間');
+    $('#th_count').html('預約傳送人數');
 
   })
+
+  //已預約分頁
+  $('#reserve').on('click', function() {
+    table
+      .columns( 6 )
+      .search( 21 )
+      .draw();
+
+    $('[name="col_time"]').show();
+    $('[name="col_btn"]').show();
+    $('#th_time').html('預約時間');
+    $('#th_count').html('預約傳送人數');
+  });
+  
+  //草稿分頁
+  $('#draft').on('click', function() {
+    table
+      .columns( 6 )
+      .search( 18 )
+      .draw();
+
+    $('[name="col_time"]').hide();
+    $('[name="col_btn"]').show();
+    $('#th_count').html('預約傳送人數');
+  });
+  
+  //已傳送分頁
+  $('#sent').on('click', function() {
+    table
+      .columns( 6 )
+      .search( 19 )
+      .draw();
+
+    $('[name="col_time"]').show();
+    $('[name="col_btn"]').hide();
+    $('#th_time').html('傳送時間');
+    $('#th_count').html('傳送人數');
+
+    $('table tbody tr').on('click', function(){
+        window.location = $(this).attr('href');
+        // return false;
+    });
+  });
+
 </script>
 
 

@@ -92,9 +92,10 @@
               </div>
 
               <div class="d-flex mt-5">
-                <button id="sendMessageBtn" class="btn btn-primary mr-2">立即傳送</button>
-                <input type="button" class="btn btn-secondary mr-2" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
+                <input type="button" class="btn btn-secondary mr-3 float-left" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
                 <input type="button" id="draftBtn" class="btn btn-secondary mr-2" value="儲存為草稿">
+                {{-- <button id="saveDraftBtn" class="btn btn-secondary">儲存為草稿</button> --}}
+                <button id="sendMessageBtn" class="btn btn-primary ml-auto">立即傳送</button>
                 <span id="displaySchedule"></span>
               </div>
 
@@ -103,7 +104,7 @@
           </div>
         </div>
 
-        <!-- 排成設定Modal -->
+        <!-- 排程設定Modal -->
         <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -114,7 +115,7 @@
                 </button>
               </div>
               <div class="modal-body">
-               <h4>選擇日期和時間</h4>
+               <h6>選擇日期和時間</h6>
 
                 <div class="form-group">
                   <div class='input-group date' id='datetimepicker1' data-target-input='nearest'>
@@ -127,7 +128,7 @@
 
               </div>
               <div class="modal-footer">
-                <button type="button" id="saveScheduleBtn" class="btn btn-secondary" data-dismiss="modal">確定排程</button>
+                <button type="button" id="saveScheduleBtn" class="btn btn-primary" data-dismiss="modal">確定排程</button>
                 <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
               </div>
             </div>
@@ -386,21 +387,26 @@ $(document).ready(function () {
 
 
   $('#draftBtn').on('click', function(e) {
+    var content = editor.getData().replace(new RegExp("<p>", "g"),"");
+    content = content.replace(new RegExp("</p>", "g"), "\n");
+    content = content.replace(new RegExp("&nbsp;", "g"), " ");
+    var emailAddr = $('#receiverEmail').val();
+    var phoneAddr = $('#receiverPhone').val();
+
     $.ajax({
       type: "POST",
       url: "draftInsert",
       data: {
-        // messageTitle: '訊息名稱',
-        mailCheckBox: $('#mailCheckBox').val();
-        messageContents: msgContent,
-        phoneNumber: $('#receiverPhone').val(),
+        mailCheckBox: $('#mailCheckBox').prop("checked"),
+        messageCheckBox: $('#messageCheckBox').prop("checked"),
         name: $('#msgTitle').val(),
         id_teacher: $('#msgTeacher').val(),
         id_course: $('#msgCourse').val(),
-        emailTitle: $('#emailTitle').val(),
+        phoneNumber: phoneAddr.split(","),
         emailAddr: emailAddr.split(","),
         emailAddrLen: emailAddr.split(",").length,
-        emailContent: emailContent
+        emailTitle: $('#emailTitle').val(),
+        content: content
       }
     }).done(function(res) {
       console.log(res);
@@ -409,12 +415,7 @@ $(document).ready(function () {
         /** alert **/
         $("#success_alert_text").html("儲存草稿成功");
         fade($("#success_alert"));
-      }else if( res == 'error: sms error.' ){
-        /** alert **/ 
-        $("#error_alert_text").html("儲存草稿失敗");
-        fade($("#error_alert"));    
-      }
-      else{
+      }else{
         /** alert **/ 
         $("#error_alert_text").html("儲存草稿失敗");
         fade($("#error_alert"));     
@@ -424,7 +425,7 @@ $(document).ready(function () {
       console.log(err);
       
       /** alert **/ 
-      $("#error_alert_text").html("發送簡訊失敗");
+      $("#error_alert_text").html("儲存草稿失敗");
       fade($("#error_alert"));       
 
     });
@@ -469,13 +470,13 @@ $(document).ready(function () {
     }).done(function(res) {
       console.log(res);
 
-      if( res == 'success' ){
+      if( res['status'] == 'success' ){
         /** alert **/
-        $("#success_alert_text").html("發送簡訊成功");
+        $("#success_alert_text").html("發送簡訊成功，餘額尚有" + res['AccountPoint'] + "。");
         fade($("#success_alert"));
-      }else if( res == 'error: sms error.' ){
+      }else if( res['status'] == 'error' ){
         /** alert **/ 
-        $("#error_alert_text").html("發送簡訊失敗");
+        $("#error_alert_text").html("發送簡訊失敗，" + res['msg'] + "。");
         fade($("#error_alert"));    
       }
       else{
