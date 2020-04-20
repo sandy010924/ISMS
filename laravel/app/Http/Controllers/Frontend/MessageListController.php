@@ -16,13 +16,22 @@ class MessageListController extends Controller
     {
       $msg = [];
 
-      $msg_all = Message::all();
+      $msg_all = Message::orderby('created_at', 'desc')->get();
 
       foreach( $msg_all as $key => $data){
-        if( $data['type'] == 0){
-          $type = '簡訊';
-        }else{
-          $type = 'email';
+        switch ($data['type']) {
+          case 0:
+            $type = '簡訊';
+            break;
+          case 1:
+            $type = 'E-mail';
+            break;
+          case 2:
+            $type = '簡訊、E-mail';
+            break;
+          default:
+            $type = '';
+            break;
         }
 
         $count_sender = count(Sender::where('id_message', $data['id'])->get());

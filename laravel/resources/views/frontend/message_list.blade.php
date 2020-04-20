@@ -68,226 +68,226 @@
 
 @section('content')
 <!-- Content Start -->
-       <!--搜尋課程頁面內容-->
-        <div class="card m-3">
-          <div class="card-body">
-            
-            {{-- <div class="container"> --}}
-            <div class="row mb-5">
-              <div class="col-5">
-                <div class="input-group date" data-target-input="nearest">
-                  {{-- <div class="input-group-prepend">
-                    <span class="input-group-text">日期區間</span>
-                  </div> --}}
-                  <input type="text" class="form-control px-3" name="daterange" id="daterange"  placeholder="搜尋日期區間"> 
-                  <div class="input-group-append" data-target="#daterange" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div>  
-                </div>
-              </div>
-              <div class="col text-right">
-                <a href="{{ route('message') }}" role="button" class="btn btn-primary">建立訊息</a>
-              </div>
-            </div>
-            {{-- <div class="row mb-3">
+  <!--搜尋課程頁面內容-->
+  <div class="card m-3">
+    <div class="card-body">
+      
+      {{-- <div class="container"> --}}
+      <div class="row mb-5">
+        <div class="col-5">
+          <div class="input-group date" data-target-input="nearest">
+            {{-- <div class="input-group-prepend">
+              <span class="input-group-text">日期區間</span>
             </div> --}}
-            {{-- <div class="row mb-2" style="align-items: baseline;">
-              <h4 class="mr-2">選擇日期</h4>
-              <div class="form-group">
-                <div class='input-group date' style="width: 275px;">
-                  <input type="text" class="m-1 w-100 form-control p-0" name="daterange"/>
-                  <button type="button" class="btn btn-primary ml-2">查詢</button>
-                </div>
+            <input type="text" class="form-control px-3" name="daterange" id="daterange"  placeholder="搜尋日期區間"> 
+            <div class="input-group-append" data-target="#daterange" data-toggle="datetimepicker">
+              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>  
+          </div>
+        </div>
+        <div class="col text-right">
+          <a href="{{ route('message') }}" role="button" class="btn btn-primary">建立訊息</a>
+        </div>
+      </div>
+      {{-- <div class="row mb-3">
+      </div> --}}
+      {{-- <div class="row mb-2" style="align-items: baseline;">
+        <h4 class="mr-2">選擇日期</h4>
+        <div class="form-group">
+          <div class='input-group date' style="width: 275px;">
+            <input type="text" class="m-1 w-100 form-control p-0" name="daterange"/>
+            <button type="button" class="btn btn-primary ml-2">查詢</button>
+          </div>
+        </div>
+      </div> --}}
+        {{-- <div class="row">
+          <div class="col-xs-12" style="width: 100%;"> --}}
+            <nav class="message_nav mb-3">
+              {{-- <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist"> --}}
+              <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" data-toggle="tab" id="reserve" data-target="reserve" role="tab">已預約</a>
+                <a class="nav-item nav-link" data-toggle="tab" id="draft" data-target="draft" role="tab">草稿</a>
+                <a class="nav-item nav-link" data-toggle="tab" id="sent" data-target="sent" role="tab">已傳送</a>
+                {{-- <a class="nav-item nav-link" data-toggle="tab" data-target="fail" role="tab">無法傳送</a> --}}
+              {{-- @foreach($teachers as $key => $item )
+                @if($loop->index == 0)
+                  <a class="nav-item nav-link active" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
+                @else
+                <a class="nav-item nav-link" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
+                @endif
+              @endforeach --}}
+                <!-- <a class="nav-item nav-link active" data-toggle="tab" data-target="Jack" role="tab"></a>
+                <a class="nav-item nav-link" data-toggle="tab" data-target="Juila" role="tab"></a>
+                <a class="nav-item nav-link" data-toggle="tab" data-target="順昌" role="tab"></a>
+                <a class="nav-item nav-link" data-toggle="tab" data-target="北極熊" role="tab"></a> -->
               </div>
-            </div> --}}
-              {{-- <div class="row">
-                <div class="col-xs-12" style="width: 100%;"> --}}
-                  <nav class="message_nav mb-3">
-                    {{-- <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist"> --}}
-                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                      <a class="nav-item nav-link active" data-toggle="tab" id="reserve" data-target="reserve" role="tab">已預約</a>
-                      <a class="nav-item nav-link" data-toggle="tab" id="draft" data-target="draft" role="tab">草稿</a>
-                      <a class="nav-item nav-link" data-toggle="tab" id="sent" data-target="sent" role="tab">已傳送</a>
-                      {{-- <a class="nav-item nav-link" data-toggle="tab" data-target="fail" role="tab">無法傳送</a> --}}
-                    {{-- @foreach($teachers as $key => $item )
-                      @if($loop->index == 0)
-                        <a class="nav-item nav-link active" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
-                      @else
-                      <a class="nav-item nav-link" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
-                      @endif
-                    @endforeach --}}
-                      <!-- <a class="nav-item nav-link active" data-toggle="tab" data-target="Jack" role="tab"></a>
-                      <a class="nav-item nav-link" data-toggle="tab" data-target="Juila" role="tab"></a>
-                      <a class="nav-item nav-link" data-toggle="tab" data-target="順昌" role="tab"></a>
-                      <a class="nav-item nav-link" data-toggle="tab" data-target="北極熊" role="tab"></a> -->
-                    </div>
-                  </nav>
-                  <div class="tab-content" id="myTabContent">
-                    @component('components.datatable')
-                        @slot('thead')
-                          <tr>
-                            <th>訊息名稱</th>
-                            <th>內容</th>
-                            {{-- <th>對象</th> --}}
-                            <th>媒介</th>
-                            <th id="th_count"></th>
-                            <th id="th_time" name="col_time"></th>
-                            <th name="col_btn"></th>
-                            <th class="d-none"></th>
-                          </tr>
-                        @endslot
-                        @slot('tbody')
-                          @foreach($msg as $key => $data )
-                          <tr href="{{ route('message_data', ['id' => $data['id']]) }}">
-                          {{-- <tr> --}}
-                            <td>{{ $data['name'] }}</td>
-                            <td>{{ $data['content'] }}</td>
-                            {{-- <td>{{ $data['id_student_group'] }}</td> --}}
-                            <td>{{ $data['type'] }}</td>
-                            <td>{{ $data['count_sender'] }}</td>
-                            <td name="col_time">{{ $data['send_at'] }}</td>
-                            <td name="col_btn">
-                              <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
-                              <a role="button" class="btn btn-danger btn-sm mx-1 text-white">刪除</a>
-                            </td>
-                            <td class="d-none"> {{ $data['id_status'] }}</td>
-                          </tr>
-                          @endforeach
-                        @endslot
-                      @endcomponent
-                    {{-- <div class="tab-pane fade show active" id="reserve" role="tabpanel" aria-labelledby="reserve-tab">
-                      @component('components.datatable')
-                        @slot('thead')
-                          <tr>
-                            <th>傳送時間</th>
-                            <th>訊息名稱</th>
-                            <th>內容</th>
-                            <th>媒介</th>
-                            <th>傳送人數</th>
-                            <th>簡訊費用</th>
-                            <th>報名人數</th>
-                            <th>報名成本</th>
-                            <th>報名率</th>
-                          </tr>
-                        @endslot
-                        @slot('tbody')
-                          @foreach($reserve as $key => $data )
-                          <tr>
-                            <td> {{ $data['send_at'] }}</td>
-                            <td> {{ $data['title'] }}</td>
-                            <td> {{ $data['content'] }}</td>
-                            <td> {{ $data['type'] }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                          </tr>
-                          @endforeach
-                        @endslot
-                      @endcomponent
-                    </div>
-                    <div class="tab-pane fade" id="draft" role="tabpanel" aria-labelledby="draft-tab">
-                      @component('components.datatable')
-                        @slot('thead')
-                          <tr>
-                            <th>傳送時間</th>
-                            <th>訊息名稱</th>
-                            <th>內容</th>
-                            <th>媒介</th>
-                            <th>傳送人數</th>
-                            <th>簡訊費用</th>
-                            <th>報名人數</th>
-                            <th>報名成本</th>
-                            <th>報名率</th>
-                          </tr>
-                        @endslot
-                        @slot('tbody')
-                          @foreach($draft as $key => $data )
-                          <tr>
-                            <td> {{ $data['send_at'] }}</td>
-                            <td> {{ $data['title'] }}</td>
-                            <td> {{ $data['content'] }}</td>
-                            <td> {{ $data['type'] }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                          </tr>
-                          @endforeach
-                        @endslot
-                      @endcomponent
-                    </div>
-                    <div class="tab-pane fade" id="sent" role="tabpanel" aria-labelledby="sent-tab">
-                      @component('components.datatable')
-                        @slot('thead')
-                          <tr>
-                            <th>傳送時間</th>
-                            <th>訊息名稱</th>
-                            <th>內容</th>
-                            <th>媒介</th>
-                            <th>傳送人數</th>
-                            <th>簡訊費用</th>
-                            <th>報名人數</th>
-                            <th>報名成本</th>
-                            <th>報名率</th>
-                          </tr>
-                        @endslot
-                        @slot('tbody')
-                          @foreach($sent as $key => $data )
-                          <tr>
-                            <td> {{ $data['send_at'] }}</td>
-                            <td> {{ $data['title'] }}</td>
-                            <td> {{ $data['content'] }}</td>
-                            <td> {{ $data['type'] }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                          </tr>
-                          @endforeach
-                        @endslot
-                      @endcomponent
-                    </div> --}}
-                  </div>
-                {{-- </div>
+            </nav>
+            <div class="tab-content" id="myTabContent">
+              @component('components.datatable')
+                  @slot('thead')
+                    <tr>
+                      <th>訊息名稱</th>
+                      <th>內容</th>
+                      {{-- <th>對象</th> --}}
+                      <th>媒介</th>
+                      <th id="th_count"></th>
+                      <th id="th_time" name="col_time"></th>
+                      <th name="col_btn"></th>
+                      <th class="d-none"></th>
+                    </tr>
+                  @endslot
+                  @slot('tbody')
+                    @foreach($msg as $key => $data )
+                    <tr href="{{ route('message_data', ['id' => $data['id']]) }}">
+                    {{-- <tr> --}}
+                      <td>{{ $data['name'] }}</td>
+                      <td class="ellipsis">{{ $data['content'] }}</td>
+                      {{-- <td>{{ $data['id_student_group'] }}</td> --}}
+                      <td>{{ $data['type'] }}</td>
+                      <td>{{ $data['count_sender'] }}</td>
+                      <td name="col_time">{{ $data['send_at'] }}</td>
+                      <td name="col_btn">
+                        <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
+                        <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
+                      </td>
+                      <td class="d-none"> {{ $data['id_status'] }}</td>
+                    </tr>
+                    @endforeach
+                  @endslot
+                @endcomponent
+              {{-- <div class="tab-pane fade show active" id="reserve" role="tabpanel" aria-labelledby="reserve-tab">
+                @component('components.datatable')
+                  @slot('thead')
+                    <tr>
+                      <th>傳送時間</th>
+                      <th>訊息名稱</th>
+                      <th>內容</th>
+                      <th>媒介</th>
+                      <th>傳送人數</th>
+                      <th>簡訊費用</th>
+                      <th>報名人數</th>
+                      <th>報名成本</th>
+                      <th>報名率</th>
+                    </tr>
+                  @endslot
+                  @slot('tbody')
+                    @foreach($reserve as $key => $data )
+                    <tr>
+                      <td> {{ $data['send_at'] }}</td>
+                      <td> {{ $data['title'] }}</td>
+                      <td> {{ $data['content'] }}</td>
+                      <td> {{ $data['type'] }}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    @endforeach
+                  @endslot
+                @endcomponent
+              </div>
+              <div class="tab-pane fade" id="draft" role="tabpanel" aria-labelledby="draft-tab">
+                @component('components.datatable')
+                  @slot('thead')
+                    <tr>
+                      <th>傳送時間</th>
+                      <th>訊息名稱</th>
+                      <th>內容</th>
+                      <th>媒介</th>
+                      <th>傳送人數</th>
+                      <th>簡訊費用</th>
+                      <th>報名人數</th>
+                      <th>報名成本</th>
+                      <th>報名率</th>
+                    </tr>
+                  @endslot
+                  @slot('tbody')
+                    @foreach($draft as $key => $data )
+                    <tr>
+                      <td> {{ $data['send_at'] }}</td>
+                      <td> {{ $data['title'] }}</td>
+                      <td> {{ $data['content'] }}</td>
+                      <td> {{ $data['type'] }}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    @endforeach
+                  @endslot
+                @endcomponent
+              </div>
+              <div class="tab-pane fade" id="sent" role="tabpanel" aria-labelledby="sent-tab">
+                @component('components.datatable')
+                  @slot('thead')
+                    <tr>
+                      <th>傳送時間</th>
+                      <th>訊息名稱</th>
+                      <th>內容</th>
+                      <th>媒介</th>
+                      <th>傳送人數</th>
+                      <th>簡訊費用</th>
+                      <th>報名人數</th>
+                      <th>報名成本</th>
+                      <th>報名率</th>
+                    </tr>
+                  @endslot
+                  @slot('tbody')
+                    @foreach($sent as $key => $data )
+                    <tr>
+                      <td> {{ $data['send_at'] }}</td>
+                      <td> {{ $data['title'] }}</td>
+                      <td> {{ $data['content'] }}</td>
+                      <td> {{ $data['type'] }}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    @endforeach
+                  @endslot
+                @endcomponent
               </div> --}}
-            {{-- </div> --}}
-          </div>
+            </div>
+          {{-- </div>
+        </div> --}}
+      {{-- </div> --}}
+    </div>
+  </div>
+
+  <!-- 排成設定Modal -->
+  <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">排成傳送</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <h4>選擇日期和時間</h4>
 
-        <!-- 排成設定Modal -->
-        <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">排成傳送</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-               <h4>選擇日期和時間</h4>
-
-                <div class="form-group">
-                  <div class='input-group date' id='datetimepicker1' data-target-input='nearest'>
-                    <input type='text' id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker1" name="params['start_time']" />
-                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" id="saveScheduleBtn" class="btn btn-secondary" data-dismiss="modal">確定排程</button>
-                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          <div class="form-group">
+            <div class='input-group date' id='datetimepicker1' data-target-input='nearest'>
+              <input type='text' id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker1" name="params['start_time']" />
+              <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>
             </div>
           </div>
+
         </div>
+        <div class="modal-footer">
+          <button type="button" id="saveScheduleBtn" class="btn btn-secondary" data-dismiss="modal">確定排程</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Content End -->
 
@@ -303,6 +303,14 @@
   }
   table tr {
       cursor: pointer;
+  }
+  
+  /* datatable內容欄位的... */
+  .ellipsis {
+    max-width: 100px;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 </style>
 
@@ -462,7 +470,14 @@
         "dom": '<l<t>p>',
         // "ordering": false,
         "autoWidth": false,
-        "order": [ 4 , 'desc']
+        "order": [ 4 , 'desc'],
+        drawCallback: function(){
+          //換頁或切換每頁筆數按鈕觸發
+          $('.paginate_button, .dataTables_length', this.api().table().container()).on('click', function(){
+              var active = $("div#nav-tab a.active").attr('id');
+              console.log(active);
+          });       
+        }
     });
     
     table
@@ -508,7 +523,6 @@
     $('[name="col_btn"]').show();
     $('#th_time').html('預約時間');
     $('#th_count').html('預約傳送人數');
-
   })
 
   //已預約分頁
@@ -554,6 +568,48 @@
     });
   });
 
+
+
+  // 刪除 Sandy(2020/04/21) 
+  function btn_delete(id_message){
+    var msg = "是否刪除此訊息?";
+
+    if (confirm(msg)==true){
+      $.ajax({
+          type : 'POST',
+          url:'message_list_delete', 
+          // dataType: 'json',    
+          data:{
+            id_message: id_message,
+          },
+          success:function(res){
+            if ( res == 'success' ) {                           
+              alert('刪除草稿成功！')
+              /** alert **/
+              // $("#success_alert_text").html("刪除課程成功");
+              // fade($("#success_alert"));
+
+              location.reload();
+            }　else {
+              // alert('刪除失敗！！')
+
+              /** alert **/ 
+              $("#error_alert_text").html("刪除草稿失敗");
+              fade($("#error_alert"));       
+            }           
+          },
+          error: function(res){
+            console.log(JSON.stringify(res));   
+
+            /** alert **/ 
+            $("#error_alert_text").html("刪除草稿失敗");
+            fade($("#error_alert"));       
+          }
+      });
+    }else{
+      return false;
+    }    
+  }
 </script>
 
 

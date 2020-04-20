@@ -20,20 +20,44 @@ class MessageController extends Controller
         $message = Message::where('id', $id)->first();
         $sender = Sender::where('id_message', $id)->get();
 
-        // foreach( $sender as $data){
-        //     if($data['phone'] != ""){
-        //         $phone = array_push($phone, $data['phone']);
-        //     }else{
-        //         $email = array_push($email);
-        //     }
-        // }
+        $phone = [];
+        $email = [];
+
+        if($message['type'] == 0 || $message['type'] == 2){
+            foreach( $sender as $data){
+                if($data['phone'] != ""){
+                    array_push($phone, $data['phone']);
+                }
+            }
+        }
+
+        if($message['type'] == 1 || $message['type'] == 2){
+            foreach( $sender as $data){
+                if($data['email'] != ""){
+                    array_push($email, $data['email']);
+                }
+            }
+        }
+
+        $sender_phone = '';
+        $sender_email = '';
+
+        if(!empty($phone)){
+            $sender_phone = implode(',', $phone);
+        }
+        if(!empty($email)){
+            $sender_email = implode(',', $email);
+        }
+
+        // $message = [
+
+        // ];
 
         $course = Course::all();
 
         $teacher = Teacher::all();
 
-
-        return view('frontend.message', compact('course', 'teacher'));
+        return view('frontend.message', compact('course', 'teacher', 'message', 'sender_phone', 'sender_email'));
     }
 
     // // 登入

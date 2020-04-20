@@ -427,11 +427,12 @@ class CourseListController extends Controller
 
                 $id_student = "0";
                 $id_SalesRegistration = "0";
-            }else if( $type == 4 ){
-                /* 活動 */
+            }
+            // else if( $type == 4 ){
+            //     /* 活動 */
 
                 
-            }
+            // }
 
             if ($id_student != "" && $id_course != "" && $id_events != "" && $id_SalesRegistration != "") {
                 return redirect('course_list')->with('status', '匯入成功');

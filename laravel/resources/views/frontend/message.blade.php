@@ -12,18 +12,26 @@
         <div class="card m-3">
           <div class="card-body">
             <form style="padding: 10px 50px;">
-
+              <input type="hidden" id="id_message" value="{{ $message['id'] }}">
               <div class="form-group">
                 <label>發送方式</label>
                 <div class="d-block">
                   <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="messageCheckBox">
+                    @if( $message['type'] != "" && $message['type'] == 0 || $message['type'] == 2)
+                      <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="messageCheckBox" checked>
+                    @else
+                      <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="messageCheckBox">
+                    @endif
                     <label class="custom-control-label" for="messageCheckBox">簡訊</label>
                     {{-- <input type="checkbox" id="messageCheckBox">
                     <label class="form-check-label" for="messageCheckBox">簡訊</label> --}}
                   </div>
                   <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" id="mailCheckBox" name="mailCheckBox">
+                    @if($message['type'] == 1 || $message['type'] == 2)
+                      <input type="checkbox" class="custom-control-input" id="mailCheckBox" name="mailCheckBox" checked>
+                    @else
+                      <input type="checkbox" class="custom-control-input" id="mailCheckBox" name="mailCheckBox">
+                    @endif
                     <label class="custom-control-label" for="mailCheckBox">E-mail</label>
                     {{-- <input type="checkbox" id="mailCheckBox">
                     <label class="form-check-label" for="mailCheckBox">E-mail</label> --}}
@@ -34,7 +42,7 @@
 
               <div class="form-group">
                 <label for="receiverPhone">訊息名稱</label>
-                <input type="text" class="form-control" id="msgTitle" name="msgTitle" placeholder="請輸入訊息名稱 ...">
+                <input type="text" class="form-control" id="msgTitle" name="msgTitle" placeholder="請輸入訊息名稱 ..." value="{{ $message['name'] }}">
               </div>
 
               <div class="form-group">
@@ -42,7 +50,11 @@
                 <select class="custom-select" id="msgTeacher" name="msgTeacher">
                   <option selected value="">選擇講師</option>
                   @foreach($teacher as $data)
-                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                    @if( $message['id_teacher'] == $data['id'] )
+                      <option value="{{ $data['id'] }}" selected>{{ $data['name'] }}</option>
+                    @else
+                      <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                    @endif
                   @endforeach
                 </select>
               </div>
@@ -52,7 +64,11 @@
                 <select class="custom-select" id="msgCourse" name="msgCourse">
                   <option selected value="">選擇課程</option>
                   @foreach($course as $data)
-                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                    @if( $message['id_course'] == $data['id'] )
+                      <option value="{{ $data['id'] }}" selected>{{ $data['name'] }}</option>
+                    @else
+                      <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                    @endif
                   @endforeach
                 </select>
               </div>
@@ -67,28 +83,28 @@
               <div class="form-group">
                 <label for="receiverPhone">收件者手機號碼</label>
                 <!-- <input id="receiverPhoneMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#messageModal"> -->
-                <input type="text" class="form-control" id="receiverPhone" name="receiverPhone" placeholder="請輸入收件者手機號碼 ..." >
+                <input type="text" class="form-control" id="receiverPhone" name="receiverPhone" placeholder="請輸入收件者手機號碼 ..." value="{{ $sender_phone }}">
                 <small id="phoneNumber" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
 
               <div class="form-group">
                 <label for="receiverEmail">收件者 E-mail</label>
                 <!-- <input id="receiverEmailMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#mailModal"> -->
-                <input type="email" class="form-control" id="receiverEmail" name="receiverEmail" placeholder="請輸入收件者 E-mail ...">
+                <input type="email" class="form-control" id="receiverEmail" name="receiverEmail" placeholder="請輸入收件者 E-mail ..." value="{{ $sender_email }}">
                 <small id="" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
 
 
               <div class="form-group">
                 <label for="emailTitle">E-mail 標題</label>
-                <input type="text" class="form-control" id="emailTitle" name="emailTitle" placeholder="請輸入E-mail標題 ...">
+                <input type="text" class="form-control" id="emailTitle" name="emailTitle" placeholder="請輸入E-mail標題 ..." value="{{ $message['title'] }}">
                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
               </div>
 
               <!-- ckeditor -->
               <div class="form-group">
                 <label for="emailTitle">內容</label>
-                <textarea name="transfer" id="content" rows="10" cols="80"></textarea>
+                <textarea name="transfer" id="content" rows="10" cols="80" value=""></textarea>
               </div>
 
               <div class="d-flex mt-5">
@@ -315,23 +331,23 @@ $(document).ready(function () {
   $('#messageCheckBox').on('click', function() {
     if( $(this).is(':checked') && $('#mailCheckBox').prop('checked') == false) {
       // 簡訊方式開始
-      $('#msgTitle').attr('disabled', false);
+      // $('#msgTitle').attr('disabled', false);
       $('#receiverPhone').attr('disabled', false);
       $('#receiverEmail').attr('disabled', 'disabled');
       $('#emailTitle').attr('disabled', 'disabled');
     } else if ( $('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == false)) {
-        $('#msgTitle').attr('disabled', 'disabled');
+        // $('#msgTitle').attr('disabled', 'disabled');
         $('#receiverPhone').attr('disabled', 'disabled');
         $('#receiverEmail').attr('disabled', false);
         $('#emailTitle').attr('disabled', false);
     } else if($('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == true)) {
-      $('#msgTitle').attr('disabled', false);
+      // $('#msgTitle').attr('disabled', false);
       $('#receiverPhone').attr('disabled', false);
       $('#receiverEmail').attr('disabled', false);
       $('#emailTitle').attr('disabled', false);
     }else {
       // 簡訊方式隱藏
-      $('#msgTitle').attr('disabled', 'disabled');
+      // $('#msgTitle').attr('disabled', 'disabled');
       $('#receiverPhone').attr('disabled', 'disabled');
       $('#receiverEmail').attr('disabled', 'disabled');
       $('#emailTitle').attr('disabled', 'disabled');
@@ -342,25 +358,25 @@ $(document).ready(function () {
   $('#mailCheckBox').on('click', function() {
     if( $(this).is(':checked') && $('#messageCheckBox').prop('checked') == false ) {
       // Email方式開始，title隱藏
-      $('#msgTitle').attr('disabled', 'disabled');
+      // $('#msgTitle').attr('disabled', 'disabled');
       $('#receiverPhone').attr('disabled', 'disabled');
       $('#receiverEmail').attr('disabled', false);
       $('#emailTitle').attr('disabled', false);
     } else if ( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == false) ) {
       // Email方式開始、title開啟
-      $('#msgTitle').attr('disabled', false);
+      // $('#msgTitle').attr('disabled', false);
       $('#receiverPhone').attr('disabled', false);
       $('#receiverEmail').attr('disabled', 'disabled');
       $('#emailTitle').attr('disabled', 'disabled');
 
     } else if( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == true) ) {
-      $('#msgTitle').attr('disabled', false);
+      // $('#msgTitle').attr('disabled', false);
       $('#receiverPhone').attr('disabled', false);
       $('#receiverEmail').attr('disabled', false);
       $('#emailTitle').attr('disabled', false);
     }else {
       // Email方式隱藏
-      $('#msgTitle').attr('disabled', 'disabled');
+      // $('#msgTitle').attr('disabled', 'disabled');
       $('#receiverPhone').attr('disabled', 'disabled');
       $('#receiverEmail').attr('disabled', 'disabled');
       $('#emailTitle').attr('disabled', 'disabled');
@@ -387,6 +403,12 @@ $(document).ready(function () {
 
 
   $('#draftBtn').on('click', function(e) {
+    if( $('#msgTitle').val() == "" ){
+      alert('請填入訊息名稱');
+      return false;
+    }
+
+    var id_message = $('#id_message').val();
     var content = editor.getData().replace(new RegExp("<p>", "g"),"");
     content = content.replace(new RegExp("</p>", "g"), "\n");
     content = content.replace(new RegExp("&nbsp;", "g"), " ");
@@ -397,6 +419,7 @@ $(document).ready(function () {
       type: "POST",
       url: "draftInsert",
       data: {
+        id_message: id_message,
         mailCheckBox: $('#mailCheckBox').prop("checked"),
         messageCheckBox: $('#messageCheckBox').prop("checked"),
         name: $('#msgTitle').val(),
@@ -411,10 +434,13 @@ $(document).ready(function () {
     }).done(function(res) {
       console.log(res);
 
-      if( res == 'success' ){
+      if( res['status'] == 'success' ){
         /** alert **/
         $("#success_alert_text").html("儲存草稿成功");
         fade($("#success_alert"));
+
+        setTimeout(window.location.href = "{{URL::to('message')}}", 5000);
+        
       }else{
         /** alert **/ 
         $("#error_alert_text").html("儲存草稿失敗");
@@ -542,9 +568,22 @@ $(document).ready(function () {
 
   /* 初始化 */
   function init() {
-    $('#msgTitle').attr('disabled', 'disabled');
-    $('#receiverPhone').attr('disabled', 'disabled');
-    $('#receiverEmail').attr('disabled', 'disabled');
+    // $('#msgTitle').attr('disabled', 'disabled');
+    // 判斷類型決定是否開啟電話跟信箱input(草稿用)
+    var type = '<?php echo $message["type"]; ?>'
+
+    if( type != "" && type == 0 || type == 2){
+      $('#receiverPhone').attr('disabled', false);
+    }else{
+      $('#receiverPhone').attr('disabled', 'disabled');
+    }
+    
+    if( type != "" && type == 1 || type == 2){
+      $('#receiverEmail').attr('disabled', false);
+    }else{
+      $('#receiverEmail').attr('disabled', 'disabled');
+    }
+
     $('#emailTitle').attr('disabled', 'disabled');
 
     ClassicEditor.create(document.querySelector("#content"), {
@@ -556,6 +595,9 @@ $(document).ready(function () {
     .catch(err => {
       console.error(err.stack);
     });
+
+    var content = '<?php echo str_replace("\n","<br>", $message["content"]); ?>';
+    $('#content').val(content);
   }
 
 
