@@ -294,6 +294,11 @@
   var array_upate_studentid = new Array();
   //  $('select').selectpicker();
   $("document").ready(function() {
+    // 查看條件 - 預設顯示 Rocky(2020/04/21)
+    $('#model_show_log').collapse({
+      show: true
+    })
+
     array_old_studentid = JSON.parse($('#data_groupdetail').val())
     // 顯示資料
     show(JSON.parse($('#data_groupdetail').val()), 'show')

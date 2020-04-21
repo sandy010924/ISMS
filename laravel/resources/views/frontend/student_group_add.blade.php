@@ -314,8 +314,10 @@
   var check_condition2 = 0,
     check_condition3 = 0;
   $("document").ready(function() {
-    //  // 顯示細分條件資料 Rocky(2020/03/14)
-    //  show_requirement();
+    // 查看條件 - 預設顯示 Rocky(2020/04/21)
+    $('#model_show_log').collapse({
+      show: true
+    })
 
     // 課程多選 Rocky(2020/03/14)
     $("#select_course").selectpicker({

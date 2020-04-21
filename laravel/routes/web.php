@@ -254,7 +254,8 @@ Route::post('contact_data_save', 'Backend\StudentController@updatedata');
 Route::post('history_data', 'Frontend\StudentController@historydata');
 /*** 完整內容-儲存 Rocky(2020/03/07) ***/
 Route::post('student_save', 'Backend\StudentController@save');
-
+/*** 完整內容-聯絡狀況-刪除 Rocky(2020/04/21) ***/
+Route::post('debt_show', 'Frontend\StudentController@debtshow');
 
 /*** [學員管理] 黑名單 ***/
 /*** 顯示資料 Rocky(2020/02/23) ***/
