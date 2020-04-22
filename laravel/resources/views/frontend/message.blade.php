@@ -13,14 +13,14 @@
           <div class="card-body">
             <form style="padding: 10px 50px;">
               <input type="hidden" id="id_message" value="{{ $message['id'] }}">
-              <div class="form-group">
-                <label>發送方式</label>
+              <div class="form-group required">
+                <label class="col-form-label">發送方式</label>
                 <div class="d-block">
                   <div class="custom-control custom-checkbox custom-control-inline">
                     @if( $message['type'] != "" && $message['type'] == 0 || $message['type'] == 2)
-                      <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="messageCheckBox" checked>
+                      <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="sendCheckBox" value="sms" checked>
                     @else
-                      <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="messageCheckBox">
+                      <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="sendCheckBox" value="sms">
                     @endif
                     <label class="custom-control-label" for="messageCheckBox">簡訊</label>
                     {{-- <input type="checkbox" id="messageCheckBox">
@@ -28,9 +28,9 @@
                   </div>
                   <div class="custom-control custom-checkbox custom-control-inline">
                     @if($message['type'] == 1 || $message['type'] == 2)
-                      <input type="checkbox" class="custom-control-input" id="mailCheckBox" name="mailCheckBox" checked>
+                      <input type="checkbox" class="custom-control-input" id="mailCheckBox" name="sendCheckBox" value="email" checked>
                     @else
-                      <input type="checkbox" class="custom-control-input" id="mailCheckBox" name="mailCheckBox">
+                      <input type="checkbox" class="custom-control-input" id="mailCheckBox" name="sendCheckBox" value="email">
                     @endif
                     <label class="custom-control-label" for="mailCheckBox">E-mail</label>
                     {{-- <input type="checkbox" id="mailCheckBox">
@@ -40,13 +40,13 @@
                 <small id="emailHelp" class="form-text " style="color:red;">若選擇簡訊發送、簡訊及Email發送皆只能輸入純文字(不可包含圖片及表格)。只有選擇Email發送才可使用圖片及表格。</small>
               </div>
 
-              <div class="form-group">
-                <label for="receiverPhone">訊息名稱</label>
+              <div class="form-group required">
+                <label class="col-form-label" for="receiverPhone">訊息名稱</label>
                 <input type="text" class="form-control" id="msgTitle" name="msgTitle" placeholder="請輸入訊息名稱 ..." value="{{ $message['name'] }}">
               </div>
 
               <div class="form-group">
-                <label for="receiverPhone">講師選擇</label>
+                <label class="col-form-label" for="receiverPhone">講師選擇</label>
                 <select class="custom-select" id="msgTeacher" name="msgTeacher">
                   <option selected value="">選擇講師</option>
                   @foreach($teacher as $data)
@@ -60,7 +60,7 @@
               </div>
 
               <div class="form-group">
-                <label for="receiverPhone">課程選擇</label>
+                <label class="col-form-label" for="receiverPhone">課程選擇</label>
                 <select class="custom-select" id="msgCourse" name="msgCourse">
                   <option selected value="">選擇課程</option>
                   @foreach($course as $data)
@@ -74,21 +74,21 @@
               </div>
 
               <div class="form-group">
-                <label for="">發送對象</label>
+                <label class="col-form-label" for="">發送對象</label>
                 <div>
                   <input id="groupDetailBtn" type="button" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="receiverPhone">收件者手機號碼</label>
+                <label class="col-form-label" for="receiverPhone">收件者手機號碼</label>
                 <!-- <input id="receiverPhoneMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#messageModal"> -->
                 <input type="text" class="form-control" id="receiverPhone" name="receiverPhone" placeholder="請輸入收件者手機號碼 ..." value="{{ $sender_phone }}">
                 <small id="phoneNumber" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
 
               <div class="form-group">
-                <label for="receiverEmail">收件者 E-mail</label>
+                <label class="col-form-label" for="receiverEmail">收件者 E-mail</label>
                 <!-- <input id="receiverEmailMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#mailModal"> -->
                 <input type="email" class="form-control" id="receiverEmail" name="receiverEmail" placeholder="請輸入收件者 E-mail ..." value="{{ $sender_email }}">
                 <small id="" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
@@ -96,14 +96,14 @@
 
 
               <div class="form-group">
-                <label for="emailTitle">E-mail 標題</label>
+                <label class="col-form-label" for="emailTitle">E-mail 標題</label>
                 <input type="text" class="form-control" id="emailTitle" name="emailTitle" placeholder="請輸入E-mail標題 ..." value="{{ $message['title'] }}">
                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
               </div>
 
               <!-- ckeditor -->
-              <div class="form-group">
-                <label for="emailTitle">內容</label>
+              <div class="form-group required">
+                <label class="col-form-label" for="emailTitle">內容</label>
                 <textarea name="transfer" id="content" rows="10" cols="80" value=""></textarea>
               </div>
 
@@ -387,24 +387,9 @@ $(document).ready(function () {
   // 立即傳送
   $('#sendMessageBtn').on('click', function(e) {
     e.preventDefault();
-    if ($('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked')) {
-      // 兩者都發送
-      messageApiType();
-      mailApi();
-    } else if( ($('#messageCheckBox').prop('checked') == true) && ($('#mailCheckBox').prop('checked') == false) ) {
-      // 只發送簡訊
-      messageApiType();
-    } else if( ($('#messageCheckBox').prop('checked') == false) && ($('#mailCheckBox').prop('checked') == true) ) {
-      // 只發送mail
-      mailApi();
-    }
-
-  });
-
-
-  $('#draftBtn').on('click', function(e) {
-    if( $('#msgTitle').val() == "" ){
-      alert('請填入訊息名稱');
+    
+    if( $('#msgTitle').val() == "" || editor.getData() == "" || ($('#mailCheckBox').prop("checked") == false && $('#messageCheckBox').prop("checked") == false) ){
+      alert('請勾選至少一項發送方式，並填入訊息名稱、內容。');
       return false;
     }
 
@@ -414,14 +399,101 @@ $(document).ready(function () {
     content = content.replace(new RegExp("&nbsp;", "g"), " ");
     var emailAddr = $('#receiverEmail').val();
     var phoneAddr = $('#receiverPhone').val();
+    var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+      return $(this).val();
+    }).get();
 
+    $.ajax({
+        type:'POST',
+        url:'message_insert',
+        data:{
+          id_message: id_message,
+          sendCheckBox: sendCheckBox,
+          name: $('#msgTitle').val(),
+          id_teacher: $('#msgTeacher').val(),
+          id_course: $('#msgCourse').val(),
+          phoneNumber: phoneAddr.split(","),
+          emailAddr: emailAddr.split(","),
+          // emailAddrLen: emailAddr.split(",").length,
+          emailTitle: $('#emailTitle').val(),
+          content: content
+        },
+        success:function(res){
+          console.log(res);  
+          if( res['status'] == 'success' ){
+            /** alert **/ 
+            $("#success_alert_text").html("寄送成功。");
+            fade($("#success_alert"));    
+            
+            $('button').prop('disabled', 'disabled');
+            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+          }else if( res['status'] == 'success' && res['AccountPoint'] != ''){
+            /** alert **/
+            $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
+            fade($("#success_alert"));
+
+            $('button').prop('disabled', 'disabled');
+            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+          }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
+            /** alert **/ 
+            $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
+            fade($("#error_alert"));    
+          }else if( res['status'] == 'error' ){
+            /** alert **/ 
+            $("#error_alert_text").html("寄送失敗。");
+            fade($("#error_alert"));    
+          }
+
+        },
+        error: function(jqXHR, textStatus, errorMessage){
+            console.log("error: "+ errorMessage);    
+        }
+      });
+
+
+
+
+
+    // if ($('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked')) {
+    //   // 兩者都發送
+    //   messageApiType();
+    //   mailApi();
+    // } else if( ($('#messageCheckBox').prop('checked') == true) && ($('#mailCheckBox').prop('checked') == false) ) {
+    //   // 只發送簡訊
+    //   messageApiType();
+    // } else if( ($('#messageCheckBox').prop('checked') == false) && ($('#mailCheckBox').prop('checked') == true) ) {
+    //   // 只發送mail
+    //   mailApi();
+    // }
+
+  });
+
+
+  $('#draftBtn').on('click', function(e) {
+
+    if( $('#msgTitle').val() == "" || editor.getData() == "" || ($('#mailCheckBox').prop("checked") == false && $('#messageCheckBox').prop("checked") == false) ){
+      alert('請勾選至少一項發送方式，並填入訊息名稱、內容。');
+      return false;
+    }
+
+    var id_message = $('#id_message').val();
+    var content = editor.getData().replace(new RegExp("<p>", "g"),"");
+    content = content.replace(new RegExp("</p>", "g"), "\n");
+    content = content.replace(new RegExp("&nbsp;", "g"), " ");
+    var emailAddr = $('#receiverEmail').val();
+    var phoneAddr = $('#receiverPhone').val();
+    var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+      return $(this).val();
+    }).get();
+    
     $.ajax({
       type: "POST",
       url: "draftInsert",
       data: {
         id_message: id_message,
-        mailCheckBox: $('#mailCheckBox').prop("checked"),
-        messageCheckBox: $('#messageCheckBox').prop("checked"),
+        // mailCheckBox: $('#mailCheckBox').prop("checked"),
+        // messageCheckBox: $('#messageCheckBox').prop("checked"),
+        sendCheckBox: sendCheckBox,
         name: $('#msgTitle').val(),
         id_teacher: $('#msgTeacher').val(),
         id_course: $('#msgCourse').val(),
@@ -548,7 +620,18 @@ $(document).ready(function () {
 
   /* Email發送 */
   function mailApi() {
+    
     var emailAddr = $('#receiverEmail').val();
+    var arrEmail = emailAddr.split(",");
+    var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+    for(var i = 0; i < arrEmail.length ;i++){
+      if(!regex.test(arrEmail[i])) {
+        alert('請輸入正確的電子信箱格式');
+        return false;
+      }
+    }
+
     var emailContent = editor.getData().replace(new RegExp("<p>", "g"),"");
     emailContent = emailContent.replace(new RegExp("</p>", "g"), "\n");
     emailContent = emailContent.replace(new RegExp("&nbsp;", "g"), " ");

@@ -330,6 +330,9 @@ Route::get('finance_return', function () {
 /*** [訊息推播] ***/
 Route::get('message', 'Frontend\MessageController@show')->name('message');
 
+/*** [立即傳送] ***/
+Route::post('message_insert', 'Backend\MessageController@insert');
+
 /*** [儲存草稿] ***/
 Route::post('draftInsert', 'Backend\MessageController@insert_draft');
 
