@@ -217,10 +217,10 @@ class StudentController extends Controller
                                         WHEN register.id_status = 3 THEN "正課未到"
                                         WHEN register.id_status = 4 THEN "正課報到"
                                         WHEN register.id_status = 5 THEN "正課取消"
-                                        WHEN registration.status_payment = 6 THEN "留單"
-                                        WHEN registration.status_payment = 7 THEN "完款"
-                                        WHEN registration.status_payment = 8 THEN "付訂"
-                                        WHEN registration.status_payment = 9 THEN "退費"
+                                        WHEN registration.status_payment = 6 THEN "正課留單"
+                                        WHEN registration.status_payment = 7 THEN "正課完款"
+                                        WHEN registration.status_payment = 8 THEN "正課付訂"
+                                        WHEN registration.status_payment = 9 THEN "正課退費"
                                     END as status_sales')
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
