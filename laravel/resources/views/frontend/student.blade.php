@@ -306,9 +306,7 @@
                       <th class="text-nowrap">
                         <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#save_contact"><i class="fa fa-plus" aria-hidden="true"></i></button>
                       </th>
-                      <th class="text-nowrap">
-
-                      </th>
+                      <th class="text-nowrap"></th>
                       <th class="text-nowrap">日期</th>
                       <th class="text-nowrap">追單課程</th>
                       <th class="text-nowrap">付款狀態/日期</th>
@@ -1094,7 +1092,7 @@
 
               data +=
                 '<tr>' +
-                '<td><i class="fa fa-comment" aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 20%;"></i></td>' +
+                '<td><i class="fa fa-address-card" aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 20%;"></i></td>' +
                 '<td><i class="fa fa-trash" aria-hidden="true" onclick="debt_delete(' + id + ');" style="cursor:pointer;padding-top: 40%; color:#eb6060"></i></td>' +
                 '<td>' +
                 '<div class="input-group date show_datetime" id="new_starttime' + id + '" data-target-input="nearest"> ' +
@@ -1291,7 +1289,6 @@
             id: id
           },
           success: function(data) {
-            console.log(data[0])
             $("#lbl_debt_date").text(data[0]['created_at']);
             $("#lbl_debt_course").text(data[0]['name_course']);
             $("#lbl_debt_status_date").text(data[0]['status_payment']);
