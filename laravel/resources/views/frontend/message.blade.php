@@ -481,12 +481,14 @@ $(document).ready(function () {
 
   /* 單筆簡訊發送 */
   function messageApi(msgContent) {
+    var id_message = $('#id_message').val();
     
     $.ajax({
       type: "POST",
       url: "messageApi",
       data: {
         // messageTitle: '訊息名稱',
+        id_message: id_message,
         messageContents: msgContent,
         phoneNumber: $('#receiverPhone').val(),
         name: $('#msgTitle').val(),
@@ -500,6 +502,8 @@ $(document).ready(function () {
         /** alert **/
         $("#success_alert_text").html("發送簡訊成功，餘額尚有" + res['AccountPoint'] + "。");
         fade($("#success_alert"));
+
+        setTimeout(window.location.href = "{{URL::to('message')}}", 5000);
       }else if( res['status'] == 'error' ){
         /** alert **/ 
         $("#error_alert_text").html("發送簡訊失敗，" + res['msg'] + "。");

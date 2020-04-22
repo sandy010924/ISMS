@@ -337,10 +337,11 @@ Route::post('draftInsert', 'Backend\MessageController@insert_draft');
 Route::post('messageDetailGroup', 'Backend\MessageController@showDetailGroup')->name('messageDetailGroup');
 
 /*** [訊息推播] 訊息列表 ***/
-// Route::get('message_list', function () {
-//     return view('frontend.message_list');
-// })->name('message_list');
 Route::get('message_list', 'Frontend\MessageListController@show')->name('message_list');
+
+/*** [訊息推播] 刪除訊息 ***/
+Route::post('message_list_delete', 'Backend\MessageListController@delete');
+
 
 /*** [訊息推播] 詳細內容 ***/
 // Route::get('message_data', function () {
