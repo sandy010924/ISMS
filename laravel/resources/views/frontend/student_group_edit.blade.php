@@ -25,7 +25,7 @@
             <option value="0">請選擇</option>
             <option value="1">銷講</option>
             <option value="2">正課</option>
-            <option value="3">活動</option>
+            <!-- <option value="3">活動</option> -->
           </select>
         </div>
         <div class="col-3">
@@ -94,7 +94,7 @@
               <option value="0">請選擇</option>
               <option value="1">銷講</option>
               <option value="2">正課</option>
-              <option value="3">活動</option>
+              <!-- <option value="3">活動</option> -->
             </select>
           </div>
           <div class="col-3">
@@ -161,7 +161,7 @@
               <option value="0">請選擇</option>
               <option value="1">銷講</option>
               <option value="2">正課</option>
-              <option value="3">活動</option>
+              <!-- <option value="3">活動</option> -->
             </select>
           </div>
           <div class="col-3">
@@ -228,7 +228,10 @@
     <div class="row">
       <div class="col-12">
         <div class="collapse" id="model_show_log" style="padding-top:15px;">
-          <div class="card card-body" id="show_log">
+          <div class="card card-body">
+            <div id="show_log"></div>
+            <div id="show_orlog"></div>
+            <div id="show_andlog"></div>
           </div>
         </div>
       </div>
@@ -499,9 +502,9 @@
                 </div>
               </div>
             </div>
-          </div>             
+          </div>
         </div>
-          <!-- 聯絡狀況 -->
+        <!-- 聯絡狀況 -->
 
         <!-- 完整內容 - E -->
       </div>
@@ -536,6 +539,9 @@
   var elt = $('#isms_tags');
   var array_studentid = new Array();
   var search_log = '',
+    search_orlog = '',
+    search_show_log = '',
+    or_log = '',
     count_log = 0,
     old_count_log = 0
   var check_condition2 = 0,
@@ -701,7 +707,6 @@
     opt2 = $(log_id[5]).text()
     value = $(log_id[6]).val()
 
-    // log += count_log + '. '
     if (type != "") {
       log += type + '/'
     }
@@ -725,23 +730,34 @@
     }
 
     if (check_condition3 == 1 && condition_id == 1) {
-      tag = "<hr>"
+      tag = "<hr>" + "<h5 style='color: #b83a3a;'>AND</h5>"
+      log = tag + condition_name + ":" + log.slice(0, -1) + "<br>"
+      search_log += log
     } else if (check_condition2 == 1 && condition_id == 1) {
-      tag = "<hr>"
+      tag = "<hr>" + "<h5 style='color: #b83a3a;'>AND</h5>"
+      log = tag + condition_name + ":" + log.slice(0, -1) + "<br>"
+      search_log += log
     } else if (condition_id == 1) {
-      tag = "<hr>"
+      or_log += condition_name + ":" + log.slice(0, -1) + "<br>"
     } else {
       tag = ""
+      log = tag + condition_name + ":" + log.slice(0, -1) + "<br>"
+      search_log += log
     }
-    // log = tag + count_log + " - " + condition_name + ":" + log.slice(0,-1) + "<br>"
-    log = tag + condition_name + ":" + log.slice(0, -1) + "<br>"
-    search_log += log
+
   }
 
   function show_log() {
     if (count_log != 0) {
-      $("#show_log").html('');
-      $("#show_log").html(search_log);
+      search_orlog = ''
+      if (or_log != "") {
+        search_orlog = "<hr>" + "<h5 style='color: #3a7eb8;'>OR</h5>" + or_log
+      }
+      $("#show_orlog").html('');
+      $("#show_orlog").html(search_orlog);
+
+      $("#show_andlog").html('');
+      $("#show_andlog").html(search_log);
     }
   }
   /*條件顯示 - E */
@@ -849,9 +865,9 @@
 
     if (type_show == "show") {
       if (data[0]['condition'] != null) {
-        search_log = data[0]['condition']
+        search_show_log = data[0]['condition']
         $("#show_log").html('');
-        $("#show_log").html(search_log);
+        $("#show_log").html(search_show_log);
       }
 
     }
@@ -880,7 +896,7 @@
             '<td>' + val['datasource'] + '</td>' +
             '<td>' + val['submissiondate'] + '</td>' +
             '<td>' +
-            '<button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + val['id'] +');" > 完整內容 </button>'
+            '<button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + val['id'] + ');" > 完整內容 </button>'
           '</td>' +
           '</tr>'
         }
@@ -1234,13 +1250,13 @@
     });
   }
   /*聯絡狀況 - 顯示 - E*/
-  
+
   /* 完整內容 -E Rocky(2020/02/29 */
   // 儲存資料 Rocky(2020/03/19)
   function update() {
     var name_group = $('#name_group').val()
     var id = $('#id_group').val()
-    var condition = search_log
+    var condition = search_show_log + search_orlog + search_log
     // console.log(id)
     $.ajax({
       type: 'POST',
