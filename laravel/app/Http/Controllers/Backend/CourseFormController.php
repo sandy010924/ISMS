@@ -66,16 +66,19 @@ class CourseFormController extends Controller
             /*電子簽章 - S*/
 
             $sign = '';
+            $submit = $request['submit'];
 
-            $base64Str = str_replace('data:image/png;base64,', '', $request['imgBase64']);
-            $image = base64_decode($base64Str);
-            $saveName = "signature-".time().".".'png';
-            $success = file_put_contents(public_path().'/sign/'.$saveName, $image) ? 'success save' : 'fail save';
-            
-            if( $success == 'success save'){
-                $sign = $saveName;
-            }else{
-                return 'error : sign';
+            if( $submit != 'submit_fast'){
+                $base64Str = str_replace('data:image/png;base64,', '', $request['imgBase64']);
+                $image = base64_decode($base64Str);
+                $saveName = "signature-".time().".".'png';
+                $success = file_put_contents(public_path().'/sign/'.$saveName, $image) ? 'success save' : 'fail save';
+                
+                if( $success == 'success save'){
+                    $sign = $saveName;
+                }else{
+                    return 'error : sign';
+                }
             }
 
             /*電子簽章 - E*/

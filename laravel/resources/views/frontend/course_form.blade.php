@@ -58,7 +58,7 @@
                 <input type="number" id="iphone_verify" name="iphone_verify" class="form-control" required>
               </div>
               {{-- <button type="button" id="page1_next" class="btn btn-dark px-4 mt-3 mx-3" onclick="firstnext(),topFunction()">下一步</button> --}}
-              <button type="submit" class="btn btn-primary mt-3 px-4 float-right" data-form="form1">下一步</button>
+              <button type="submit" class="btn btn-dark mt-3 px-4 float-right" data-form="form1">下一步</button>
               {{-- <button type="submit" id="btn_verify" class="btn btn-dark px-4 mt-3 mx-3">下一步</button> --}}
             </form>
           </div>
@@ -157,7 +157,7 @@
               </div>
               <div class="text-center">
                 <button type="button" name="last" class="btn btn-dark px-4 mt-3 mx-3 mx-2" data-form="form2">上一步</button>
-                <button type="button" name="check_next" id="second_next" class="btn btn-primary px-4 mt-3 mx-3 mx-2" data-form="form2">下一步，查看課程說明及場次</button>
+                <button type="button" name="check_next" id="second_next" class="btn btn-dark px-4 mt-3 mx-3 mx-2" data-form="form2">下一步</button>
               </div>
               <div class="text-center">
                 <button type="button" id="submit_fast" class="btn btn-danger px-4 mt-3 mx-auto">直接報名</button>
@@ -202,7 +202,7 @@
 
               <div class="text-center">
                 <button type="button" name="last" class="btn btn-dark px-4 mt-3 mx-3" data-form="form3">上一步</button>
-                <button type="button" name="next" class="btn btn-primary px-4 mt-3 mx-3" data-form="form3">下一步</button>
+                <button type="button" name="next" class="btn btn-dark px-4 mt-3 mx-3" data-form="form3">下一步</button>
               </div>
             </form>
           </div>
@@ -315,7 +315,7 @@
               </div>
               <div class="text-center">
                 <button type="button" name="last" class="btn btn-dark px-4 mt-3 mx-3" data-form="form4">上一步</button>
-                <button type="button" id="events_check" class="btn btn-primary px-4 mt-3 mx-3" data-form="form4">下一步</button>
+                <button type="button" id="events_check" class="btn btn-dark px-4 mt-3 mx-3" data-form="form4">下一步</button>
               </div>
             </form>
           </div>
@@ -706,6 +706,7 @@
       data:{
         '_token':"{{ csrf_token() }}",
         // idate : idate,
+        submit : 'submit',
         iname : iname,
         isex : isex,
         iid : iid,
@@ -766,6 +767,7 @@
     var icompany = $('#icompany').val();
     var iprofession = $('#iprofession').val();
     var iaddress = $('#iaddress').val();
+    var source_events = $('#source_events').val();
 
     $.ajax({
       type:'POST',
@@ -773,6 +775,7 @@
       data:{
         '_token':"{{ csrf_token() }}",
         // idate : idate,
+        submit : 'submit_fast',
         iname : iname,
         isex : isex,
         iid : iid,
@@ -782,6 +785,7 @@
         icompany : icompany,
         iprofession : iprofession,
         iaddress : iaddress,
+        source_events : source_events,
       },
       success:function(data){
         console.log(data);
