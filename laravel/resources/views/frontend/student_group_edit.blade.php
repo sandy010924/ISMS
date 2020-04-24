@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 
 @section('title', '學員管理')
-@section('header', '細分組修改')
+@section('header', '名單列表修改')
 
 @section('content')
 <link href="{{ asset('css/bootstrap-tagsinput.css') }}" rel="stylesheet">
