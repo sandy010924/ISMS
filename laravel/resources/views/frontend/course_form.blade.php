@@ -128,8 +128,8 @@
               <div class="form-group mb-5">
                 <label class="col-form-label" for="ibirthday2">
                   <b>出生日期</b>
-                </label>     
-                <input type="date" class="form-control" name="ibirthday" id="ibirthday">      
+                </label>
+                <input type="date" class="form-control" name="ibirthday" id="ibirthday">
                 {{--<div class="input-group date" id="ibirthday" data-target-input="nearest">
                   <input type="text" name="ibirthday" class="form-control datetimepicker-input" data-target="#ibirthday"/>
                   <div class="input-group-append" data-target="#ibirthday" data-toggle="datetimepicker">
@@ -175,7 +175,7 @@
                   <textarea class="form-control border-0 bg-white" rows="8" disabled readonly>{{$data->courseservices}}</textarea>
                 <hr>
                 <h4 class="font-weight-bold text-center my-3">{{ $data->name }}</h4>
-                <h4 class="font-weight-bold text-center my-3 text-secondary">一般方案：{{ $data->money }}</h4> 
+                <h4 class="font-weight-bold text-center my-3 text-secondary">一般方案：{{ $data->money }}</h4>
               </div>
 
                 @if( count($course) > 1)
@@ -199,7 +199,7 @@
               </div>
               {{-- <button type="button" class="btn btn-dark px-4 mt-3 mx-3" onclick="thirdlast(),topFunction()">上一步</button>
               <button type="button" class="btn btn-dark px-4 mt-3 mx-3" onclick="thirdnext(),topFunction()">下一步</button> --}}
-              
+
               <div class="text-center">
                 <button type="button" name="last" class="btn btn-dark px-4 mt-3 mx-3" data-form="form3">上一步</button>
                 <button type="button" name="next" class="btn btn-primary px-4 mt-3 mx-3" data-form="form3">下一步</button>
@@ -341,7 +341,7 @@
                 </div>
                 <textarea rows="5" class="form-control bg-white" disabled readonly>如您於繳交費用後無法參加課程，請保留此表單備分內容。（報名完成會寄到您填寫的email）&#13;&#10;申請之退費方式、款項如下： &#13;&#10; 5日內全額退費（繳費後隔日起算）&#13;&#10;★第6日起：課程費用80%（繳交費用未達20%者，恕不辦理退費）&#13;&#10;★第31日起或開課後：恕不辦理退費。</textarea>
               </div>
-              <hr>      
+              <hr>
               <div class="form-group my-5 required">
                 <div class="custom-control custom-checkbox my-3">
                   <input type="checkbox" class="custom-control-input" id="agree_check3" name="agree" required>
@@ -354,7 +354,9 @@
                 <p>本人保證上述資料之真實性並願遵守本「課程服務合約」之內容（請簽中文正楷）<span class="required_span"></span></p>
                 <!-- 電子簽章 -->
                 {{-- <div> --}}
-                  <canvas id="signature_pad" class="signature_pad border border-secondary" width="600" height="300"></canvas>
+
+                  <canvas id="signature_pad" width="320" height="300" class="signature_pad border border-secondary"></canvas>
+
                 {{-- </div>
                 <div> --}}
                   <button type="button" id="signature_pad_clear" class="btn btn-secondary my-2">清除簽名</button>
@@ -383,6 +385,15 @@
     </div>
   </main>
 </body>
+
+<style>
+#signature_pad{
+  border: solid 1px blue;
+  /* width: 100%; */
+  /* height: 100%; */
+}
+
+</style>
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('js/feather.min.js') }}"></script>
@@ -411,9 +422,9 @@
         phone:phone
       },
       success:function(data){
-        // console.log(data);  
+        // console.log(data);
 
-        if( data == "nodata" ){          
+        if( data == "nodata" ){
           $("#iname").val('');
           $("#isex1").click();
           $("#iid").val('');
@@ -439,14 +450,14 @@
           $("#iprofession").val(data[0].profession);
           $("#iaddress").val(data[0].address);
         }
-        
+
         next(now);
         // $("#step" + now).hide()
         // $("#step" + (now + 1)).show()
         // $("body").scrollTop(0);
       },
       error: function(jqXHR, textStatus, errorMessage){
-          console.log("error: "+ errorMessage);    
+          console.log("error: "+ errorMessage);
       }
     });
   });
@@ -459,14 +470,14 @@
   //   }
   //     return true;
   // });
-  
+
 
       //下一步按鈕觸發 Sandy (2020/03/05)
       $("button[name='next']").click(function(){
         // var now = parseInt($(this).parent().attr("id").split("form").pop());
         var now = parseInt($(this).data("form").split("form").pop());
         next(now);
-        
+
 
         // alert($("#step" + now + " input[required='required']")[0]].val());
         // if( $("#step" + now + " input[required='required']").val() == ""){
@@ -490,7 +501,7 @@
               $("#form2 input").blur(function(){
                 second_judge(btn_next,false)
               })
-            
+
           });
         }, false);
 
@@ -506,9 +517,9 @@
         }
         else{
           $("#iname").removeClass("is-invalid");
-    
+
         }
-        
+
         if($('#iphone').val()==""){
             // console.log("NR");
             $("#iphone").addClass("is-invalid");
@@ -522,13 +533,13 @@
           }
           else{
             $("#iphone").removeClass("is-invalid");
-            
+
           }
         }
 
-        
+
           if($('#iid').val()!=""){
-              
+
               var rule1=/^[A-Z]1|2\d{8}/
               if(!rule1.test($('#iid').val())){
                 $("#iid").addClass("is-invalid");
@@ -543,7 +554,7 @@
           }
 
           if($('#iemail').val()!=""){
-              
+
               var rule1=/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/
               if(!rule1.test($('#iemail').val())){
                 $("#iemail").addClass("is-invalid");
@@ -556,45 +567,45 @@
           else{
             $("#iemail").removeClass("is-invalid");
           }
-          
+
           if(successful && send){
             // console.log("IR");
-            
+
             // var now = parseInt($(x).parent().attr("id").split("form").pop());
-            
+
             var now = parseInt($(x).data("form").split("form").pop());
             // console.log(now)
             next(now);
           }
-        
+
         }
         //匯款帳號/卡號後五碼規則防呆
         $("#events_check").click(function(){
           // var now = parseInt($(this).parent().attr("id").split("form").pop());
           var now = parseInt($(this).data("form").split("form").pop());
           if($('#inumber').val()!=""){
-              
+
               var rule1=/^\d{5}$/
               if(!rule1.test($('#inumber').val())){
                 $("#inumber").addClass("is-invalid");
-                
+
               }
               else{
                 $("#inumber").removeClass("is-invalid");
-                // console.log("IR");   
+                // console.log("IR");
                 next(now);
               }
           }
           else{
             $("#inumber").removeClass("is-invalid");
-            // console.log("IR"); 
+            // console.log("IR");
             next(now);
           }
 	});
 
   //我同意checkbox防呆
   $("#preview").click(function(){
-    
+
     //電子簽名驗證
     if(signaturePad.isEmpty()) {
       alert("請中文正楷簽章!");
@@ -605,15 +616,15 @@
 			if(check2==0){
         // console.log("NR");
 				alert("請詳細閱讀三項課程服務須知，完成請勾選我同意。");
-				
+
 			}else if(check2==1){
         // console.log("NR");
 				alert("請詳細閱讀三項課程服務須知，完成請勾選我同意，您只勾選一項。");
-				
+
       }else if(check2==2){
         // console.log("NR");
 				alert("請詳細閱讀三項課程服務須知，完成請勾選我同意，您只勾選兩項。");
-				
+
 			}else{
           //預覽 Sandy (2020/03/05)
             $("form").parent().show()
@@ -625,9 +636,9 @@
 			}
 	});
 
-  
+
   //下一步跳頁 Sandy (2020/03/05)
-  function next(now){ 
+  function next(now){
     $("#step" + now).hide()
     $("#step" + (now + 1)).show()
     $("body").scrollTop(0);
@@ -637,11 +648,11 @@
   $("button[name='last']").click(function(){
     // var now = parseInt($(this).parent().attr("id").split("form").pop());
     var now = parseInt($(this).data("form").split("form").pop());
-    
+
     $("#step" + now).hide()
     $("#step" + (now - 1)).show()
   });
-  
+
   //編輯 Sandy (2020/03/05)
   $("#edit").click(function(){
     $("form").parent().find("button").show()
@@ -651,7 +662,7 @@
     $("#step6").hide();
     $("body").scrollTop(0);
   });
-  
+
   //送出報名 Sandy (2020/03/05)
   $("#submit").click(function(){
 
@@ -691,9 +702,35 @@
     var source_events = $('#source_events').val();
 
     //電子簽名
+
     var canvas = document.getElementById('signature_pad');
     var dataURL = canvas.toDataURL();
-    
+    var signaturePad = new SignaturePad(canvas, {
+      minWidth: 5,
+      maxWidth: 10,
+      penColor: "rgb(66, 133, 244)"
+    });
+    // var heightRatio = 1.5;
+    // canvas.height = canvas.width * heightRatio;
+    // function resizeCanvas() {
+    // var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+    // canvas.width = canvas.offsetWidth * ratio;
+    // canvas.height = canvas.offsetHeight * ratio;
+    // canvas.getContext("2d").scale(ratio, ratio);
+    // signaturePad.clear(); // otherwise isEmpty() might return incorrect value
+    // }
+
+    // window.addEventListener("resize", resizeCanvas);
+    // resizeCanvas();
+
+    function resizeCanvas() {
+  console.log(this); // I should always be the canvas element
+  var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+  this.width = this.offsetWidth * ratio;
+  this.height = this.offsetHeight * ratio;
+  this.getContext("2d").scale(ratio, ratio);
+}
+window.onresize = resizeCanvas.bind(document.querySelector('canvas'));
 
     $.ajax({
       type:'POST',
@@ -723,7 +760,7 @@
         imgBase64: dataURL
       },
       success:function(data){
-        console.log(data);  
+        console.log(data);
 
         if( data == 'success' ){
           alert('恭喜報名成功 ！');
@@ -738,13 +775,13 @@
 
       },
       error: function(jqXHR, textStatus, errorMessage){
-          console.log("error: "+ errorMessage);    
-            console.log(JSON.stringify(jqXHR)); 
+          console.log("error: "+ errorMessage);
+            console.log(JSON.stringify(jqXHR));
       }
     });
   });
 
-  
+
   //快速報名 Sandy (2020/04/18)
   $("#submit_fast").click(function(){
 
@@ -760,7 +797,7 @@
     var ibirthday = $('#ibirthday').val();
     var icompany = $('#icompany').val();
     var iprofession = $('#iprofession').val();
-    var iaddress = $('#iaddress').val();    
+    var iaddress = $('#iaddress').val();
 
     $.ajax({
       type:'POST',
@@ -776,10 +813,10 @@
         ibirthday : ibirthday,
         icompany : icompany,
         iprofession : iprofession,
-        iaddress : iaddress,        
+        iaddress : iaddress,
       },
       success:function(data){
-        console.log(data);  
+        console.log(data);
 
         if( data == 'success' ){
           alert('報名成功！');
@@ -794,8 +831,8 @@
 
       },
       error: function(jqXHR, textStatus, errorMessage){
-          console.log("error: "+ errorMessage);    
-            console.log(JSON.stringify(jqXHR)); 
+          console.log("error: "+ errorMessage);
+            console.log(JSON.stringify(jqXHR));
       }
     });
   });
