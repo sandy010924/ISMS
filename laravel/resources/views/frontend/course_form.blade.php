@@ -386,14 +386,7 @@
   </main>
 </body>
 
-<style>
-#signature_pad{
-  border: solid 1px blue;
-  /* width: 100%; */
-  /* height: 100%; */
-}
 
-</style>
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('js/feather.min.js') }}"></script>
@@ -705,32 +698,7 @@
 
     var canvas = document.getElementById('signature_pad');
     var dataURL = canvas.toDataURL();
-    var signaturePad = new SignaturePad(canvas, {
-      minWidth: 5,
-      maxWidth: 10,
-      penColor: "rgb(66, 133, 244)"
-    });
-    // var heightRatio = 1.5;
-    // canvas.height = canvas.width * heightRatio;
-    // function resizeCanvas() {
-    // var ratio =  Math.max(window.devicePixelRatio || 1, 1);
-    // canvas.width = canvas.offsetWidth * ratio;
-    // canvas.height = canvas.offsetHeight * ratio;
-    // canvas.getContext("2d").scale(ratio, ratio);
-    // signaturePad.clear(); // otherwise isEmpty() might return incorrect value
-    // }
 
-    // window.addEventListener("resize", resizeCanvas);
-    // resizeCanvas();
-
-    function resizeCanvas() {
-  console.log(this); // I should always be the canvas element
-  var ratio =  Math.max(window.devicePixelRatio || 1, 1);
-  this.width = this.offsetWidth * ratio;
-  this.height = this.offsetHeight * ratio;
-  this.getContext("2d").scale(ratio, ratio);
-}
-window.onresize = resizeCanvas.bind(document.querySelector('canvas'));
 
     $.ajax({
       type:'POST',
