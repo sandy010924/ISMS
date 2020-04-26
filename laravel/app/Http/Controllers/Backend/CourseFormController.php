@@ -77,7 +77,7 @@ class CourseFormController extends Controller
                 if( $success == 'success save'){
                     $sign = $saveName;
                 }else{
-                    return 'error : sign';
+                    return array('status' => 'error : sign');
                 }
             }
 
@@ -133,6 +133,7 @@ class CourseFormController extends Controller
 
             // $events_group = EventsCourse::where('id_group', $id_group)->get();
 
+            $course = [];
         
             if(!empty($id_group)){
                 
@@ -383,9 +384,17 @@ class CourseFormController extends Controller
                         $success++;
                     } 
 
+                    
+                    $id_course = Registration::where('id', $id_registration)->first()->id_course;
+                    if( $id_course != -99 ){
+                        $course_name = Course::where('id', $id_course)->first()->name;
+                        array_push($course, $course_name);
+                    }
                 }
                 
-                return 'success';
+                // return array('status'=>'success', 'course' => implode(" 及 ",$course));
+                
+                // return 'success';
             }else{
                 /*正課報名資料 - S*/
                 // 檢查是否報名過
@@ -511,11 +520,20 @@ class CourseFormController extends Controller
 
                 /*追單資料 - E*/
 
-                return 'success';
+
+                $id_course = Registration::where('id', $id_registration)->first()->id_course;
+                if( $id_course != -99 ){
+                    $course_name = Course::where('id', $id_course)->first()->name;
+                    array_push($course, $course_name);
+                }
+                // return 'success';
             }
+                
+            return array('status'=>'success', 'course' => implode(" 及 ",$course));
         
         }catch (Exception $e) {
-            return 'error';
+            return array('status'=>'error');
+            // return 'error';
             // return json_encode(array(
             //     'errorMsg' => '儲存失敗'
             // ));

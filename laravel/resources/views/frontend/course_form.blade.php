@@ -729,23 +729,31 @@
         imgBase64: dataURL
       },
       success:function(data){
-        console.log(data);
+        // console.log(data);
 
-        if( data == 'success' ){
-          alert('恭喜報名成功 ！');
-          location.reload();
-        }else if( data == 'error : sign'){
-          alert('報名失敗，電子簽章有誤。');
-          location.reload();
-        }else{
-          alert('報名失敗');
-          location.reload();
+        switch (data['status']) {
+          case 'success':
+            if(data['course']!=''){
+              alert('恭喜報名 '+ data['course'] +' 課程成功！');
+            }else{
+              alert('恭喜報名成功！');
+            }
+            location.reload();
+            break;
+          case 'error : sign':
+            alert('報名失敗，電子簽章有誤。');
+            location.reload();
+            break;        
+          default:            
+            alert('報名失敗');
+            break;
         }
 
       },
-      error: function(jqXHR, textStatus, errorMessage){
+      error: function(jqXHR, textStatus, errorMessage){ 
           console.log("error: "+ errorMessage);
-            console.log(JSON.stringify(jqXHR));
+          console.log(JSON.stringify(jqXHR));
+          alert('報名失敗');
       }
     });
   });
@@ -753,6 +761,25 @@
 
   //快速報名 Sandy (2020/04/18)
   $("#submit_fast").click(function(){
+
+    //姓名、聯絡電話必填
+    if( $('#iname').val()=="" &&  $('#iphone').val()==""){
+        $("#iname").addClass("is-invalid");
+        $("#iphone").addClass("is-invalid");
+        return false;
+    }else if( $('#iname').val()!="" &&  $('#iphone').val()=="" ){
+      $("#iphone").addClass("is-invalid");
+      $("#iname").removeClass("is-invalid");
+        return false;
+    }else if( $('#iname').val()=="" &&  $('#iphone').val()!="" ){
+      $("#iname").addClass("is-invalid");
+      $("#iphone").removeClass("is-invalid");
+        return false;
+    }else{
+      $("#iname").removeClass("is-invalid");
+      $("#iphone").removeClass("is-invalid");
+    }
+
 
     //get data
     var source_course = $('#course_id').val();
@@ -788,23 +815,31 @@
         source_events : source_events,
       },
       success:function(data){
-        console.log(data);
-
-        if( data == 'success' ){
-          alert('報名成功！');
-          location.reload();
-        }else if( data == 'error : sign'){
-          alert('報名失敗，電子簽章有誤。');
-          location.reload();
-        }else{
-          alert('報名失敗');
-          location.reload();
+        // console.log(data);
+        
+        switch (data['status']) {
+          case 'success':
+            if(data['course']!=''){
+              alert('恭喜報名 '+ data['course'] +' 課程成功！');
+            }else{
+              alert('恭喜報名成功！');
+            }
+            location.reload();
+            break;
+          case 'error : sign':
+            alert('報名失敗，電子簽章有誤。');
+            location.reload();
+            break;        
+          default:            
+            alert('報名失敗');
+            break;
         }
 
       },
       error: function(jqXHR, textStatus, errorMessage){
           console.log("error: "+ errorMessage);
-            console.log(JSON.stringify(jqXHR));
+          console.log(JSON.stringify(jqXHR));
+          alert('報名失敗');
       }
     });
   });
