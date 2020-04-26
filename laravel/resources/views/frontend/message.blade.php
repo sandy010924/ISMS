@@ -111,7 +111,10 @@
                 <input type="button" class="btn btn-secondary mr-3 float-left" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
                 <input type="button" id="draftBtn" class="btn btn-secondary mr-2" value="儲存為草稿">
                 {{-- <button id="saveDraftBtn" class="btn btn-secondary">儲存為草稿</button> --}}
-                <button id="sendMessageBtn" class="btn btn-primary ml-auto">立即傳送</button>
+                <button id="sendMessageBtn" class="btn btn-primary ml-auto">
+                  {{-- <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:hidden"></span> --}}
+                  立即傳送
+                </button>
                 <span id="displaySchedule"></span>
               </div>
 
@@ -387,11 +390,15 @@ $(document).ready(function () {
   // 立即傳送
   $('#sendMessageBtn').on('click', function(e) {
     e.preventDefault();
+
     
     if( $('#msgTitle').val() == "" || editor.getData() == "" || ($('#mailCheckBox').prop("checked") == false && $('#messageCheckBox').prop("checked") == false) ){
       alert('請勾選至少一項發送方式，並填入訊息名稱、內容。');
       return false;
     }
+
+    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>立即傳送');
+    $(this).attr('disabled', 'disabled');
 
     var id_message = $('#id_message').val();
     var content = editor.getData().replace(new RegExp("<p>", "g"),"");
@@ -438,15 +445,24 @@ $(document).ready(function () {
             /** alert **/ 
             $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
             fade($("#error_alert"));    
+            
+            $(this).html('立即傳送');
+            $(this).attr('disabled', false);
           }else if( res['status'] == 'error' ){
             /** alert **/ 
             $("#error_alert_text").html("寄送失敗。");
-            fade($("#error_alert"));    
+            fade($("#error_alert"));   
+
+            $(this).html('立即傳送');
+            $(this).attr('disabled', false); 
           }
 
         },
         error: function(jqXHR, textStatus, errorMessage){
             console.log("error: "+ errorMessage);    
+            
+            $(this).html('立即傳送');
+            $(this).attr('disabled', false);
         }
       });
 
@@ -675,6 +691,10 @@ $(document).ready(function () {
 
     ClassicEditor.create(document.querySelector("#content"), {
       // config
+      toolbar:['Heading','|','bold','italic','link', 
+                'bulletedList', 
+                'numberedList', 
+                '|','outdent','indent','']
     })
     .then( newEditor => {
         editor = newEditor;
