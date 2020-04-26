@@ -20,17 +20,7 @@ class BlacklistRuleController extends Controller
             $data = Rule::where('rule_value', $key)
                 ->update(['rule_status' => $checkboxlist[$key],'regulation' =>  $textlist[$key]]);
         }
-        // echo $checkboxlist[1];
-    //    print_r($checkboxlist);
-        // if (!empty($password) && !empty($password_check)) {
-        //     $data = User::where('id', $id)
-        //         ->update(['account' => $account,'password' =>  Hash::make($password),'name' => $name,'role' => $role]);
-        // } else {
-        //     $data = User::where('id', $id)
-        //         ->update(['account' => $account,'name' => $name,'role' => $role]);
-        // }
-        
-        
+               
         if ($data) {
             return '更新成功';
         } else {

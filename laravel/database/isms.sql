@@ -632,3 +632,42 @@ ALTER TABLE `mark` ADD COLUMN id_events VARCHAR(50) NULL COMMENT '場次ID';
 
 -- 修改細分組資料表 - 條件欄位長度大小 Rocky (2020/04/18)
 ALTER TABLE `student_group` CHANGE COLUMN `condition` `condition` VARCHAR(65535) null COMMENT '條件';
+
+
+-- 場次資料表 - 各項成本欄位 Rocky(2020/04/25)
+ALTER TABLE `events_course` ADD COLUMN cost_ad VARCHAR(200) NULL COMMENT '廣告成本';
+ALTER TABLE `events_course` ADD COLUMN cost_message VARCHAR(200) NULL COMMENT '訊息成本';
+ALTER TABLE `events_course` ADD COLUMN cost_events VARCHAR(200) NULL COMMENT '場地成本';
+
+-- 正課資料表 - 發票欄位 Rocky(2020/04/25)
+ALTER TABLE `registration` ADD COLUMN invoice VARCHAR(150) NULL COMMENT '發票號碼';
+ALTER TABLE `registration` ADD COLUMN invoice_created_at timestamp NULL COMMENT '開立日期';
+
+
+-- bonus  獎金資料表(2020/04/26)
+CREATE TABLE IF NOT EXISTS `bonus`(
+   `id` INT  AUTO_INCREMENT COMMENT 'id',
+   `id_events` VARCHAR(100)  NULL COMMENT '場次ID',
+   `id_course` VARCHAR(100)  NULL COMMENT '課程ID',
+   `id_group` VARCHAR(100)  NULL COMMENT '群組ID',
+   `name` VARCHAR(70)  NULL COMMENT '姓名',
+   `status` VARCHAR(10)  NULL COMMENT '狀態(0:不啟用,1:啟用)',
+   `created_at` timestamp not null default  CURRENT_TIMESTAMP	 COMMENT '創建日期',
+   `updated_at` timestamp not null default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+-- bonus_rule  獎金規則資料表(2020/04/26)
+CREATE TABLE IF NOT EXISTS `bonus_rule`(
+   `id` INT  AUTO_INCREMENT COMMENT 'id',
+   `id_bonus` VARCHAR(100)  NULL COMMENT '獎金ID',
+   `name` VARCHAR(200)  NULL COMMENT '規則名稱',
+   `name_id` VARCHAR(50)  NULL COMMENT '規則ID',
+   `value` VARCHAR(200)  NULL COMMENT '規則',
+   `status` VARCHAR(10)  NULL COMMENT '狀態(0:不啟用,1:啟用)',
+   `created_at` timestamp not null default  CURRENT_TIMESTAMP	 COMMENT '創建日期',
+   `updated_at` timestamp not null default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

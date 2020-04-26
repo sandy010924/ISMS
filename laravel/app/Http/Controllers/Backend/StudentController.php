@@ -228,7 +228,7 @@ class StudentController extends Controller
 
         $mark = new Mark;
 
-        // 新增學員資料
+        // 新增標記資料
         $mark->id_student       = $id_student;         // 學員ID
         $mark->name_mark        = $name;               // 標記名稱
 

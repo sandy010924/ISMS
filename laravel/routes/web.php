@@ -310,9 +310,29 @@ Route::get('student_group_edit', 'Frontend\StudentGroupController@showeditdata')
 ------------
 */
 /*** [財務管理] ***/
-Route::get('finance', function () {
-    return view('frontend.finance');
-})->name('finance');
+/*** 場次 - 顯示場次資料 Rocky(2020/04/25) ***/
+Route::get('finance', 'Frontend\FinanceController@show')->name('finance');
+/*** 場次 - 顯示學員資料 Rocky(2020/04/25) ***/
+Route::post('show_student', 'Frontend\FinanceController@showstudent');
+/*** 場次 - 自動儲存 Rocky(2020/04/25) ***/
+Route::post('events_update', 'Backend\FinanceController@eventsupdate');
+/*** 場次 - 發票自動儲存 Rocky(2020/04/25) ***/
+Route::post('invoice_update', 'Backend\FinanceController@invoiceupdate');
+/*** 獎金 - 儲存 Rocky(2020/04/26) ***/
+Route::post('add_bonus', 'Backend\FinanceController@addbonus');
+
+
+/*** 獎金名單 - 顯示資料 Rocky(2020/04/26) ***/
+Route::get('bonus', 'Frontend\FinanceController@showbonus')->name('bonus');
+/*** 獎金名單 - 顯示資料規則 Rocky(2020/04/26) ***/
+Route::post('show_bonusrule', 'Frontend\FinanceController@showbonusrule');
+/*** 獎金名單 - 刪除 Rocky(2020/04/26) ***/
+Route::post('delete_bonus', 'Backend\FinanceController@deletebonus');
+/*** 獎金名單 - 更新 Rocky(2020/04/26) ***/
+Route::post('update_bonus', 'Backend\FinanceController@updatebonus');
+
+
+
 /*** [財務管理] 查看報表 ***/
 Route::get('finance_return', function () {
     return view('frontend.finance_return');
