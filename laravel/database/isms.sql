@@ -671,3 +671,7 @@ CREATE TABLE IF NOT EXISTS `bonus_rule`(
    `updated_at` timestamp not null default  CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 	 COMMENT '更新日期',
    PRIMARY KEY ( `id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- sender資料表重新命名為receiver   Sandy (2020/04/27)
+ALTER TABLE sender RENAME TO receiver;

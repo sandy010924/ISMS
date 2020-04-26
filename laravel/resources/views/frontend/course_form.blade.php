@@ -126,10 +126,12 @@
                 </div>
               </div>
               <div class="form-group mb-5">
-                <label class="col-form-label" for="ibirthday2">
+                <label class="col-form-label" for="ibirthday">
                   <b>出生日期</b>
                 </label>
-                <input type="date" class="form-control" name="ibirthday" id="ibirthday">
+                {{-- <input type="date" class="form-control" name="ibirthday" id="ibirthday"> --}}
+                <input type="text" class="form-control" id="ibirthday" name="ibirthday" data-provide="datepicker" autocomplete="off">
+                <label class="text-secondary px-2 py-1"><small>(民國年-月-日)</small></label>
                 {{--<div class="input-group date" id="ibirthday" data-target-input="nearest">
                   <input type="text" name="ibirthday" class="form-control datetimepicker-input" data-target="#ibirthday"/>
                   <div class="input-group-append" data-target="#ibirthday" data-toggle="datetimepicker">
@@ -394,6 +396,10 @@
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script src="{{ asset('js/signature.js') }}"></script>
 
+<!-- 民國年日期選擇器 Sandy (2020/04/02) -->
+<link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+<script src="{{ asset('js/bootstrap-datepicker.js') }} "></script>
+
 <script>
   $.ajaxSetup({
     headers: {
@@ -465,135 +471,143 @@
   // });
 
 
-      //下一步按鈕觸發 Sandy (2020/03/05)
-      $("button[name='next']").click(function(){
-        // var now = parseInt($(this).parent().attr("id").split("form").pop());
-        var now = parseInt($(this).data("form").split("form").pop());
-        next(now);
+  //下一步按鈕觸發 Sandy (2020/03/05)
+  $("button[name='next']").click(function(){
+    // var now = parseInt($(this).parent().attr("id").split("form").pop());
+    var now = parseInt($(this).data("form").split("form").pop());
+    next(now);
 
 
-        // alert($("#step" + now + " input[required='required']")[0]].val());
-        // if( $("#step" + now + " input[required='required']").val() == ""){
-        //   alert("請輸入完整內容")
-        //   return false;
-        // }else{
-        //   next(now);
-        // }
+    // alert($("#step" + now + " input[required='required']")[0]].val());
+    // if( $("#step" + now + " input[required='required']").val() == ""){
+    //   alert("請輸入完整內容")
+    //   return false;
+    // }else{
+    //   next(now);
+    // }
+  });
+
+
+
+  //第二頁必填及輸入規則防呆
+  $(function(){
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        document.getElementById("second_next").addEventListener("click", function(event) {
+          var btn_next=this
+          second_judge(btn_next,true)
+          $("#form2 input").blur(function(){
+            second_judge(btn_next,false)
+          })
+
       });
+    }, false);
+
+        
+    //出生年月日
+    $('#ibirthday').datepicker({ 
+      // defaultDate: new Date(),
+      languate: 'zh-TW',
+      format: 'twy-mm-dd',
+    });
+
+  })
+
+function second_judge(x,send){
+  // console.log(x)
+  var successful=true
+  if($('#iname').val()==""){
+      // console.log("NR");
+      $("#iname").addClass("is-invalid");
+      successful=false
+  }
+  else{
+    $("#iname").removeClass("is-invalid");
+
+  }
+
+  if($('#iphone').val()==""){
+      // console.log("NR");
+      $("#iphone").addClass("is-invalid");
+      successful=false
+  }
+  else{
+    var rule1=/^\d*$/
+    if(!rule1.test($('#iphone').val())){
+      $("#iphone").addClass("is-invalid");
+      successful=false
+    }
+    else{
+      $("#iphone").removeClass("is-invalid");
+
+    }
+  }
 
 
+    if($('#iid').val()!=""){
 
-      //第二頁必填及輸入規則防呆
-      $(function(){
-          var forms = document.getElementsByClassName('needs-validation');
-          // Loop over them and prevent submission
-          var validation = Array.prototype.filter.call(forms, function(form) {
-            document.getElementById("second_next").addEventListener("click", function(event) {
-              var btn_next=this
-              second_judge(btn_next,true)
-              $("#form2 input").blur(function(){
-                second_judge(btn_next,false)
-              })
-
-          });
-        }, false);
-
-      })
-
-      function second_judge(x,send){
-        // console.log(x)
-        var successful=true
-        if($('#iname').val()==""){
-            // console.log("NR");
-            $("#iname").addClass("is-invalid");
-            successful=false
+        var rule1=/^[A-Z]1|2\d{8}/
+        if(!rule1.test($('#iid').val())){
+          $("#iid").addClass("is-invalid");
+          successful=false
         }
         else{
-          $("#iname").removeClass("is-invalid");
-
+          $("#iid").removeClass("is-invalid");
         }
+    }
+    else{
+      $("#iid").removeClass("is-invalid");
+    }
 
-        if($('#iphone').val()==""){
-            // console.log("NR");
-            $("#iphone").addClass("is-invalid");
-            successful=false
+    if($('#iemail').val()!=""){
+
+        var rule1=/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/
+        if(!rule1.test($('#iemail').val())){
+          $("#iemail").addClass("is-invalid");
+          successful=false
         }
         else{
-          var rule1=/^\d*$/
-          if(!rule1.test($('#iphone').val())){
-            $("#iphone").addClass("is-invalid");
-            successful=false
-          }
-          else{
-            $("#iphone").removeClass("is-invalid");
-
-          }
+          $("#iemail").removeClass("is-invalid");
         }
+    }
+    else{
+      $("#iemail").removeClass("is-invalid");
+    }
 
+    if(successful && send){
+      // console.log("IR");
 
-          if($('#iid').val()!=""){
+      // var now = parseInt($(x).parent().attr("id").split("form").pop());
 
-              var rule1=/^[A-Z]1|2\d{8}/
-              if(!rule1.test($('#iid').val())){
-                $("#iid").addClass("is-invalid");
-                successful=false
-              }
-              else{
-                $("#iid").removeClass("is-invalid");
-              }
-          }
-          else{
-            $("#iid").removeClass("is-invalid");
-          }
+      var now = parseInt($(x).data("form").split("form").pop());
+      // console.log(now)
+      next(now);
+    }
 
-          if($('#iemail').val()!=""){
+  }
+  //匯款帳號/卡號後五碼規則防呆
+  $("#events_check").click(function(){
+    // var now = parseInt($(this).parent().attr("id").split("form").pop());
+    var now = parseInt($(this).data("form").split("form").pop());
+    if($('#inumber').val()!=""){
 
-              var rule1=/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/
-              if(!rule1.test($('#iemail').val())){
-                $("#iemail").addClass("is-invalid");
-                successful=false
-              }
-              else{
-                $("#iemail").removeClass("is-invalid");
-              }
-          }
-          else{
-            $("#iemail").removeClass("is-invalid");
-          }
-
-          if(successful && send){
-            // console.log("IR");
-
-            // var now = parseInt($(x).parent().attr("id").split("form").pop());
-
-            var now = parseInt($(x).data("form").split("form").pop());
-            // console.log(now)
-            next(now);
-          }
+        var rule1=/^\d{5}$/
+        if(!rule1.test($('#inumber').val())){
+          $("#inumber").addClass("is-invalid");
 
         }
-        //匯款帳號/卡號後五碼規則防呆
-        $("#events_check").click(function(){
-          // var now = parseInt($(this).parent().attr("id").split("form").pop());
-          var now = parseInt($(this).data("form").split("form").pop());
-          if($('#inumber').val()!=""){
-
-              var rule1=/^\d{5}$/
-              if(!rule1.test($('#inumber').val())){
-                $("#inumber").addClass("is-invalid");
-
-              }
-              else{
-                $("#inumber").removeClass("is-invalid");
-                // console.log("IR");
-                next(now);
-              }
-          }
-          else{
-            $("#inumber").removeClass("is-invalid");
-            // console.log("IR");
-            next(now);
-          }
+        else{
+          $("#inumber").removeClass("is-invalid");
+          // console.log("IR");
+          next(now);
+        }
+    }
+    else{
+      $("#inumber").removeClass("is-invalid");
+      // console.log("IR");
+      next(now);
+    }
 	});
 
   //我同意checkbox防呆

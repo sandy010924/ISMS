@@ -358,6 +358,9 @@ Route::post('message_insert', 'Backend\MessageController@insert');
 /*** [儲存草稿] ***/
 Route::post('draftInsert', 'Backend\MessageController@insert_draft');
 
+/*** [排程設定] ***/
+Route::post('scheduleInsert', 'Backend\MessageController@insert_schedule');
+
 /*** [訊息推播] 撈出細分組資料 ***/
 Route::post('messageDetailGroup', 'Backend\MessageController@showDetailGroup')->name('messageDetailGroup');
 

@@ -4,9 +4,9 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Sender extends Model
+class Receiver extends Model
 {
-    protected $table = 'sender';
+    protected $table = 'receiver';
 
     protected $fillable = [
         'id_message',

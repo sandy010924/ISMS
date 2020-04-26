@@ -318,12 +318,12 @@
                     @endslot
                     @slot('tbody')
                       @foreach($msg as $key => $data )
-                      <tr>
+                      <tr href="{{ route('message_data', ['id' => $data['id']]) }}">
                         <td>{{ $data['send_at'] }}</td>
                         <td>{{ $data['name'] }}</td>
-                        <td>{{ $data['content'] }}</td>
+                        <td class="ellipsis">{{ $data['content'] }}</td>
                         <td>{{ $data['type'] }}</td>
-                        <td>{{ $data['count_sender'] }}</td>
+                        <td>{{ $data['count_receiver'] }}</td>
                         <td>{{ $data['cost_sms'] }}</td>
                         <td></td>
                         <td></td>
@@ -381,6 +381,17 @@
   }
   .show_row {
     display: table-row;
+  }
+
+  table tr {
+      cursor: pointer;
+  }
+  /* datatable內容欄位的... */
+  .ellipsis {
+    max-width: 100px;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
 </style>
@@ -550,6 +561,11 @@
         .draw();
     });
 
+    //點選<tr>看見詳細內容
+    $('table tbody tr').on('click', function(){
+        window.location = $(this).attr('href');
+        // return false;
+    });
 
     // $('.nav-item').on('click', function() {
     //   var target = $(this).attr('data-target');

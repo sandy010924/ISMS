@@ -8,7 +8,7 @@ use App\Model\Student;
 use App\Model\Teacher;
 use App\Model\Course;
 use App\User;
-use App\Model\Sender;
+use App\Model\Receiver;
 
 class MessageController extends Controller
 {
@@ -18,13 +18,13 @@ class MessageController extends Controller
         $id = $request->get('id');
 
         $message = Message::where('id', $id)->first();
-        $sender = Sender::where('id_message', $id)->get();
+        $receiver = Receiver::where('id_message', $id)->get();
 
         $phone = [];
         $email = [];
 
         if($message['type'] == 0 || $message['type'] == 2){
-            foreach( $sender as $data){
+            foreach( $receiver as $data){
                 if($data['phone'] != ""){
                     array_push($phone, $data['phone']);
                 }
@@ -32,21 +32,21 @@ class MessageController extends Controller
         }
 
         if($message['type'] == 1 || $message['type'] == 2){
-            foreach( $sender as $data){
+            foreach( $receiver as $data){
                 if($data['email'] != ""){
                     array_push($email, $data['email']);
                 }
             }
         }
 
-        $sender_phone = '';
-        $sender_email = '';
+        $receiver_phone = '';
+        $receiver_email = '';
 
         if(!empty($phone)){
-            $sender_phone = implode(',', $phone);
+            $receiver_phone = implode(',', $phone);
         }
         if(!empty($email)){
-            $sender_email = implode(',', $email);
+            $receiver_email = implode(',', $email);
         }
 
         // $message = [
@@ -57,7 +57,7 @@ class MessageController extends Controller
 
         $teacher = Teacher::all();
 
-        return view('frontend.message', compact('course', 'teacher', 'message', 'sender_phone', 'sender_email'));
+        return view('frontend.message', compact('course', 'teacher', 'message', 'receiver_phone', 'receiver_email'));
     }
 
     // // 登入

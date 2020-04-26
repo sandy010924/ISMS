@@ -75,15 +75,21 @@
       {{-- <div class="container"> --}}
       <div class="row mb-5">
         <div class="col-5">
-          <div class="input-group date" data-target-input="nearest">
+          {{-- <div class="input-group date" data-target-input="nearest"> --}}
             {{-- <div class="input-group-prepend">
               <span class="input-group-text">日期區間</span>
             </div> --}}
-            <input type="text" class="form-control px-3" name="daterange" id="daterange"  placeholder="搜尋日期區間"> 
-            <div class="input-group-append" data-target="#daterange" data-toggle="datetimepicker">
+            {{-- <input type="text" class="form-control px-3" name="daterange" id="daterange"  placeholder="搜尋日期區間"> 
+            <div class="input-group-append" data-target="#daterange">
               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-            </div>  
-          </div>
+            </div> --}}
+          {{-- </div> --}}
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">搜尋日期區間</span>
+            </div>
+            <input type="search" class="form-control px-3" name="daterange" id="daterange"> 
+          </div>  
         </div>
         <div class="col text-right">
           <a href="{{ route('message') }}" role="button" class="btn btn-primary">建立訊息</a>
@@ -144,7 +150,7 @@
                       <td class="ellipsis">{{ $data['content'] }}</td>
                       {{-- <td>{{ $data['id_student_group'] }}</td> --}}
                       <td>{{ $data['type'] }}</td>
-                      <td>{{ $data['count_sender'] }}</td>
+                      <td>{{ $data['count_receiver'] }}</td>
                       <td name="col_time">{{ $data['send_at'] }}</td>
                       <td name="col_btn">
                         <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
@@ -457,7 +463,7 @@
           var min = picker.startDate.format('YYYY-MM-DD');
           var max = picker.endDate.format('YYYY-MM-DD');
           
-          var startDate = data[0];
+          var startDate = data[4];
           if (startDate <= max && startDate >= min) { return true; }
           return false;
       });

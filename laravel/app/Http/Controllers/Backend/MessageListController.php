@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Message;
-use App\Model\Sender;
+use App\Model\Receiver;
 
 class MessageListController extends Controller
 {
@@ -19,7 +19,7 @@ class MessageListController extends Controller
         try{
 
             Message::where('id', $id)->delete();
-            Sender::where('id_message', $id)->delete();
+            Receiver::where('id_message', $id)->delete();
             
             return 'success';
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Message;
 use App\Model\Student;
 use App\Model\Teacher;
-use App\Model\Sender;
+use App\Model\Receiver;
 use App\User;
 
 class MessageListController extends Controller
@@ -34,16 +34,16 @@ class MessageListController extends Controller
             break;
         }
 
-        $count_sender = count(Sender::where('id_message', $data['id'])->get());
+        $count_receiver = count(Receiver::where('id_message', $data['id'])->get());
 
         $msg[$key] = [
           'id' => $data['id'],
           'id_status' => $data['id_status'],
           'name' => $data['name'],
-          'content' => $data['content'],
+          'content' => strip_tags($data['content']),
           'type' => $type,
           'send_at' => $data['send_at'],
-          'count_sender' => $count_sender,
+          'count_receiver' => $count_receiver,
         ];
       }
 // dd($msg);

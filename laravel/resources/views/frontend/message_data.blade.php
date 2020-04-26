@@ -25,7 +25,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">發送方式</span>
                   </div>
-                  <input type="text" class="form-control bg-white" aria-label="Group's name" value=" @if($msg->type==0)簡訊 @else Email @endif" disabled readonly>
+                  <input type="text" class="form-control bg-white" aria-label="Group's name" value=" @if($msg->type==0)簡訊 @elseif($msg->type==1) Email @else 簡訊、E-mail @endif" disabled readonly>
                 </div>
               </div>
             </div>
@@ -37,9 +37,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">訊息內容</span>
                   </div>
-                  <textarea class="form-control bg-white" aria-label="With textarea" rows="5" disabled readonly>
-{{ $msg->content }}
-                  </textarea>
+                  <div class="form-control bg-white"  aria-label="With textarea" style="min-height:150px">
+{!! $msg->content !!}
+                  </div>
                 </div>
               </div>
             </div>
@@ -66,7 +66,7 @@
                 </tr>
               @endslot
               @slot('tbody')
-                @foreach($sender as $data )
+                @foreach($receiver as $data )
                 <tr>
                   <td>{{ $data['name'] }}</td>
                   <td>{{ $data['phone'] }}</td>

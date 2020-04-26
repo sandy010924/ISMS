@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Message;
-use App\Model\Sender;
+use App\Model\Receiver;
 use App\Model\Student;
 // use App\Model\Teacher;
 // use App\User;
@@ -18,12 +18,12 @@ class MessageDataController extends Controller
       
       $msg = Message::where('id', $id)->first();
 
-      $sender = Sender::leftjoin('student', 'student.id', '=', 'sender.id_student')
-                      ->select('student.name', 'sender.*')
+      $receiver = Receiver::leftjoin('student', 'student.id', '=', 'receiver.id_student')
+                      ->select('student.name', 'receiver.*')
                       ->where('id_message', $msg->id)
                       ->get();
 
-      return view('frontend.message_data', compact('msg', 'sender'));
+      return view('frontend.message_data', compact('msg', 'receiver'));
     }
 
 }

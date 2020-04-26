@@ -15,7 +15,7 @@
               <input type="hidden" id="id_message" value="{{ $message['id'] }}">
               <div class="form-group required">
                 <label class="col-form-label">發送方式</label>
-                <div class="d-block">
+                <div class="d-block" id="sendCheckBox">
                   <div class="custom-control custom-checkbox custom-control-inline">
                     @if( $message['type'] != "" && $message['type'] == 0 || $message['type'] == 2)
                       <input type="checkbox" class="custom-control-input" id="messageCheckBox" name="sendCheckBox" value="sms" checked>
@@ -37,12 +37,18 @@
                     <label class="form-check-label" for="mailCheckBox">E-mail</label> --}}
                   </div>
                 </div>
-                <small id="emailHelp" class="form-text " style="color:red;">若選擇簡訊發送、簡訊及Email發送皆只能輸入純文字(不可包含圖片及表格)。只有選擇Email發送才可使用圖片及表格。</small>
+                <div class="invalid-feedback">
+                  請選擇至少一項發送方式
+                </div>
+                <small id="emailHelp" class="form-text " style="color:#888;">若選擇簡訊發送、簡訊及Email發送皆只能輸入純文字(不可包含圖片及表格)。只有選擇Email發送才可使用圖片及表格。</small>
               </div>
 
               <div class="form-group required">
                 <label class="col-form-label" for="receiverPhone">訊息名稱</label>
                 <input type="text" class="form-control" id="msgTitle" name="msgTitle" placeholder="請輸入訊息名稱 ..." value="{{ $message['name'] }}">
+                <div class="invalid-feedback">
+                  請輸入訊息名稱
+                </div>
               </div>
 
               <div class="form-group">
@@ -76,22 +82,28 @@
               <div class="form-group">
                 <label class="col-form-label" for="">發送對象</label>
                 <div>
-                  <input id="groupDetailBtn" type="button" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
+                  <input id="groupDetailBtn" type="button" class="btn btn-sm btn-secondary" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-form-label" for="receiverPhone">收件者手機號碼</label>
                 <!-- <input id="receiverPhoneMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#messageModal"> -->
-                <input type="text" class="form-control" id="receiverPhone" name="receiverPhone" placeholder="請輸入收件者手機號碼 ..." value="{{ $sender_phone }}">
-                <small id="phoneNumber" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
+                <input type="text" class="form-control" id="receiverPhone" name="receiverPhone" placeholder="請輸入收件者手機號碼 ..." value="{{ $receiver_phone }}">
+                <div class="invalid-feedback">
+                  請輸入收件者手機號碼
+                </div>
+                <small id="phoneNumber" class="form-text " style="color:#888;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
 
               <div class="form-group">
                 <label class="col-form-label" for="receiverEmail">收件者 E-mail</label>
                 <!-- <input id="receiverEmailMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#mailModal"> -->
-                <input type="email" class="form-control" id="receiverEmail" name="receiverEmail" placeholder="請輸入收件者 E-mail ..." value="{{ $sender_email }}">
-                <small id="" class="form-text " style="color:red;">手動輸入請以 , 隔開(中間不空白)</small>
+                <input type="email" class="form-control" id="receiverEmail" name="receiverEmail" placeholder="請輸入收件者 E-mail ..." value="{{ $receiver_email }}">
+                <div class="invalid-feedback">
+                  請輸入收件者 E-mail
+                </div>
+                <small class="form-text " style="color:#888;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
 
 
@@ -103,8 +115,11 @@
 
               <!-- ckeditor -->
               <div class="form-group required">
-                <label class="col-form-label" for="emailTitle">內容</label>
+                <label class="col-form-label" for="content">內容</label>&nbsp;<small style="color:#888;">（簡訊只能傳送無格式之純文字及連結）</small>
                 <textarea name="transfer" id="content" rows="10" cols="80" value=""></textarea>
+                <div class="invalid-feedback">
+                  請輸入內容
+                </div>
               </div>
 
               <div class="d-flex mt-5">
@@ -245,6 +260,13 @@ $(document).ready(function () {
   var allDataPhone = [];
   var allDataEmail = [];
   var selectedDataId = [];
+
+  //預約日期選擇器
+  $('#datetimepicker1').datetimepicker({
+    format: "YYYY-MM-DD HH:mm",
+    defaultDate:new Date(),
+    // locale:"zh-tw"
+  });
 
   $.ajax({
     type: "post",
@@ -387,13 +409,13 @@ $(document).ready(function () {
   });
 
 
-  // 立即傳送
+  /* 立即傳送 */
   $('#sendMessageBtn').on('click', function(e) {
     e.preventDefault();
 
+    var empty = verifyEmpty();
     
-    if( $('#msgTitle').val() == "" || editor.getData() == "" || ($('#mailCheckBox').prop("checked") == false && $('#messageCheckBox').prop("checked") == false) ){
-      alert('請勾選至少一項發送方式，並填入訊息名稱、內容。');
+    if( empty > 0 ){
       return false;
     }
 
@@ -427,18 +449,18 @@ $(document).ready(function () {
         },
         success:function(res){
           console.log(res);  
-          if( res['status'] == 'success' ){
-            /** alert **/ 
-            $("#success_alert_text").html("寄送成功。");
-            fade($("#success_alert"));    
-            
-            $('button').prop('disabled', 'disabled');
-            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
-          }else if( res['status'] == 'success' && res['AccountPoint'] != ''){
+          if( res['status'] == 'success' && res['AccountPoint'] != ''){
             /** alert **/
             $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
             fade($("#success_alert"));
 
+            $('button').prop('disabled', 'disabled');
+            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+          }else if( res['status'] == 'success' ){
+            /** alert **/ 
+            $("#success_alert_text").html("寄送成功。");
+            fade($("#success_alert"));    
+            
             $('button').prop('disabled', 'disabled');
             setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
           }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
@@ -484,11 +506,14 @@ $(document).ready(function () {
 
   });
 
-
+  /* 儲存草稿 */
   $('#draftBtn').on('click', function(e) {
+    
+    e.preventDefault();
 
-    if( $('#msgTitle').val() == "" || editor.getData() == "" || ($('#mailCheckBox').prop("checked") == false && $('#messageCheckBox').prop("checked") == false) ){
-      alert('請勾選至少一項發送方式，並填入訊息名稱、內容。');
+    var empty = verifyEmpty();
+    
+    if( empty > 0 ){
       return false;
     }
 
@@ -527,7 +552,7 @@ $(document).ready(function () {
         $("#success_alert_text").html("儲存草稿成功");
         fade($("#success_alert"));
 
-        setTimeout(window.location.href = "{{URL::to('message')}}", 5000);
+        setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
         
       }else{
         /** alert **/ 
@@ -545,6 +570,96 @@ $(document).ready(function () {
     });
   });
 
+  /* 排程設定 */
+  $('#saveScheduleBtn').on('click', function(e) {
+
+    // $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
+
+    e.preventDefault();
+
+    // var empty = verifyEmpty();
+    
+    // if( empty > 0 ){
+    //   $('#scheduleModal').modal('hide')
+    //   return false;
+    // }
+    
+    if( $('#scheduleTime').val() == "" ){
+      alert('請輸入排程時間');
+      return false;
+    }
+
+    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
+    $(this).attr('disabled', 'disabled');
+
+    var id_message = $('#id_message').val();
+    var content = editor.getData().replace(new RegExp("<p>", "g"),"");
+    content = content.replace(new RegExp("</p>", "g"), "\n");
+    content = content.replace(new RegExp("&nbsp;", "g"), " ");
+    var emailAddr = $('#receiverEmail').val();
+    var phoneAddr = $('#receiverPhone').val();
+    var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+      return $(this).val();
+    }).get();
+    var dlvtime = $('#scheduleTime').val()
+
+    $.ajax({
+        type:'POST',
+        url:'scheduleInsert',
+        data:{
+          id_message: id_message,
+          sendCheckBox: sendCheckBox,
+          name: $('#msgTitle').val(),
+          id_teacher: $('#msgTeacher').val(),
+          id_course: $('#msgCourse').val(),
+          phoneNumber: phoneAddr.split(","),
+          emailAddr: emailAddr.split(","),
+          // emailAddrLen: emailAddr.split(",").length,
+          emailTitle: $('#emailTitle').val(),
+          content: content,
+          dlvtime: dlvtime
+        },
+        success:function(res){
+          console.log(res);  
+          // if( res['status'] == 'success' && res['AccountPoint'] != ''){
+          //   /** alert **/
+          //   $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
+          //   fade($("#success_alert"));
+
+          //   $('button').prop('disabled', 'disabled');
+          //   setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+          // }else if( res['status'] == 'success' ){
+          //   /** alert **/ 
+          //   $("#success_alert_text").html("寄送成功。");
+          //   fade($("#success_alert"));    
+            
+          //   $('button').prop('disabled', 'disabled');
+          //   setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+          // }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
+          //   /** alert **/ 
+          //   $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
+          //   fade($("#error_alert"));    
+            
+          //   $(this).html('立即傳送');
+          //   $(this).attr('disabled', false);
+          // }else if( res['status'] == 'error' ){
+          //   /** alert **/ 
+          //   $("#error_alert_text").html("寄送失敗。");
+          //   fade($("#error_alert"));   
+
+          //   $(this).html('立即傳送');
+          //   $(this).attr('disabled', false); 
+          // }
+
+        },
+        error: function(jqXHR, textStatus, errorMessage){
+            console.log("error: "+ errorMessage);    
+            
+            // $(this).html('立即傳送');
+            // $(this).attr('disabled', false);
+        }
+      });
+  });
   
   //select2 講師及課程下拉式搜尋 Sandy(2020/04/14)
   $("#msgTeacher, #msgCourse").select2({
@@ -691,10 +806,7 @@ $(document).ready(function () {
 
     ClassicEditor.create(document.querySelector("#content"), {
       // config
-      toolbar:['Heading','|','bold','italic','link', 
-                'bulletedList', 
-                'numberedList', 
-                '|','outdent','indent','']
+      toolbar:['Heading','|','bold','italic']
     })
     .then( newEditor => {
         editor = newEditor;
@@ -707,23 +819,64 @@ $(document).ready(function () {
     $('#content').val(content);
   }
 
+  /* 驗證是否空值 */
+  function verifyEmpty(){
+    var empty = 0;
+ 
+    //發送方式
+    var sendCheckBox = $('input[name="sendCheckBox"]:checked').length;
+    if( sendCheckBox == 0 ){
+      $("#sendCheckBox").addClass("is-invalid");
+      empty++;
+    }
+    else{
+      $("#sendCheckBox").removeClass("is-invalid");
+    }
 
+    //訊息名稱
+    if($('#msgTitle').val()==""){
+      $("#msgTitle").addClass("is-invalid");
+      empty++;
+    }
+    else{
+      $("#msgTitle").removeClass("is-invalid");
+    }
 
-  // /* 以下均待改 */
-  // $('#datetimepicker1').datetimepicker({
-  //   format: "YYYY-MM-DD HH:mm",
-  //   defaultDate:new Date(),
-  //   locale:"zh-tw"
-  // });
+    //email收件人
+    if($('#mailCheckBox').prop('checked')){
+      if( $("#receiverEmail").val() == "" ){
+        $("#receiverEmail").addClass("is-invalid");
+        empty++;
+      }else{
+        $("#receiverEmail").removeClass("is-invalid");
+      }
+    }else{
+      $("#receiverEmail").removeClass("is-invalid");
+    }
+    
+    //簡訊收件人
+    if($('#messageCheckBox').prop('checked')){
+      if( $("#receiverPhone").val() == "" ){
+        $("#receiverPhone").addClass("is-invalid");
+        empty++;
+      }else{
+        $("#receiverPhone").removeClass("is-invalid");
+      }
+    }else{
+      $("#receiverPhone").removeClass("is-invalid");
+    }
+    
+    //訊息內容
+    if(editor.getData()==""){
+      $("#content").addClass("is-invalid");
+      empty++;
+    }
+    else{
+      $("#content").removeClass("is-invalid");
+    }
 
-
-  //   $('#saveScheduleBtn').on('click', function() {
-
-  //     $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
-  //   });
-
-  // });
-
+    return empty;
+  }
 
 </script>
 
