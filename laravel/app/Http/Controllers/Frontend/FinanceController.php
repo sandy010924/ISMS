@@ -190,6 +190,76 @@ class FinanceController extends Controller
         }
         return $bonus;
     }
+
+    // 顯示獎金詳細資料(完整內容)
+    public function showeditdata(Request $request)
+    {
+        $id_bonus = $request->get('id');
+
+        // 獎金規則
+        $datas_rule = Bonus::leftjoin('bonus_rule as b', 'Bonus.id', '=', 'b.id_bonus')
+            ->select('Bonus.name', 'b.name', 'b.name_id', 'b.value')
+            ->where('Bonus.id', $id_bonus)
+            ->get();
+        // $datas = StudentGroup::leftjoin('student_groupdetail as b', 'student_group.id', '=', 'b.id_group')
+        //     ->leftjoin('student as c', 'b.id_student', '=', 'c.id')
+        //     ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
+        //     ->select('student_group.condition', 'c.*', 'd.datasource', 'd.submissiondate', 'student_group.name as name_group')
+        //     ->where('student_group.id', $id)
+        //     ->groupby('c.id')
+        //     ->get();
+
+        // 學員資料
+        // SELECT a.id,d.name as name_course,c.id,c.name as name_events,b.name as name_student,e.name as name_status,a.id_group,c.host,c.closeorder,c.staff,a.person,f.person FROM registration a
+        // 	   LEFT JOIN student b ON a.id_student = b.id
+        //     LEFT JOIN events_course c ON a.id_group = c.id_group
+        //     LEFT JOIN course d ON a.id_course = d.id
+        //     LEFT JOIN isms_status e ON a.status_payment = e.id
+        //     LEFT JOIN debt f on a.id = f.id_registration
+        // WHERE a.status_payment = '7' AND a.id_group is NOT null
+
+        $datas = Registration::leftjoin('student as b', 'registration.id_student', '=', 'b.id')
+            ->leftjoin('events_course as c', 'registration.id_group', '=', 'c.id_group')
+            ->leftjoin('course as d', 'registration.id_course', '=', 'd.id')
+            ->leftjoin('isms_status as e', 'registration.status_payment', '=', 'e.id')
+            ->leftjoin('debt as f', 'registration.id', '=', 'f.id_registration')
+            ->select('registration.id', 'd.name as name_course', 'c.name as name_events', 'b.name as name_student', 'e.name as name_status', 'registration.id_group')
+            ->where('registration.id_group', '<>', 'null')
+            ->where(function ($query) use ($datas_rule) {
+                foreach ($datas_rule as $key => $data) {
+                    switch ($data['name_id']) {
+                        case "0":
+                            // 名單來源包含
+                            // echo '00000000000';
+                            break;
+                        case "1":
+                            // 工作人員包含
+                            $query->wherein('c.staff', explode(',', $data['value']));
+                            break;
+                        case "2":
+                            // 主持開場包含
+                            $query->wherein('c.host', explode(',', $data['value']));
+                            break;
+                        case "3":
+                            // 結束收單包含
+                            $query->wherein('c.closeorder', explode(',', $data['value']));
+                            break;
+                        case "4":
+                            // 服務人員包含
+                            $query->wherein('registration.person', explode(',', $data['value']));
+                            break;
+                        case "5":
+                            // 追單人員包含
+                            $query->wherein('f.person', explode(',', $data['value']));
+                            break;
+                    }
+                }
+            })
+            ->get();
+
+        return view('frontend.bonus_detail', compact('datas', 'datas_rule', 'id_bonus'));
+    }
+
     // //日期排序
     // private static function dateSort(
     //     $a,

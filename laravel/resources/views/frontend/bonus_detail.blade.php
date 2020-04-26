@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 
 @section('title', '財務管理')
-@section('header', '獎金名單')
+@section('header', '獎金名單 - 完整內容')
 
 @section('content')
 <!-- Content Start -->
@@ -30,31 +30,25 @@
       @component('components.datatable')
       @slot('thead')
       <tr>
-        <th>姓名</th>
-        <th>狀態</th>
-        <th>獎金條件</th>
-        <th>建立時間</th>
-        <th></th>
+        <th>包含</th>
+        <th>日期</th>
+        <th>課程</th>
+        <th>場次</th>
+        <th>學員姓名</th>
+        <th>付款狀態</th>
+        <th>備註</th>
       </tr>
       @endslot
       @slot('tbody')
-      @foreach($bonus as $key => $data )
+      @foreach($datas as $key => $data )
       <tr>
-        <td>{{ $data['bonus_name']  }}</td>
-        <td>{{ ($data['bonus_status'] == '1') ? '啟用' : '暫停'  }}</td>
-        <td>
-          @foreach($data['bonus_rule'] as $key => $data_rule )
-          <span>{{$data_rule['name']}}<b style="color:#d21b1b">{{$data_rule['value']}}</b></span> <br>
-          @endforeach
-        </td>
-        <td>{{ $data['created_at'] }}</td>
-        <td>
-          @if (isset(Auth::user()->role) == 'admin' || isset(Auth::user()->role) == 'accountant')
-          <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('show_bonus_detail', [ 'id' => $data['id'] ] ) }}">完整內容</a>
-          <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#bonus_new" onclick="show_bonus({{ $data['id']}})">編輯</button>
-          <button type="button" class="btn btn-danger btn-sm mx-1" onclick="bonus_delete({{ $data['id']}})">刪除</button>
-          @endif
-        </td>
+        <td>包含</td>
+        <td>日期</td>
+        <td>{{ $data['name_course'] }}</td>
+        <td>{{ $data['name_events'] }}</td>
+        <td>{{ $data['name_student'] }}</td>
+        <td>{{ $data['name_status'] }}</td>
+        <td>備註</td>
       </tr>
       @endforeach
       @endslot

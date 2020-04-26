@@ -326,6 +326,8 @@ Route::post('add_bonus', 'Backend\FinanceController@addbonus');
 Route::get('bonus', 'Frontend\FinanceController@showbonus')->name('bonus');
 /*** 獎金名單 - 顯示資料規則 Rocky(2020/04/26) ***/
 Route::post('show_bonusrule', 'Frontend\FinanceController@showbonusrule');
+/*** 獎金名單 - 完整內容 Rocky(2020/04/26) ***/
+Route::get('show_bonus_detail', 'Frontend\FinanceController@showeditdata')->name('show_bonus_detail');
 /*** 獎金名單 - 刪除 Rocky(2020/04/26) ***/
 Route::post('delete_bonus', 'Backend\FinanceController@deletebonus');
 /*** 獎金名單 - 更新 Rocky(2020/04/26) ***/
