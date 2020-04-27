@@ -24,6 +24,7 @@
       </div>
       <div class="col-3">
         <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#bonus_add">新增獎金</button>
       </div>
     </div>
     <div class="table-responsive">
@@ -51,7 +52,7 @@
         <td>
           @if (isset(Auth::user()->role) == 'admin' || isset(Auth::user()->role) == 'accountant')
           <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('show_bonus_detail', [ 'id' => $data['id'] ] ) }}">完整內容</a>
-          <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#bonus_new" onclick="show_bonus({{ $data['id']}})">編輯</button>
+          <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#bonus_edite" onclick="show_bonus({{ $data['id']}})">編輯</button>
           <button type="button" class="btn btn-danger btn-sm mx-1" onclick="bonus_delete({{ $data['id']}})">刪除</button>
           @endif
         </td>
@@ -61,61 +62,98 @@
       @endcomponent
     </div>
 
-    <!-- 新增發票 Rocky(2020/04/25) - S -->
-    <div class="modal fade text-left " id="invoice" tabindex="-1" role="dialog" aria-labelledby="invoiceLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl" role="document">
+    <!-- 新增獎金 Rocky (2002/04/24) - S -->
+    <div class="modal fade text-left " id="bonus_add" tabindex="-1" role="dialog" aria-labelledby="bonus_addLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">發票資訊</h5>
+            <h5 class="modal-title">新增獎金</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <div class="row mb-3">
-              <div class="col-2">
-              </div>
-              <div class="col-3">
-                <div class="input-group date" data-target-input="nearest">
-                  <input type="text" id="invoice_search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期">
-                  <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            <div class="form-group required">
+              <label for="new_name" class="col-form-label">姓名</label>
+              <input type="text" id="bonus_add_name" name="new_name" class="form-control" required>
+            </div>
+            <div class="form-group required">
+              <label for="new_condition" class="col-form-label">條件</label>
+              <div class="form-group row mb-3">
+                <div class="col-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="c_add" value="" id="c_add_0">
+                    <label class="form-check-label" for="c_add_0">
+                      <h6 name="rule_add_name">名單來源包含<input id="t_add_0" type="text" name="rule_add" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="c_add" value="" id="c_add_1">
+                    <label class="form-check-label" for="c_add_1">
+                      <h6 name="rule_add_name">工作人員包含<input id="t_add_1" type="text" name="rule_add" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="c_add" value="" id="c_add_2">
+                    <label class="form-check-label" for="c_add_2">
+                      <h6 name="rule_add_name">主持開場包含<input id="t_add_2" type="text" name="rule_add" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
+                    </label>
                   </div>
                 </div>
               </div>
-              <div class="col-3">
-                <input id="invoice_search_name" type="search" class="form-control" placeholder="輸入學員姓名" aria-label="Class's name">
-              </div>
-              <div class="col-3">
-                <button class="btn btn-outline-secondary" type="button" id="btn_search2">搜尋</button>
+              <div class="form-group row mb-3">
+                <div class="col-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="c_add" value="" id="c_add_3">
+                    <label class="form-check-label" for="c_add_3">
+                      <h6 name="rule_add_name">結束收單包含<input id="t_add_3" type="text" name="rule_add" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="c_add" value="" id="c_add_4">
+                    <label class="form-check-label" for="c_add_4">
+                      <h6 name="rule_add_name">服務人員包含<input id="t_add_4" type="text" name="rule_add" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="c_add" value="" id="c_add_5">
+                    <label class="form-check-label" for="c_add_5">
+                      <h6 name="rule_add_name">追單人員包含<input id="t_add_5" type="text" name="rule_add" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="table-responsive">
-              @component('components.datatable_history')
-              @slot('thead')
-              <tr>
-                <th>購買日期</th>
-                <th>學員姓名</th>
-                <th>發票</th>
-                <th>開立日期</th>
-                <th>發票號碼</th>
-                <th>抬頭</th>
-                <th>統編</th>
-                <th>地址</th>
-              </tr>
-              @endslot
-              @slot('tbody')
-              @endslot
-              @endcomponent
+            <div class="form-group required">
+              <label for="new_mode" class="col-form-label">狀態</label>
+              <div class="form-check">
+                <input id="status_add_1" type="radio" name="status_add" value="1">
+                <label for="status_add_1">啟用</label>&nbsp; &nbsp;
+                <input id="status_add_0" type="radio" name="status_add" value="0">
+                <label for="status_add_0">暫停</label>
+              </div>
             </div>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" onclick="add_bonus();">確認</button>
+          </div>
+          </form>
         </div>
       </div>
     </div>
-    <!-- 新增發票 Rocky(2020/04/25) - E -->
+    <!-- 新增獎金 Rocky (2002/04/24) - E -->
 
     <!-- 編輯獎金 Rocky (2002/04/26) - S -->
-    <div class="modal fade text-left " id="bonus_new" tabindex="-1" role="dialog" aria-labelledby="bonus_newLabel" aria-hidden="true">
+    <div class="modal fade text-left " id="bonus_edite" tabindex="-1" role="dialog" aria-labelledby="bonus_editeLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -135,7 +173,7 @@
               <div class="form-group row mb-3">
                 <div class="col-4">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="c_0">
+                    <input class="form-check-input" type="checkbox" name="c_edite" value="" id="c_0">
                     <label class="form-check-label" for="c_0">
                       <h6 name="rule_name">名單來源包含<input id="t_0" type="text" name="rule" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
                     </label>
@@ -143,7 +181,7 @@
                 </div>
                 <div class="col-4">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="c_1">
+                    <input class="form-check-input" type="checkbox" name="c_edite" value="" id="c_1">
                     <label class="form-check-label" for="c_1">
                       <h6 name="rule_name">工作人員包含<input id="t_1" type="text" name="rule" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
                     </label>
@@ -151,7 +189,7 @@
                 </div>
                 <div class="col-4">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="c_2">
+                    <input class="form-check-input" type="checkbox" name="c_edite" value="" id="c_2">
                     <label class="form-check-label" for="c_2">
                       <h6 name="rule_name">主持開場包含<input id="t_2" type="text" name="rule" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
                     </label>
@@ -161,7 +199,7 @@
               <div class="form-group row mb-3">
                 <div class="col-4">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="c_3">
+                    <input class="form-check-input" type="checkbox" name="c_edite" value="" id="c_3">
                     <label class="form-check-label" for="c_3">
                       <h6 name="rule_name">結束收單包含<input id="t_3" type="text" name="rule" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
                     </label>
@@ -169,7 +207,7 @@
                 </div>
                 <div class="col-4">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="c_4">
+                    <input class="form-check-input" type="checkbox" name="c_edite" value="" id="c_4">
                     <label class="form-check-label" for="c_4">
                       <h6 name="rule_name">服務人員包含<input id="t_4" type="text" name="rule" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
                     </label>
@@ -177,7 +215,7 @@
                 </div>
                 <div class="col-4">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="c_5">
+                    <input class="form-check-input" type="checkbox" name="c_edite" value="" id="c_5">
                     <label class="form-check-label" for="c_5">
                       <h6 name="rule_name">追單人員包含<input id="t_5" type="text" name="rule" class="border-top-0 border-right-0 border-left-0 mx-1 w-50 text-center"></h6>
                     </label>
@@ -280,7 +318,6 @@
   }
   /* 刪除獎金資料 - E Rocky(2020/04/26) */
 
-
   /* 顯示獎金資料 - S Rocky(2020/04/26) */
   function show_bonus(id) {
     $('#input_id').val(id)
@@ -323,6 +360,77 @@
   }
   /* 顯示獎金資料 - E Rocky(2020/04/26) */
 
+  /* 新增獎金資料 - ESRocky(2020/04/27) */
+  function add_bonus() {
+    var checkboxlist = '',
+      namelist = '',
+      nameidlist = '',
+      textlist = '';
+
+    // 名稱
+    $("h6[name='rule_add_name']").each(function(index) {
+      if (this.text != '') {
+        namelist += $(this).text() + ",";
+      }
+    });
+    if (namelist.length > 0) {
+      namelist = namelist.substring(0, namelist.length - 1);
+    }
+
+    // 勾選
+    $("input[name='c_add']").each(function(index) {
+      if (this.checked) {
+        checkboxlist += "1,";
+      } else {
+        checkboxlist += "0,";
+      }
+    });
+    if (checkboxlist.length > 0) {
+      checkboxlist = checkboxlist.substring(0, checkboxlist.length - 1);
+    }
+
+    // 輸入框
+    $("input[name='rule_add']").each(function(index) {
+      if (this.val != '') {
+        textlist += $(this).val() + "|";
+      } else {
+        textlist += "0|";
+      }
+    });
+    if (textlist.length > 0) {
+      textlist = textlist.substring(0, textlist.length - 1);
+    }
+    nameidlist = '0,1,2,3,4,5';
+    // console.log(namelist + '\n' + nameidlist + '\n' + checkboxlist + '\n' + textlist)
+
+    $.ajax({
+      type: 'POST',
+      url: 'add_bonus',
+      data: {
+        name: $('#bonus_add_name').val(),
+        bonus_status: $('input[name="status_add"]:checked').val(),
+        namelist: namelist,
+        nameidlist: nameidlist,
+        checkboxlist: checkboxlist,
+        textlist: textlist
+      },
+      success: function(data) {
+        /** alert **/
+        $("#success_alert_text").html("資料儲存成功");
+        fade($("#success_alert"));
+        location.reload();
+      },
+      error: function(jqXHR) {
+        console.log(JSON.stringify(jqXHR));
+
+        /** alert **/
+        $("#error_alert_text").html("資料儲存失敗");
+        fade($("#error_alert"));
+      }
+    });
+  }
+  /* 新增獎金資料 - E Rocky(2020/04/27) */
+
   /* 更新獎金資料 - S Rocky(2020/04/26) */
   function update_bonus() {
     var checkboxlist = '',
@@ -341,7 +449,7 @@
     }
 
     // 勾選
-    $("input[type=checkbox]").each(function(index) {
+    $("input[name='c_edite']").each(function(index) {
       if (this.checked) {
         checkboxlist += "1,";
       } else {
@@ -379,11 +487,10 @@
         textlist: textlist
       },
       success: function(data) {
-        console.log(data);
-
         /** alert **/
         $("#success_alert_text").html("資料更新成功");
         fade($("#success_alert"));
+        location.reload();
       },
       error: function(jqXHR) {
         console.log(JSON.stringify(jqXHR));

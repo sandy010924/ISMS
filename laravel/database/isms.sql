@@ -644,7 +644,7 @@ ALTER TABLE `registration` ADD COLUMN invoice VARCHAR(150) NULL COMMENT '發票�
 ALTER TABLE `registration` ADD COLUMN invoice_created_at timestamp NULL COMMENT '開立日期';
 
 
--- bonus  獎金資料表(2020/04/26)
+-- bonus  獎金資料表 Rocky(2020/04/26)
 CREATE TABLE IF NOT EXISTS `bonus`(
    `id` INT  AUTO_INCREMENT COMMENT 'id',
    `id_events` VARCHAR(100)  NULL COMMENT '場次ID',
@@ -659,7 +659,7 @@ CREATE TABLE IF NOT EXISTS `bonus`(
 
 
 
--- bonus_rule  獎金規則資料表(2020/04/26)
+-- bonus_rule  獎金規則資料表 Rocky(2020/04/26)
 CREATE TABLE IF NOT EXISTS `bonus_rule`(
    `id` INT  AUTO_INCREMENT COMMENT 'id',
    `id_bonus` VARCHAR(100)  NULL COMMENT '獎金ID',
@@ -675,3 +675,8 @@ CREATE TABLE IF NOT EXISTS `bonus_rule`(
 
 -- sender資料表重新命名為receiver   Sandy (2020/04/27)
 ALTER TABLE sender RENAME TO receiver;
+
+-- 獎金資料表 - 刪除欄位 Rocky(2020/04/27)
+ALTER TABLE `bonus` DROP COLUMN `id_events`;
+ALTER TABLE `bonus` DROP COLUMN `id_course`;
+ALTER TABLE `bonus` DROP COLUMN `id_group`;

@@ -76,9 +76,6 @@ class FinanceController extends Controller
     public function addbonus(Request $request)
     {
         //取回data
-        $id_events = $request->input('id_events');
-        $id_course = $request->input('id_course');
-        $id_group = $request->input('id_group');
         $name = $request->input('name');
         $bonus_status = $request->input('bonus_status');
         $namelist = $request->input('namelist');
@@ -90,9 +87,6 @@ class FinanceController extends Controller
 
 
         // 獎金
-        $bonus->id_events       = $id_events;         // 場次ID
-        $bonus->id_course       = $id_course;         // 課程ID
-        $bonus->id_group        = $id_group;          // 群組ID
         $bonus->name            = $name;              // 姓名
         $bonus->status          = $bonus_status;      // 狀態
 
