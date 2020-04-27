@@ -562,7 +562,7 @@ function second_judge(x,send){
 
     if($('#iemail').val()!=""){
 
-        var rule1=/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/
+        var rule1=/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         if(!rule1.test($('#iemail').val())){
           $("#iemail").addClass("is-invalid");
           successful=false

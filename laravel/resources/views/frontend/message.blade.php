@@ -101,7 +101,7 @@
                 <!-- <input id="receiverEmailMultiBtn" type="button" value="多選" data-toggle="modal" data-target="#mailModal"> -->
                 <input type="email" class="form-control" id="receiverEmail" name="receiverEmail" placeholder="請輸入收件者 E-mail ..." value="{{ $receiver_email }}">
                 <div class="invalid-feedback">
-                  請輸入收件者 E-mail
+                  請輸入正確格式的收件者 E-mail
                 </div>
                 <small class="form-text " style="color:#888;">手動輸入請以 , 隔開(中間不空白)</small>
               </div>
@@ -482,7 +482,7 @@ $(document).ready(function () {
         },
         error: function(jqXHR, textStatus, errorMessage){
             console.log("error: "+ errorMessage);    
-            
+            console.log(jqXHR);
             $(this).html('立即傳送');
             $(this).attr('disabled', false);
         }
@@ -848,7 +848,20 @@ $(document).ready(function () {
         $("#receiverEmail").addClass("is-invalid");
         empty++;
       }else{
-        $("#receiverEmail").removeClass("is-invalid");
+        //驗證email格式
+        $email = $('#receiverEmail').val().split(",");
+        var rule=/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+        for( var i = 0; i < $email.length ; i++ ){
+          if(!rule.test($email[i])){
+            $("#receiverEmail").addClass("is-invalid");
+            empty++;
+            break;
+          }
+          else{
+            $("#receiverEmail").removeClass("is-invalid");
+          }
+        }
       }
     }else{
       $("#receiverEmail").removeClass("is-invalid");
