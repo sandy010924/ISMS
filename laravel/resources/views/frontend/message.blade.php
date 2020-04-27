@@ -423,29 +423,44 @@ $(document).ready(function () {
     $(this).attr('disabled', 'disabled');
 
     var id_message = $('#id_message').val();
+    var type ="";
+    var name =$('#msgTitle').val();
+    var id_teacher = $('#msgTeacher').val();
+    var id_course = $('#msgCourse').val();
+    var phoneAddr = $('#receiverPhone').val();
+    var emailAddr = $('#receiverEmail').val();
+    var emailTitle = $('#emailTitle').val()
+    // var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+    //   return $(this).val();
+    // }).get();
     var content = editor.getData().replace(new RegExp("<p>", "g"),"");
     content = content.replace(new RegExp("</p>", "g"), "\n");
     content = content.replace(new RegExp("&nbsp;", "g"), " ");
-    var emailAddr = $('#receiverEmail').val();
-    var phoneAddr = $('#receiverPhone').val();
-    var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
-      return $(this).val();
-    }).get();
+    var send_at = ""; 
+
+    //寄送方式
+    if( $('#messageCheckBox').prop('checked') && !$('#mailCheckBox').prop('checked') ){
+      type = 0;
+    }else if( !$('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+      type = 1;
+    }else if( $('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+      type = 2;
+    }
 
     $.ajax({
         type:'POST',
         url:'message_insert',
         data:{
           id_message: id_message,
-          sendCheckBox: sendCheckBox,
-          name: $('#msgTitle').val(),
-          id_teacher: $('#msgTeacher').val(),
-          id_course: $('#msgCourse').val(),
+          type: type,
+          name: name,
+          id_teacher: id_teacher,
+          id_course: id_course,
           phoneNumber: phoneAddr.split(","),
           emailAddr: emailAddr.split(","),
-          // emailAddrLen: emailAddr.split(",").length,
-          emailTitle: $('#emailTitle').val(),
-          content: content
+          emailTitle: emailTitle,
+          content: content,
+          send_at: send_at
         },
         success:function(res){
           console.log(res);  
@@ -489,9 +504,6 @@ $(document).ready(function () {
       });
 
 
-
-
-
     // if ($('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked')) {
     //   // 兩者都發送
     //   messageApiType();
@@ -518,31 +530,68 @@ $(document).ready(function () {
     }
 
     var id_message = $('#id_message').val();
+    var type ="";
+    var name =$('#msgTitle').val();
+    var id_teacher = $('#msgTeacher').val();
+    var id_course = $('#msgCourse').val();
+    var phoneAddr = $('#receiverPhone').val();
+    var emailAddr = $('#receiverEmail').val();
+    var emailTitle = $('#emailTitle').val()
+    // var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+    //   return $(this).val();
+    // }).get();
     var content = editor.getData().replace(new RegExp("<p>", "g"),"");
     content = content.replace(new RegExp("</p>", "g"), "\n");
     content = content.replace(new RegExp("&nbsp;", "g"), " ");
-    var emailAddr = $('#receiverEmail').val();
-    var phoneAddr = $('#receiverPhone').val();
-    var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
-      return $(this).val();
-    }).get();
+    var send_at = ""; 
+
+    //寄送方式
+    if( $('#messageCheckBox').prop('checked') && !$('#mailCheckBox').prop('checked') ){
+      type = 0;
+    }else if( !$('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+      type = 1;
+    }else if( $('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+      type = 2;
+    }
+
+    // var id_message = $('#id_message').val();
+    // var content = editor.getData().replace(new RegExp("<p>", "g"),"");
+    // content = content.replace(new RegExp("</p>", "g"), "\n");
+    // content = content.replace(new RegExp("&nbsp;", "g"), " ");
+    // var emailAddr = $('#receiverEmail').val();
+    // var phoneAddr = $('#receiverPhone').val();
+    // var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+    //   return $(this).val();
+    // }).get();
     
     $.ajax({
       type: "POST",
       url: "draftInsert",
       data: {
+        // id_message: id_message,
+        // // mailCheckBox: $('#mailCheckBox').prop("checked"),
+        // // messageCheckBox: $('#messageCheckBox').prop("checked"),
+        // sendCheckBox: sendCheckBox,
+        // name: $('#msgTitle').val(),
+        // id_teacher: $('#msgTeacher').val(),
+        // id_course: $('#msgCourse').val(),
+        // phoneNumber: phoneAddr.split(","),
+        // emailAddr: emailAddr.split(","),
+        // emailAddrLen: emailAddr.split(",").length,
+        // emailTitle: $('#emailTitle').val(),
+        // content: content
+
+
         id_message: id_message,
-        // mailCheckBox: $('#mailCheckBox').prop("checked"),
-        // messageCheckBox: $('#messageCheckBox').prop("checked"),
-        sendCheckBox: sendCheckBox,
-        name: $('#msgTitle').val(),
-        id_teacher: $('#msgTeacher').val(),
-        id_course: $('#msgCourse').val(),
+        type: type,
+        name: name,
+        id_teacher: id_teacher,
+        id_course: id_course,
         phoneNumber: phoneAddr.split(","),
         emailAddr: emailAddr.split(","),
-        emailAddrLen: emailAddr.split(",").length,
-        emailTitle: $('#emailTitle').val(),
-        content: content
+        emailTitle: emailTitle,
+        content: content,
+        send_at: send_at
       }
     }).done(function(res) {
       console.log(res);
@@ -592,32 +641,403 @@ $(document).ready(function () {
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
     $(this).attr('disabled', 'disabled');
 
+    insert('schedule');
+    
+  });
+
+  // /* 立即傳送 */
+  // $('#sendMessageBtn').on('click', function(e) {
+  //   e.preventDefault();
+
+  //   var empty = verifyEmpty();
+    
+  //   if( empty > 0 ){
+  //     return false;
+  //   }
+
+  //   $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>立即傳送');
+  //   $(this).attr('disabled', 'disabled');
+
+  //   var id_message = $('#id_message').val();
+  //   var content = editor.getData().replace(new RegExp("<p>", "g"),"");
+  //   content = content.replace(new RegExp("</p>", "g"), "\n");
+  //   content = content.replace(new RegExp("&nbsp;", "g"), " ");
+  //   var emailAddr = $('#receiverEmail').val();
+  //   var phoneAddr = $('#receiverPhone').val();
+  //   var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+  //     return $(this).val();
+  //   }).get();
+
+
+  //   $.ajax({
+  //       type:'POST',
+  //       url:'message_insert',
+  //       data:{
+  //         btnType : 'insert'
+  //         id_message: id_message,
+  //         sendCheckBox: sendCheckBox,
+  //         name: $('#msgTitle').val(),
+  //         id_teacher: $('#msgTeacher').val(),
+  //         id_course: $('#msgCourse').val(),
+  //         phoneNumber: phoneAddr.split(","),
+  //         emailAddr: emailAddr.split(","),
+  //         // emailAddrLen: emailAddr.split(",").length,
+  //         emailTitle: $('#emailTitle').val(),
+  //         content: content,
+  //         send_at: send_at
+  //       },
+  //       success:function(res){
+  //         console.log(res);  
+  //         if( res['status'] == 'success' && res['AccountPoint'] != ''){
+  //           /** alert **/
+  //           $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
+  //           fade($("#success_alert"));
+
+  //           $('button').prop('disabled', 'disabled');
+  //           setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+  //         }else if( res['status'] == 'success' ){
+  //           /** alert **/ 
+  //           $("#success_alert_text").html("寄送成功。");
+  //           fade($("#success_alert"));    
+            
+  //           $('button').prop('disabled', 'disabled');
+  //           setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+  //         }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
+  //           /** alert **/ 
+  //           $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
+  //           fade($("#error_alert"));    
+            
+  //           $(this).html('立即傳送');
+  //           $(this).attr('disabled', false);
+  //         }else if( res['status'] == 'error' ){
+  //           /** alert **/ 
+  //           $("#error_alert_text").html("寄送失敗。");
+  //           fade($("#error_alert"));   
+
+  //           $(this).html('立即傳送');
+  //           $(this).attr('disabled', false); 
+  //         }
+
+  //       },
+  //       error: function(jqXHR, textStatus, errorMessage){
+  //           console.log("error: "+ errorMessage);    
+  //           console.log(jqXHR);
+  //           $(this).html('立即傳送');
+  //           $(this).attr('disabled', false);
+  //       }
+  //     });
+
+
+
+
+
+  //   // if ($('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked')) {
+  //   //   // 兩者都發送
+  //   //   messageApiType();
+  //   //   mailApi();
+  //   // } else if( ($('#messageCheckBox').prop('checked') == true) && ($('#mailCheckBox').prop('checked') == false) ) {
+  //   //   // 只發送簡訊
+  //   //   messageApiType();
+  //   // } else if( ($('#messageCheckBox').prop('checked') == false) && ($('#mailCheckBox').prop('checked') == true) ) {
+  //   //   // 只發送mail
+  //   //   mailApi();
+  //   // }
+
+  // });
+
+  // /* 儲存草稿 */
+  // $('#draftBtn').on('click', function(e) {
+    
+  //   e.preventDefault();
+
+  //   var empty = verifyEmpty();
+    
+  //   if( empty > 0 ){
+  //     return false;
+  //   }
+
+  //   var id_message = $('#id_message').val();
+  //   var content = editor.getData().replace(new RegExp("<p>", "g"),"");
+  //   content = content.replace(new RegExp("</p>", "g"), "\n");
+  //   content = content.replace(new RegExp("&nbsp;", "g"), " ");
+  //   var emailAddr = $('#receiverEmail').val();
+  //   var phoneAddr = $('#receiverPhone').val();
+  //   var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+  //     return $(this).val();
+  //   }).get();
+    
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "draftInsert",
+  //     data: {
+  //       id_message: id_message,
+  //       // mailCheckBox: $('#mailCheckBox').prop("checked"),
+  //       // messageCheckBox: $('#messageCheckBox').prop("checked"),
+  //       sendCheckBox: sendCheckBox,
+  //       name: $('#msgTitle').val(),
+  //       id_teacher: $('#msgTeacher').val(),
+  //       id_course: $('#msgCourse').val(),
+  //       phoneNumber: phoneAddr.split(","),
+  //       emailAddr: emailAddr.split(","),
+  //       emailAddrLen: emailAddr.split(",").length,
+  //       emailTitle: $('#emailTitle').val(),
+  //       content: content
+  //     }
+  //   }).done(function(res) {
+  //     console.log(res);
+
+  //     if( res['status'] == 'success' ){
+  //       /** alert **/
+  //       $("#success_alert_text").html("儲存草稿成功");
+  //       fade($("#success_alert"));
+
+  //       setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+        
+  //     }else{
+  //       /** alert **/ 
+  //       $("#error_alert_text").html("儲存草稿失敗");
+  //       fade($("#error_alert"));     
+  //     }
+
+  //   }).fail(function(err) {
+  //     console.log(err);
+      
+  //     /** alert **/ 
+  //     $("#error_alert_text").html("儲存草稿失敗");
+  //     fade($("#error_alert"));       
+
+  //   });
+  // });
+
+  // /* 排程設定 */
+  // $('#saveScheduleBtn').on('click', function(e) {
+
+  //   // $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
+
+  //   e.preventDefault();
+
+  //   // var empty = verifyEmpty();
+    
+  //   // if( empty > 0 ){
+  //   //   $('#scheduleModal').modal('hide')
+  //   //   return false;
+  //   // }
+    
+  //   if( $('#scheduleTime').val() == "" ){
+  //     alert('請輸入排程時間');
+  //     return false;
+  //   }
+
+  //   $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
+  //   $(this).attr('disabled', 'disabled');
+
+  //   insert('schedule');
+    
+  // });
+  
+  //select2 講師及課程下拉式搜尋 Sandy(2020/04/14)
+  $("#msgTeacher, #msgCourse").select2({
+      width: 'resolve', // need to override the changed default
+      theme: 'bootstrap'
+  });
+  $.fn.select2.defaults.set( "theme", "bootstrap" );
+
+});
+
+//  /* 判斷簡訊是單筆、多筆 */
+//   function messageApiType() {
+//     var msgContent = editor.getData().replace(new RegExp("<p>", "g"),"");
+//     msgContent = msgContent.replace(new RegExp("</p>", "g"), "\n");
+//     msgContent = msgContent.replace(new RegExp("&nbsp;", "g"), " ");
+
+
+//     // 單筆 & 多筆 簡訊判斷
+//     $('#receiverPhone').val().indexOf(",") == -1 ? messageApi(msgContent) : messageBulkApi(msgContent);
+//   }
+
+
+//   /* 單筆簡訊發送 */
+//   function messageApi(msgContent) {
+//     var id_message = $('#id_message').val();
+    
+//     $.ajax({
+//       type: "POST",
+//       url: "messageApi",
+//       data: {
+//         // messageTitle: '訊息名稱',
+//         id_message: id_message,
+//         messageContents: msgContent,
+//         phoneNumber: $('#receiverPhone').val(),
+//         name: $('#msgTitle').val(),
+//         id_teacher: $('#msgTeacher').val(),
+//         id_course: $('#msgCourse').val()
+//       }
+//     }).done(function(res) {
+//       console.log(res);
+
+//       if( res['status'] == 'success' ){
+//         /** alert **/
+//         $("#success_alert_text").html("發送簡訊成功，餘額尚有" + res['AccountPoint'] + "。");
+//         fade($("#success_alert"));
+
+//         setTimeout(window.location.href = "{{URL::to('message')}}", 5000);
+//       }else if( res['status'] == 'error' ){
+//         /** alert **/ 
+//         $("#error_alert_text").html("發送簡訊失敗，" + res['msg'] + "。");
+//         fade($("#error_alert"));    
+//       }
+//       else{
+//         /** alert **/ 
+//         $("#error_alert_text").html("發送簡訊成功，資料儲存失敗");
+//         fade($("#error_alert"));     
+//       }
+
+//     }).fail(function(err) {
+//       console.log(err);
+      
+//       /** alert **/ 
+//       $("#error_alert_text").html("發送簡訊失敗");
+//       fade($("#error_alert"));       
+
+//     });
+//   }
+
+//   /* 多筆簡訊發送 */
+//   function messageBulkApi(msgContent) {
+//     $.ajax({
+//       type: "POST",
+//       url: "messageBulkApi",
+//       data: {
+//         // messageTitle: '訊息名稱',
+//         messageContents: msgContent,
+//         phoneNumber: $('#receiverPhone').val().split(","),
+//         msgLen: $('#receiverPhone').val().split(",").length,
+//         name: $('#msgTitle').val(),
+//         id_teacher: $('#msgTeacher').val(),
+//         id_course: $('#msgCourse').val()
+//       }
+//     }).done(function(res) {
+//       console.log(res);
+//     }).fail(function(err) {
+//       console.log(err);
+//     });
+//   }
+
+//   /* Email發送 */
+//   function mailApi() {
+    
+//     var emailAddr = $('#receiverEmail').val();
+//     var arrEmail = emailAddr.split(",");
+//     var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+//     for(var i = 0; i < arrEmail.length ;i++){
+//       if(!regex.test(arrEmail[i])) {
+//         alert('請輸入正確的電子信箱格式');
+//         return false;
+//       }
+//     }
+
+//     var emailContent = editor.getData().replace(new RegExp("<p>", "g"),"");
+//     emailContent = emailContent.replace(new RegExp("</p>", "g"), "\n");
+//     emailContent = emailContent.replace(new RegExp("&nbsp;", "g"), " ");
+
+//     $.ajax({
+//       type: "post",
+//       url: "sendMail",
+//       data: {
+//         emailTitle: $('#emailTitle').val(),
+//         emailAddr: emailAddr.split(","),
+//         emailAddrLen: emailAddr.split(",").length,
+//         emailContent: emailContent
+
+//       }
+//     }).done(function(res) {
+//       console.log(res);
+//     }).fail(function(err) {
+//       console.log(err);
+//     });
+//   }
+
+  /* 初始化 */
+  function init() {
+    // $('#msgTitle').attr('disabled', 'disabled');
+    // 判斷類型決定是否開啟電話跟信箱input(草稿用)
+    var type = '<?php echo $message["type"]; ?>'
+
+    if( type != "" && type == 0 || type == 2){
+      $('#receiverPhone').attr('disabled', false);
+    }else{
+      $('#receiverPhone').attr('disabled', 'disabled');
+    }
+    
+    if( type != "" && type == 1 || type == 2){
+      $('#receiverEmail').attr('disabled', false);
+    }else{
+      $('#receiverEmail').attr('disabled', 'disabled');
+    }
+
+    $('#emailTitle').attr('disabled', 'disabled');
+
+    ClassicEditor.create(document.querySelector("#content"), {
+      // config
+      toolbar:['Heading','|','bold','italic']
+    })
+    .then( newEditor => {
+        editor = newEditor;
+    })
+    .catch(err => {
+      console.error(err.stack);
+    });
+
+    var content = '<?php echo str_replace("\n","<br>", $message["content"]); ?>';
+    $('#content').val(content);
+  }
+
+
+  /* 新增訊息推播 */
+  function insert() {
     var id_message = $('#id_message').val();
+    var type ="";
+    var name =$('#msgTitle').val();
+    var id_teacher = $('#msgTeacher').val();
+    var id_course = $('#msgCourse').val();
+    var phoneAddr = $('#receiverPhone').val();
+    var emailAddr = $('#receiverEmail').val();
+    var emailTitle = $('#emailTitle').val()
+    // var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+    //   return $(this).val();
+    // }).get();
     var content = editor.getData().replace(new RegExp("<p>", "g"),"");
     content = content.replace(new RegExp("</p>", "g"), "\n");
     content = content.replace(new RegExp("&nbsp;", "g"), " ");
-    var emailAddr = $('#receiverEmail').val();
-    var phoneAddr = $('#receiverPhone').val();
-    var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
-      return $(this).val();
-    }).get();
-    var dlvtime = $('#scheduleTime').val()
+    var send_at = ""; 
+
+    //寄送方式
+    if( $('#messageCheckBox').prop('checked') && !$('#mailCheckBox').prop('checked') ){
+      type = 0;
+    }else if( !$('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+      type = 1;
+    }else if( $('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+      type = 2;
+    }
 
     $.ajax({
         type:'POST',
         url:'scheduleInsert',
         data:{
+          btnType: btnType,
           id_message: id_message,
-          sendCheckBox: sendCheckBox,
-          name: $('#msgTitle').val(),
-          id_teacher: $('#msgTeacher').val(),
-          id_course: $('#msgCourse').val(),
+          // sendCheckBox: sendCheckBox,
+          type: type,
+          name: name,
+          id_teacher: id_teacher,
+          id_course: id_course,
           phoneNumber: phoneAddr.split(","),
           emailAddr: emailAddr.split(","),
           // emailAddrLen: emailAddr.split(",").length,
-          emailTitle: $('#emailTitle').val(),
+          emailTitle: emailTitle,
           content: content,
-          dlvtime: dlvtime
+          send_at: send_at
         },
         success:function(res){
           console.log(res);  
@@ -659,167 +1079,10 @@ $(document).ready(function () {
             // $(this).attr('disabled', false);
         }
       });
-  });
-  
-  //select2 講師及課程下拉式搜尋 Sandy(2020/04/14)
-  $("#msgTeacher, #msgCourse").select2({
-      width: 'resolve', // need to override the changed default
-      theme: 'bootstrap'
-  });
-  $.fn.select2.defaults.set( "theme", "bootstrap" );
-
-});
-
- /* 判斷簡訊是單筆、多筆 */
-  function messageApiType() {
-    var msgContent = editor.getData().replace(new RegExp("<p>", "g"),"");
-    msgContent = msgContent.replace(new RegExp("</p>", "g"), "\n");
-    msgContent = msgContent.replace(new RegExp("&nbsp;", "g"), " ");
-
-
-    // 單筆 & 多筆 簡訊判斷
-    $('#receiverPhone').val().indexOf(",") == -1 ? messageApi(msgContent) : messageBulkApi(msgContent);
   }
 
 
-  /* 單筆簡訊發送 */
-  function messageApi(msgContent) {
-    var id_message = $('#id_message').val();
-    
-    $.ajax({
-      type: "POST",
-      url: "messageApi",
-      data: {
-        // messageTitle: '訊息名稱',
-        id_message: id_message,
-        messageContents: msgContent,
-        phoneNumber: $('#receiverPhone').val(),
-        name: $('#msgTitle').val(),
-        id_teacher: $('#msgTeacher').val(),
-        id_course: $('#msgCourse').val()
-      }
-    }).done(function(res) {
-      console.log(res);
-
-      if( res['status'] == 'success' ){
-        /** alert **/
-        $("#success_alert_text").html("發送簡訊成功，餘額尚有" + res['AccountPoint'] + "。");
-        fade($("#success_alert"));
-
-        setTimeout(window.location.href = "{{URL::to('message')}}", 5000);
-      }else if( res['status'] == 'error' ){
-        /** alert **/ 
-        $("#error_alert_text").html("發送簡訊失敗，" + res['msg'] + "。");
-        fade($("#error_alert"));    
-      }
-      else{
-        /** alert **/ 
-        $("#error_alert_text").html("發送簡訊成功，資料儲存失敗");
-        fade($("#error_alert"));     
-      }
-
-    }).fail(function(err) {
-      console.log(err);
-      
-      /** alert **/ 
-      $("#error_alert_text").html("發送簡訊失敗");
-      fade($("#error_alert"));       
-
-    });
-  }
-
-  /* 多筆簡訊發送 */
-  function messageBulkApi(msgContent) {
-    $.ajax({
-      type: "POST",
-      url: "messageBulkApi",
-      data: {
-        // messageTitle: '訊息名稱',
-        messageContents: msgContent,
-        phoneNumber: $('#receiverPhone').val().split(","),
-        msgLen: $('#receiverPhone').val().split(",").length,
-        name: $('#msgTitle').val(),
-        id_teacher: $('#msgTeacher').val(),
-        id_course: $('#msgCourse').val()
-      }
-    }).done(function(res) {
-      console.log(res);
-    }).fail(function(err) {
-      console.log(err);
-    });
-  }
-
-  /* Email發送 */
-  function mailApi() {
-    
-    var emailAddr = $('#receiverEmail').val();
-    var arrEmail = emailAddr.split(",");
-    var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
-    for(var i = 0; i < arrEmail.length ;i++){
-      if(!regex.test(arrEmail[i])) {
-        alert('請輸入正確的電子信箱格式');
-        return false;
-      }
-    }
-
-    var emailContent = editor.getData().replace(new RegExp("<p>", "g"),"");
-    emailContent = emailContent.replace(new RegExp("</p>", "g"), "\n");
-    emailContent = emailContent.replace(new RegExp("&nbsp;", "g"), " ");
-
-    $.ajax({
-      type: "post",
-      url: "sendMail",
-      data: {
-        emailTitle: $('#emailTitle').val(),
-        emailAddr: emailAddr.split(","),
-        emailAddrLen: emailAddr.split(",").length,
-        emailContent: emailContent
-
-      }
-    }).done(function(res) {
-      console.log(res);
-    }).fail(function(err) {
-      console.log(err);
-    });
-  }
-
-  /* 初始化 */
-  function init() {
-    // $('#msgTitle').attr('disabled', 'disabled');
-    // 判斷類型決定是否開啟電話跟信箱input(草稿用)
-    var type = '<?php echo $message["type"]; ?>'
-
-    if( type != "" && type == 0 || type == 2){
-      $('#receiverPhone').attr('disabled', false);
-    }else{
-      $('#receiverPhone').attr('disabled', 'disabled');
-    }
-    
-    if( type != "" && type == 1 || type == 2){
-      $('#receiverEmail').attr('disabled', false);
-    }else{
-      $('#receiverEmail').attr('disabled', 'disabled');
-    }
-
-    $('#emailTitle').attr('disabled', 'disabled');
-
-    ClassicEditor.create(document.querySelector("#content"), {
-      // config
-      toolbar:['Heading','|','bold','italic']
-    })
-    .then( newEditor => {
-        editor = newEditor;
-    })
-    .catch(err => {
-      console.error(err.stack);
-    });
-
-    var content = '<?php echo str_replace("\n","<br>", $message["content"]); ?>';
-    $('#content').val(content);
-  }
-
-  /* 驗證是否空值 */
+  /* 驗證格式及是否空值 */
   function verifyEmpty(){
     var empty = 0;
  
