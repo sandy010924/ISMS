@@ -529,69 +529,69 @@ $(document).ready(function () {
       return false;
     }
 
-    var id_message = $('#id_message').val();
-    var type ="";
-    var name =$('#msgTitle').val();
-    var id_teacher = $('#msgTeacher').val();
-    var id_course = $('#msgCourse').val();
-    var phoneAddr = $('#receiverPhone').val();
-    var emailAddr = $('#receiverEmail').val();
-    var emailTitle = $('#emailTitle').val()
-    // var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
-    //   return $(this).val();
-    // }).get();
-    var content = editor.getData().replace(new RegExp("<p>", "g"),"");
-    content = content.replace(new RegExp("</p>", "g"), "\n");
-    content = content.replace(new RegExp("&nbsp;", "g"), " ");
-    var send_at = ""; 
-
-    //寄送方式
-    if( $('#messageCheckBox').prop('checked') && !$('#mailCheckBox').prop('checked') ){
-      type = 0;
-    }else if( !$('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
-      type = 1;
-    }else if( $('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
-      type = 2;
-    }
-
     // var id_message = $('#id_message').val();
+    // var type ="";
+    // var name =$('#msgTitle').val();
+    // var id_teacher = $('#msgTeacher').val();
+    // var id_course = $('#msgCourse').val();
+    // var phoneAddr = $('#receiverPhone').val();
+    // var emailAddr = $('#receiverEmail').val();
+    // var emailTitle = $('#emailTitle').val()
+    // // var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+    // //   return $(this).val();
+    // // }).get();
     // var content = editor.getData().replace(new RegExp("<p>", "g"),"");
     // content = content.replace(new RegExp("</p>", "g"), "\n");
     // content = content.replace(new RegExp("&nbsp;", "g"), " ");
-    // var emailAddr = $('#receiverEmail').val();
-    // var phoneAddr = $('#receiverPhone').val();
-    // var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
-    //   return $(this).val();
-    // }).get();
+    // var send_at = ""; 
+
+    // //寄送方式
+    // if( $('#messageCheckBox').prop('checked') && !$('#mailCheckBox').prop('checked') ){
+    //   type = 0;
+    // }else if( !$('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+    //   type = 1;
+    // }else if( $('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+    //   type = 2;
+    // }
+
+    var id_message = $('#id_message').val();
+    var content = editor.getData().replace(new RegExp("<p>", "g"),"");
+    content = content.replace(new RegExp("</p>", "g"), "\n");
+    content = content.replace(new RegExp("&nbsp;", "g"), " ");
+    var emailAddr = $('#receiverEmail').val();
+    var phoneAddr = $('#receiverPhone').val();
+    var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+      return $(this).val();
+    }).get();
     
     $.ajax({
       type: "POST",
       url: "draftInsert",
       data: {
-        // id_message: id_message,
-        // // mailCheckBox: $('#mailCheckBox').prop("checked"),
-        // // messageCheckBox: $('#messageCheckBox').prop("checked"),
-        // sendCheckBox: sendCheckBox,
-        // name: $('#msgTitle').val(),
-        // id_teacher: $('#msgTeacher').val(),
-        // id_course: $('#msgCourse').val(),
-        // phoneNumber: phoneAddr.split(","),
-        // emailAddr: emailAddr.split(","),
-        // emailAddrLen: emailAddr.split(",").length,
-        // emailTitle: $('#emailTitle').val(),
-        // content: content
-
-
         id_message: id_message,
-        type: type,
-        name: name,
-        id_teacher: id_teacher,
-        id_course: id_course,
+        // mailCheckBox: $('#mailCheckBox').prop("checked"),
+        // messageCheckBox: $('#messageCheckBox').prop("checked"),
+        sendCheckBox: sendCheckBox,
+        name: $('#msgTitle').val(),
+        id_teacher: $('#msgTeacher').val(),
+        id_course: $('#msgCourse').val(),
         phoneNumber: phoneAddr.split(","),
         emailAddr: emailAddr.split(","),
-        emailTitle: emailTitle,
-        content: content,
-        send_at: send_at
+        emailAddrLen: emailAddr.split(",").length,
+        emailTitle: $('#emailTitle').val(),
+        content: content
+
+
+        // id_message: id_message,
+        // type: type,
+        // name: name,
+        // id_teacher: id_teacher,
+        // id_course: id_course,
+        // phoneNumber: phoneAddr.split(","),
+        // emailAddr: emailAddr.split(","),
+        // emailTitle: emailTitle,
+        // content: content,
+        // send_at: send_at
       }
     }).done(function(res) {
       console.log(res);
@@ -641,7 +641,89 @@ $(document).ready(function () {
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
     $(this).attr('disabled', 'disabled');
 
-    insert('schedule');
+    var id_message = $('#id_message').val();
+    var type ="";
+    var name =$('#msgTitle').val();
+    var id_teacher = $('#msgTeacher').val();
+    var id_course = $('#msgCourse').val();
+    var phoneAddr = $('#receiverPhone').val();
+    var emailAddr = $('#receiverEmail').val();
+    var emailTitle = $('#emailTitle').val()
+    // var sendCheckBox = $('input[name="sendCheckBox"]:checked').map(function(){
+    //   return $(this).val();
+    // }).get();
+    var content = editor.getData().replace(new RegExp("<p>", "g"),"");
+    content = content.replace(new RegExp("</p>", "g"), "\n");
+    content = content.replace(new RegExp("&nbsp;", "g"), " ");
+    var send_at = ""; 
+
+    //寄送方式
+    if( $('#messageCheckBox').prop('checked') && !$('#mailCheckBox').prop('checked') ){
+      type = 0;
+    }else if( !$('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+      type = 1;
+    }else if( $('#messageCheckBox').prop('checked') && $('#mailCheckBox').prop('checked') ){
+      type = 2;
+    }
+
+    $.ajax({
+        type:'POST',
+        url:'scheduleInsert',
+        data:{
+          // btnType: btnType,
+          id_message: id_message,
+          // sendCheckBox: sendCheckBox,
+          type: type,
+          name: name,
+          id_teacher: id_teacher,
+          id_course: id_course,
+          phoneNumber: phoneAddr.split(","),
+          emailAddr: emailAddr.split(","),
+          // emailAddrLen: emailAddr.split(",").length,
+          emailTitle: emailTitle,
+          content: content,
+          send_at: $('#scheduleTime').val()
+        },
+        success:function(res){
+          console.log(res);  
+          if( res['status'] == 'success' && res['AccountPoint'] != ''){
+            /** alert **/
+            $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
+            fade($("#success_alert"));
+
+            $('button').prop('disabled', 'disabled');
+            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+          }else if( res['status'] == 'success' ){
+            /** alert **/ 
+            $("#success_alert_text").html("寄送成功。");
+            fade($("#success_alert"));    
+            
+            $('button').prop('disabled', 'disabled');
+            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+          }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
+            /** alert **/ 
+            $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
+            fade($("#error_alert"));    
+            
+            $(this).html('立即傳送');
+            $(this).attr('disabled', false);
+          }else if( res['status'] == 'error' ){
+            /** alert **/ 
+            $("#error_alert_text").html("寄送失敗。");
+            fade($("#error_alert"));   
+
+            $(this).html('立即傳送');
+            $(this).attr('disabled', false); 
+          }
+
+        },
+        error: function(jqXHR, textStatus, errorMessage){
+            console.log("error: "+ errorMessage);    
+            
+            // $(this).html('立即傳送');
+            // $(this).attr('disabled', false);
+        }
+      });
     
   });
 
