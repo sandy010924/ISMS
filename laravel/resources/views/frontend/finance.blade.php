@@ -112,16 +112,6 @@
               </tr>
               @endslot
               @slot('tbody')
-              <tr>
-                <td>2020-03-04</td>
-                <td>王曉明</td>
-                <td>二聯式</td>
-                <td><input type="number" class="form-control form-control-sm" name="startdate"></td>
-                <td><input type="number" class="form-control form-control-sm" name="invoice_num"></td>
-                <td>王曉明</td>
-                <td>54900838</td>
-                <td>新竹市東區園區二路168號</td>
-              </tr>
               @endslot
               @endcomponent
             </div>
@@ -135,7 +125,7 @@
 
 <!-- Content End -->
 <script>
-  var table;
+  var table, table2;
 
   $("document").ready(function() {
     // 日期選擇器 Rocky(2020/04/24)
@@ -152,12 +142,11 @@
       }]
     });
 
-    $('#table_list_history').DataTable({
-      "dom": '<l<td>p>',
-      "destroy": true,
-      "ordering": true,
+    table2 = $('#table_list_history').DataTable({
+      "dom": '<l<t>p>',
       "columnDefs": [{
         "targets": 'no-sort',
+        "orderable": false,
       }]
     });
     /* Datatable.js Rocky(2020/04/24) - E */
@@ -174,16 +163,16 @@
       }
     });
 
-    // $('#invoice_search_date').on('keyup', function(e) {
-    //   if (e.keyCode === 13) {
-    //     $("#btn_search2").click();
-    //   }
-    // });
-    // $('#invoice_search_name').on('keyup', function(e) {
-    //   if (e.keyCode === 13) {
-    //     $("#btn_search2").click();
-    //   }
-    // });
+    $('#invoice_search_date').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        $("#btn_search2").click();
+      }
+    });
+    $('#invoice_search_name').on('keyup', function(e) {
+      if (e.keyCode === 13) {
+        $("#btn_search2").click();
+      }
+    });
     /* 輸入框 Rocky(2020/04/24) - E */
   });
 
@@ -321,22 +310,39 @@
   /* 自動儲存 - S Rocky(2020/04/25) */
 
   /* 搜尋 Rocky(2020/04/24) - S */
-  $.fn.dataTable.ext.search.push(
-    function(settings, data, dataIndex) {
-      var seatch_date = $('#search_date').val();
-      var seatch_course = $('#search_course').val();
-      var date = data[0];
-      var course = data[1];
+  // $.fn.dataTable.ext.search.push(
+  //   function(settings, data, dataIndex) {
+  //     console.log(settings.nTable)
+  //     if (settings.nTable == document.getElementById('table_list')) {
+  //       var seatch_date = $('#search_date').val();
+  //       var seatch_course = $('#search_course').val();
+  //       var date = data[0];
+  //       var course = data[1];
 
-      if ((isNaN(seatch_date) && isNaN(seatch_course)) || (date.includes(seatch_date) && isNaN(seatch_course)) || (course.includes(seatch_course) && isNaN(seatch_date)) || (course.includes(seatch_course) && date.includes(seatch_date))) {
-        return true;
-      }
-      return false;
-    }
-  );
+  //       if ((isNaN(seatch_date) && isNaN(seatch_course)) || (date.includes(seatch_date) && isNaN(seatch_course)) || (course.includes(seatch_course) && isNaN(seatch_date)) || (course.includes(seatch_course) && date.includes(seatch_date))) {
+  //         return true;
+  //       }
+  //       return false;
+  //     } else {
+  //       var seatch_date = $('#invoice_search_date').val();
+  //       var seatch_name = $('#invoice_search_name').val();
+  //       var date = data[0];
+  //       var name = data[1];
+  //       console.log(name)
+  //       if ((isNaN(seatch_date) && isNaN(seatch_name)) || (date.includes(seatch_date) && isNaN(seatch_name)) || (name.includes(seatch_name) && isNaN(seatch_date)) || (name.includes(seatch_name) && date.includes(seatch_date))) {
+  //         return true;
+  //       }
+  //     }
+  //   }
+  // );
 
   $("#btn_search").click(function() {
     table.columns(0).search($('#search_date').val()).columns(1).search($("#search_course").val()).draw();
+    // table.search($('#search_course').val() + " " + $('#search_date').val()).draw();
+  });
+  $("#btn_search2").click(function() {
+    table2.columns(0).search($('#invoice_search_date').val()).columns(1).search($("#invoice_search_name").val()).draw();
+    // $('#table_list_history').DataTable().search($('#invoice_search_name').val() + " " + $('#invoice_search_date').val()).draw();
   });
   /* 搜尋 Rocky(2020/04/24) - E */
 </script>

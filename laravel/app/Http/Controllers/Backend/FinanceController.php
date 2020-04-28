@@ -188,4 +188,17 @@ class FinanceController extends Controller
             return '更新失敗';
         }
     }
+
+    /*** 獎金名單 - 自動儲存 ***/
+    public function regimemoupdate(Request $request)
+    {
+        //取回data
+        $id = $request->input('id');
+        $data = $request->input('data');
+
+        Registration::where('id', $id)
+            ->update(['memo' => $data]);
+
+        return 'success';
+    }
 }

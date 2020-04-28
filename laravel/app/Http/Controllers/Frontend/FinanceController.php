@@ -20,7 +20,6 @@ class FinanceController extends Controller
 
         $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
             ->select('events_course.*', 'course.name as course', 'course.type as type')
-            ->where('type', '<>', '1')
             ->where('unpublish', '0')
             ->groupBy('events_course.id_group')
             ->orderBy('events_course.course_start_at', 'desc')
@@ -208,7 +207,7 @@ class FinanceController extends Controller
             ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
             ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
             ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
-            ->select('b.id', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name')
+            ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name')
             ->where(function ($query) use ($datas_rule) {
                 foreach ($datas_rule as $key => $data) {
                     switch ($data['name_id']) {
@@ -245,7 +244,7 @@ class FinanceController extends Controller
                 ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
                 ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
                 ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
-                ->select('b.id', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name', 'c.datasource')
+                ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name', 'c.datasource')
                 ->where(function ($query) use ($datas_rule) {
                     foreach ($datas_rule as $key => $data) {
                         switch ($data['name_id']) {
@@ -264,7 +263,7 @@ class FinanceController extends Controller
                     ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
                     ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
                     ->leftjoin('debt as g', 'g.id_registration', '=', 'b.id')
-                    ->select('b.id', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name')
+                    ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name')
                     ->where(function ($query) use ($datas_rule) {
                         foreach ($datas_rule as $key => $data) {
                             switch ($data['name_id']) {

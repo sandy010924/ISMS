@@ -9,11 +9,11 @@
 <div class="card m-3">
   <div class="card-body">
     <div class="row mb-3">
-      <div class="col-3">
+      <div class="col-2">
         <h3>獎金名單：{{$datas_rule[0]['bonus_name']}}</h3>
         <input type="hidden" id="id_bonus" value="{{$id_bonus}}">
       </div>
-      <div class="col-3">
+      <div class="col-2">
         <select id="cars" name="carlist" class=form-control onchange="show_student($(this));">
           <option value="0">名單來源</option>
           <option value="1">工作人員</option>
@@ -26,6 +26,7 @@
     </div>
     <hr />
     <div class="row ml-4 mt-4 mb-3">
+      <div class="col-2"></div>
       <div class="col-3">
         <div class="input-group date" data-target-input="nearest">
           <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期">
@@ -35,7 +36,7 @@
         </div>
       </div>
       <div class="col-3">
-        <input type="search" class="form-control" placeholder="搜尋學員姓名或電話" aria-label="Class's name" id="search_name">
+        <input type="search" class="form-control" placeholder="請輸入關鍵字" aria-label="Class's name" id="search_name">
       </div>
       <div class="col-3">
         <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
@@ -68,7 +69,7 @@
         <td>{{ $data['email'] }}</td>
         <td>{{ $data['phone'] }}</td>
         <td>{{ $data['status_name'] }}</td>
-        <td><input type="text" class="form-control form-control-sm" onblur=""></td>
+        <td><input type="text" class="form-control form-control-sm" value="{{ $data['memo'] }}" onblur="auto_update_data($(this), {{ $data['id'] }});"></td>
       </tr>
       @endforeach
       @endslot
@@ -197,6 +198,36 @@ https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js -->
       }
     });
   });
+  /* 自動儲存 - S Rocky(2020/04/28) */
+  function auto_update_data(data, id) {
+    console.log(data.val() + '\n' + id)
+    regi_memo_update(data.val(), id);
+  }
+
+  function regi_memo_update(data, id) {
+    $.ajax({
+      type: 'POST',
+      url: 'regi_memo_update',
+      data: {
+        id: id,
+        data: data
+      },
+      success: function(data) {
+
+        /** alert **/
+        $("#success_alert_text").html("資料儲存成功");
+        fade($("#success_alert"));
+      },
+      error: function(jqXHR) {
+        console.log(JSON.stringify(jqXHR));
+
+        /** alert **/
+        $("#error_alert_text").html("資料儲存失敗");
+        fade($("#error_alert"));
+      }
+    });
+  }
+  /* 自動儲存 - E Rocky(2020/04/28) */
 
   /* 顯示獎金資料 - S Rocky(2020/04/26) */
   function show_bonus(id) {
@@ -256,6 +287,10 @@ https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js -->
         $('#history_data_detail').html('');
         if (data['datas'].length > 0) {
           $.each(data['datas'], function(index, val) {
+            var memo = ''
+            if (val['memo'] != null) {
+              memo = val['memo']
+            }
             data_table +=
               '<tr>' +
               '<td>' + data['datas_rule_vlue'] + '</td>' +
@@ -266,7 +301,7 @@ https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js -->
               '<td>' + val['email'] + '</td>' +
               '<td>' + val['phone'] + '</td>' +
               '<td>' + val['status_name'] + '</td>' +
-              '<td><input type="text" class="form-control form-control-sm" onblur=""></td>' +
+              '<td><input type="text" class="form-control form-control-sm" value="' + memo + '" onblur="auto_update_data($(this),' + val['id'] + ');"></td>' +
               '</tr>'
           })
         };
@@ -286,32 +321,27 @@ https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js -->
   /* 匯出Excel - E Rocky(2020/04/27) */
 
   /* 搜尋 Rocky(2020/04/24) - S */
-  $.fn.dataTable.ext.search.push(
-    function(settings, data, dataIndex) {
-      if (settings.nTable == document.getElementById('table_list_history')) {
-        var seatch_date = $('#search_date').val();
-        var search_name = $('#search_name').val();
-        var date = data[1];
-        var name = data[4];
-        var phone = data[6];
+  // $.fn.dataTable.ext.search.push(
+  //   function(settings, data, dataIndex) {
+  //     if (settings.nTable == document.getElementById('table_list_history')) {
+  //       var seatch_date = $('#search_date').val();
+  //       var search_name = $('#search_name').val();
+  //       var date = data[1];
+  //       var name = data[4];
+  //       var phone = data[6];
 
-        if (((isNaN(search_name)) || (phone.includes(search_name)) || (name.includes(search_name))) || ((isNaN(seatch_date)) || (date.includes(seatch_date)))) {
-          return true;
-        }
-        return false;
-      }
-
-      // if ((isNaN(seatch_date) && isNaN(search_name)) || (date.includes(seatch_date) && isNaN(search_name)) || (phone.includes(search_name) && name.includes(search_name) && isNaN(seatch_date)) || (phone.includes(search_name) && name.includes(search_name) && date.includes(seatch_date))) {
-      //   return true;
-      // }
-      // return false;
-    }
-  );
+  //       if ((isNaN(seatch_date) && isNaN(search_name)) || (date.includes(seatch_date) && isNaN(search_name)) ||
+  //         ((phone.includes(search_name) || name.includes(search_name)) && isNaN(seatch_date)) ||
+  //         ((phone.includes(search_name) || name.includes(search_name)) && date.includes(seatch_date))) {
+  //         return true;
+  //       }
+  //       return false;
+  //     }
+  //   }
+  // );
 
   $("#btn_search").click(function() {
-    // table2.search($('#search_name').val()).search($('#search_date').val()).draw();
-    table2.columns(4).search($('#search_name').val()).search($('#search_name').val()).columns(1).search($("#search_date").val()).draw();
-
+    table2.search($('#search_name').val() + " " + $('#search_date').val()).draw();
   });
   /* 搜尋 Rocky(2020/04/24) - E */
 </script>
