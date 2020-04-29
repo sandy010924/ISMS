@@ -114,8 +114,8 @@
                   @endif
 
                   <td>{{ $courseapply->name }}</td>
-                  <td>{{ substr_replace($courseapply->phone, '***', 4, 3) }}</td>
-                  <td>{{ substr_replace($courseapply->email, '***', strrpos($courseapply->email, '@')) }}</td>
+                  <td>{{ $courseapply->phone }}</td>
+                  <td>{{ $courseapply->email }}</td>
                   <td>{{ $courseapply->profession }}</td>
                   
                   <!-- 如果是銷講多加我想在講座中了解的內容 -->

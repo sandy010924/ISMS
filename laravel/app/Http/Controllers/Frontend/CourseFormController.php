@@ -51,10 +51,12 @@ class CourseFormController extends Controller
             
             foreach( $events_table as $key_events => $data_events ){
                 
-                if(strtotime(date('Y-m-d', strtotime($data_events['course_start_at']))) <= strtotime(date("Y-m-d"))){
-                    $id_group = $data_events['id_group'];
-                    continue;
-                }
+                // //已過場次 就不顯示
+                // if(strtotime(date('Y-m-d', strtotime($data_events['course_start_at']))) <= strtotime(date("Y-m-d"))){
+                //     $id_group = $data_events['id_group'];
+                //     continue;
+                // }
+
                 // if($data['id_group'] == ""){
                 //     //日期
                 //     $date = date('Y-m-d', strtotime($data['course_start_at']));

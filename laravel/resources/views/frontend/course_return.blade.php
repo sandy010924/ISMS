@@ -755,31 +755,37 @@
     
     // 付款資料 - 帳戶/卡號後四碼
     $('body').on('blur','input[name="number"]',function(e){
-      var data_val = $(this).val();
-      if( data_val == "" ){
-        /** alert **/ 
-        $("#error_alert_text").html("帳戶/卡號後四碼不可空白，請輸入帳戶/卡號後四碼");
-        fade($("#error_alert")); 
-        $(this).focus();
-      }else{
-        var data_id = ($(this).attr('id')).substr(6);
-        var data_type = 'number';
-        save_data($(this), data_type, data_id);
-      }
+      // var data_val = $(this).val();
+      var data_id = ($(this).attr('id')).substr(6);
+      var data_type = 'number';
+      save_data($(this), data_type, data_id);
+      // if( data_val == "" ){
+      //   /** alert **/ 
+      //   $("#error_alert_text").html("帳戶/卡號後四碼不可空白，請輸入帳戶/卡號後四碼");
+      //   fade($("#error_alert")); 
+      //   $(this).focus();
+      // }else{
+      //   var data_id = ($(this).attr('id')).substr(6);
+      //   var data_type = 'number';
+      //   save_data($(this), data_type, data_id);
+      // }
     });
     $('body').on('keyup','input[name="number"]',function(e){
       if (e.keyCode === 13) {
-        var data_val = $(this).val();
-        if( data_val == "" ){
-          /** alert **/ 
-          $("#error_alert_text").html("卡號後四碼不可空白");
-          fade($("#error_alert")); 
-          $(this).focus();
-        }else{
-          var data_id = ($(this).attr('id')).substr(6);
-          var data_type = 'number';
-          save_data($(this), data_type, data_id);
-        }
+        // var data_val = $(this).val();
+        var data_id = ($(this).attr('id')).substr(6);
+        var data_type = 'number';
+        save_data($(this), data_type, data_id);
+        // if( data_val == "" ){
+        //   /** alert **/ 
+        //   $("#error_alert_text").html("卡號後四碼不可空白");
+        //   fade($("#error_alert")); 
+        //   $(this).focus();
+        // }else{
+        //   var data_id = ($(this).attr('id')).substr(6);
+        //   var data_type = 'number';
+        //   save_data($(this), data_type, data_id);
+        // }
       }
     });
     

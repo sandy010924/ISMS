@@ -82,11 +82,11 @@ class CourseListEditController extends Controller
 
                 foreach( $course_group as $key_group => $data_group ){
 
-                    //已過場次 就取消場次
-                    if(strtotime(date('Y-m-d', strtotime($data_group['course_start_at']))) < strtotime(date("Y-m-d"))){
-                        EventsCourse::Where('id', $data_group['id'])
-                                    ->update(['unpublish' => 1]);
-                    }
+                    // //已過場次 就取消場次
+                    // if(strtotime(date('Y-m-d', strtotime($data_group['course_start_at']))) < strtotime(date("Y-m-d"))){
+                    //     EventsCourse::Where('id', $data_group['id'])
+                    //                 ->update(['unpublish' => 1]);
+                    // }
 
                     //日期
                     $date = date('Y-m-d', strtotime($data_group['course_start_at']));
