@@ -59,7 +59,7 @@
         <td class="align-middle">
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
           @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' )
-          <button id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}"><i class="fa fa-bug"></i>列入黑名單</button>
+          <button type="button" id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}"><i class="fa fa-bug"></i>列入黑名單</button>
           @endif
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
           @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' )
@@ -476,22 +476,22 @@
         </div>
         <!-- 完整內容 - E -->
       </div>
-      <!-- 列入黑名單 - S -->
-      <div class="modal fade" id="save_blacklist" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">加入黑名單原因</h5>
-              <button type="button" class="close" id="blacklist_close" aria-label="Close" data-number="1">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <input type="text" id="blacklist_reason" class="input_width">
-            </div>
-            <div class="modal-footer">
-              <button type="button" id="blacklist_add" class="btn btn-primary" onclick="add_blacklist();">儲存</button>
-            </div>
+    </div>
+    <!-- 列入黑名單 - S -->
+    <div class="modal fade" id="save_blacklist" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">加入黑名單原因</h5>
+            <button type="button" class="close" id="blacklist_close" aria-label="Close" data-number="1">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="blacklist_reason" class="input_width">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="blacklist_add" class="btn btn-primary" onclick="add_blacklist();">儲存</button>
           </div>
         </div>
       </div>
