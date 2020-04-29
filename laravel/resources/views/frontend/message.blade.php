@@ -465,6 +465,13 @@ $(document).ready(function () {
 
             $(this).html('立即傳送');
             $(this).attr('disabled', false); 
+          }else{
+            /** alert **/ 
+            $("#error_alert_text").html("寄送失敗。");
+            fade($("#error_alert"));   
+
+            $(this).html('立即傳送');
+            $(this).attr('disabled', false); 
           }
 
         },
@@ -518,7 +525,8 @@ $(document).ready(function () {
       }else{
         /** alert **/ 
         $("#error_alert_text").html("儲存草稿失敗");
-        fade($("#error_alert"));     
+        fade($("#error_alert")); 
+        $(this).attr('disabled', false);     
       }
 
     }).fail(function(err) {
@@ -526,7 +534,8 @@ $(document).ready(function () {
       
       /** alert **/ 
       $("#error_alert_text").html("儲存草稿失敗");
-      fade($("#error_alert"));       
+      fade($("#error_alert"));     
+      $(this).attr('disabled', false);   
 
     });
   });
@@ -542,7 +551,7 @@ $(document).ready(function () {
     var empty = verifyEmpty();
     
     if( empty > 0 ){
-      $('#scheduleModal').modal('hide')
+      $('#scheduleModal').modal('hide');
       return false;
     }
     
@@ -550,6 +559,13 @@ $(document).ready(function () {
       alert('請輸入排程時間');
       return false;
     }
+
+    // if( $('#scheduleTime').val() > "" ){
+    //   alert('請輸入排程時間');
+    //   return false;
+    // }
+    console.log($('#scheduleTime').val());
+      return false;
 
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
     $(this).attr('disabled', 'disabled');
@@ -573,7 +589,9 @@ $(document).ready(function () {
         },
         success:function(res){
           console.log(res);  
-          if( res['status'] == 'success' && res['AccountPoint'] != ''){
+          if( res['status'] == 'success' && res['AccountPoint'] != null){
+            $('#scheduleModal').modal('hide');
+
             /** alert **/
             $("#success_alert_text").html("訊息預約成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
             fade($("#success_alert"));
@@ -581,6 +599,8 @@ $(document).ready(function () {
             $('button').prop('disabled', 'disabled');
             setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
           }else if( res['status'] == 'success' ){
+            $('#scheduleModal').modal('hide');
+
             /** alert **/ 
             $("#success_alert_text").html("訊息預約成功。");
             fade($("#success_alert"));    
@@ -605,8 +625,14 @@ $(document).ready(function () {
 
         },
         error: function(jqXHR, textStatus, errorMessage){
-            console.log("error: "+ errorMessage);    
-            
+            console.log("error: "+ errorMessage);  
+
+            /** alert **/ 
+            $("#error_alert_text").html("訊息預約失敗。");
+            fade($("#error_alert"));   
+
+            $(this).html('排程設定');
+            $(this).attr('disabled', false); 
             // $(this).html('立即傳送');
             // $(this).attr('disabled', false);
         }

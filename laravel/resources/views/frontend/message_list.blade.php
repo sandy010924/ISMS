@@ -95,172 +95,135 @@
           <a href="{{ route('message') }}" role="button" class="btn btn-primary">建立訊息</a>
         </div>
       </div>
-      {{-- <div class="row mb-3">
-      </div> --}}
-      {{-- <div class="row mb-2" style="align-items: baseline;">
-        <h4 class="mr-2">選擇日期</h4>
-        <div class="form-group">
-          <div class='input-group date' style="width: 275px;">
-            <input type="text" class="m-1 w-100 form-control p-0" name="daterange"/>
-            <button type="button" class="btn btn-primary ml-2">查詢</button>
-          </div>
+      <nav class="message_nav mb-3">
+        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+          <a class="nav-item nav-link active" role="tab" data-toggle="tab" id="nav-schedule-tab" href="#nav-schedule" aria-controls="schedule" aria-selected="true">已預約</a>
+          <a class="nav-item nav-link" role="tab" data-toggle="tab" id="nav-draft-tab" href="#nav-draft" aria-controls="draft" aria-selected="false">草稿</a>
+          <a class="nav-item nav-link" role="tab" data-toggle="tab" id="nav-sent-tab" href="#nav-sent" aria-controls="sent" aria-selected="false">已傳送</a>
         </div>
+      </nav>
+      {{-- <div class="tab-content" id="myTabContent">
+        @component('components.datatable')
+            @slot('thead')
+              <tr>
+                <th>訊息名稱</th>
+                <th>內容</th>
+                <th>媒介</th>
+                <th id="th_count"></th>
+                <th id="th_time" name="col_time"></th>
+                <th name="col_btn"></th>
+                <th class="d-none"></th>
+              </tr>
+            @endslot
+            @slot('tbody')
+              @foreach($msg as $data )
+              <tr href="{{ route('message_data', ['id' => $data['id']]) }}">
+                <td>{{ $data['name'] }}</td>
+                <td class="ellipsis">{{ $data['content'] }}</td>
+                <td>{{ $data['type'] }}</td>
+                <td>{{ $data['count_receiver'] }}</td>
+                <td name="col_time">{{ $data['send_at'] }}</td>
+                <td name="col_btn">
+                  <a name="btn_edit" role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
+                  <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
+                </td>
+                <td class="d-none"> {{ $data['id_status'] }}</td>
+              </tr>
+              @endforeach
+            @endslot
+          @endcomponent
       </div> --}}
-        {{-- <div class="row">
-          <div class="col-xs-12" style="width: 100%;"> --}}
-            <nav class="message_nav mb-3">
-              {{-- <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist"> --}}
-              <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" data-toggle="tab" id="reserve" data-target="reserve" role="tab">已預約</a>
-                <a class="nav-item nav-link" data-toggle="tab" id="draft" data-target="draft" role="tab">草稿</a>
-                <a class="nav-item nav-link" data-toggle="tab" id="sent" data-target="sent" role="tab">已傳送</a>
-                {{-- <a class="nav-item nav-link" data-toggle="tab" data-target="fail" role="tab">無法傳送</a> --}}
-              {{-- @foreach($teachers as $key => $item )
-                @if($loop->index == 0)
-                  <a class="nav-item nav-link active" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
-                @else
-                <a class="nav-item nav-link" data-toggle="tab" data-target="{{ $item->name }}" role="tab">{{ $item['name'] }}</a>
-                @endif
-              @endforeach --}}
-                <!-- <a class="nav-item nav-link active" data-toggle="tab" data-target="Jack" role="tab"></a>
-                <a class="nav-item nav-link" data-toggle="tab" data-target="Juila" role="tab"></a>
-                <a class="nav-item nav-link" data-toggle="tab" data-target="順昌" role="tab"></a>
-                <a class="nav-item nav-link" data-toggle="tab" data-target="北極熊" role="tab"></a> -->
-              </div>
-            </nav>
-            <div class="tab-content" id="myTabContent">
-              @component('components.datatable')
-                  @slot('thead')
-                    <tr>
-                      <th>訊息名稱</th>
-                      <th>內容</th>
-                      {{-- <th>對象</th> --}}
-                      <th>媒介</th>
-                      <th id="th_count"></th>
-                      <th id="th_time" name="col_time"></th>
-                      <th name="col_btn"></th>
-                      <th class="d-none"></th>
-                    </tr>
-                  @endslot
-                  @slot('tbody')
-                    @foreach($msg as $key => $data )
-                    <tr href="{{ route('message_data', ['id' => $data['id']]) }}">
-                    {{-- <tr> --}}
-                      <td>{{ $data['name'] }}</td>
-                      <td class="ellipsis">{{ $data['content'] }}</td>
-                      {{-- <td>{{ $data['id_student_group'] }}</td> --}}
-                      <td>{{ $data['type'] }}</td>
-                      <td>{{ $data['count_receiver'] }}</td>
-                      <td name="col_time">{{ $data['send_at'] }}</td>
-                      <td name="col_btn">
-                        <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
-                        <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
-                      </td>
-                      <td class="d-none"> {{ $data['id_status'] }}</td>
-                    </tr>
-                    @endforeach
-                  @endslot
-                @endcomponent
-              {{-- <div class="tab-pane fade show active" id="reserve" role="tabpanel" aria-labelledby="reserve-tab">
-                @component('components.datatable')
-                  @slot('thead')
-                    <tr>
-                      <th>傳送時間</th>
-                      <th>訊息名稱</th>
-                      <th>內容</th>
-                      <th>媒介</th>
-                      <th>傳送人數</th>
-                      <th>簡訊費用</th>
-                      <th>報名人數</th>
-                      <th>報名成本</th>
-                      <th>報名率</th>
-                    </tr>
-                  @endslot
-                  @slot('tbody')
-                    @foreach($reserve as $key => $data )
-                    <tr>
-                      <td> {{ $data['send_at'] }}</td>
-                      <td> {{ $data['title'] }}</td>
-                      <td> {{ $data['content'] }}</td>
-                      <td> {{ $data['type'] }}</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    @endforeach
-                  @endslot
-                @endcomponent
-              </div>
-              <div class="tab-pane fade" id="draft" role="tabpanel" aria-labelledby="draft-tab">
-                @component('components.datatable')
-                  @slot('thead')
-                    <tr>
-                      <th>傳送時間</th>
-                      <th>訊息名稱</th>
-                      <th>內容</th>
-                      <th>媒介</th>
-                      <th>傳送人數</th>
-                      <th>簡訊費用</th>
-                      <th>報名人數</th>
-                      <th>報名成本</th>
-                      <th>報名率</th>
-                    </tr>
-                  @endslot
-                  @slot('tbody')
-                    @foreach($draft as $key => $data )
-                    <tr>
-                      <td> {{ $data['send_at'] }}</td>
-                      <td> {{ $data['title'] }}</td>
-                      <td> {{ $data['content'] }}</td>
-                      <td> {{ $data['type'] }}</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    @endforeach
-                  @endslot
-                @endcomponent
-              </div>
-              <div class="tab-pane fade" id="sent" role="tabpanel" aria-labelledby="sent-tab">
-                @component('components.datatable')
-                  @slot('thead')
-                    <tr>
-                      <th>傳送時間</th>
-                      <th>訊息名稱</th>
-                      <th>內容</th>
-                      <th>媒介</th>
-                      <th>傳送人數</th>
-                      <th>簡訊費用</th>
-                      <th>報名人數</th>
-                      <th>報名成本</th>
-                      <th>報名率</th>
-                    </tr>
-                  @endslot
-                  @slot('tbody')
-                    @foreach($sent as $key => $data )
-                    <tr>
-                      <td> {{ $data['send_at'] }}</td>
-                      <td> {{ $data['title'] }}</td>
-                      <td> {{ $data['content'] }}</td>
-                      <td> {{ $data['type'] }}</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    @endforeach
-                  @endslot
-                @endcomponent
-              </div> --}}
-            </div>
-          {{-- </div>
-        </div> --}}
-      {{-- </div> --}}
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane show active" id="nav-schedule" role="tabpanel" aria-labelledby="nav-schedule-tab">
+          <!-- 已預約 -->
+          @component('components.datatable')
+            @slot('thead')
+              <tr>
+                <th class="d-none"></th>
+                <th>訊息名稱</th>
+                <th>內容</th>
+                <th>媒介</th>
+                <th>預計傳送人數</th>
+                <th>預約時間</th>
+                <th></th>
+              </tr>
+            @endslot
+            @slot('tbody')
+              @foreach($scheduleMsg as $data )
+              <tr>
+                <td class="d-none">{{ $data['created_at'] }}</td>
+                <td>{{ $data['name'] }}</td>
+                <td class="ellipsis">{{ $data['content'] }}</td>
+                <td>{{ $data['type'] }}</td>
+                <td>{{ $data['count'] }}</td>
+                <td>{{ $data['send_at'] }}</td>
+                <td>
+                  <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_cancel({{ $data['id'] }});">取消預約</a>
+                </td>
+              </tr>
+              @endforeach
+            @endslot
+          @endcomponent
+        </div>
+        <div class="tab-pane" id="nav-draft" role="tabpanel" aria-labelledby="nav-draft-tab">
+          <!-- 草稿 -->
+          @component('components.datatable')
+            @slot('thead')
+              <tr>
+                <th class="d-none"></th>
+                <th>訊息名稱</th>
+                <th>內容</th>
+                <th>媒介</th>
+                <th>預計傳送人數</th>
+                <th></th>
+              </tr>
+            @endslot
+            @slot('tbody')
+              @foreach($draftMsg as $data )
+              <tr>
+                <td class="d-none">{{ $data['created_at'] }}</td>
+                <td>{{ $data['name'] }}</td>
+                <td class="ellipsis">{{ $data['content'] }}</td>
+                <td>{{ $data['type'] }}</td>
+                <td>{{ $data['count'] }}</td>
+                <td>
+                  <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
+                  <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
+                </td>
+              </tr>
+              @endforeach
+            @endslot
+          @endcomponent
+        </div>
+        <div class="tab-pane" id="nav-sent" role="tabpanel" aria-labelledby="nav-sent-tab">
+          <!-- 已傳送 -->
+          @component('components.datatable')
+            @slot('thead')
+              <tr>
+                <th class="d-none"></th>
+                <th>訊息名稱</th>
+                <th>內容</th>
+                <th>媒介</th>
+                <th>傳送人數</th>
+                <th>傳送時間</th>
+              </tr>
+            @endslot
+            @slot('tbody')
+              @foreach($sentMsg as $data )
+              <tr href="{{ route('message_data', ['id' => $data['id']]) }}" style="cursor: pointer;">
+                <td class="d-none">{{ $data['created_at'] }}</td>
+                <td>{{ $data['name'] }}</td>
+                <td class="ellipsis">{{ $data['content'] }}</td>
+                <td>{{ $data['type'] }}</td>
+                <td>{{ $data['count'] }}</td>
+                <td>{{ $data['send_at'] }}</td>
+              </tr>
+              @endforeach
+            @endslot
+          @endcomponent
+        </div>
+        
+      </div>
     </div>
   </div>
 
@@ -307,10 +270,6 @@
   .show_row {
     display: table-row;
   }
-  table tr {
-      cursor: pointer;
-  }
-  
   /* datatable內容欄位的... */
   .ellipsis {
     max-width: 100px;
@@ -321,123 +280,11 @@
 </style>
 
 <script>
-  // var fakeData = [
-  //   {
-  //     name: 'Jack',
-  //     data:[
-  //       {
-  //         sendTime: '2020/02/05 12:32',
-  //         msgTitle: 'Jack黑心台北',
-  //         contents: '有危機才有機...',
-  //         sendType: 'email',
-  //         sendPeople: 1456,
-  //         msgFee: 1000,
-  //         registerTotal: 250,
-  //         registrationCost: 700,
-  //         registerRate: '25%'
-  //       },
-  //       {
-  //         sendTime: '2020/02/04 20:54',
-  //         msgTitle: 'Jack黑心台北2',
-  //         contents: '有危機才有機2...',
-  //         sendType: 'email',
-  //         sendPeople: 1456,
-  //         msgFee: 1000,
-  //         registerTotal: 250,
-  //         registrationCost: 700,
-  //         registerRate: '25%'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     name: 'Juila',
-  //     data:[
-  //       {
-  //         sendTime: '2020/02/05 12:32',
-  //         msgTitle: 'Juila黑心台北',
-  //         contents: '有危機才有機...',
-  //         sendType: 'email',
-  //         sendPeople: 1456,
-  //         msgFee: 1000,
-  //         registerTotal: 250,
-  //         registrationCost: 700,
-  //         registerRate: '25%'
-  //       },
-  //       {
-  //         sendTime: '2020/02/04 20:54',
-  //         msgTitle: 'Juila黑心台北2',
-  //         contents: '有危機才有機2...',
-  //         sendType: 'email',
-  //         sendPeople: 1456,
-  //         msgFee: 1000,
-  //         registerTotal: 250,
-  //         registrationCost: 700,
-  //         registerRate: '25%'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     name: '順昌',
-  //     data:[
-  //       {
-  //         sendTime: '2020/02/05 12:32',
-  //         msgTitle: '順昌黑心台北',
-  //         contents: '順昌有危機才有機...',
-  //         sendType: 'email',
-  //         sendPeople: 1456,
-  //         msgFee: 1000,
-  //         registerTotal: 250,
-  //         registrationCost: 700,
-  //         registerRate: '25%'
-  //       },
-  //       {
-  //         sendTime: '2020/02/04 20:54',
-  //         msgTitle: '順昌黑心台北2',
-  //         contents: '順昌有危機才有機2...',
-  //         sendType: 'email',
-  //         sendPeople: 1456,
-  //         msgFee: 1000,
-  //         registerTotal: 250,
-  //         registrationCost: 700,
-  //         registerRate: '25%'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     name: '北極熊',
-  //     data:[
-  //       {
-  //         sendTime: '2020/02/05 12:32',
-  //         msgTitle: '北極熊黑心台北',
-  //         contents: '北極熊有危機才有機...',
-  //         sendType: 'email',
-  //         sendPeople: 1456,
-  //         msgFee: 1000,
-  //         registerTotal: 250,
-  //         registrationCost: 700,
-  //         registerRate: '25%'
-  //       },
-  //       {
-  //         sendTime: '2020/02/04 20:54',
-  //         msgTitle: '北極熊黑心台北2',
-  //         contents: 'v有危機才有機2...',
-  //         sendType: 'email',
-  //         sendPeople: 1456,
-  //         msgFee: 1000,
-  //         registerTotal: 250,
-  //         registrationCost: 700,
-  //         registerRate: '25%'
-  //       }
-  //     ]
-  //   }
-  // ];
-
   // $('tbody').addClass('tab-content');
 
   var daterange = $('#daterange').val();
 
   $("document").ready(function() {
-
 
     // $('input[name="daterange"]').daterangepicker({
     //   opens: 'left'
@@ -453,7 +300,6 @@
         separator: ' ~ '
       },
     });
-
 
     //日期區間搜尋
     $('#daterange').on('apply.daterangepicker', function(ev, picker) {
@@ -472,31 +318,17 @@
     });
 
 
-    table = $('#table_list').DataTable({
+    table = $('table[name="table_list"]').DataTable({
         "dom": '<l<t>p>',
-        // "ordering": false,
         "autoWidth": false,
-        "order": [ 4 , 'desc'],
-        drawCallback: function(){
-          //換頁或切換每頁筆數按鈕觸發
-          $('.paginate_button, .dataTables_length', this.api().table().container()).on('click', function(){
-              var active = $("div#nav-tab a.active").attr('id');
-              console.log(active);
-          });       
-        }
+        "order": [[ 0, 'desc' ]]
     });
-    
-    table
-      .columns( 6 )
-      .search( 21 )
-      .draw();
 
     // $('.nav-item').on('click', function() {
     //   var target = $(this).attr('data-target');
     //   $('.show_row').removeClass('show_row')
     //   $(`.${target}`).addClass('show_row');
     // });
-
 
     // fakeData.forEach((data, idx) => {
     //   // $('#nav-tab a').eq(idx).text(data.name);
@@ -525,48 +357,52 @@
 
     // });
 
-    $('[name="col_time"]').show();
-    $('[name="col_btn"]').show();
-    $('#th_time').html('預約時間');
-    $('#th_count').html('預約傳送人數');
-  })
+    // $('[name="col_time"]').show();
+    // $('[name="col_btn"]').show();
+    // $('a[name="btn_edit"]').hide();
+    // $('#th_time').html('預約時間');
+    // $('#th_count').html('預約傳送人數');
+  // })
 
-  //已預約分頁
-  $('#reserve').on('click', function() {
-    table
-      .columns( 6 )
-      .search( 21 )
-      .draw();
+  // //已預約分頁
+  // $('#schedule').on('click', function() {
+  //   table
+  //     .columns( 6 )
+  //     .search( 21 )
+  //     .draw();
 
-    $('[name="col_time"]').show();
-    $('[name="col_btn"]').show();
-    $('#th_time').html('預約時間');
-    $('#th_count').html('預約傳送人數');
-  });
+  //   $('[name="col_time"]').show();
+  //   $('[name="col_btn"]').show();
+  //   $('a[name="btn_edit"]').hide();
+  //   $('#th_time').html('預約時間');
+  //   $('#th_count').html('預約傳送人數');
+  // });
   
-  //草稿分頁
-  $('#draft').on('click', function() {
-    table
-      .columns( 6 )
-      .search( 18 )
-      .draw();
+  // //草稿分頁
+  // $('#draft').on('click', function() {
+  //   table
+  //     .columns( 6 )
+  //     .search( 18 )
+  //     .draw();
 
-    $('[name="col_time"]').hide();
-    $('[name="col_btn"]').show();
-    $('#th_count').html('預約傳送人數');
-  });
+  //   $('[name="col_time"]').hide();
+  //   $('[name="col_btn"]').show();
+  //   $('a[name="btn_edit"]').show();
+  //   $('#th_count').html('預約傳送人數');
+  // });
   
-  //已傳送分頁
-  $('#sent').on('click', function() {
-    table
-      .columns( 6 )
-      .search( 19 )
-      .draw();
+  // //已傳送分頁
+  // $('#sent').on('click', function() {
+  //   table
+  //     .columns( 6 )
+  //     .search( 19 )
+  //     .draw();
 
-    $('[name="col_time"]').show();
-    $('[name="col_btn"]').hide();
-    $('#th_time').html('傳送時間');
-    $('#th_count').html('傳送人數');
+  //   $('[name="col_time"]').show();
+  //   $('[name="col_btn"]').hide();
+  //   $('a[name="btn_edit"]').show();
+  //   $('#th_time').html('傳送時間');
+  //   $('#th_count').html('傳送人數');
 
     $('table tbody tr').on('click', function(){
         window.location = $(this).attr('href');
@@ -575,8 +411,60 @@
   });
 
 
+  /* 取消預約 Sandy(2020/04/29) */
+  function btn_cancel(id_message){
+    var msg = "是否取消此預約訊息?";
 
-  // 刪除 Sandy(2020/04/21) 
+    if (confirm(msg)==true){
+      $.ajax({
+          type : 'POST',
+          url:'message_list_cancel', 
+          data:{
+            id_message: id_message,
+          },
+          success:function(res){
+            // console.log(res);
+
+            switch (res['status']) {
+              case 'success':
+                  alert('取消預約成功！');
+                  location.reload();
+                  // /** alert **/
+                  // $("#success_alert_text").html("刪除課程成功");
+                  // fade($("#success_alert"));
+                break;
+              case 'warn':
+                  // alert('取消預約成功！');
+
+                  /** alert **/
+                  $("#warn_alert_text").html("取消預約成功！ 5秒後重整頁面" + "<br><br>" + res['msg']);
+                  $("#warn_alert").show();
+
+                  $('a').prop('disabled', 'disabled');
+                  setTimeout( function(){location.href="{{URL::to('message_list')}}"}, 5000);
+                break;            
+              default:
+                /** alert **/ 
+                $("#error_alert_text").html("取消預約失敗，" + res['msg']);
+                fade($("#error_alert"));      
+                break;
+            }
+          },
+          error: function(res){
+            console.log(JSON.stringify(res));   
+
+            /** alert **/ 
+            $("#error_alert_text").html("取消預約失敗");
+            fade($("#error_alert"));       
+          }
+      });
+    }else{
+      return false;
+    }    
+  }
+
+
+  /* 刪除 Sandy(2020/04/21) */
   function btn_delete(id_message){
     var msg = "是否刪除此訊息?";
 

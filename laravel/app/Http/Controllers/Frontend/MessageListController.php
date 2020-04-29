@@ -14,11 +14,13 @@ class MessageListController extends Controller
     // 顯示frontend.message_cost資訊
     public function show()
     {
-      $msg = [];
+      $scheduleMsg = [];
+      $draftMsg= [];
+      $sentMsg= [];
 
-      $msg_all = Message::orderby('created_at', 'desc')->get();
+      $msg_all = Message::all();
 
-      foreach( $msg_all as $key => $data){
+      foreach( $msg_all as $data){
         switch ($data['type']) {
           case 0:
             $type = '簡訊';
@@ -34,22 +36,53 @@ class MessageListController extends Controller
             break;
         }
 
-        $count_receiver = count(Receiver::where('id_message', $data['id'])->get());
+        $count = count(Receiver::where('id_message', $data['id'])->get());
 
-        $msg[$key] = [
-          'id' => $data['id'],
-          'id_status' => $data['id_status'],
-          'name' => $data['name'],
-          'content' => strip_tags($data['content']),
-          'type' => $type,
-          'send_at' => $data['send_at'],
-          'count_receiver' => $count_receiver,
-        ];
+        switch ($data['id_status']) {
+          case 21:
+            //已預約
+            //當天預約訊息不得取消故不顯示
+            if( date('Y-m-d', strtotime($data['send_at'])) > date('Y-m-d') ){
+              $scheduleMsg[count($scheduleMsg)] = [
+                'created_at' => $data['created_at'],
+                'id' => $data['id'],
+                'name' => $data['name'],
+                'content' => strip_tags($data['content']),
+                'type' => $type,
+                'send_at' => $data['send_at'],
+                'count' => $count,
+              ];
+            }
+            break;
+          case 18:
+            //草稿
+            $draftMsg[count($draftMsg)] = [
+              'created_at' => $data['created_at'],
+              'id' => $data['id'],
+              'name' => $data['name'],
+              'content' => strip_tags($data['content']),
+              'type' => $type,
+              'count' => $count,
+            ];
+            break;
+          case 19:
+            //已傳送
+            $sentMsg[count($sentMsg)] = [
+              'created_at' => $data['created_at'],
+              'id' => $data['id'],
+              'name' => $data['name'],
+              'content' => strip_tags($data['content']),
+              'type' => $type,
+              'send_at' => $data['send_at'],
+              'count' => $count,
+            ];
+            break;
+          default:
+            break;
+        }
       }
-// dd($msg);
-      // $teachers = Teacher::Where('phone', ' ') -> get();
 
-      return view('frontend.message_list', compact('msg'));
+      return view('frontend.message_list', compact('scheduleMsg', 'draftMsg', 'sentMsg'));
     }
 
     // // 登入

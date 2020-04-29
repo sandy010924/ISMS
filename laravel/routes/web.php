@@ -370,6 +370,9 @@ Route::post('messageDetailGroup', 'Backend\MessageController@showDetailGroup')->
 Route::get('message_list', 'Frontend\MessageListController@show')->name('message_list');
 
 /*** [訊息推播] 刪除訊息 ***/
+Route::post('message_list_cancel', 'Backend\MessageListController@cancel');
+
+/*** [訊息推播] 刪除訊息 ***/
 Route::post('message_list_delete', 'Backend\MessageListController@delete');
 
 
