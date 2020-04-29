@@ -526,18 +526,18 @@
       var table, table2;
 
       // 搜尋 Rocky(2020/03/27)
-      $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-          var keyword = $('#search_input').val();
-          var phone = data[1];
-          var email = data[2];
+      // $.fn.dataTable.ext.search.push(
+      //   function(settings, data, dataIndex) {
+      //     var keyword = $('#search_input').val();
+      //     var phone = data[1];
+      //     var email = data[2];
 
-          if ((isNaN(keyword)) || (phone.includes(keyword)) || (email.includes(keyword))) {
-            return true;
-          }
-          return false;
-        }
-      );
+      //     if ((isNaN(keyword)) || (phone.includes(keyword)) || (email.includes(keyword))) {
+      //       return true;
+      //     }
+      //     return false;
+      //   }
+      // );
       $("#btn_search").click(function() {
         table.search($('#search_input').val()).draw();
       });
@@ -984,6 +984,7 @@
             "targets": 'no-sort',
             "orderable": false,
           }],
+          "deferRender": true,
           "orderCellsTop": true,
           "destroy": true,
           "retrieve": true,
