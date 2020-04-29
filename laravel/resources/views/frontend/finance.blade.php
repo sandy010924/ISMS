@@ -85,8 +85,8 @@
               </div>
               <div class="col-3">
                 <div class="input-group date" data-target-input="nearest">
-                  <input type="text" id="invoice_search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期">
-                  <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
+                  <input type="text" id="invoice_search_date" name="invoice_search_date" class="form-control datetimepicker-input" data-target="#invoice_search_date" placeholder="購買日期">
+                  <div class="input-group-append" data-target="#invoice_search_date" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                   </div>
                 </div>
@@ -133,6 +133,10 @@
     $('#search_date').datetimepicker({
       format: 'YYYY-MM-DD'
     });
+    $('#invoice_search_date').datetimepicker({
+      format: 'YYYY-MM-DD'
+    });
+
 
     /* Datatable.js Rocky(2020/04/24) - S */
     table = $('#table_list').DataTable({
@@ -144,23 +148,7 @@
       "orderCellsTop": true
     });
 
-    // table2 = $('#table_list_history').DataTable({
-    //   "dom": '<l<t>p>',
-    //   "columnDefs": [{
-    //     "targets": 'no-sort',
-    //     "orderable": false,
-    //   }],
-    //   // paging: false,
-    //   // searching: false,
-    //   destroy: true,
-    //   retrieve: true,
-    //   drawCallback: function() {
-    //     //換頁或切換每頁筆數按鈕觸發報到狀態樣式
-    //     $('th.sorting', this.api().table().container()).on('click', function() {
-    //       show_invoice($('#id_group').val());
-    //     });
-    //   }
-    // });
+    table2 = $('#table_list_history').DataTable();
     /* Datatable.js Rocky(2020/04/24) - E */
 
     /* 輸入框 Rocky(2020/04/24) - S */
@@ -193,6 +181,11 @@
   function show_invoice(id_group) {
     var updatetime = ''
     $("#invoice").modal('show');
+    $("#invoice_search_date").val('');
+    $("#invoice_search_name").val('');
+
+    table2.clear().draw();
+    table2.destroy();
 
     table2 = $('#table_list_history').DataTable({
       "dom": '<l<t>p>',
@@ -200,18 +193,19 @@
         "targets": 'no-sort',
         "orderable": false,
       }],
-      destroy: true,
-      retrieve: true,
+      "orderCellsTop": true,
+      "destroy": true,
+      "retrieve": true,
       "ajax": {
         "url": "show_student",
         "type": "POST",
         "data": {
           id_group: id_group
         },
+        async: false,
         "dataSrc": function(json) {
           for (var i = 0, ien = json.length; i < ien; i++) {
             var type_invoice = ''
-
 
             if (json[i]['type_invoice'] == '0') {
               type_invoice = '捐贈社會福利機構（ 由無極限國際公司另行辦理）'
@@ -224,114 +218,46 @@
             json[i][0] = json[i]['created_at'];
             json[i][1] = json[i]['name'];
             json[i][2] = type_invoice;
-
-            json[i][3] = '<div class="input-group date show_datetime" id="new_starttime' + json[i]['id'] + '" data-target-input="nearest"> ' +
-              ' <input type="text" onblur="auto_update_invoice($(this),' + json[i]['id'] + ',0);" value="' + json[i]['invoice_created_at'] + '" class="form-control datetimepicker-input datepicker" data-target="#new_starttime' + json[i]['id'] + '" /> ' +
+            // json[i][3] = '<div class="input-group date show_datetime " id="new_starttime' + json[i]['id'] + '" data-target-input="nearest"> ' +
+            //   ' <input type="text onblur="auto_update_invoice($(this),' + json[i]['id'] + ',0);" value="' + json[i]['invoice_created_at'] + '" class="form-control datetimepicker-input datepicker" data-target="#new_starttime' + json[i]['id'] + '" /> ' +
+            //   ' <div class="input-group-append" data-target="#new_starttime' + json[i]['id'] + '" data-toggle="datetimepicker"> ' +
+            //   ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
+            //   '</div> ' +
+            //   '</div>'
+            json[i][3] = '<div class="input-group date" data-target-input="nearest"> ' +
+              ' <input type="text" onblur="auto_update_invoice($(this),' + json[i]['id'] + ',0);" id="new_starttime' + json[i]['id'] + '" name="new_starttime' + json[i]['id'] + '" value="' + json[i]['invoice_created_at'] + '"  class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期"> ' +
               ' <div class="input-group-append" data-target="#new_starttime' + json[i]['id'] + '" data-toggle="datetimepicker"> ' +
               ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
-              '</div> ' +
-              '</div>'
+              '</div> </div>';
+            // <div class="input-group date" data-target-input="nearest">
+            //     <input type="text" id="invoice_search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期">
+            //     <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
+            //       <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            //     </div>
+            //   </div>
             json[i][4] = '<input type="number" class="form-control form-control-sm"  onblur="auto_update_invoice($(this),' + json[i]['id'] + ',1);"  value="' + json[i]['invoice'] + '">';
             json[i][5] = json[i]['companytitle'];
             json[i][6] = json[i]['number_taxid'];
             json[i][7] = json[i]['address'];
           }
-
-
-          // 日期
-          console.log(updatetime.substring(0, updatetime.length - 1))
-          var iconlist = {
-            time: 'fas fa-clock',
-            date: 'fas fa-calendar',
-            up: 'fas fa-arrow-up',
-            down: 'fas fa-arrow-down',
-            previous: 'fas fa-arrow-circle-left',
-            next: 'fas fa-arrow-circle-right',
-            today: 'far fa-calendar-check-o',
-            clear: 'fas fa-trash',
-            close: 'far fa-times'
-          }
-          $(updatetime.substring(0, updatetime.length - 1)).datetimepicker({
-            format: "YYYY-MM-DD",
-            icons: iconlist,
-            defaultDate: new Date(),
-            pickerPosition: "bottom-left"
-          });
           return json;
+
         }
       }
     });
 
-    table2.clear();
-    table2.destroy();
+    // 日期
+    $(updatetime.substring(0, updatetime.length - 1)).datetimepicker({
+      format: "YYYY-MM-DD",
+      pickerPosition: "bottom-left"
+    })
 
-    // $.ajax({
-    //   type: 'POST',
-    //   url: 'show_student',
-    //   data: {
-    //     id_group: id_group
-    //   },
-    //   success: function(data) {
-    //     // console.log(data)
-    //     var updatetime = ''
-
-    //     $('#history_data_detail').html('');
-    //     $.each(data, function(index, val) {
-    //       var type_invoice = ''
-    //       if (val['type_invoice'] == '0') {
-    //         type_invoice = '捐贈社會福利機構（ 由無極限國際公司另行辦理）'
-    //       } else if (val['type_invoice'] == '1') {
-    //         type_invoice = '二聯式'
-    //       } else if (val['type_invoice'] == '2') {
-    //         type_invoice = '三聯式'
-    //       }
-    //       updatetime += "#new_starttime" + val['id'] + ','
-    //       data +=
-    //         '<tr>' +
-    //         '<td>' + val['created_at'] + '</td>' +
-    //         '<td>' + val['name'] + '</td>' +
-    //         '<td>' + type_invoice + '</td>' +
-    //         '<td> ' +
-    //         '<div class="input-group date show_datetime" id="new_starttime' + val['id'] + '" data-target-input="nearest"> ' +
-    //         ' <input type="text" onblur="auto_update_invoice($(this),' + val['id'] + ',0);" value="' + val['invoice_created_at'] + '" class="form-control datetimepicker-input datepicker" data-target="#new_starttime' + val['id'] + '" /> ' +
-    //         ' <div class="input-group-append" data-target="#new_starttime' + val['id'] + '" data-toggle="datetimepicker"> ' +
-    //         ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
-    //         '</div> ' +
-    //         '</div>' +
-    //         '</td>' +
-    //         '<td><input type="number" class="form-control form-control-sm"  onblur="auto_update_invoice($(this),' + val['id'] + ',1);"  value="' + val['invoice'] + '"></td>' +
-    //         '<td>' + val['companytitle'] + '</td>' +
-    //         '<td>' + val['number_taxid'] + '</td>' +
-    //         '<td>' + val['address'] + '</td>' +
-    //         '</tr>'
-    //     });
-    //     $('#history_data_detail').html(data);
-
-
-    //     // 日期
-    //     var iconlist = {
-    //       time: 'fas fa-clock',
-    //       date: 'fas fa-calendar',
-    //       up: 'fas fa-arrow-up',
-    //       down: 'fas fa-arrow-down',
-    //       previous: 'fas fa-arrow-circle-left',
-    //       next: 'fas fa-arrow-circle-right',
-    //       today: 'far fa-calendar-check-o',
-    //       clear: 'fas fa-trash',
-    //       close: 'far fa-times'
-    //     }
-    //     $(updatetime.substring(0, updatetime.length - 1)).datetimepicker({
-    //       format: "YYYY-MM-DD",
-    //       icons: iconlist,
-    //       defaultDate: new Date(),
-    //       pickerPosition: "bottom-left"
-    //     });
-    //   },
-    //   error: function(jqXHR) {
-    //     console.log(JSON.stringify(jqXHR));
-    //   }
-    // });
+    // 調整Datable.js寬度
+    $("#table_list_history").css({
+      "width": "100%"
+    });
   }
+
   /* 顯示學員資料 - E Rocky(2020/04/25) */
 
   /* 自動儲存 - S Rocky(2020/04/25) */

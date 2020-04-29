@@ -549,6 +549,7 @@
 
   var array_old_studentid = new Array();
   var array_upate_studentid = new Array();
+  var table2
   //  $('select').selectpicker();
   $("document").ready(function() {
     // 查看條件 - 預設顯示 Rocky(2020/04/21)
@@ -574,6 +575,9 @@
     $("#select_course3").selectpicker({
       noneSelectedText: '請選擇' //預設顯示內容
     });
+
+    // Datable.js Rocky (2020/04/30)
+    table2 = $('#table_list_history').DataTable();
   });
 
   // 追單資料關閉
@@ -1065,45 +1069,97 @@
 
   // 歷史互動
   function history_data() {
-    $.ajax({
-      type: 'POST',
-      url: 'history_data',
-      dataType: 'json',
-      data: {
-        id_student: id_student_old
-      },
-      success: function(data) {
-        var id_student = '';
-        $('#history_data_detail').html('');
-        $.each(data, function(index, val) {
-          var status = '',
-            course_sales = '';
-          if (val['status_sales'] == null) {
-            status = '無'
-          } else {
-            status = val['status_sales']
-          }
+    table2.clear().draw();
+    table2.destroy();
 
-          if (val['course_sales'] == null) {
-            course_sales = '無'
-          } else {
-            course_sales = val['course_sales']
-          }
+    table2 = $('#table_list_history').DataTable({
+      "dom": '<l<t>p>',
+      "columnDefs": [{
+        "targets": 'no-sort',
+        "orderable": false,
+      }],
+      "orderCellsTop": true,
+      "destroy": true,
+      "retrieve": true,
+      "ajax": {
+        "url": "history_data",
+        "type": "POST",
+        "data": {
+          id_student: id_student_old
+        },
+        async: false,
+        "dataSrc": function(json) {
+          for (var i = 0, ien = json.length; i < ien; i++) {
 
-          id_student = val['id_student'];
-          data +=
-            '<tr>' +
-            '<td>' + val['created_at'] + '</td>' +
-            '<td>' + status + '</td>' +
-            '<td>' + course_sales + '</td>' +
-            '</tr>'
-        });
-        $('#history_data_detail').html(data);
-      },
-      error: function(error) {
-        console.log(JSON.stringify(error));
+            var status = '',
+              course_sales = '';
+            if (json[i]['status_sales'] == null) {
+              status = '無'
+            } else {
+              status = json[i]['status_sales']
+            }
+
+            if (json[i]['course_sales'] == null) {
+              course_sales = '無'
+            } else {
+              course_sales = json[i]['course_sales']
+            }
+
+            // id_student = json[i]['id_student'];
+            json[i][0] = json[i]['created_at'];
+            json[i][1] = status;
+            json[i][2] = course_sales;
+          }
+          return json;
+
+        }
       }
     });
+
+
+    // 調整Datable.js寬度
+    $("#table_list_history").css({
+      "width": "100%"
+    });
+    // $.ajax({
+    //   type: 'POST',
+    //   url: 'history_data',
+    //   dataType: 'json',
+    //   data: {
+    //     id_student: id_student_old
+    //   },
+    //   success: function(data) {
+    //     var id_student = '';
+    //     $('#history_data_detail').html('');
+    //     $.each(data, function(index, val) {
+    //       var status = '',
+    //         course_sales = '';
+    //       if (val['status_sales'] == null) {
+    //         status = '無'
+    //       } else {
+    //         status = val['status_sales']
+    //       }
+
+    //       if (val['course_sales'] == null) {
+    //         course_sales = '無'
+    //       } else {
+    //         course_sales = val['course_sales']
+    //       }
+
+    //       id_student = val['id_student'];
+    //       data +=
+    //         '<tr>' +
+    //         '<td>' + val['created_at'] + '</td>' +
+    //         '<td>' + status + '</td>' +
+    //         '<td>' + course_sales + '</td>' +
+    //         '</tr>'
+    //     });
+    //     $('#history_data_detail').html(data);
+    //   },
+    //   error: function(error) {
+    //     console.log(JSON.stringify(error));
+    //   }
+    // });
   }
 
   // 聯絡狀況

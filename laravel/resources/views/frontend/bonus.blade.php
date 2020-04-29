@@ -78,7 +78,8 @@
               <input type="text" id="bonus_add_name" name="new_name" class="form-control" required>
             </div>
             <div class="form-group required">
-              <label for="new_condition" class="col-form-label">條件</label>
+              <label for="new_condition">條件</label>
+              <b style="color:#d03939">(輸入框請用小寫逗號區隔，Ex: fb,line)</b>
               <div class="form-group row mb-3">
                 <div class="col-4">
                   <div class="form-check">
@@ -169,7 +170,8 @@
               <input type="text" id="bonus_name" name="new_name" class="form-control" required>
             </div>
             <div class="form-group required">
-              <label for="new_condition" class="col-form-label">條件</label>
+              <label for="new_condition">條件</label>
+              <b style="color:#d03939">(輸入框請用小寫逗號區隔，Ex: fb,line)</b>
               <div class="form-group row mb-3">
                 <div class="col-4">
                   <div class="form-check">
@@ -402,7 +404,10 @@
     }
     nameidlist = '0,1,2,3,4,5';
     // console.log(namelist + '\n' + nameidlist + '\n' + checkboxlist + '\n' + textlist)
-
+    if ($('input[name="status_add"]:checked').val() == null || $('#bonus_add_name').val() == null) {
+      alert('請選擇姓名 / 狀態！！')
+      return false;
+    }
     $.ajax({
       type: 'POST',
       url: 'add_bonus',
@@ -473,6 +478,11 @@
     }
     nameidlist = '0,1,2,3,4,5';
     // console.log(namelist + '\n' + nameidlist + '\n' + checkboxlist + '\n' + textlist)
+
+    if ($('input[name="status"]:checked').val() == null || $('#bonus_name').val() == '') {
+      alert('請選擇姓名 / 狀態！！')
+      return false;
+    }
 
     $.ajax({
       type: 'POST',
