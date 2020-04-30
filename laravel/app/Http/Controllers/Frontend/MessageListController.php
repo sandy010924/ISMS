@@ -41,8 +41,8 @@ class MessageListController extends Controller
         switch ($data['id_status']) {
           case 21:
             //已預約
-            //當天預約訊息不得取消故不顯示
-            if( date('Y-m-d', strtotime($data['send_at'])) > date('Y-m-d') ){
+            //過時預約訊息不得取消故不顯示
+            if( strtotime($data['send_at']) > strtotime('now') ){
               $scheduleMsg[count($scheduleMsg)] = [
                 'created_at' => $data['created_at'],
                 'id' => $data['id'],

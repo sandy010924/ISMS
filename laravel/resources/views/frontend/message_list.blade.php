@@ -71,7 +71,6 @@
   <!--搜尋課程頁面內容-->
   <div class="card m-3">
     <div class="card-body">
-      
       {{-- <div class="container"> --}}
       <div class="row mb-5">
         <div class="col-5">
@@ -84,12 +83,18 @@
               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
             </div> --}}
           {{-- </div> --}}
-          <div class="input-group">
+          {{-- <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text">搜尋日期區間</span>
             </div>
             <input type="search" class="form-control px-3" name="daterange" id="daterange"> 
-          </div>  
+          </div>   --}}
+          <div class="input-group date" data-target-input="nearest">
+            <input type="search" class="form-control px-3" name="daterange" id="daterange" placeholder="搜尋日期區間" autocomplete="off"> 
+            <div class="input-group-append" data-target="#daterange" data-toggle="datetimepicker">
+              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            </div>  
+          </div>
         </div>
         <div class="col text-right">
           <a href="{{ route('message') }}" role="button" class="btn btn-primary">建立訊息</a>
@@ -260,8 +265,8 @@
 
 <!-- Content End -->
 
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+{{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script> --}}
 
 <style>
   .fade_row {

@@ -546,27 +546,36 @@ $(document).ready(function () {
 
     // $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
 
-    e.preventDefault();
+    // e.preventDefault();
 
-    var empty = verifyEmpty();
+    // var empty = verifyEmpty();
     
-    if( empty > 0 ){
-      $('#scheduleModal').modal('hide');
-      return false;
-    }
+    // if( empty > 0 ){
+    //   $('#scheduleModal').modal('hide');
+    //   return false;
+    // }
     
-    if( $('#scheduleTime').val() == "" ){
-      alert('請輸入排程時間');
-      return false;
-    }
-
-    // if( $('#scheduleTime').val() > "" ){
+    // if( $('#scheduleTime').val() == "" ){
     //   alert('請輸入排程時間');
     //   return false;
     // }
-    console.log($('#scheduleTime').val());
-      return false;
 
+    var date = new Date('2020-05-01');
+    var day = date.getDate();
+    var month = date.getMonth()+1;
+    var year = date.getFullYear();
+    
+    var today = moment().format("YYYY-MM-DD");
+    var scheduleDate = year + '-' + month + '-' + day;
+
+    console.log(today);
+    console.log(scheduleDate);
+
+    if( today == scheduleDate ){
+      alert('無法排程當日訊息，請選擇今天以後的日期。');
+      return false;
+    }
+return false;
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
     $(this).attr('disabled', 'disabled');
 
