@@ -1,9 +1,10 @@
 <html lang="zh-TW">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
-  <meta name="csrf-token"  content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>@yield('title') | 無極限學員系統</title>
 
@@ -20,7 +21,8 @@
   {{-- <link href="{{ asset('css/dataTables.bootstrap4.css') }}" rel="stylesheet"> --}}
   <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
-  <!-- Rocky(2020/01/11) --> <!-- Sandy(2020/02/27) -->
+  <!-- Rocky(2020/01/11) -->
+  <!-- Sandy(2020/02/27) -->
   <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
   <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/feather.min.js') }}"></script>
@@ -52,7 +54,7 @@
   <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
   <script src="{{ asset('js/bootstrap-select.min.js') }} "></script>
 
-   <!-- message 細分組搜尋 Joanna (2020/04/01) -->
+  <!-- message 細分組搜尋 Joanna (2020/04/01) -->
   <link rel="stylesheet" href="{{ asset('css/icon_font.css') }}">
   <link rel="stylesheet" href="{{ asset('css/jquery.transfer.css') }}">
   <script src="{{ asset('js/jquery.transfer.js') }} "></script>
@@ -60,70 +62,95 @@
   <!-- 民國年日期選擇器 Sandy (2020/04/02) -->
   <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
   <script src="{{ asset('js/bootstrap-datepicker.js') }} "></script>
-  
+
   <!-- Custom styles -->
   <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
   <link href="{{ asset('css/web.css') }}" rel="stylesheet">
   <link href="{{ asset('css/form.css') }}" rel="stylesheet">
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
   <link href="{{ asset('css/course_list_chart.css') }}" rel="stylesheet">
+  <!-- Excel 匯出 Rocky (2020/04/30) -->
+  <style>
+    .buttons-excel {
+      color: #212529;
+      cursor: pointer;
+      background-color: transparent;
+      border: 1px solid transparent;
+      padding: .375rem .75rem;
+      line-height: 1.5;
+      border-radius: .25rem;
+      color: #28a745;
+      border-color: #28a745;
+    }
 
+    .buttons-excel:hover {
+      color: #fff;
+      background-color: #28a745;
+    }
+  </style>
+  <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ asset('js/jszip.min.js') }}"></script>
+  <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
+  <!-- <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> -->
+  <!-- <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script> -->
+  <!-- Excel 匯出 Rocky (2020/04/30) -->
 </head>
 
 <body>
   {{-- <div class="container-fluid"> --}}
 
-      @include('frontend.layouts.navbar')
+  @include('frontend.layouts.navbar')
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
+  <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
 
-          @include('frontend.layouts.header')
+    @include('frontend.layouts.header')
 
-          @yield('content')
+    @yield('content')
 
-          <!-- form alert Start-->
-          @if (session('status') == "報名成功")
-            <div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
-              {{ session('status') }}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            @elseif (session('status') == "報名失敗")
-            <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
-              {{ session('status') }}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          @endif
-          <!-- form alert End -->
+    <!-- form alert Start-->
+    @if (session('status') == "報名成功")
+    <div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
+      {{ session('status') }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    @elseif (session('status') == "報名失敗")
+    <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
+      {{ session('status') }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    @endif
+    <!-- form alert End -->
 
-          <!-- alert Start-->
-          <!-- success -->
-          <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
-            <span id="success_alert_text"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <!-- error -->
-          <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
-            <span id="error_alert_text"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <!-- warn -->
-          <div class="alert alert-warning alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="warn_alert">
-            <span id="warn_alert_text"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <!-- alert End -->
+    <!-- alert Start-->
+    <!-- success -->
+    <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+      <span id="success_alert_text"></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- error -->
+    <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+      <span id="error_alert_text"></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- warn -->
+    <div class="alert alert-warning alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="warn_alert">
+      <span id="warn_alert_text"></span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- alert End -->
 
-        </main>
+  </main>
   {{-- </div> --}}
 
   <!-- Rocky(2020/02/17) -->

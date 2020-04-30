@@ -10,7 +10,7 @@
   <div class="card-body">
     <div class="row mb-3">
       <div class="col-2">
-        <h3>獎金名單：{{$datas_rule[0]['bonus_name']}}</h3>
+        <h3 id="h3_title">獎金名單：{{$datas_rule[0]['bonus_name']}}</h3>
         <input type="hidden" id="id_bonus" value="{{$id_bonus}}">
       </div>
       <div class="col-2">
@@ -40,7 +40,6 @@
       </div>
       <div class="col-3">
         <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
-        <button class="btn btn-outline-success" type="button" id="btn_excel" onclick="btn_excel();">匯出Excel</button>
       </div>
     </div>
     <div class="table-responsive">
@@ -132,30 +131,9 @@
 </div>
 
 <!-- Content End -->
-<!-- <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.20/js/dataTables.semanticui.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.semanticui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script> -->
 
-<!-- https://code.jquery.com/jquery-3.3.1.js
-https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js
-https://cdn.datatables.net/1.10.20/js/dataTables.semanticui.min.js
-https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js
-https://cdn.datatables.net/buttons/1.6.1/js/buttons.semanticui.min.js
-https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js
-https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js
-https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js
-https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js
-https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js
-https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js -->
 <script>
-  var table, table2;
+  var table2;
 
   $("document").ready(function() {
     // 日期選擇器 Rocky(2020/04/24)
@@ -164,26 +142,20 @@ https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js -->
     });
 
     /* Datatable.js Rocky(2020/04/24) - S */
-    table = $('#table_list').DataTable({
-      "dom": '<l<t>p>',
-      "columnDefs": [{
-        "targets": 'no-sort',
-        "orderable": false,
-      }]
-    });
 
     table2 = $('#table_list_history').DataTable({
-      "dom": '<l<td>p>',
-      // "dom": 'Bfrtip',
+      "dom": '<l<td>Bt>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
       }],
-      // lengthChange: false,
-      buttons: ['excel']
+      lengthChange: false,
+      buttons: [{
+        extend: 'excel',
+        text: '匯出Excel',
+        messageTop: $('#h3_title').text(),
+      }],
     });
-    // table2.buttons().container()
-    //   .appendTo($('div.eight.column:eq(0)', table.table().container()));
     /* Datatable.js Rocky(2020/04/24) - E */
 
     /* 輸入框 Rocky(2020/04/24) - S */
@@ -313,12 +285,6 @@ https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js -->
     });
   }
   /* 顯示學員資料 - E Rocky(2020/04/25) */
-
-  /* 匯出Excel - S Rocky(2020/04/27) */
-  function btn_excel() {
-    alert('此功能尚未開放，如有需求請付費解鎖');
-  }
-  /* 匯出Excel - E Rocky(2020/04/27) */
 
   /* 搜尋 Rocky(2020/04/24) - S */
   // $.fn.dataTable.ext.search.push(
