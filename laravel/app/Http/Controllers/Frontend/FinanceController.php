@@ -139,6 +139,7 @@ class FinanceController extends Controller
                     }
                 }
             })
+            ->groupby('b.id')
             ->get();
 
         return view('frontend.bonus_detail', compact('datas', 'datas_rule', 'id_bonus'));
@@ -176,6 +177,7 @@ class FinanceController extends Controller
                         }
                     }
                 })
+                ->groupby('b.id')
                 ->get();
         } else {
             if (count($datas_rule) != 0) {
@@ -211,6 +213,7 @@ class FinanceController extends Controller
                             }
                         }
                     })
+                    ->groupby('b.id')
                     ->get();
             }
         }
