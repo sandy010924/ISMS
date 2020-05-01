@@ -452,6 +452,10 @@ Route::post('authority_insert', 'Backend\AuthorityController@insert');
 /*** 刪除資料 Rocky(2020/02/17) ***/
 Route::post('authority_delete', 'Backend\AuthorityController@delete');
 
+/*** 顯示講師資料 Rocky(2020/05/01) ***/
+Route::post('show_teacher', 'Frontend\AuthorityController@showteacher');
+/*** 顯示修改資料 Rocky(2020/05/01) ***/
+Route::post('show_edite', 'Frontend\AuthorityController@showedite');
 
 /*
 |--------------------------------------------------------------------------

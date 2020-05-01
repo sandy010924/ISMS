@@ -9,59 +9,7 @@
 <div class="card m-3">
   <div class="card-body">
     <div class="row mb-4">
-      <div class="col-4">
-        <button type="button" class="btn btn-outline-secondary btn_date mx-1" data-toggle="modal" data-target="#form_newuser">新增</button>
-        <div class="modal fade" id="form_newuser" tabindex="-1" role="dialog" aria-labelledby="form_newuserLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="form_newclassLabel">新增</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form action="{{url('authority_insert')}}" name="insert" method="POST">
-                  @csrf
-                  <div class="form-group">
-                    <label for="newuser_account" class="col-form-label">帳號</label>
-                    <input type="text" class="form-control" id="newuser_account" name="account" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="newuser_password" class="col-form-label">密碼</label>
-                    <input type="password" class="form-control" id="newuser_password" name="password" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="newuser_password2" class="col-form-label">確認密碼</label>
-                    <input type="password" class="form-control" id="newuser_password2" name="password_check" data-match="#newuser_password" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="newuser_name" class="col-form-label">姓名</label>
-                    <input type="text" class="form-control" id="newuser_name" name="name" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="newuser_persona" class="col-form-label">角色</label>
-                    <select class="custom-select form-control" id="newuser_persona" name="newuser_persona" required>
-                      <option value="teacher">講師</option>
-                      <option value="saleser">業務人員</option>
-                      <option value="msaleser ">業務主管</option>
-                      <option value="officestaff">行政人員</option>
-                      <option value="staff">臨時人員</option>
-                      <option value="accountant">財務人員</option>
-                      <option value="marketer">行銷人員</option>
-                      <option value="admin">管理員</option>
-                    </select>
-                  </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="submit" id="import_check" class="btn btn-primary" onclick="CheckPassword(document.insert.password,document.insert.password_check)">確認</button>
-              </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="col-3"></div>
       <div class="col-7">
         <div class="input-group">
           <div class="col-md-4">
@@ -84,10 +32,12 @@
           </div>
           <div class="col-md-3">
             <button type="button" class="btn btn-outline-secondary" id="btn_search">搜尋</button>
+            <button type="button" class="btn btn-primary btn_date mx-1" data-toggle="modal" data-target="#form_newuser"><i class="fa fa-plus-square"></i> 新增</button>
           </div>
         </div>
       </div>
     </div>
+    <!-- 列表 -S Rocky(2020/05/01) -->
     @component('components.datatable')
     @slot('thead')
     <tr>
@@ -104,66 +54,131 @@
       <td>{{ $data['name'] }}</td>
       <td>{{ $data['role_name'] }}</td>
       <td>
-        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#e{{ $data['id'] }}">修改</button>
-        <div class="modal fade text-left" id="e{{ $data['id'] }}" tabindex="-1" role="dialog" aria-labelledby="form_updateuserLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="form_newclassLabel">修改資料</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form action="{{url('authority_update')}}" method="POST" role="update" data-toggle="validator">
-                  @csrf
-                  <input type="hidden" name="id" value="{{ $data['id'] }}">
-                  <div class="form-group">
-                    <label for="updateuser_account" class="col-form-label">帳號</label>
-                    <input type="text" class="form-control" name="account" value="{{ $data['account'] }}" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="updateuser_password" class="col-form-label">密碼</label>
-                    <input type="password" class="form-control" name="password">
-                  </div>
-                  <div class="form-group">
-                    <label for="updateuser_password2" class="col-form-label">確認密碼</label>
-                    <input type="password" class="form-control" name="password_check" data-match="#updateuser_password">
-                  </div>
-                  <div class="form-group">
-                    <label for="updateuser_name" class="col-form-label">姓名</label>
-                    <input type="text" class="form-control" name="name" value="{{ $data['name'] }}" required>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label">角色</label>
-
-                    <select class="custom-select form-control" name="updateuser_persona" required="required">
-                      <option @if($data['role']=='teacher' ) selected @endif value="teacher">講師</option>
-                      <option @if($data['role']=='saleser' ) selected @endif value="saleser">業務人員</option>
-                      <option @if($data['role']=='msaleser' ) selected @endif value="msaleser ">業務主管</option>
-                      <option @if($data['role']=='officestaff' ) selected @endif value="officestaff">行政人員</option>
-                      <option @if($data['role']=='staff' ) selected @endif value="staff">臨時人員</option>
-                      <option @if($data['role']=='accountant' ) selected @endif value="accountant">財務人員</option>
-                      <option @if($data['role']=='marketer' ) selected @endif value="marketer">行銷人員</option>
-                      <option @if($data['role']=='admin' ) selected @endif value="admin">管理員</option>
-                    </select>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-primary">確認</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- <button type="button" class="btn btn-secondary btn-sm">刪除</button> -->
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" onclick="show_edite({{ $data['id']}})">修改</button>
         <button id="{{ $data['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data['id'] }});" value="{{ $data['id'] }}">刪除</button>
       </td>
     </tr>
     @endforeach
     @endslot
     @endcomponent
+    <!-- 列表 -E Rocky(2020/05/01) -->
+
+    <!-- 新增 -S Rocky(2020/05/01) -->
+    <div class="modal fade" id="form_newuser" tabindex="-1" role="dialog" aria-labelledby="form_newuserLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="form_newclassLabel">新增</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="{{url('authority_insert')}}" name="insert" method="POST">
+              @csrf
+              <div class="form-group">
+                <label for="newuser_account" class="col-form-label">帳號</label>
+                <input type="text" class="form-control" id="newuser_account" name="account" required>
+              </div>
+              <div class="form-group">
+                <label for="newuser_password" class="col-form-label">密碼</label>
+                <input type="password" class="form-control" id="newuser_password" name="password" required>
+              </div>
+              <div class="form-group">
+                <label for="newuser_password2" class="col-form-label">確認密碼</label>
+                <input type="password" class="form-control" id="newuser_password2" name="password_check" data-match="#newuser_password" required>
+              </div>
+              <div class="form-group">
+                <label for="input_email" class="col-form-label">Email</label>
+                <input type="text" class="form-control" id="input_email" name="input_email" required>
+              </div>
+              <div class="form-group">
+                <label for="newuser_name" class="col-form-label">姓名</label>
+                <input type="text" class="form-control" id="newuser_name" name="name" required>
+              </div>
+              <div class="form-group">
+                <label for="newuser_persona" class="col-form-label">角色</label>
+                <select class="custom-select form-control" id="newuser_persona" name="newuser_persona" required>
+                  <option value="teacher">講師</option>
+                  <option value="saleser">業務人員</option>
+                  <option value="msaleser ">業務主管</option>
+                  <option value="officestaff">行政人員</option>
+                  <option value="staff">臨時人員</option>
+                  <option value="accountant">財務人員</option>
+                  <option value="marketer">行銷人員</option>
+                  <option value="admin">管理員</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="select_teacher" class="col-form-label">講師</label>
+                <select class="custom-select form-control" id="select_teacher" name="select_teacher">
+                </select>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="submit" id="import_check" class="btn btn-primary" onclick="CheckPassword(document.insert.password,document.insert.password_check)">確認</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- 新增 -E Rocky(2020/05/01) -->
+
+    <!-- 編輯 -S Rocky(2020/05/01) -->
+    <div class="modal fade text-left" id="model_edite" tabindex="-1" role="dialog" aria-labelledby="form_updateuserLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="form_newclassLabel">修改資料</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="{{url('authority_update')}}" method="POST" role="update" data-toggle="validator">
+              @csrf
+              <input type="hidden" id="id_edite" name="id_edite">
+              <div class="form-group">
+                <label for="updateuser_account" class="col-form-label">帳號</label>
+                <input type="text" id="edite_account" class="form-control" name="account" required>
+              </div>
+              <div class="form-group">
+                <label for="updateuser_password" class="col-form-label">密碼</label>
+                <input type="password" class="form-control" name="password">
+              </div>
+              <div class="form-group">
+                <label for="updateuser_password2" class="col-form-label">確認密碼</label>
+                <input type="password" class="form-control" name="password_check" data-match="#updateuser_password">
+              </div>
+              <div class="form-group">
+                <label for="input_email" class="col-form-label">Email</label>
+                <input type="text" id="input_email" class="form-control" id="input_email" name="input_email" required>
+              </div>
+              <div class="form-group">
+                <label for="updateuser_name" class="col-form-label">姓名</label>
+                <input type="text" class="form-control" id="edite_name" name="name" required>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label">角色</label>
+                <select class="custom-select form-control" id="select_role_edite" name="select_role_edite" required="required">
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="select_teacher_edite" class="col-form-label">講師</label>
+                <select class="custom-select form-control" id="select_teacher_edite" name="select_teacher_edite">
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary">確認</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 編輯 -E Rocky(2020/05/01) -->
   </div>
 </div>
 <!-- Content End -->
@@ -203,6 +218,12 @@
   );
 
   $("document").ready(function() {
+    // 講師下拉選單 Rocky(2020/05/01)
+    select_teacher();
+
+    // 角色下拉選單 Rocky(2020/05/01)
+    select_role();
+
     // Sandy (2020/02/26)
     table = $('#table_list').DataTable({
       "dom": '<l<t>p>',
@@ -231,6 +252,32 @@
   });
   // Sandy(2020/02/26) dt列表搜尋 E
 
+  // 顯示修改資料 Rocky(2020/05/01)
+  function show_edite(id) {
+    $("#model_edite").modal('show');
+    $('#id_edite').val(id)
+    $.ajax({
+      type: 'POST',
+      url: 'show_edite',
+      data: {
+        id: id
+      },
+      dataType: 'json',
+      success: function(data) {
+        console.log(data)
+        $.each(data, function(index, item) {
+          $("#edite_account").val(data[index].account) // 帳號
+          $("#input_email").val(data[index].email) // email
+          $("#edite_name").val(data[index].name) // 姓名
+          $("#select_role_edite").val(data[index].role) // 角色
+          $("#select_teacher_edite").val(data[index].id_teacher) // 講師
+        })
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    });
+  }
 
   // 確認密碼 Rocky(2020/02/18)
   function CheckPassword(pwd, pwd_check) {
@@ -281,6 +328,81 @@
     } else {
       return false;
     }
+  }
+
+  // 講師下拉選單 Rocky(2020/05/01)
+  function select_teacher() {
+    $.ajax({
+      type: 'POST',
+      url: 'show_teacher',
+      dataType: 'json',
+      success: function(data) {
+        $("#select_teacher").append("<option value=''>請選擇</option>");
+        $("#select_teacher_edite").append("<option value=''>請選擇</option>");
+        $.each(data, function(index, item) {
+          var id = data[index].id;
+          var name = data[index].name;
+          $("#select_teacher").append("<option value='" + id + "'>" + name + "</option>");
+          $("#select_teacher_edite").append("<option value='" + id + "'>" + name + "</option>");
+        });
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    });
+  }
+
+  // 角色下拉選單 Rocky(2020/05/01)
+  function select_role() {
+    var data_role = [{
+        "id": 1,
+        "value": "teacher",
+        "name": "講師"
+      },
+      {
+        "id": 2,
+        "value": "saleser",
+        "name": "業務人員"
+      },
+      {
+        "id": 3,
+        "value": "msaleser",
+        "name": "業務主管"
+      },
+      {
+        "id": 4,
+        "value": "officestaff",
+        "name": "行政人員"
+      },
+      {
+        "id": 5,
+        "value": "staff",
+        "name": "臨時人員"
+      },
+      {
+        "id": 6,
+        "value": "accountant",
+        "name": "財務人員"
+      },
+      {
+        "id": 7,
+        "value": "marketer",
+        "name": "行銷人員"
+      },
+      {
+        "id": 8,
+        "value": "admin",
+        "name": "管理員"
+      }
+    ]
+
+    $("#select_role_edite").append("<option value=''>請選擇</option>");
+    $.each(data_role, function(index, item) {
+      var id = data_role[index].value;
+      var name = data_role[index].name;
+
+      $("#select_role_edite").append("<option value='" + id + "'>" + name + "</option>");
+    });
   }
 </script>
 @endsection

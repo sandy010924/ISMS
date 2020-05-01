@@ -685,5 +685,9 @@ ALTER TABLE `bonus` DROP COLUMN `id_group`;
 ALTER TABLE `registration` ADD COLUMN memo VARCHAR(250) NULL COMMENT '備註';
 
 
--- 訊息資料表 - 簡訊封數欄位 Sandy(2020/04/28)
-ALTER TABLE `message` ADD COLUMN sms_num int NULL COMMENT '簡訊封數';
+   -- 訊息資料表 - 簡訊封數欄位 Sandy(2020/04/28)
+   ALTER TABLE `message` ADD COLUMN sms_num int NULL COMMENT '簡訊封數';
+
+
+-- User資料表 - 講師ID欄位 Rocky(2020/05/01)
+ALTER TABLE `users` ADD COLUMN id_teacher VARCHAR(90) NULL COMMENT '講師ID';
