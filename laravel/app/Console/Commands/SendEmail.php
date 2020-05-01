@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Mail;
 use App\Model\Message;
 use App\Model\Receiver;
+use Carbon;
 
 
 class SendEmail extends Command
@@ -53,8 +54,13 @@ class SendEmail extends Command
      */
     protected function sendMail() 
     {
-        //找出已預約今日要發送的訊息
-        $msg = Message::where('send_at', 'like', '%'. date('Y-m-d') . '%')
+        //找出已預約今日並已到期要發送的訊息
+        $msg = Message::where('send_at', '<', date('Y-m-d H:i:s'))
+                        ->where('send_at', 'like', '%' . date('Y-m-d') . '%')
+                        ->where(function ($query) {
+                            $query->where('type', '=', 1)
+                                  ->orWhere('type', '=', 2);
+                        })
                         ->where('id_status', 21)
                         ->get();
 
@@ -63,22 +69,25 @@ class SendEmail extends Command
             $mailContents = $dataMsg['content'];
 
             //訊息收件人
-            $emailAddr = Receiver::where('id_message', $dataMsg['id'])
+            $emailAddr = Receiver::select('email')
+                                ->where('id_message', $dataMsg['id'])
                                 ->get();
 
-            //寄送訊息
-            Mail::send('frontend.testMail', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
-                $message->subject($mailTitle);
-                foreach ($emailAddr as $email) {
-                    $message->to($email);
-                }
-            });
+            if( !empty($emailAddr) ){
+                //寄送訊息
+                Mail::send('frontend.testMail', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
+                    $message->subject($mailTitle);
+                    foreach ($emailAddr as $email) {
+                        $message->to($email->email);
+                    }
+                });
 
-            // 更新訊息狀態為已傳送
-            Message::where('id', $id_message)
-                    ->update([
-                        'id_status' => 19
-                    ]);  
+                // 更新訊息狀態為已傳送
+                Message::where('id', $dataMsg['id'])
+                        ->update([
+                            'id_status' => 19
+                        ]);  
+            }
         }
     }
 

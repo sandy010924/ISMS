@@ -163,7 +163,11 @@
                 <td>{{ $data['count'] }}</td>
                 <td>{{ $data['send_at'] }}</td>
                 <td>
-                  <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_cancel({{ $data['id'] }});">取消預約</a>
+                  @if( date('Y-m-d', strtotime($data['send_at'])) <= date('Y-m-d', strtotime('now')) )
+                    <a role="button" class="btn btn-danger btn-sm mx-1 text-white disable" onclick="alert('當日預約訊息無法取消');">取消預約</a>
+                  @else
+                    <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_cancel({{ $data['id'] }});">取消預約</a>
+                  @endif
                 </td>
               </tr>
               @endforeach
@@ -237,7 +241,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">排成傳送</h5>
+          <h5 class="modal-title" id="exampleModalLabel">排程傳送</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -409,7 +413,7 @@
   //   $('#th_time').html('傳送時間');
   //   $('#th_count').html('傳送人數');
 
-    $('table tbody tr').on('click', function(){
+    $('#nav-sent tbody tr').on('click', function(){
         window.location = $(this).attr('href');
         // return false;
     });

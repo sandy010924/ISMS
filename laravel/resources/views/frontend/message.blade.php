@@ -437,7 +437,8 @@ $(document).ready(function () {
         },
         success:function(res){
           console.log(res);  
-          if( res['status'] == 'success' && res['AccountPoint'] != ''){
+          
+          if( res['status'] == 'success' && res['AccountPoint'] != null){
             /** alert **/
             $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
             fade($("#success_alert"));
@@ -546,36 +547,37 @@ $(document).ready(function () {
 
     // $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
 
-    // e.preventDefault();
+    e.preventDefault();
 
-    // var empty = verifyEmpty();
+    var empty = verifyEmpty();
     
-    // if( empty > 0 ){
-    //   $('#scheduleModal').modal('hide');
-    //   return false;
-    // }
+    if( empty > 0 ){
+      $('#scheduleModal').modal('hide');
+      return false;
+    }
     
-    // if( $('#scheduleTime').val() == "" ){
-    //   alert('請輸入排程時間');
-    //   return false;
-    // }
+    if( $('#scheduleTime').val() == "" ){
+      alert('請輸入排程時間');
+      return false;
+    }
 
-    var date = new Date('2020-05-01');
-    var day = date.getDate();
-    var month = date.getMonth()+1;
-    var year = date.getFullYear();
+    /* 排程防呆，不得排今日訊息 */
+    var d = new Date($('#scheduleTime').val());
+
+    var month = d.getMonth()+1;
+    var day = d.getDate();
+
+    var scheduleDate = d.getFullYear() + '-' +
+    (month<10 ? '0' : '') + month + '-' +
+    (day<10 ? '0' : '') + day;
     
     var today = moment().format("YYYY-MM-DD");
-    var scheduleDate = year + '-' + month + '-' + day;
-
-    console.log(today);
-    console.log(scheduleDate);
 
     if( today == scheduleDate ){
       alert('無法排程當日訊息，請選擇今天以後的日期。');
       return false;
     }
-return false;
+    
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
     $(this).attr('disabled', 'disabled');
 
@@ -598,6 +600,7 @@ return false;
         },
         success:function(res){
           console.log(res);  
+
           if( res['status'] == 'success' && res['AccountPoint'] != null){
             $('#scheduleModal').modal('hide');
 
