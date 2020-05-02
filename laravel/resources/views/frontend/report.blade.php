@@ -396,7 +396,7 @@
       <div class="row">
         <div class="col-12">
             <div class="collapse show" id="model_show_log" style="padding-top:15px;">
-              <div class="card card-body" id="show_log">
+              <div class="card card-body h6" id="show_log">
               </div>
             </div>
           </div>
