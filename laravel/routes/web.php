@@ -407,19 +407,19 @@ Route::post('messageBulkApi', 'Backend\MessageController@messageBulkApi');
 ------------
 */
 /*** [數據報表] ***/
-Route::get('report', function () {
-    return view('frontend.report');
-})->name('report');
+Route::get('report', 'Frontend\ReportController@show')->name('report');
 
-/*** [數據報表] 場次數據 ***/
-Route::get('report_data', function () {
-    return view('frontend.report_data');
-})->name('report_data');
+/*** [查詢報表] ***/
+Route::get('report_search', 'Frontend\ReportController@search');
+// /*** [數據報表] 場次數據 ***/
+// Route::get('report_data', function () {
+//     return view('frontend.report_data');
+// })->name('report_data');
 
-/*** [數據報表] 完整內容 ***/
-Route::get('report_chart', function () {
-    return view('frontend.report_chart');
-})->name('report_chart');
+// /*** [數據報表] 完整內容 ***/
+// Route::get('report_chart', function () {
+//     return view('frontend.report_chart');
+// })->name('report_chart');
 
 
 

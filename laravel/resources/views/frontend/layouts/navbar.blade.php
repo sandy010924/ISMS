@@ -81,7 +81,7 @@
       <!-- 數據報表 -->
       @if (Auth::user()->role == 'admin' || Auth::user()->role == 'dataanalysis' || Auth::user()->role == 'accountant' || Auth::user()->role == 'officestaff')
       <li class="nav-item border-top">
-        <a class="nav-link" href="{{ route('report_chart') }}">
+        <a class="nav-link" href="{{ route('report') }}">
           <i data-feather="pie-chart"></i>
           數據報表
         </a>

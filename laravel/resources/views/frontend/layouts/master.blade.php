@@ -161,7 +161,7 @@
 
   <!-- Web js -->
   <script src="{{ asset('js/style.js') }}"></script>
-  <script src="{{ asset('js/otd.js') }}"></script>
+  {{-- <script src="{{ asset('js/otd.js') }}"></script> --}}
 
   <!-- feather icon -->
   <script>
