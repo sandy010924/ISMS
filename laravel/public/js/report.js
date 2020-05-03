@@ -10,20 +10,21 @@ var chartOptions = {
                     return value.toLocaleString();
                 },
                 fontSize: 16,
-            }
+            },
+            stacked: true
         }],
-        xAxes: [{
-            type: 'time',
-            scaleLabel: { display: true },
-            ticks: {
-                beginAtZero: false,
-                callback: function (value, index, values) {
-                    // return value.toLocaleString()+'%';
-                    return value.toLocaleString();
-                },
-                fontSize: 16,
-            }
-        }],
+        // xAxes: [{
+        //     type: 'time',
+        //     scaleLabel: { display: true },
+        //     ticks: {
+        //         beginAtZero: false,
+        //         callback: function (value, index, values) {
+        //             // return value.toLocaleString()+'%';
+        //             return value.toLocaleString();
+        //         },
+        //         fontSize: 16,
+        //     }
+        // }]
     },
     title: {
         display: true,
@@ -47,11 +48,11 @@ var chartOptions = {
                 //   return previousValue + currentValue;
                 // });
                 const currentValue = dataset.data[tooltipItem.index];
-                const { y, x, position, title } = currentValue
+                const { y, x, course } = currentValue
                 // console.log(currentValue)
                 // return " " + data.labels[tooltipItem.index] + ":" + currentValue  + "%";
                 // return " " + data.labels[tooltipItem.index] + ":" + currentValue  + "%";
-                return [x, title, '', `${position}: ${y}%`];
+                return [x, '', `${course}: ${y}`];
             },
             title: function (tooltipItem, data) {
                 return;

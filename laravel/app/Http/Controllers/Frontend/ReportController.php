@@ -53,6 +53,7 @@ class ReportController extends Controller
     // 查詢報表資料 Sandy(2020/05/02)
     public function search(Request $request)
     {
+        $nav = $request->get('nav');
         $startDate = date('Y-m-d H:i:s', strtotime($request->get('startDate')));
         $endDate = date('Y-m-d H:i:s', strtotime($request->get('endDate')));
         $item = $request->get('item');
@@ -70,7 +71,8 @@ class ReportController extends Controller
                                     events_course.name as events,
                                     b.type as type,
                                     b.name as course,
-                                    DATE_FORMAT(course_start_at,'%Y/%m/%d') as date")
+                                    DATE_FORMAT(course_start_at,'%Y-%m-%d') as x")
+                                ->orderby('course_start_at')
                                 ->whereBetween('events_course.course_start_at', [$startDate, $endDate]);
 
             //老師
@@ -102,56 +104,218 @@ class ReportController extends Controller
 
             $search = $search -> get();
             $result[$key] = [];
-            
+
+
             /* 計算名單數據 */
-            foreach( $search as $key_search => $data_search ){
-                $events = [];
-                if( $data_search['type'] == 1 ){
-                    //銷講
-                    $count = SalesRegistration::where('id_events', $data_search['id']);
+            if($nav == "list"){
+                foreach( $search as $key_search => $data_search ){
+                    $events = [];
+                    if( $data_search['type'] == 1 ){
+                        //銷講
+                        $count = SalesRegistration::where('id_events', $data_search['id']);
 
-                    //來源
-                    if($data[2] != '0'){
-                        $count->where('datasource', $data[2]);
+                        //來源
+                        if($data[2] != '0'){
+                            $count->where('datasource', $data[2]);
+                        }
+
+                        //動作
+                        if($data[3] != '0'){
+                            $count->where('id_status', $data[3]);
+                        }
+
+                        // $events[$key_events]['y'] = count($count->get());
+                        // $events['y'] = count($count->get());
+
+                    }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
+                        //正課
+                        $count = Register::where('id_events', $data_search['id_events']);
+
+                        // //來源
+                        // if($data[2] != '0'){
+                        //     $count->where('datasource', $data[2]);
+                        // }
+
+                        //動作
+                        if($data[3] != '0'){
+                            $count->where('id_status', $data[3]);
+                        }
+
+                        //付款狀態(營業額)
+                        if($data[6] != '0' && $nav == "pay"){
+                            $count->where('status_payment', $data[6]);
+                        }
+
+                        // $events[$key_events]['y'] = count($count->get());
                     }
 
-                    //動作
-                    if($data[3] != '0'){
-                        $count->where('id_status', $data[3]);
+                    $out = 0;
+                    foreach($result[$key] as $key_result => $data_result){
+                        if( $data_search['x'] == $data_result['x'] ){
+                            // $index = array_search($data_search['x'], $data_result);
+                            $result[$key][$key_result]['y'] += count($count->get());
+                            $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
+                            // $events['title'] .= "、".$data_search['course'];
+                            $out++;
+                            break;
+                        }
                     }
+                    if( $out == 0 ){
+                        $events['y'] = count($count->get());
+                        $events['x'] = $data_search['x'];
+                        $events['course'] = $data_search['course'] . " " . $data_search['events'];
+                        // $events['title'] = $data_search['course'];
 
-                    // $events[$key_events]['y'] = count($count->get());
-                    // $events['y'] = count($count->get());
-
-                }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
-                    //正課
-                    $count = Register::where('id_events', $data_search['id_events']);
-
-                    // //來源
-                    // if($data[2] != '0'){
-                    //     $count->where('datasource', $data[2]);
-                    // }
-
-                    //動作
-                    if($data[3] != '0'){
-                        $count->where('id_status', $data[3]);
+                        array_push($result[$key], $events);
                     }
+                    
+                    //記錄每一條件的每一場次資訊
+                    // $result[$key][$key_search] = $events;
+                    // $result .= [$events];
 
-                    // $events[$key_events]['y'] = count($count->get());
+                    //紀錄每場日期
+                    if( !in_array( $data_search['x'], $labelDate) ){
+                        array_push($labelDate, $data_search['x']);
+                    }
                 }
-
-                $events['y'] = count($count->get());
-                $events['date'] = $data_search['date'];
-                $events['position'] = $data_search['events'];
-                $events['title'] = $data_search['course'];
-// return $events;
-                //記錄每一條件的每一場次資訊
-                // $result[$key][$key_search] = $events;
-                // $result .= [$events];
-                array_push($result[$key], $events);
-                //紀錄每場日期
-                array_push($labelDate, $data_search['date']);
             }
+
+            
+            /* 計算報到率 */
+            if($nav == "check"){
+                //報名數
+                foreach( $search as $key_search => $data_search ){
+                    $events = [];
+                    if( $data_search['type'] == 1 ){
+                        //銷講
+                        $apply = SalesRegistration::where('id_events', $data_search['id']);
+                        $check = SalesRegistration::where('id_events', $data_search['id']);
+                        
+                        //來源
+                        if($data[2] != '0'){
+                            $apply->where('datasource', $data[2]);
+                            $check->where('datasource', $data[2]);
+                        }
+                    }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
+                        //正課
+                        $apply = Register::where('id_events', $data_search['id']);
+                        $check = Register::where('id_events', $data_search['id']);
+                    }
+
+
+                    $apply = $apply->where('id_status', '<>', 2)->get();
+                    $check = $check->where('id_status', 4)->get();
+                    
+                    $out = 0;
+                    foreach($result[$key] as $key_result => $data_result){
+                        if( $data_search['x'] == $data_result['x'] ){
+                            // $index = array_search($data_search['x'], $data_result);
+                            if(count($check)!=0 && count($apply)!=0){
+                                $result[$key][$key_result]['y'] += count($check) / count($apply);
+                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 2);
+                            }else if($result[$key][$key_result]['y'] != 0){
+                                $result[$key][$key_result]['y'] /= 2;
+                            }
+                            $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
+                            // $events['title'] .= "、".$data_search['course'];
+                            $out++;
+                            break;
+                        }
+                    }
+                    if( $out == 0 ){
+                        if(count($check)!=0 && count($apply)!=0){
+                            $events['y'] = round(count($check) / count($apply),2);
+                        }else{
+                            $events['y'] = 0;
+                        }
+                        $events['x'] = $data_search['x'];
+                        $events['course'] = $data_search['course'] . " " . $data_search['events'];
+                        // $events['title'] = $data_search['course'];
+
+                        array_push($result[$key], $events);
+                    }
+                    
+                    //記錄每一條件的每一場次資訊
+                    // $result[$key][$key_search] = $events;
+                    // $result .= [$events];
+
+                    //紀錄每場日期
+                    if( !in_array( $data_search['x'], $labelDate) ){
+                        array_push($labelDate, $data_search['x']);
+                    }
+                }
+            }
+
+
+            /* 計算成交率 */
+            if($nav == "check"){
+                //報名數
+                foreach( $search as $key_search => $data_search ){
+                    $events = [];
+                    if( $data_search['type'] == 1 ){
+                        //銷講
+                        $check = SalesRegistration::where('id_events', $data_search['id']);
+                        //來源
+                        if($data[2] != '0'){
+                            $check->where('datasource', $data[2]);
+                        }
+                    }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
+                        //正課
+                        $check = Registration::where('id_events', $data_search['id']);
+                    }
+
+                    $check = $check->where('id_status', 4)->get();
+
+                    $deal = Registration::where('source_events', $data_search['id']);
+                    $deal = $deal->where('status_status', 7)->get();
+
+
+                    
+                    $out = 0;
+                    foreach($result[$key] as $key_result => $data_result){
+                        if( $data_search['x'] == $data_result['x'] ){
+                            // $index = array_search($data_search['x'], $data_result);
+                            if(count($deal)!=0 && count($check)!=0){
+                                $result[$key][$key_result]['y'] += count($deal) / count($check);
+                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 2);
+                            }else if($result[$key][$key_result]['y'] != 0){
+                                $result[$key][$key_result]['y'] /= 2;
+                            }
+                            $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
+                            // $events['title'] .= "、".$data_search['course'];
+                            $out++;
+                            break;
+                        }
+                    }
+                    if( $out == 0 ){
+                        if(count($deal)!=0 && count($acheckpply)!=0){
+                            $events['y'] = round(count($deal) / count($check),2);
+                        }else{
+                            $events['y'] = 0;
+                        }
+                        $events['x'] = $data_search['x'];
+                        $events['course'] = $data_search['course'] . " " . $data_search['events'];
+                        // $events['title'] = $data_search['course'];
+
+                        array_push($result[$key], $events);
+                    }
+                    
+                    //記錄每一條件的每一場次資訊
+                    // $result[$key][$key_search] = $events;
+                    // $result .= [$events];
+
+                    //紀錄每場日期
+                    if( !in_array( $data_search['x'], $labelDate) ){
+                        array_push($labelDate, $data_search['x']);
+                    }
+                }
+            }
+
+
+
+
+
+
 
             // $result[$key] = $events;
             // foreach( $arr as $key_search => $date_search){
@@ -163,7 +327,14 @@ class ReportController extends Controller
             //     ];
             // }
         }
+        
 
-        return array( 'result' => $result, 'labelDate' => $labelDate );
+
+
+
+        //x軸日期不重複
+        // $labelDate = array_unique($labelDate);
+
+        return array( 'result' => $result , 'labelDate' => $labelDate);
     }
 }
