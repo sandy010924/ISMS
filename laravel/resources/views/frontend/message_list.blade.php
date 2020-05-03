@@ -290,7 +290,7 @@
 
 <script>
   // $('tbody').addClass('tab-content');
-
+  var table;
   var daterange = $('#daterange').val();
 
   $("document").ready(function() {
@@ -413,7 +413,7 @@
   //   $('#th_time').html('傳送時間');
   //   $('#th_count').html('傳送人數');
 
-    $('#nav-sent tbody tr').on('click', function(){
+    $('body').on('click','#nav-sent tbody tr',function(){
         window.location = $(this).attr('href');
         // return false;
     });
