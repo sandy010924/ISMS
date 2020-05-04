@@ -67,7 +67,7 @@
             </select>
           </div>
           <div class="col">
-            <select  class="form-control" name="item1" data-select="itemSource">
+            <select  class="form-control itemSource" name="item1" data-select="itemSource">
               <option value="0" selected>所有來源</option>
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
@@ -133,10 +133,10 @@
     <div class="card m-3">
       <div class="card-body">
         <div class="row">
-          <div class="col-3">
+          <div class="col">
             <h5>第二組</h5>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item2" data-select="itemTeacher">
               <option value="0" selected>所有老師</option>
               @foreach($teacher as $data)
@@ -144,7 +144,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item2" data-select="itemType">
               <option value="0" selected>所有類型</option>
               <option value="1">銷講</option>
@@ -152,25 +152,25 @@
               <option value="3">三階</option>
             </select>
           </div>
-          <div class="col-3">
-            <select  class="form-control" name="item2" data-select="itemSource">
+          <div class="col">
+            <select  class="form-control itemSource" name="item2" data-select="itemSource">
               <option value="0" selected>所有來源</option>
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
             </select>
           </div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-3">
-            <select  class="form-control" name="item2" data-select="itemAction">
+          <div class="col">
+            <select class="form-control itemAction" name="item2" data-select="itemAction">
               <option value="0" selected>所有動作</option>
               <option value="4">報到</option>
               <option value="5">取消</option>
               <option value="3">未到</option>
             </select>
           </div>
-          <div class="col-3">
+        </div>
+        <div class="row mt-2">
+          <div class="col">
             <select class="custom-select" name="item2" data-select="itemCity">
               <option value="0" selected>所有地區</option>
               @foreach($city as $data)
@@ -178,7 +178,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item2" data-select="itemTime">
               <option value="0" selected>所有時段</option>
               <option value="上午">上午</option>
@@ -187,7 +187,23 @@
               <option value="整天">整天</option>
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
+            <select  class="form-control itemPay" name="item2" data-select="itemPay" disabled>
+              <option value="0" selected>所有付款狀態</option>
+              <option value="7">完款</option>
+              <option value="8">付訂</option>
+              <option value="9">退費</option>
+            </select>
+          </div>
+          <div class="col">
+            <select  class="form-control itemCost" name="item2" data-select="itemCost" disabled>
+              <option value="0" selected>所有費用</option>
+              <option value="cost_events">場地費</option>
+              <option value="cost_ad">廣告費</option>
+              {{-- <option value="cost_message">訊息費</option> --}}
+            </select>
+          </div>
+          <div class="col">
           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
             <i class="fa fa-toggle-on" aria-hidden="true">比較條件</i>
           </button>
@@ -202,10 +218,10 @@
     <div class="card m-3">
       <div class="card-body">
         <div class="row">
-          <div class="col-3">
+          <div class="col">
             <h5>第三組</h5>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item3" data-select="itemTeacher">
               <option value="0" selected>所有老師</option>
               @foreach($teacher as $data)
@@ -213,7 +229,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item3" data-select="itemType">
               <option value="0" selected>所有類型</option>
               <option value="1">銷講</option>
@@ -221,25 +237,25 @@
               <option value="3">三階</option>
             </select>
           </div>
-          <div class="col-3">
-            <select  class="form-control" name="item3" data-select="itemSource">
+          <div class="col">
+            <select  class="form-control itemSource" name="item3" data-select="itemSource">
               <option value="0" selected>所有來源</option>
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
             </select>
           </div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-3">
-            <select  class="form-control" name="item3" data-select="itemAction">
+          <div class="col">
+            <select class="form-control itemAction" name="item3" data-select="itemAction">
               <option value="0" selected>所有動作</option>
               <option value="4">報到</option>
               <option value="5">取消</option>
               <option value="3">未到</option>
             </select>
           </div>
-          <div class="col-3">
+        </div>
+        <div class="row mt-2">
+          <div class="col">
             <select class="custom-select" name="item3" data-select="itemCity">
               <option value="0" selected>所有地區</option>
               @foreach($city as $data)
@@ -247,7 +263,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item3" data-select="itemTime">
               <option value="0" selected>所有時段</option>
               <option value="上午">上午</option>
@@ -256,7 +272,23 @@
               <option value="整天">整天</option>
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
+            <select  class="form-control itemPay" name="item3" data-select="itemPay" disabled>
+              <option value="0" selected>所有付款狀態</option>
+              <option value="7">完款</option>
+              <option value="8">付訂</option>
+              <option value="9">退費</option>
+            </select>
+          </div>
+          <div class="col">
+            <select  class="form-control itemCost" name="item3" data-select="itemCost" disabled>
+              <option value="0" selected>所有費用</option>
+              <option value="cost_events">場地費</option>
+              <option value="cost_ad">廣告費</option>
+              {{-- <option value="cost_message">訊息費</option> --}}
+            </select>
+          </div>
+          <div class="col">
           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition4" aria-expanded="false" aria-controls="dev_condition4">
             <i class="fa fa-toggle-on" aria-hidden="true">比較條件</i>
           </button>
@@ -271,10 +303,10 @@
     <div class="card m-3">
       <div class="card-body">
         <div class="row">
-          <div class="col-3">
+          <div class="col">
             <h5>第四組</h5>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item4" data-select="itemTeacher">
               <option value="0" selected>所有老師</option>
               @foreach($teacher as $data)
@@ -282,7 +314,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item4" data-select="itemType">
               <option value="0" selected>所有類型</option>
               <option value="1">銷講</option>
@@ -290,25 +322,25 @@
               <option value="3">三階</option>
             </select>
           </div>
-          <div class="col-3">
-            <select  class="form-control" name="item4" data-select="itemSource">
+          <div class="col">
+            <select  class="form-control itemSource" name="item4" data-select="itemSource">
               <option value="0" selected>所有來源</option>
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
             </select>
           </div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-3">
-            <select  class="form-control" name="item4" data-select="itemAction">
+          <div class="col">
+            <select class="form-control itemAction" name="item4" data-select="itemAction">
               <option value="0" selected>所有動作</option>
               <option value="4">報到</option>
               <option value="5">取消</option>
               <option value="3">未到</option>
             </select>
           </div>
-          <div class="col-3">
+        </div>
+        <div class="row mt-2">
+          <div class="col">
             <select class="custom-select" name="item4" data-select="itemCity">
               <option value="0" selected>所有地區</option>
               @foreach($city as $data)
@@ -316,7 +348,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item4" data-select="itemTime">
               <option value="0" selected>所有時段</option>
               <option value="上午">上午</option>
@@ -325,7 +357,23 @@
               <option value="整天">整天</option>
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
+            <select  class="form-control itemPay" name="item4" data-select="itemPay" disabled>
+              <option value="0" selected>所有付款狀態</option>
+              <option value="7">完款</option>
+              <option value="8">付訂</option>
+              <option value="9">退費</option>
+            </select>
+          </div>
+          <div class="col">
+            <select  class="form-control itemCost" name="item4" data-select="itemCost" disabled>
+              <option value="0" selected>所有費用</option>
+              <option value="cost_events">場地費</option>
+              <option value="cost_ad">廣告費</option>
+              {{-- <option value="cost_message">訊息費</option> --}}
+            </select>
+          </div>
+          <div class="col">
           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition5" aria-expanded="false" aria-controls="dev_condition5">
             <i class="fa fa-toggle-on" aria-hidden="true">比較條件</i>
           </button>
@@ -340,10 +388,10 @@
     <div class="card m-3">
       <div class="card-body">
         <div class="row">
-          <div class="col-3">
+          <div class="col">
             <h5>第五組</h5>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item5" data-select="itemTeacher">
               <option value="0" selected>所有老師</option>
               @foreach($teacher as $data)
@@ -351,7 +399,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item5" data-select="itemType">
               <option value="0" selected>所有類型</option>
               <option value="1">銷講</option>
@@ -359,25 +407,25 @@
               <option value="3">三階</option>
             </select>
           </div>
-          <div class="col-3">
-            <select  class="form-control" name="item5" data-select="itemSource">
+          <div class="col">
+            <select  class="form-control itemSource" name="item5" data-select="itemSource">
               <option value="0" selected>所有來源</option>
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
             </select>
           </div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-3">
-            <select  class="form-control" name="item5" data-select="itemAction">
+          <div class="col">
+            <select class="form-control itemAction" name="item5" data-select="itemAction">
               <option value="0" selected>所有動作</option>
               <option value="4">報到</option>
               <option value="5">取消</option>
               <option value="3">未到</option>
             </select>
           </div>
-          <div class="col-3">
+        </div>
+        <div class="row mt-2">
+          <div class="col">
             <select class="custom-select" name="item5" data-select="itemCity">
               <option value="0" selected>所有地區</option>
               @foreach($city as $data)
@@ -385,7 +433,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-3">
+          <div class="col">
             <select  class="form-control" name="item5" data-select="itemTime">
               <option value="0" selected>所有時段</option>
               <option value="上午">上午</option>
@@ -394,6 +442,23 @@
               <option value="整天">整天</option>
             </select>
           </div>
+          <div class="col">
+            <select  class="form-control itemPay" name="item5" data-select="itemPay" disabled>
+              <option value="0" selected>所有付款狀態</option>
+              <option value="7">完款</option>
+              <option value="8">付訂</option>
+              <option value="9">退費</option>
+            </select>
+          </div>
+          <div class="col">
+            <select  class="form-control itemCost" name="item5" data-select="itemCost" disabled>
+              <option value="0" selected>所有費用</option>
+              <option value="cost_events">場地費</option>
+              <option value="cost_ad">廣告費</option>
+              {{-- <option value="cost_message">訊息費</option> --}}
+            </select>
+          </div>
+          <div class="col"></div>
         </div>
       </div>
     </div>
@@ -424,7 +489,19 @@
   <!-- 表格 -->
   <div id="reportTable" class="card m-3" style="display: none">
     <div class="card-body">
-      <div class="table-responsive">
+       @component('components.datatable')
+          @slot('thead')
+            <tr>
+              <th>test</th>
+            </tr>
+          @endslot
+          @slot('tbody')
+            <tr>
+              <td>test</td>
+            </tr>
+          @endslot
+        @endcomponent
+      {{-- <div class="table-responsive">
         <table class="table table-striped table-sm text-center">
           <thead id="tableHead">
             <tr></tr>
@@ -433,7 +510,7 @@
             
           </tbody>
         </table>
-      </div>
+      </div> --}}
     </div>
   </div>
 
@@ -442,6 +519,10 @@
     /* .nav-link.active {
 
     } */
+      
+    div.dt-buttons {
+      float: right;
+    }
   </style>
 
   <!-- Content End -->
@@ -483,10 +564,12 @@
         }else{
           $('.itemCost').prop('disabled', 'disabled');
         }
-        if($(this).text() == "報到率" || $(this).text() == "成交率"){
-          $('.itemAction').prop('disabled', 'disabled');
+        if($(this).text() == "名單數據"){
+          $('.itemAction').prop('disabled', false);
+          $('.itemSource').prop('disabled', false);
         }else{
-          $('.itemAction').prop('disabled',false);
+          $('.itemAction').prop('disabled', 'disabled');
+          $('.itemSource').prop('disabled', 'disabled');
         }
       });
 
@@ -496,7 +579,6 @@
           theme: 'bootstrap'
       });
       $.fn.select2.defaults.set( "theme", "bootstrap" );
-
 
 
     // 圖表設定
@@ -647,6 +729,16 @@
 
   
 
+    var table = $('#table_list').DataTable({
+          "dom": '<B<t>>',
+          "ordering": false,
+          // "order": [ 0 , 'desc'],      
+          buttons: [{
+            extend: 'excel',
+            text: '匯出Excel',
+            // messageTop: $('#h3_title').text(),
+          }],
+      });
       
   /* 搜尋按鈕click */
   $('#searchBtn').click(function(){
@@ -713,6 +805,8 @@
 
           if($("ul#reportTab a.active").data('nav') == "check" || $("ul#reportTab a.active").data('nav') == "deal"){
             lineChart.config.options.scales.yAxes[0].ticks.stepSize = 1;
+          }else if($("ul#reportTab a.active").data('nav') == "income" || $("ul#reportTab a.active").data('nav') == "cost"){
+            lineChart.config.options.scales.yAxes[0].ticks.stepSize = 2000;
           }else{
             lineChart.config.options.scales.yAxes[0].ticks.stepSize = 5;
           }
@@ -741,6 +835,14 @@
               lineChart.data.datasets[i].pointHitRadius = 50;
               lineChart.data.datasets[i].pointBorderWidth = 2;
               // lineChart.data.datasets[i].pointStyle = 'rectRounded';
+
+
+            table.clear().draw();
+   table.rows.add(NewlyCreatedData); // Add new data
+   table.columns.adjust().draw(); // Redraw the DataTable
+
+
+
 
               tableBody += "<tr><th>" + "第"+ chNum[i] + "組" + "</th>";
                 

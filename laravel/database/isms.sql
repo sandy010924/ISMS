@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `registration`(
    `id_course` INT COMMENT '課程ID',  
    `id_status` INT COMMENT '狀態ID',  
    `id_payment` INT COMMENT '繳款明細ID',  
-   `amount_payable` VARCHAR(100) NOT NULL COMMENT '應付金額',
+   `amount_payable` INT NOT NULL COMMENT '應付金額',
    `amount_paid` VARCHAR(100) NOT NULL COMMENT '已付金額',
    `person` VARCHAR(40) NOT NULL COMMENT '追單人員',
    `memo` VARCHAR(65535) NOT NULL COMMENT '備註',
@@ -685,9 +685,13 @@ ALTER TABLE `bonus` DROP COLUMN `id_group`;
 ALTER TABLE `registration` ADD COLUMN memo VARCHAR(250) NULL COMMENT '備註';
 
 
-   -- 訊息資料表 - 簡訊封數欄位 Sandy(2020/04/28)
-   ALTER TABLE `message` ADD COLUMN sms_num int NULL COMMENT '簡訊封數';
+-- 訊息資料表 - 簡訊封數欄位 Sandy(2020/04/28)
+ALTER TABLE `message` ADD COLUMN sms_num int NULL COMMENT '簡訊封數';
 
 
 -- User資料表 - 講師ID欄位 Rocky(2020/05/01)
 ALTER TABLE `users` ADD COLUMN id_teacher VARCHAR(90) NULL COMMENT '講師ID';
+
+
+-- 修改標記資料表欄位 Rocky (2020/03/17)
+ALTER TABLE `registration` CHANGE COLUMN `amount_payable` `amount_payable` INT null COMMENT '應付金額';
