@@ -356,26 +356,26 @@ $(document).ready(function () {
   $('#messageCheckBox').on('click', function() {
     if( $(this).is(':checked') && $('#mailCheckBox').prop('checked') == false) {
       // 簡訊方式開始
-      // $('#msgTitle').attr('disabled', false);
-      $('#receiverPhone').attr('disabled', false);
-      $('#receiverEmail').attr('disabled', 'disabled');
-      $('#emailTitle').attr('disabled', 'disabled');
+      // $('#msgTitle').prop('disabled', false);
+      $('#receiverPhone').prop('disabled', false);
+      $('#receiverEmail').prop('disabled', 'disabled');
+      $('#emailTitle').prop('disabled', 'disabled');
     } else if ( $('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == false)) {
-        // $('#msgTitle').attr('disabled', 'disabled');
-        $('#receiverPhone').attr('disabled', 'disabled');
-        $('#receiverEmail').attr('disabled', false);
-        $('#emailTitle').attr('disabled', false);
+        // $('#msgTitle').prop('disabled', 'disabled');
+        $('#receiverPhone').prop('disabled', 'disabled');
+        $('#receiverEmail').prop('disabled', false);
+        $('#emailTitle').prop('disabled', false);
     } else if($('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == true)) {
-      // $('#msgTitle').attr('disabled', false);
-      $('#receiverPhone').attr('disabled', false);
-      $('#receiverEmail').attr('disabled', false);
-      $('#emailTitle').attr('disabled', false);
+      // $('#msgTitle').prop('disabled', false);
+      $('#receiverPhone').prop('disabled', false);
+      $('#receiverEmail').prop('disabled', false);
+      $('#emailTitle').prop('disabled', false);
     }else {
       // 簡訊方式隱藏
-      // $('#msgTitle').attr('disabled', 'disabled');
-      $('#receiverPhone').attr('disabled', 'disabled');
-      $('#receiverEmail').attr('disabled', 'disabled');
-      $('#emailTitle').attr('disabled', 'disabled');
+      // $('#msgTitle').prop('disabled', 'disabled');
+      $('#receiverPhone').prop('disabled', 'disabled');
+      $('#receiverEmail').prop('disabled', 'disabled');
+      $('#emailTitle').prop('disabled', 'disabled');
     }
   });
 
@@ -383,28 +383,28 @@ $(document).ready(function () {
   $('#mailCheckBox').on('click', function() {
     if( $(this).is(':checked') && $('#messageCheckBox').prop('checked') == false ) {
       // Email方式開始，title隱藏
-      // $('#msgTitle').attr('disabled', 'disabled');
-      $('#receiverPhone').attr('disabled', 'disabled');
-      $('#receiverEmail').attr('disabled', false);
-      $('#emailTitle').attr('disabled', false);
+      // $('#msgTitle').prop('disabled', 'disabled');
+      $('#receiverPhone').prop('disabled', 'disabled');
+      $('#receiverEmail').prop('disabled', false);
+      $('#emailTitle').prop('disabled', false);
     } else if ( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == false) ) {
       // Email方式開始、title開啟
-      // $('#msgTitle').attr('disabled', false);
-      $('#receiverPhone').attr('disabled', false);
-      $('#receiverEmail').attr('disabled', 'disabled');
-      $('#emailTitle').attr('disabled', 'disabled');
+      // $('#msgTitle').prop('disabled', false);
+      $('#receiverPhone').prop('disabled', false);
+      $('#receiverEmail').prop('disabled', 'disabled');
+      $('#emailTitle').prop('disabled', 'disabled');
 
     } else if( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == true) ) {
-      // $('#msgTitle').attr('disabled', false);
-      $('#receiverPhone').attr('disabled', false);
-      $('#receiverEmail').attr('disabled', false);
-      $('#emailTitle').attr('disabled', false);
+      // $('#msgTitle').prop('disabled', false);
+      $('#receiverPhone').prop('disabled', false);
+      $('#receiverEmail').prop('disabled', false);
+      $('#emailTitle').prop('disabled', false);
     }else {
       // Email方式隱藏
-      // $('#msgTitle').attr('disabled', 'disabled');
-      $('#receiverPhone').attr('disabled', 'disabled');
-      $('#receiverEmail').attr('disabled', 'disabled');
-      $('#emailTitle').attr('disabled', 'disabled');
+      // $('#msgTitle').prop('disabled', 'disabled');
+      $('#receiverPhone').prop('disabled', 'disabled');
+      $('#receiverEmail').prop('disabled', 'disabled');
+      $('#emailTitle').prop('disabled', 'disabled');
     }
   });
 
@@ -420,7 +420,7 @@ $(document).ready(function () {
     }
 
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>立即傳送');
-    $(this).attr('disabled', 'disabled');
+    $(this).prop('disabled', 'disabled');
     
     var form = getData();
 
@@ -457,22 +457,22 @@ $(document).ready(function () {
             $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
             fade($("#error_alert"));    
             
-            $(this).html('立即傳送');
-            $(this).attr('disabled', false);
+            $('#sendMessageBtn').html('立即傳送');
+            $('#sendMessageBtn').prop('disabled', false);
           }else if( res['status'] == 'error' ){
             /** alert **/ 
             $("#error_alert_text").html("寄送失敗。");
             fade($("#error_alert"));   
 
-            $(this).html('立即傳送');
-            $(this).attr('disabled', false); 
+            $('#sendMessageBtn').html('立即傳送');
+            $('#sendMessageBtn').prop('disabled', false); 
           }else{
             /** alert **/ 
             $("#error_alert_text").html("寄送失敗。");
             fade($("#error_alert"));   
 
-            $(this).html('立即傳送');
-            $(this).attr('disabled', false); 
+            $('#sendMessageBtn').html('立即傳送');
+            $('#sendMessageBtn').prop('disabled', false); 
           }
 
         },
@@ -480,7 +480,7 @@ $(document).ready(function () {
             console.log("error: "+ errorMessage);    
             console.log(jqXHR);
             $(this).html('立即傳送');
-            $(this).attr('disabled', false);
+            $(this).prop('disabled', false);
         }
       });
   });
@@ -498,7 +498,7 @@ $(document).ready(function () {
     }
 
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>儲存為草稿');
-    $(this).attr('disabled', 'disabled');
+    $(this).prop('disabled', 'disabled');
 
     var form = getData();
 
@@ -527,7 +527,7 @@ $(document).ready(function () {
         /** alert **/ 
         $("#error_alert_text").html("儲存草稿失敗");
         fade($("#error_alert")); 
-        $(this).attr('disabled', false);     
+        $('#draftBtn').prop('disabled', false);     
       }
 
     }).fail(function(err) {
@@ -536,7 +536,7 @@ $(document).ready(function () {
       /** alert **/ 
       $("#error_alert_text").html("儲存草稿失敗");
       fade($("#error_alert"));     
-      $(this).attr('disabled', false);   
+      $('#draftBtn').prop('disabled', false);   
 
     });
   });
@@ -579,7 +579,7 @@ $(document).ready(function () {
     }
     
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
-    $(this).attr('disabled', 'disabled');
+    $(this).prop('disabled', 'disabled');
 
 
     var form = getData();
@@ -624,15 +624,15 @@ $(document).ready(function () {
             $("#error_alert_text").html("訊息預約失敗，" + res['msg'] + "。");
             fade($("#error_alert"));    
             
-            $(this).html('排程設定');
-            $(this).attr('disabled', false);
+            $('#saveScheduleBtn').html('排程設定');
+            $('#saveScheduleBtn').prop('disabled', false);
           }else if( res['status'] == 'error' ){
             /** alert **/ 
             $("#error_alert_text").html("訊息預約失敗。");
             fade($("#error_alert"));   
 
-            $(this).html('排程設定');
-            $(this).attr('disabled', false); 
+            $('#saveScheduleBtn').html('排程設定');
+            $('#saveScheduleBtn').prop('disabled', false); 
           }
 
         },
@@ -643,10 +643,10 @@ $(document).ready(function () {
             $("#error_alert_text").html("訊息預約失敗。");
             fade($("#error_alert"));   
 
-            $(this).html('排程設定');
-            $(this).attr('disabled', false); 
+            $('#saveScheduleBtn').html('排程設定');
+            $('#saveScheduleBtn').prop('disabled', false); 
             // $(this).html('立即傳送');
-            // $(this).attr('disabled', false);
+            // $(this).prop('disabled', false);
         }
       });
     
@@ -665,23 +665,23 @@ $(document).ready(function () {
 
   /* 初始化 */
   function init() {
-    // $('#msgTitle').attr('disabled', 'disabled');
+    // $('#msgTitle').prop('disabled', 'disabled');
     // 判斷類型決定是否開啟電話跟信箱input(草稿用)
     var type = '<?php echo $message["type"]; ?>'
 
     if( type != "" && type == 0 || type == 2){
-      $('#receiverPhone').attr('disabled', false);
+      $('#receiverPhone').prop('disabled', false);
     }else{
-      $('#receiverPhone').attr('disabled', 'disabled');
+      $('#receiverPhone').prop('disabled', 'disabled');
     }
     
     if( type != "" && type == 1 || type == 2){
-      $('#receiverEmail').attr('disabled', false);
+      $('#receiverEmail').prop('disabled', false);
     }else{
-      $('#receiverEmail').attr('disabled', 'disabled');
+      $('#receiverEmail').prop('disabled', 'disabled');
     }
 
-    $('#emailTitle').attr('disabled', 'disabled');
+    $('#emailTitle').prop('disabled', 'disabled');
 
     ClassicEditor.create(document.querySelector("#content"), {
       // config
