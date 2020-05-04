@@ -837,11 +837,6 @@
               // lineChart.data.datasets[i].pointStyle = 'rectRounded';
 
 
-            table.clear().draw();
-   table.rows.add(NewlyCreatedData); // Add new data
-   table.columns.adjust().draw(); // Redraw the DataTable
-
-
 
 
               tableBody += "<tr><th>" + "第"+ chNum[i] + "組" + "</th>";

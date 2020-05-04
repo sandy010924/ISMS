@@ -693,5 +693,5 @@ ALTER TABLE `message` ADD COLUMN sms_num int NULL COMMENT '簡訊封數';
 ALTER TABLE `users` ADD COLUMN id_teacher VARCHAR(90) NULL COMMENT '講師ID';
 
 
--- 修改標記資料表欄位 Rocky (2020/03/17)
+-- 修改標記資料表欄位 Sandy (2020/05/04)
 ALTER TABLE `registration` CHANGE COLUMN `amount_payable` `amount_payable` INT null COMMENT '應付金額';
