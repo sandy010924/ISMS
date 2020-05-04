@@ -213,10 +213,10 @@ class StudentController extends Controller
             ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
             ->select('registration.created_at', 'registration.id_student')
             ->selectRaw(' CASE
-                                        WHEN register.id_status = 1 THEN "正課已報名"
-                                        WHEN register.id_status = 3 THEN "正課未到"
-                                        WHEN register.id_status = 4 THEN "正課報到"
-                                        WHEN register.id_status = 5 THEN "正課取消"
+                                        WHEN register.id_status = 1 and registration.status_payment is null THEN "正課已報名"
+                                        WHEN register.id_status = 3 and registration.status_payment is null THEN "正課未到"
+                                        WHEN register.id_status = 4 and registration.status_payment is null THEN "正課報到"
+                                        WHEN register.id_status = 5 and registration.status_payment is null THEN "正課取消"
                                         WHEN registration.status_payment = 6 THEN "正課留單"
                                         WHEN registration.status_payment = 7 THEN "正課完款"
                                         WHEN registration.status_payment = 8 THEN "正課付訂"
