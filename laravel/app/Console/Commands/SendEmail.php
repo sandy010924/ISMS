@@ -82,8 +82,16 @@ class SendEmail extends Command
                     }
                 });
 
+                
                 // 更新訊息狀態為已傳送
                 Message::where('id', $dataMsg['id'])
+                        ->update([
+                            'id_status' => 19
+                        ]);  
+
+                
+                // 更新收件狀態為已傳送
+                Receiver::where('id_message', $dataMsg['id'])
                         ->update([
                             'id_status' => 19
                         ]);  
