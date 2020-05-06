@@ -28,6 +28,7 @@
           </div>
           <div class="col-md-3">
             <!-- <button type="button" class="btn btn-outline-secondary" id="btn_backup" onclick="backup();">點我備份</button> -->
+            <!-- <button type="button" class="btn btn-outline-secondary" id="btn_backup" onclick="btn_delete();">點我刪除</button> -->
           </div>
         </div>
       </div>
@@ -136,6 +137,20 @@
     $.ajax({
       type: 'POST',
       url: 'database_backup',
+      dataType: 'json',
+      success: function(data) {
+        console.log(data)
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    });
+  }
+
+  function btn_delete() {
+    $.ajax({
+      type: 'POST',
+      url: 'database_delete',
       dataType: 'json',
       success: function(data) {
         console.log(data)

@@ -6,8 +6,7 @@ use Illuminate\Console\Command;
 use File;
 use App\Model\Mdatabase;
 use Ifsnop\Mysqldump as IMysqldump;
-// use Illuminate\Support\Facades\Storage;
-use Carbon;
+use DB;
 use Storage;
 
 class Backup extends Command
@@ -44,6 +43,8 @@ class Backup extends Command
     public function handle()
     {
         $directory = 'backup';
+        // 刪除 Rocky(2020/05/06)
+        $this->delete();
 
         // 資料庫設定
         $dumpSettings = array(
@@ -99,5 +100,47 @@ class Backup extends Command
         }
         // 記錄 Log
         File::append($log_file_path, $log_info_json);
+    }
+    // 刪除 Rocky(2020/05/06)
+    public function delete()
+    {
+
+        $directory = 'backup';
+
+        // 刪除
+        $check_delete = "";
+
+        // 抓取資料
+        $datas = Mdatabase::join(
+            DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 2,100) as b'),
+            function ($join) {
+                $join->on("m_database.id", "=", "b.id");
+            }
+        )
+            ->select('m_database.id', 'm_database.filename')
+            ->get();
+
+
+        // 確認是否有檔案
+        $disk = Storage::disk('backup');
+        foreach ($datas as $key => $data) {
+            $exists = $disk->exists($directory . '/' . $data['filename']);
+
+            if ($exists) {
+                // 刪除檔案
+                $check_delete = $disk->delete($directory  . '/' . $data['filename']);
+            }
+        }
+
+        if ($datas != "" && $check_delete) {
+            Mdatabase::join(
+                DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 5,100) as b'),
+                function ($join) {
+                    $join->on("m_database.id", "=", "b.id");
+                }
+            )
+                ->select('m_database.id', 'm_database.filename')
+                ->delete();
+        }
     }
 }

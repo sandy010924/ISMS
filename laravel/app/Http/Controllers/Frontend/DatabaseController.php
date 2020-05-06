@@ -24,6 +24,49 @@ class DatabaseController extends Controller
     }
 
 
+    public function delete()
+    {
+        $status = "";
+        $check_delete = "";
+
+        // 抓取資料
+        $datas = Mdatabase::join(
+            DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 2,100) as b'),
+            function ($join) {
+                $join->on("m_database.id", "=", "b.id");
+            }
+        )
+            ->select('m_database.id', 'm_database.filename')
+            ->get();
+
+
+        // 確認是否有檔案
+        $disk = Storage::disk('backup');
+        foreach ($datas as $key => $data) {
+            $exists = $disk->exists($this->directory . '/' . $data['filename']);
+
+            if ($exists) {
+                // 刪除檔案
+                $check_delete = $disk->delete($this->directory  . '/' . $data['filename']);
+            }
+        }
+
+        if ($datas != "" && $check_delete) {
+            Mdatabase::join(
+                DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 2,100) as b'),
+                function ($join) {
+                    $join->on("m_database.id", "=", "b.id");
+                }
+            )
+                ->select('m_database.id', 'm_database.filename')
+                ->delete();
+            $status = "ok";
+        } else {
+            $status = "error";
+        }
+        return $status;
+    }
+
     public function backup()
     {        // 資料庫設定
         $dumpSettings = array(
@@ -116,7 +159,7 @@ class DatabaseController extends Controller
             $result = DB::unprepared($sql);
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
-        
+
         if ($result != 1) {
             return '失敗';
         } else {

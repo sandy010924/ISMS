@@ -492,6 +492,9 @@ Route::post('database_recover', 'Frontend\DatabaseController@recover');
 /*** 資料還原 Rocky(2020/04/10) ***/
 Route::post('database_backup', 'Frontend\DatabaseController@backup');
 
+/*** 資料刪除 Rocky(2020/05/06) ***/
+Route::post('database_delete', 'Frontend\DatabaseController@delete');
+
 /*
 ------------
 |
