@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+
 // use Config;
 // use Mail;
 // use Log;
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\Backup::class,
+        \App\Console\Commands\SendEmail::class,
     ];
 
     /**
@@ -34,7 +36,8 @@ class Kernel extends ConsoleKernel
 
 
         // 每日早上8點 Artisan 命令 emails:send
-        $schedule->command('emails:send')->dailyAt('8:00')->withoutOverlapping();
+        $schedule->command('emails:send')->everyMinute()->withoutOverlapping();
+        // $schedule->command('emails:send')->dailyAt('8:00')->withoutOverlapping();
     }
 
     /**
