@@ -112,7 +112,7 @@ class Backup extends Command
 
         // 抓取資料
         $datas = Mdatabase::join(
-            DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 2,100) as b'),
+            DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 5,100) as b'),
             function ($join) {
                 $join->on("m_database.id", "=", "b.id");
             }
