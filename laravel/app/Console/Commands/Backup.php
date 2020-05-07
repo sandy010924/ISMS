@@ -112,7 +112,7 @@ class Backup extends Command
 
         // 抓取資料
         $datas = Mdatabase::join(
-            DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 5,100) as b'),
+            DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 4,100) as b'),
             function ($join) {
                 $join->on("m_database.id", "=", "b.id");
             }
@@ -121,26 +121,30 @@ class Backup extends Command
             ->get();
 
 
-        // 確認是否有檔案
-        $disk = Storage::disk('backup');
-        foreach ($datas as $key => $data) {
-            $exists = $disk->exists($directory . '/' . $data['filename']);
+        if ($datas != "") {
 
-            if ($exists) {
-                // 刪除檔案
-                $check_delete = $disk->delete($directory  . '/' . $data['filename']);
-            }
-        }
 
-        if ($datas != "" && $check_delete) {
-            Mdatabase::join(
-                DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 5,100) as b'),
-                function ($join) {
-                    $join->on("m_database.id", "=", "b.id");
+            // 確認是否有檔案
+            $disk = Storage::disk('backup');
+            foreach ($datas as $key => $data) {
+                $exists = $disk->exists($directory . '/' . $data['filename']);
+
+                if ($exists) {
+                    // 刪除檔案
+                    $check_delete = $disk->delete($directory  . '/' . $data['filename']);
                 }
-            )
-                ->select('m_database.id', 'm_database.filename')
-                ->delete();
+            }
+
+            if ($datas != "" && $check_delete) {
+                Mdatabase::join(
+                    DB::raw('(SELECT ID FROM m_database ORDER BY created_at DESC limit 4,100) as b'),
+                    function ($join) {
+                        $join->on("m_database.id", "=", "b.id");
+                    }
+                )
+                    ->select('m_database.id', 'm_database.filename')
+                    ->delete();
+            }
         }
     }
 }
