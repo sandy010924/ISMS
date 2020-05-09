@@ -43,7 +43,9 @@
     <tr>
       <th>帳號</th>
       <th>姓名</th>
+      <th>狀態</th>
       <th>角色</th>
+      <th>建立時間</th>
       <th class="no-sort"></th>
     </tr>
     @endslot
@@ -52,7 +54,9 @@
     <tr>
       <td>{{ $data['account'] }}</td>
       <td>{{ $data['name'] }}</td>
+      <td>{{ $data['status'] }}</td>
       <td>{{ $data['role_name'] }}</td>
+      <td>{{ $data['created_at'] }}</td>
       <td>
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" onclick="show_edite({{ $data['id']}})">修改</button>
         <button id="{{ $data['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data['id'] }});" value="{{ $data['id'] }}">刪除</button>
@@ -298,13 +302,19 @@
           id_teacher: id_teacher
         },
         success: function(data) {
-          if (data['data'] == 'ok') {
+          console.log(data)
+          if (data['data'] == 'repeat account') {
+            alert('此帳號有人使用過囉！！')
+          } else if (data['data'] == 'ok') {
             // 要寄信!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             $("#success_alert_text").html("新增成功");
             fade($("#success_alert"));
 
             location.reload();
+          } else if (data['data'] == 'error') {
+            $("#error_alert_text").html("新增失敗");
+            fade($("#error_alert"));
           }
         },
         error: function(error) {
@@ -348,7 +358,9 @@
           id_teacher: id_teacher
         },
         success: function(data) {
-          if (data['data'] == 'ok') {
+          if (data['data'] == 'repeat account') {
+            alert('此帳號有人使用過囉！！')
+          } else if (data['data'] == 'ok') {
             // 要寄信!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             $("#success_alert_text").html("修改成功");
