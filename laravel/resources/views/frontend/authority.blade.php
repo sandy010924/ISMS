@@ -74,25 +74,34 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="{{url('authority_insert')}}" name="insert" method="POST">
+            <form>
               @csrf
-              <div class="form-group">
-                <label for="newuser_account" class="col-form-label">帳號</label>
+              <div class="form-group required">
+                <label for="new_mode">狀態</label>
+                <div class="form-check">
+                  <input id="status_add_1" type="radio" name="status_add" value="1" checked>
+                  <label for="status_add_1">啟用</label>&nbsp; &nbsp;
+                  <input id="status_add_0" type="radio" name="status_add" value="0">
+                  <label for="status_add_0">暫停</label>
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-form-label">帳號</label>
                 <input type="text" class="form-control" id="newuser_account" name="account" required>
               </div>
-              <div class="form-group">
+              <div class="form-group required">
                 <label for="newuser_password" class="col-form-label">密碼</label>
                 <input type="password" class="form-control" id="newuser_password" name="password" required>
               </div>
-              <div class="form-group">
+              <div class="form-group required">
                 <label for="newuser_password2" class="col-form-label">確認密碼</label>
                 <input type="password" class="form-control" id="newuser_password2" name="password_check" data-match="#newuser_password" required>
               </div>
-              <div class="form-group">
+              <div class="form-group required">
                 <label for="input_email" class="col-form-label">Email</label>
                 <input type="text" class="form-control" id="input_email" name="input_email" required>
               </div>
-              <div class="form-group">
+              <div class="form-group required">
                 <label for="newuser_name" class="col-form-label">姓名</label>
                 <input type="text" class="form-control" id="newuser_name" name="name" required>
               </div>
@@ -117,7 +126,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-            <button type="submit" id="import_check" class="btn btn-primary" onclick="CheckPassword(document.insert.password,document.insert.password_check)">確認</button>
+            <button type="button" id="import_check" class="btn btn-primary" onclick="btn_add()">確認</button>
           </div>
           </form>
         </div>
@@ -136,42 +145,51 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="{{url('authority_update')}}" method="POST" role="update" data-toggle="validator">
+            <form>
               @csrf
               <input type="hidden" id="id_edite" name="id_edite">
-              <div class="form-group">
-                <label for="updateuser_account" class="col-form-label">帳號</label>
-                <input type="text" id="edite_account" class="form-control" name="account" required>
+              <div class="form-group required">
+                <label for="new_mode" class="col-form-label">狀態</label>
+                <div class="form-check">
+                  <input id="status_1" type="radio" name="edite_status" value="1">
+                  <label for="status_1">啟用</label>&nbsp; &nbsp;
+                  <input id="status_0" type="radio" name="edite_status" value="0">
+                  <label for="status_0">暫停</label>
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-form-label">帳號</label>
+                <input type="text" id="edite_account" class="form-control" name="account">
               </div>
               <div class="form-group">
                 <label for="updateuser_password" class="col-form-label">密碼</label>
-                <input type="password" class="form-control" name="password">
+                <input type="password" id="edite_password" class="form-control" name="password">
               </div>
               <div class="form-group">
-                <label for="updateuser_password2" class="col-form-label">確認密碼</label>
-                <input type="password" class="form-control" name="password_check" data-match="#updateuser_password">
+                <label class="col-form-label">確認密碼</label>
+                <input type="password" id="edite_password_check" class="form-control" name="password_check" data-match="#updateuser_password">
               </div>
-              <div class="form-group">
-                <label for="input_email" class="col-form-label">Email</label>
-                <input type="text" id="input_email" class="form-control" id="input_email" name="input_email" required>
+              <div class="form-group required">
+                <label class="col-form-label">Email</label>
+                <input type="text" id="edite_email" class="form-control" name="input_email">
               </div>
-              <div class="form-group">
+              <div class="form-group required">
                 <label for="updateuser_name" class="col-form-label">姓名</label>
-                <input type="text" class="form-control" id="edite_name" name="name" required>
+                <input type="text" id="edite_name" class="form-control">
               </div>
               <div class="form-group">
                 <label class="col-form-label">角色</label>
-                <select class="custom-select form-control" id="select_role_edite" name="select_role_edite" required="required">
+                <select class="custom-select form-control" id="edite_role">
                 </select>
               </div>
               <div class="form-group">
-                <label for="select_teacher_edite" class="col-form-label">講師</label>
-                <select class="custom-select form-control" id="select_teacher_edite" name="select_teacher_edite">
+                <label class="col-form-label">講師</label>
+                <select class="custom-select form-control" id="edite_teacher">
                 </select>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="submit" class="btn btn-primary">確認</button>
+                <button type="button" class="btn btn-primary" onclick="btn_edite();">確認</button>
               </div>
             </form>
           </div>
@@ -252,6 +270,103 @@
   });
   // Sandy(2020/02/26) dt列表搜尋 E
 
+  // 新增 Rocky(2020/05/08)
+  function btn_add() {
+    var account, status, password, password_check, email, name, role, id_teacher
+
+    account = $('#newuser_account').val()
+    status = $('input[name="status_add"]:checked').val()
+    password = $('#newuser_password').val()
+    password_check = $('#newuser_password2').val()
+    email = $('#input_email').val()
+    name = $('#newuser_name').val()
+    role = $('#newuser_persona').val()
+    id_teacher = $('#select_teacher').val()
+    if (CheckPassword(password, password_check) && check_data(account, password, email, name)) {
+      $.ajax({
+        type: 'POST',
+        url: 'authority_insert',
+        dataType: 'json',
+        data: {
+          account: account,
+          status: status,
+          password: password,
+          password_check: password_check,
+          email: email,
+          name: name,
+          role: role,
+          id_teacher: id_teacher
+        },
+        success: function(data) {
+          if (data['data'] == 'ok') {
+            // 要寄信!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            $("#success_alert_text").html("新增成功");
+            fade($("#success_alert"));
+
+            location.reload();
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error));
+          /** alert **/
+          $("#error_alert_text").html("新增失敗");
+          fade($("#error_alert"));
+        }
+      });
+    }
+  }
+
+  // 修改 Rocky(2020/05/09)
+  function btn_edite() {
+    var id, account, status, password, password_check, email, name, role, id_teacher
+
+    id = $('#id_edite').val()
+    account = $('#edite_account').val()
+    status = $('input[name="edite_status"]:checked').val()
+    password = $('#edite_password').val()
+    password_check = $('#edite_password_check').val()
+    email = $('#edite_email').val()
+    name = $('#edite_name').val()
+    role = $('#edite_role').val()
+    id_teacher = $('#edite_teacher').val()
+
+    if (CheckPassword(password, password_check) && check_data(account, password, email, name)) {
+      $.ajax({
+        type: 'POST',
+        url: 'authority_update',
+        dataType: 'json',
+        data: {
+          id: id,
+          account: account,
+          status: status,
+          password: password,
+          password_check: password_check,
+          email: email,
+          name: name,
+          role: role,
+          id_teacher: id_teacher
+        },
+        success: function(data) {
+          if (data['data'] == 'ok') {
+            // 要寄信!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            $("#success_alert_text").html("修改成功");
+            fade($("#success_alert"));
+
+            location.reload();
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error));
+          /** alert **/
+          $("#error_alert_text").html("修改失敗");
+          fade($("#error_alert"));
+        }
+      });
+    }
+  }
+
   // 顯示修改資料 Rocky(2020/05/01)
   function show_edite(id) {
     $("#model_edite").modal('show');
@@ -264,13 +379,18 @@
       },
       dataType: 'json',
       success: function(data) {
-        console.log(data)
         $.each(data, function(index, item) {
           $("#edite_account").val(data[index].account) // 帳號
-          $("#input_email").val(data[index].email) // email
+          $("#edite_email").val(data[index].email) // email
           $("#edite_name").val(data[index].name) // 姓名
-          $("#select_role_edite").val(data[index].role) // 角色
-          $("#select_teacher_edite").val(data[index].id_teacher) // 講師
+          $("#edite_role").val(data[index].role) // 角色
+          $("#edite_teacher").val(data[index].id_teacher) // 講師
+          // 狀態 Rocky (2020/05/07)
+          if (data[index].status == "1") {
+            $('#status_1').attr('checked', 'checked');
+          } else if (data[0]['bonus_status'] == "0") {
+            $('#status_0').attr('checked', 'checked');
+          }
         })
       },
       error: function(error) {
@@ -279,15 +399,35 @@
     });
   }
 
+  // 檢查空值 Rocky(2020/05/08)
+  function check_data(account, pwd, email, name) {
+    if (pwd != "") {
+      if (account == "" || pwd == "" || email == "" || name == "") {
+        alert('請填寫帳號 / 密碼 / email / 姓名');
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      if (account == "" || email == "" || name == "") {
+        alert('請填寫帳號 / email / 姓名');
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
   // 確認密碼 Rocky(2020/02/18)
   function CheckPassword(pwd, pwd_check) {
-    console.log(pwd.value + "\n")
-    console.log(pwd_check.value)
-    if (pwd.value != pwd_check.value) {
-      alert('請確認密碼！！！');
-      window.event.returnValue = false
+    if (pwd != "" && pwd_check != "") {
+      if (pwd != pwd_check) {
+        alert('請確認密碼！！！');
+        return false;
+      } else {
+        return true;
+      }
     } else {
-      window.event.returnValue = true
+      return true;
     }
   }
   // 刪除 Rocky(2020/02/18)
@@ -338,12 +478,12 @@
       dataType: 'json',
       success: function(data) {
         $("#select_teacher").append("<option value=''>請選擇</option>");
-        $("#select_teacher_edite").append("<option value=''>請選擇</option>");
+        $("#edite_teacher").append("<option value=''>請選擇</option>");
         $.each(data, function(index, item) {
           var id = data[index].id;
           var name = data[index].name;
           $("#select_teacher").append("<option value='" + id + "'>" + name + "</option>");
-          $("#select_teacher_edite").append("<option value='" + id + "'>" + name + "</option>");
+          $("#edite_teacher").append("<option value='" + id + "'>" + name + "</option>");
         });
       },
       error: function(error) {
@@ -396,12 +536,12 @@
       }
     ]
 
-    $("#select_role_edite").append("<option value=''>請選擇</option>");
+    $("#edite_role").append("<option value=''>請選擇</option>");
     $.each(data_role, function(index, item) {
       var id = data_role[index].value;
       var name = data_role[index].name;
 
-      $("#select_role_edite").append("<option value='" + id + "'>" + name + "</option>");
+      $("#edite_role").append("<option value='" + id + "'>" + name + "</option>");
     });
   }
 </script>

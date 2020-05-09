@@ -58,11 +58,12 @@
         <td class="align-middle">{{ $student['datasource'] }}</td>
         <td class="align-middle">
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
-          @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' )
+
+          @if (isset(Auth::user()->role) == 'admin' || isset(Auth::user()->role) == 'marketer' || isset(Auth::user()->role) == 'saleser' || isset(Auth::user()->role) == 'msaleser' )
           <button type="button" id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}"><i class="fa fa-bug"></i>列入黑名單</button>
           @endif
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
-          @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' )
+          @if (isset(Auth::user()->role) == 'admin' || isset(Auth::user()->role) == 'marketer' || isset(Auth::user()->role) == 'saleser' || isset(Auth::user()->role) == 'msaleser' )
           <button id="{{ $student['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student['id'] }});" value="{{ $student['id'] }}">刪除</button>
           @endif
         </td>

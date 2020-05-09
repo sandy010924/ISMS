@@ -15,7 +15,8 @@ class AuthorityController extends Controller
     // 顯示資訊
     public function show()
     {
-        $datas = User::get();
+        $datas = User::orderby('created_at', 'desc')
+            ->get();
 
         foreach ($datas as $key => $data) {
             $role_name = "";
@@ -101,6 +102,7 @@ class AuthorityController extends Controller
                 'email' => $data['email'],
                 'id_teacher' => $data['id_teacher'],
                 'role' => $data['role'],
+                'status' => $data['status'],
                 'role_name' => $role_name
             ];
         }

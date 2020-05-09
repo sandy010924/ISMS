@@ -116,7 +116,7 @@
               window.location.href = "./course_list";
               break;
             default:
-              alert('請確認帳號 / 密碼')
+              alert('請確認帳號密碼 / 狀態')
           }
         },
         error: function(data) {

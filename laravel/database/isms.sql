@@ -695,3 +695,9 @@ ALTER TABLE `users` ADD COLUMN id_teacher VARCHAR(90) NULL COMMENT '講師ID';
 
 -- 修改標記資料表欄位 Sandy (2020/05/04)
 ALTER TABLE `registration` CHANGE COLUMN `amount_payable` `amount_payable` INT null COMMENT '應付金額';
+
+-- User資料表 - 狀態欄位 Rocky(2020/05/07)
+ALTER TABLE `users` ADD COLUMN status VARCHAR(10) NULL COMMENT '狀態(0:暫停,1:啟用)';
+
+-- User資料表 - 更新狀態欄位 Rocky(2020/05/07)
+UPDATE users SET status = '1'

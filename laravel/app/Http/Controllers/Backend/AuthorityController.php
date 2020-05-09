@@ -13,53 +13,62 @@ class AuthorityController extends Controller
     // 更新
     public function update(Request $request)
     {
-        $id = $request->get('id_edite');
+        $check_status = "";
+        $id = $request->get('id');
         $account = $request->get('account');
         $password = $request->get('password');
         $name = $request->get('name');
         $password_check = $request->get('password_check');
-        $role = $request->get('select_role_edite');
-        $email = $request->get('input_email');
-        $id_teacher = $request->get('select_teacher_edite');
+        $role = $request->get('role');
+        $email = $request->get('email');
+        $status = $request->get('status');
+        $id_teacher = $request->get('id_teacher');
 
         if (!empty($password) && !empty($password_check)) {
             $data = User::where('id', $id)
-                ->update(['account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher]);
+                ->update(['account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
+            $check_status = "password_ok";
+            // 要寄信!!!!!!!!!
+
         } else {
             $data = User::where('id', $id)
-                ->update(['account' => $account, 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher]);
+                ->update(['account' => $account, 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
+            $check_status = "ok";
         }
 
 
+
         if ($data) {
-            return redirect('authority')->with('status', '更新成功');
+            return json_encode(array('data' => 'ok'));
         } else {
-            return redirect('authority')->with('status', '更新失敗');
+            return json_encode(array('data' => 'error'));
         }
     }
 
     // 新增
     public function insert(Request $request)
     {
-        $id = $request->get('id');
         $account = $request->get('account');
+        $status = $request->get('status');
         $password = $request->get('password');
         $name = $request->get('name');
-        $password_check = $request->get('password_check');
-        $role = $request->get('newuser_persona');
-        $id_teacher = $request->get('select_teacher');
-        $email = $request->get('input_email');
+        $role = $request->get('role');
+        $id_teacher = $request->get('id_teacher');
+        $email = $request->get('email');
 
 
 
         $data = User::insert(
-            ['account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher]
+            [
+                'account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email,
+                'id_teacher' => $id_teacher, 'status' => $status, 'created_at' => new \DateTime(), 'updated_at' => new \DateTime()
+            ]
         );
 
         if ($data) {
-            return redirect('authority')->with('status', '新增成功');
+            return json_encode(array('data' => 'ok'));
         } else {
-            return redirect('authority')->with('status', '新增失敗');
+            return json_encode(array('data' => 'error'));
         }
     }
 

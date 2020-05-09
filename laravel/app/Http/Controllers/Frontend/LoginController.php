@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
@@ -23,8 +24,8 @@ class LoginController extends Controller
     {
         $account = $request->get('uname');
         $psw = $request->get('psw');
-        
-        if (Auth::attempt(['account' => $account, 'password' => $psw])) {
+
+        if (Auth::attempt(['account' => $account, 'password' => $psw, 'status' => '1'])) {
             return Auth::user()->role;
         } else {
             return "0";
