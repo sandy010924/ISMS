@@ -28,6 +28,8 @@
 <!-- Content Start -->
 <!--搜尋學員頁面內容-->
 <div class="card m-3">
+  <!-- 權限 Rocky(2020/05/10) -->
+  <input type="hidden" id="auth_role" value="{{ Auth::user()->role }}" />
   <div class="card-body">
     <div class="row mb-3">
       <div class="col-4"></div>
@@ -59,11 +61,11 @@
         <td class="align-middle">
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
 
-          @if (isset(Auth::user()->role) == 'admin' || isset(Auth::user()->role) == 'marketer' || isset(Auth::user()->role) == 'saleser' || isset(Auth::user()->role) == 'msaleser' )
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' ) )
           <button type="button" id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}"><i class="fa fa-bug"></i>列入黑名單</button>
           @endif
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
-          @if (isset(Auth::user()->role) == 'admin' || isset(Auth::user()->role) == 'marketer' || isset(Auth::user()->role) == 'saleser' || isset(Auth::user()->role) == 'msaleser' )
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff'))
           <button id="{{ $student['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student['id'] }});" value="{{ $student['id'] }}">刪除</button>
           @endif
         </td>
@@ -131,14 +133,18 @@
           <div class="row">
             <div class="col-12 py-2">
               <h6>標記 :
+                @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'saleser'))
                 <i class="fa fa-plus" aria-hidden="true" style="cursor:pointer;" id="new_tag" data-toggle="modal" data-target="#save_tag"></i>
+                @endif
               </h6>
               <input type="text" id="isms_tags" />
             </div>
             <div class="col-5">
             </div>
             <div class="col-4 align-right">
+              @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'saleser'))
               <button type="button" class="btn btn-primary float-right" onclick="btn_delete('','1');">刪除聯絡人</button>
+              @endif
             </div>
           </div>
           <div class="modal fade" id="save_tag" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
@@ -192,7 +198,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">職業</span>
                         </div>
-                        <input id="student_profession" type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#">
+                        <input id="student_profession" type="text" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
                       </div>
                     </div>
                   </div>
@@ -203,7 +209,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">原始來源</span>
                         </div>
-                        <input type="text" id="old_datasource" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#">
+                        <input type="text" id="old_datasource" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
                         <input type="hidden" id="sales_registration_old">
                       </div>
                     </div>
@@ -212,7 +218,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">電話</span>
                         </div>
-                        <input id="student_phone" type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#">
+                        <input id="student_phone" type="text" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
                       </div>
                     </div>
                   </div>
@@ -238,7 +244,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">居住地址</span>
                     </div>
-                    <input type="text" id="student_address" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#">
+                    <input type="text" id="student_address" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
                   </div>
                 </div>
                 <div class="col-6">
@@ -260,7 +266,9 @@
                     </div>
                     <input type="text" name="course_refund" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
                   </div>
+                  @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'saleser'))
                   <button type="button" class="btn btn-primary float-right" id="save-inf" style="display:block;" onclick="save();">儲存</button>
+                  @endif
                   <!-- <button type="button" class="btn btn-primary float-right" id="update-inf" style="display:block;">修改資料</button> -->
                 </div>
               </div>
@@ -305,7 +313,7 @@
                   <thead>
                     <tr>
                       <th class="text-nowrap">
-                        <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#save_contact"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        <button type="button" class="btn btn-secondary btn-sm mx-1 auth_hidden" data-toggle="modal" data-target="#save_contact"><i class="fa fa-plus" aria-hidden="true"></i></button>
                       </th>
                       <th class="text-nowrap"></th>
                       <th class="text-nowrap">日期</th>
@@ -584,7 +592,21 @@
         $('#search_input').on('blur', function() {
           // console.log(`search_input: ${$(this).val()}`);
         });
+
+        // 權限判斷 Rocky(2020/05/10)
+        check_auth();
       });
+
+      // 權限判斷
+      function check_auth() {
+        var role = ''
+        role = $('#auth_role').val()
+        if (role != "admin" && role != "marketer" && role != "officestaff" && role != "msaleser" && role != "saleser") {
+          $('.auth_readonly').attr('readonly', 'readonly')
+          $('.auth_readonly').attr("disabled", true);
+          $(".auth_hidden").attr("style", "display:none");
+        }
+      }
 
       // 追單資料關閉
       $("#contact_close").click(function() {
@@ -940,34 +962,42 @@
       }
 
       // 標記刪除
-      elt.on('itemRemoved', function(event) {
-        var msg = "是否刪除標記資料?";
-        if (confirm(msg) == true) {
-          $.ajax({
-            type: 'POST',
-            url: 'tag_delete',
-            dataType: 'json',
-            data: {
-              id: event.item['value']
-            },
-            success: function(data) {
-              if (data['data'] == "ok") {
-                /** alert **/
-                $("#success_alert_text").html("刪除資料成功");
-                fade($("#success_alert"));
+      elt.on('beforeItemRemove', function(event) {
+        // 權限 Rocky (2020/05/11)
+        var role = $('#auth_role').val()
+        if (role == "admin" || role == "marketer" || role == "officestaff" || role == "msaleser" || role == "saleser") {
+          var msg = "是否刪除標記資料?";
+          if (confirm(msg) == true) {
+            $.ajax({
+              type: 'POST',
+              url: 'tag_delete',
+              dataType: 'json',
+              data: {
+                id: event.item['value']
+              },
+              success: function(data) {
+                if (data['data'] == "ok") {
+                  /** alert **/
+                  $("#success_alert_text").html("刪除資料成功");
+                  fade($("#success_alert"));
 
-                // location.reload();
-              } else {
-                /** alert **/
-                $("#error_alert_text").html("刪除資料失敗");
-                fade($("#error_alert"));
+                  // location.reload();
+                } else {
+                  /** alert **/
+                  $("#error_alert_text").html("刪除資料失敗");
+                  fade($("#error_alert"));
+                }
+              },
+              error: function(error) {
+                console.log(JSON.stringify(error));
               }
-            },
-            error: function(error) {
-              console.log(JSON.stringify(error));
-            }
-          });
+            });
+          } else {
+            tags_show(id_student_old)
+            return false;
+          }
         } else {
+          tags_show(id_student_old)
           return false;
         }
       });
@@ -1083,6 +1113,7 @@
           data: {
             id_student: id_student_old
           },
+          // async: false,
           success: function(data) {
             updatetime = '', remindtime = '';
             $.each(data, function(index, val) {
@@ -1133,20 +1164,20 @@
 
               data +=
                 '<tr>' +
-                '<td><i class="fa fa-address-card" aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 20%;"></i></td>' +
-                '<td><i class="fa fa-trash" aria-hidden="true" onclick="debt_delete(' + id + ');" style="cursor:pointer;padding-top: 40%; color:#eb6060"></i></td>' +
+                '<td><i class="fa fa-address-card " aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 20%;"></i></td>' +
+                '<td><i class="fa fa-trash auth_hidden" aria-hidden="true" onclick="debt_delete(' + id + ');" style="cursor:pointer;padding-top: 40%; color:#eb6060"></i></td>' +
                 '<td>' +
                 '<div class="input-group date show_datetime" id="new_starttime' + id + '" data-target-input="nearest"> ' +
-                ' <input type="text" onblur="update_time($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker" data-target="#new_starttime' + id + '" required/> ' +
+                ' <input type="text" onblur="update_time($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" required/> ' +
                 ' <div class="input-group-append" data-target="#new_starttime' + id + '" data-toggle="datetimepicker"> ' +
                 ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
                 '</div> ' +
                 '</div>' +
                 '</td>' +
-                '<td>' + '<input type="text"  class="form-control" onblur="name_course($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
-                '<td>' + '<input type="text"  class="form-control" onblur="status_payment($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
-                '<td>' + '<input type="text"  class="form-control" onblur="contact($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
-                '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id + '_status" onblur="status($(this),' + id + ',3);" class="custom-select border-0 bg-transparent input_width"> ' +
+                '<td>' + '<input type="text"  class="form-control auth_readonly" onblur="name_course($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="status_payment($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<input type="text"  class=" auth_readonly form-control" onblur="contact($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id + '_status" onblur="status($(this),' + id + ',3);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
                 '<option selected disabled value=""></option>' +
                 '<option value="11" ' + opt2 + '>完款</option>' +
                 '<option value="10" ' + opt1 + '>付訂</option>' +
@@ -1157,10 +1188,10 @@
                 '<option value="16" ' + opt7 + '>推薦其他講師</option>' +
                 '</select>' +
                 '</div> </td>' +
-                '<td>' + '<input type="text"  class="form-control" onblur="person($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="person($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
                 '<td>' +
                 '<div class="input-group date show_datetime" id="remind' + id + '" data-target-input="nearest"> ' +
-                ' <input type="text" onblur="remind($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="form-control datetimepicker-input datepicker" data-target="#remind' + id + '" required/> ' +
+                ' <input type="text" onblur="remind($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" required/> ' +
                 ' <div class="input-group-append" data-target="#remind' + id + '" data-toggle="datetimepicker"> ' +
                 ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
                 '</div> ' +
@@ -1193,6 +1224,9 @@
               defaultDate: new Date(),
               pickerPosition: "bottom-left"
             });
+
+            // 權限判斷 Rocky(2020/05/10)
+            check_auth();
           },
           error: function(error) {
             console.log(JSON.stringify(error));

@@ -15,7 +15,7 @@
 
     <ul class="nav flex-column">
       <!-- 學員管理 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'accountant' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff')
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'accountant' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'teacher')
       <li class="nav-item border-top">
         <a class="nav-link" href="{{ route('student') }}">
           <i data-feather="users"></i>
@@ -30,27 +30,43 @@
       <!-- 學員管理 -->
 
       <!-- 課程管理 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' || Auth::user()->role == 'staff' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' )
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' || Auth::user()->role == 'staff' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'accountant')
       <li class="nav-item border-top">
+        @if (Auth::user()->role == 'staff')
+        <a class="nav-link" href="#">
+          <i data-feather="book-open"></i>
+          課程管理
+        </a>
+        @else
         <a class="nav-link" href="{{ route('course_list') }}">
           <i data-feather="book-open"></i>
           課程管理
         </a>
-        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff')
+        @endif
+        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'accountant' || Auth::user()->role == 'staff')
         <a class="nav-link nav-sub-item" href="{{ route('course') }}">場次總覽</a>
         @endif
+        @if (Auth::user()->role != 'staff')
         <a class="nav-link nav-sub-item" href="{{ route('course_today') }}">今日課程</a>
+        @endif
       </li>
       @endif
       <!-- 課程管理 -->
 
       <!-- 財務管理 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff')
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' )
       <li class="nav-item border-top">
+        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' )
         <a class="nav-link" href="{{ route('finance') }}">
           <i data-feather="dollar-sign"></i>
           財務管理
         </a>
+        @else
+        <a class="nav-link" href="#">
+          <i data-feather="dollar-sign"></i>
+          財務管理
+        </a>
+        @endif
         <a class="nav-link nav-sub-item" href="{{ route('bonus') }}">獎金名單</a>
       </li>
       @endif
@@ -79,7 +95,7 @@
       <!-- 訊息推播 -->
 
       <!-- 數據報表 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'dataanalysis' || Auth::user()->role == 'accountant' || Auth::user()->role == 'officestaff')
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'dataanalysis' || Auth::user()->role == 'accountant' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser')
       <li class="nav-item border-top">
         <a class="nav-link" href="{{ route('report') }}">
           <i data-feather="pie-chart"></i>
@@ -90,7 +106,7 @@
       <!-- 數據報表 -->
 
       <!-- 系統設定 -->
-      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff')
+      @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' )
       <li class="nav-item border-top">
         {{-- <a class="nav-link" href="{{ route('system') }}"> --}}
         <a class="nav-link" href="#">

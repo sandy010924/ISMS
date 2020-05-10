@@ -24,7 +24,9 @@
       </div>
       <div class="col-3">
         <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
+        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' ))
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#bonus_add">新增獎金</button>
+        @endif
       </div>
     </div>
     <div class="table-responsive">
@@ -50,11 +52,14 @@
         </td>
         <td>{{ $data['created_at'] }}</td>
         <td>
-          @if (isset(Auth::user()->role) == 'admin' || isset(Auth::user()->role) == 'accountant')
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant'|| Auth::user()->role == 'saleser'))
           <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('show_bonus_detail', [ 'id' => $data['id'] ] ) }}">完整內容</a>
+          @endif
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant'))
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#bonus_edite" onclick="show_bonus({{ $data['id']}})">編輯</button>
           <button type="button" class="btn btn-danger btn-sm mx-1" onclick="bonus_delete({{ $data['id']}})">刪除</button>
           @endif
+
         </td>
       </tr>
       @endforeach

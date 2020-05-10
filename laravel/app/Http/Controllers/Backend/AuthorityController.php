@@ -30,27 +30,27 @@ class AuthorityController extends Controller
             ->get();
 
         // 檢查重複帳號
-        if (count($check_account) == "0") {
-            if (!empty($password) && !empty($password_check)) {
-                $data = User::where('id', $id)
-                    ->update(['account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
-                $check_status = "password_ok";
-                // 要寄信!!!!!!!!!
+        // if (count($check_account) == "0") {
+        if (!empty($password) && !empty($password_check)) {
+            $data = User::where('id', $id)
+                ->update(['account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
+            $check_status = "password_ok";
+            // 要寄信!!!!!!!!!
 
-            } else {
-                $data = User::where('id', $id)
-                    ->update(['account' => $account, 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
-                $check_status = "ok";
-            }
-
-            if ($data) {
-                return json_encode(array('data' => 'ok'));
-            } else {
-                return json_encode(array('data' => 'error'));
-            }
         } else {
-            return json_encode(array('data' => 'repeat account'));
+            $data = User::where('id', $id)
+                ->update(['account' => $account, 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
+            $check_status = "ok";
         }
+
+        if ($data) {
+            return json_encode(array('data' => 'ok'));
+        } else {
+            return json_encode(array('data' => 'error'));
+        }
+        // } else {
+        //     return json_encode(array('data' => 'repeat account'));
+        // }
     }
 
     // 新增

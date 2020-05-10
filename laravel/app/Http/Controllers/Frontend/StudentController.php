@@ -10,14 +10,20 @@ use App\Model\Refund;
 use App\Model\Debt;
 use App\Model\Mark;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
     // 顯示資料
     public function show()
     {
+        // 講師ID Rocky(2020/05/11)
+        $id_teacher = Auth::user()->id_teacher;
+
         $students = Student::leftjoin('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+            ->join('course', 'sales_registration.id_course', '=', 'course.id')
             ->select('student.*', 'sales_registration.datasource')
+            ->where('course.id_teacher', $id_teacher)
             ->groupBy('id')
             ->get();
 

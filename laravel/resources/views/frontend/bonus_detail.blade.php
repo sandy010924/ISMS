@@ -7,6 +7,8 @@
 <!-- Content Start -->
 <!--搜尋課程頁面內容-->
 <div class="card m-3">
+  <!-- 權限 Rocky(2020/05/10) -->
+  <input type="hidden" id="auth_role" value="{{ Auth::user()->role }}" />
   <div class="card-body">
     <div class="row mb-3">
       <div class="col-2">
@@ -68,7 +70,7 @@
         <td>{{ $data['email'] }}</td>
         <td>{{ $data['phone'] }}</td>
         <td>{{ $data['status_name'] }}</td>
-        <td><input type="text" class="form-control form-control-sm" value="{{ $data['memo'] }}" onblur="auto_update_data($(this), {{ $data['id'] }});"></td>
+        <td><input type="text" class="form-control form-control-sm auth_readonly" value="{{ $data['memo'] }}" onblur="auto_update_data($(this), {{ $data['id'] }});"></td>
       </tr>
       @endforeach
       @endslot
@@ -169,10 +171,24 @@
         $("#btn_search").click();
       }
     });
+    // 權限判斷 Rocky(2020/05/10)
+    $('#table_list_history').on('draw.dt', function() {
+      check_auth();
+    });
+    check_auth();
   });
+
+  // 權限判斷
+  function check_auth() {
+    var role = ''
+    role = $('#auth_role').val()
+    if (role != "admin") {
+      $('.auth_readonly').attr('readonly', 'readonly')
+    }
+  }
+
   /* 自動儲存 - S Rocky(2020/04/28) */
   function auto_update_data(data, id) {
-    console.log(data.val() + '\n' + id)
     regi_memo_update(data.val(), id);
   }
 

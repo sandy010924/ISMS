@@ -7,6 +7,8 @@
 <!-- Content Start -->
 <!--搜尋課程頁面內容-->
 <div class="card m-3">
+  <!-- 權限 Rocky(2020/05/10) -->
+  <input type="hidden" id="auth_role" value="{{ Auth::user()->role }}" />
   <div class="card-body">
     <div class="row mb-3">
       <div class="col-2">
@@ -48,21 +50,23 @@
         <td>{{ $event['course'] }}</td>
         <td>{{ $event['event'] }}</td>
         <td><a href="javascript:void(0)" onclick="show_invoice({{ $event['id_group'] }})">{{ (empty($event['count_invoice'])) ? '0' : $event['count_invoice']  }}/{{ $event['total'] }}</a> </td>
+
         <td>
           <div class="col-sm-8">
-            <input type="number" class="form-control form-control-sm" name="advertise_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,0);" value="{{ $event['cost_ad'] }}" />
+            <input type="number" class="form-control form-control-sm auth_readonly" name="advertise_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,0);" value="{{ $event['cost_ad'] }}" />
           </div>
         </td>
         <td>
           <div class="col-sm-8">
-            <input type="number" class="form-control form-control-sm" name="sms_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,1);" value="{{ $event['cost_message'] }}">
+            <input type="number" class="form-control form-control-sm auth_readonly" name="sms_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,1);" value="{{ $event['cost_message'] }}">
           </div>
         </td>
         <td>
           <div class="col-sm-8">
-            <input type="number" class="form-control form-control-sm" name="space_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,2);" value="{{ $event['cost_events'] }}">
+            <input type="number" class="form-control form-control-sm auth_readonly" name="space_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,2);" value="{{ $event['cost_events'] }}">
           </div>
         </td>
+
       </tr>
       @endforeach
       @endslot
@@ -129,6 +133,7 @@
   var table, table2;
 
   $("document").ready(function() {
+
     // 日期選擇器 Rocky(2020/04/24)
     $('#search_date').datetimepicker({
       format: 'YYYY-MM-DD'
@@ -175,7 +180,22 @@
       }
     });
     /* 輸入框 Rocky(2020/04/24) - E */
+
+    // 權限判斷 Rocky(2020/05/10)
+    $('#table_list').on('draw.dt', function() {
+      check_auth();
+    });
+    check_auth();
   });
+
+  // 權限判斷
+  function check_auth() {
+    var role = ''
+    role = $('#auth_role').val()
+    if (role != "admin" && role != "accountant") {
+      $('.auth_readonly').attr('readonly', 'readonly')
+    }
+  }
 
   /* 顯示學員資料 - S Rocky(2020/04/25) */
   function show_invoice(id_group) {
