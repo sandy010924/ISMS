@@ -22,11 +22,19 @@ class CourseController extends Controller
         // 講師ID Rocky(2020/05/11)
         $id_teacher = Auth::user()->id_teacher;
 
-        $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
-            ->select('events_course.*', 'course.name as course', 'course.type as type')
-            ->where('course.id_teacher', $id_teacher)
-            ->orderBy('events_course.course_start_at', 'desc')
-            ->get();
+        if (Auth::user()->role == "teacher") {
+            $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                ->select('events_course.*', 'course.name as course', 'course.type as type')
+                ->where('course.id_teacher', $id_teacher)
+                ->orderBy('events_course.course_start_at', 'desc')
+                ->get();
+        } else {
+            $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                ->select('events_course.*', 'course.name as course', 'course.type as type')
+                ->orderBy('events_course.course_start_at', 'desc')
+                ->get();
+        }
+
 
         $teachers = Teacher::all();
 

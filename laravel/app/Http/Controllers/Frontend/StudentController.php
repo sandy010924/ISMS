@@ -19,13 +19,21 @@ class StudentController extends Controller
     {
         // 講師ID Rocky(2020/05/11)
         $id_teacher = Auth::user()->id_teacher;
+        if (Auth::user()->role == "teacher") {
+            $students = Student::leftjoin('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+                ->join('course', 'sales_registration.id_course', '=', 'course.id')
+                ->select('student.*', 'sales_registration.datasource')
+                ->where('course.id_teacher', $id_teacher)
+                ->groupBy('id')
+                ->get();
+        } else {
+            $students = Student::leftjoin('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+                ->join('course', 'sales_registration.id_course', '=', 'course.id')
+                ->select('student.*', 'sales_registration.datasource')
+                ->groupBy('id')
+                ->get();
+        }
 
-        $students = Student::leftjoin('sales_registration', 'student.id', '=', 'sales_registration.id_student')
-            ->join('course', 'sales_registration.id_course', '=', 'course.id')
-            ->select('student.*', 'sales_registration.datasource')
-            ->where('course.id_teacher', $id_teacher)
-            ->groupBy('id')
-            ->get();
 
         return view('frontend.student', compact('students'));
     }

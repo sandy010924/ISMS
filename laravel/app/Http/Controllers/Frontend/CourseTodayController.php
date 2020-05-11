@@ -25,11 +25,19 @@ class CourseTodayController extends Controller
         // 講師ID Rocky(2020/05/11)
         $id_teacher = Auth::user()->id_teacher;
 
-        $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
-            ->select('events_course.*', 'course.name as course', 'course.type as type')
-            ->Where('course_start_at', 'like', '%' . date("Y-m-d") . '%')
-            ->where('course.id_teacher', $id_teacher)
-            ->get();
+        if (Auth::user()->role == "teacher") {
+            $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                ->select('events_course.*', 'course.name as course', 'course.type as type')
+                ->Where('course_start_at', 'like', '%' . date("Y-m-d") . '%')
+                ->where('course.id_teacher', $id_teacher)
+                ->get();
+        } else {
+            $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                ->select('events_course.*', 'course.name as course', 'course.type as type')
+                ->Where('course_start_at', 'like', '%' . date("Y-m-d") . '%')
+                ->get();
+        }
+
 
         foreach ($events as $key => $data) {
             $type = "";
