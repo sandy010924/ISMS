@@ -6,9 +6,33 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Mail;
 
 class AuthorityController extends Controller
 {
+
+    // email
+    public function sendMail($emailAddr, $mailTitle, $mailContents)
+    {
+        $mailContents = str_replace("\n", "<br>", $mailContents);
+
+        Mail::send('frontend.testMail', ['content' => $mailContents], function ($message) use ($mailTitle, $emailAddr) {
+            $message->subject($mailTitle);
+            $message->to($emailAddr);
+        });
+
+        return array('status' => 'success', 'email' => $emailAddr);
+    }
+
+    public function email(Request $request)
+    {
+        $emailAddr = $request->get('emailAddr');
+        $mailTitle  = $request->get('mailTitle');
+        $mailContents = $request->get('mailContents');
+
+        $check = $this->sendMail($emailAddr, $mailTitle, $mailContents);
+        return $check;
+    }
 
     // 更新
     public function update(Request $request)
@@ -17,6 +41,7 @@ class AuthorityController extends Controller
         $check_status = "";
         $id = $request->get('id');
         $account = $request->get('account');
+        $old_account = $request->get('old_account');
         $password = $request->get('password');
         $name = $request->get('name');
         $password_check = $request->get('password_check');
@@ -25,37 +50,61 @@ class AuthorityController extends Controller
         $status = $request->get('status');
         $id_teacher = $request->get('id_teacher');
 
-        $check_account = User::where('account', $account)
-            ->select('users.id')
-            ->get();
+        // 寄信
+        $mailTitle = "無極限學員系統 - 帳號權限通知";
+
+        if ($account != "old_account") {
+            $check_account = User::where('account', $account)
+                ->select('users.id')
+                ->get();
+        } else {
+            $check_account = [];
+        }
+
 
         // 檢查重複帳號
-        // if (count($check_account) == "0") {
-        if (!empty($password) && !empty($password_check)) {
-            $data = User::where('id', $id)
-                ->update(['account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
-            $check_status = "password_ok";
-            // 要寄信!!!!!!!!!
+        if (count($check_account) == "0") {
+            if (!empty($password) && !empty($password_check)) {
+                if ($account != "old_account") {
+                    // 寄信
+                    $mailContents = "您好 " . $name . "<br>  您的帳號：" . $account . " / 密碼：" . $password . "<br>  系統網址：" . env('APP_URL2');
 
-        } else {
-            $data = User::where('id', $id)
-                ->update(['account' => $account, 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
-            $check_status = "ok";
-        }
+                    $data = User::where('id', $id)
+                        ->update(['account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
+                } else {
+                    // 寄信
+                    $mailContents = "您好 " . $name . "<br>  您的帳號：" . $old_account . " / 密碼：" . $password . "<br>  系統網址：" . env('APP_URL2');
+                    $data = User::where('id', $id)
+                        ->update(['password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
+                }
+                if ($data == "1") {
+                    // 寄信
+                    $this->sendMail($email, $mailTitle, $mailContents);
+                }
+            } else {
+                if ($account != "old_account") {
+                    $data = User::where('id', $id)
+                        ->update(['account' => $account,  'name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
+                } else {
+                    $data = User::where('id', $id)
+                        ->update(['name' => $name, 'role' => $role, 'email' => $email, 'id_teacher' => $id_teacher, 'status' => $status, 'updated_at' => new \DateTime()]);
+                }
+            }
 
-        if ($data) {
-            return json_encode(array('data' => 'ok'));
+            if ($data == "1") {
+                return json_encode(array('data' => 'ok'));
+            } else {
+                return json_encode(array('data' => 'error'));
+            }
         } else {
-            return json_encode(array('data' => 'error'));
+            return json_encode(array('data' => 'repeat account'));
         }
-        // } else {
-        //     return json_encode(array('data' => 'repeat account'));
-        // }
     }
 
     // 新增
     public function insert(Request $request)
     {
+
         $data = "";
         $check_account = "";
         $account = $request->get('account');
@@ -66,6 +115,9 @@ class AuthorityController extends Controller
         $id_teacher = $request->get('id_teacher');
         $email = $request->get('email');
 
+        // 寄信
+        $mailTitle = "無極限學員系統 - 帳號權限通知";
+        $mailContents = "您好 " . $name . "<br>  您的帳號：" . $account . " / 密碼：" . $password . "<br>  系統網址：" . env('APP_URL2');
 
         $check_account = User::where('account', $account)
             ->select('users.id')
@@ -80,7 +132,9 @@ class AuthorityController extends Controller
                 ]
             );
 
-            if ($data) {
+            if (!empty($data)) {
+                // 寄信
+                $this->sendMail($email, $mailTitle, $mailContents);
                 return json_encode(array('data' => 'ok'));
             } else {
                 return json_encode(array('data' => 'error'));

@@ -33,6 +33,7 @@
           <div class="col-md-3">
             <button type="button" class="btn btn-outline-secondary" id="btn_search">搜尋</button>
             <button type="button" class="btn btn-primary btn_date mx-1" data-toggle="modal" data-target="#form_newuser"><i class="fa fa-plus-square"></i> 新增</button>
+            <!-- <button type="button" class="btn btn-outline-secondary" onclick="btn_email();">email test</button> -->
           </div>
         </div>
       </div>
@@ -130,7 +131,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-            <button type="button" id="import_check" class="btn btn-primary" onclick="btn_add()">確認</button>
+            <button type="button" id="btn_id_add" class="btn btn-primary" onclick="btn_add()">確認</button>
           </div>
           </form>
         </div>
@@ -193,7 +194,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" onclick="btn_edite();">確認</button>
+                <button type="button" id="btn_id_edite" class="btn btn-primary" onclick="btn_edite();">確認</button>
               </div>
             </form>
           </div>
@@ -222,7 +223,7 @@
 
 <script>
   // Sandy(2020/02/26) dt列表搜尋 S
-  var table;
+  var table, old_account;
   //針對姓名與角色搜尋 Sandy(2020/02/26)
   $.fn.dataTable.ext.search.push(
     function(settings, data, dataIndex) {
@@ -274,8 +275,30 @@
   });
   // Sandy(2020/02/26) dt列表搜尋 E
 
+  // 測試 email Rocky(2020/05/11)
+  function btn_email() {
+    $.ajax({
+      type: 'POST',
+      url: 'authority_email',
+      dataType: 'json',
+      data: {
+        emailAddr: 'g10894007@cycu.edu.tw',
+        mailTitle: '無極限學員系統 - 帳號權限通知',
+        mailContents: '您好，余佩珊 您的帳號：admin / 密碼：123 系統網址：https://www.google.com.tw/',
+      },
+      success: function(data) {
+        console.log(data)
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    });
+
+
+  }
   // 新增 Rocky(2020/05/08)
   function btn_add() {
+    $('#btn_id_add').prop('disabled', 'disabled');
     var account, status, password, password_check, email, name, role, id_teacher
 
     account = $('#newuser_account').val()
@@ -302,16 +325,16 @@
           id_teacher: id_teacher
         },
         success: function(data) {
-          console.log(data)
+          // console.log(data)
           if (data['data'] == 'repeat account') {
             alert('此帳號有人使用過囉！！')
           } else if (data['data'] == 'ok') {
-            // 要寄信!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-            $("#success_alert_text").html("新增成功");
-            fade($("#success_alert"));
-
-            location.reload();
+            setTimeout(function() {
+              $("#success_alert_text").html("新增成功");
+              fade($("#success_alert"));
+              location.reload();
+            }, 2000);
           } else if (data['data'] == 'error') {
             $("#error_alert_text").html("新增失敗");
             fade($("#error_alert"));
@@ -329,6 +352,8 @@
 
   // 修改 Rocky(2020/05/09)
   function btn_edite() {
+    $('#btn_id_edite').prop('disabled', 'disabled');
+
     var id, account, status, password, password_check, email, name, role, id_teacher
 
     id = $('#id_edite').val()
@@ -341,7 +366,12 @@
     role = $('#edite_role').val()
     id_teacher = $('#edite_teacher').val()
 
+    if (old_account == account) {
+      // 沒有更改帳號
+      account = "old_account"
+    }
     if (CheckPassword(password, password_check) && check_data(account, password, email, name)) {
+
       $.ajax({
         type: 'POST',
         url: 'authority_update',
@@ -349,6 +379,7 @@
         data: {
           id: id,
           account: account,
+          old_account: old_account,
           status: status,
           password: password,
           password_check: password_check,
@@ -361,12 +392,13 @@
           if (data['data'] == 'repeat account') {
             alert('此帳號有人使用過囉！！')
           } else if (data['data'] == 'ok') {
-            // 要寄信!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-            $("#success_alert_text").html("修改成功");
-            fade($("#success_alert"));
+            setTimeout(function() {
+              $("#success_alert_text").html("修改成功");
+              fade($("#success_alert"));
+              location.reload();
+            }, 2000);
 
-            location.reload();
           }
         },
         error: function(error) {
@@ -392,6 +424,7 @@
       dataType: 'json',
       success: function(data) {
         $.each(data, function(index, item) {
+          old_account = data[index].account
           $("#edite_account").val(data[index].account) // 帳號
           $("#edite_email").val(data[index].email) // email
           $("#edite_name").val(data[index].name) // 姓名
@@ -418,6 +451,16 @@
         alert('請填寫帳號 / 密碼 / email / 姓名');
         return false;
       } else {
+        if (email != "") {
+          //驗證email格式
+          var rule = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+          if (!rule.test(email)) {
+            alert('email 格式錯誤囉～～');
+            return false;
+          }
+        }
+
         return true;
       }
     } else {
@@ -425,6 +468,15 @@
         alert('請填寫帳號 / email / 姓名');
         return false;
       } else {
+        if (email != "") {
+          //驗證email格式
+          var rule = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+          if (!rule.test(email)) {
+            alert('email 格式錯誤囉～～');
+            return false;
+          }
+        }
         return true;
       }
     }
