@@ -298,7 +298,7 @@
   }
   // 新增 Rocky(2020/05/08)
   function btn_add() {
-    $('#btn_id_add').prop('disabled', 'disabled');
+
     var account, status, password, password_check, email, name, role, id_teacher
 
     account = $('#newuser_account').val()
@@ -329,7 +329,7 @@
           if (data['data'] == 'repeat account') {
             alert('此帳號有人使用過囉！！')
           } else if (data['data'] == 'ok') {
-
+            $('#btn_id_add').prop('disabled', 'disabled');
             setTimeout(function() {
               $("#success_alert_text").html("新增成功");
               fade($("#success_alert"));
@@ -352,8 +352,6 @@
 
   // 修改 Rocky(2020/05/09)
   function btn_edite() {
-    $('#btn_id_edite').prop('disabled', 'disabled');
-
     var id, account, status, password, password_check, email, name, role, id_teacher
 
     id = $('#id_edite').val()
@@ -392,7 +390,7 @@
           if (data['data'] == 'repeat account') {
             alert('此帳號有人使用過囉！！')
           } else if (data['data'] == 'ok') {
-
+            $('#btn_id_edite').prop('disabled', 'disabled');
             setTimeout(function() {
               $("#success_alert_text").html("修改成功");
               fade($("#success_alert"));
