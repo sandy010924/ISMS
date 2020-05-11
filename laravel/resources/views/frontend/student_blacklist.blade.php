@@ -33,9 +33,7 @@
                 </div> -->
     </div>
     <div class="table-responsive">
-      @component('components.datatable')
-      <!-- <table class="table table-striped table-sm text-center"> -->
-      <!-- <thead> -->
+      @component('components.datatable')    
       @slot('thead')
       <tr>
         <th>姓名</th>
@@ -43,9 +41,7 @@
         <th>電子郵件</th>
         <th>原因</th>
         <th></th>
-      </tr>
-      <!-- </thead>
-        <tbody> -->
+      </tr>    
       @endslot
       @slot('tbody')
       @foreach($blacklists as $blacklist)
@@ -61,8 +57,6 @@
         </td>
       </tr>
       @endforeach
-      <!-- </tbody>
-      </table> -->
       @endslot
       @endcomponent
     </div>
@@ -366,13 +360,21 @@
 
     // Rocky (2020/03/27)
     table = $('#table_list').DataTable({
-      "dom": '<l<t>p>',
+      "dom": '<l<td>Bt>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
       }],
       "destroy": true,
       "retrieve": true,
+      buttons: [{
+        extend: 'excel',
+        text: '匯出Excel',
+        messageTop: '黑名單',
+        exportOptions: {
+          columns: [0, 1, 2, 3]
+        }
+      }],
       // "ordering": false,
     });
 

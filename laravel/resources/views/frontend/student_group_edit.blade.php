@@ -239,19 +239,25 @@
     <div class="table-responsive">
       <input type="hidden" id="id_group" value="{{$id}}">
       <input type="hidden" id="data_groupdetail" value="{{$datas}}">
-      <table class="table table-striped table-sm text-center">
-        <thead>
-          <tr>
-            <th>姓名</th>
-            <th>聯絡電話</th>
-            <th>電子郵件</th>
-            <th>來源</th>
-            <th>加入日期</th>
-            <th>完整內容</th>
-          </tr>
-        </thead>
-        <tbody id="data_student">
-        </tbody>
+      @component('components.datatable')
+      @slot('thead')
+      <!-- <table class="table table-striped table-sm text-center">
+        <thead> -->
+      <tr>
+        <th>姓名</th>
+        <th>聯絡電話</th>
+        <th>電子郵件</th>
+        <th>來源</th>
+        <th>加入日期</th>
+        <th>完整內容</th>
+      </tr>
+      @endslot
+      <!-- </thead> -->
+      @slot('tbody')
+      <!-- <tbody id="data_student">
+      </tbody> -->
+      @endslot
+      @endcomponent
       </table>
     </div>
   </div>
@@ -549,7 +555,7 @@
 
   var array_old_studentid = new Array();
   var array_upate_studentid = new Array();
-  var table2
+  var table2, table
   //  $('select').selectpicker();
   $("document").ready(function() {
     // 查看條件 - 預設顯示 Rocky(2020/04/21)
@@ -578,6 +584,25 @@
 
     // Datable.js Rocky (2020/04/30)
     table2 = $('#table_list_history').DataTable();
+
+    table = $('#table_list').DataTable({
+      "dom": '<l<td>Bt>',
+      "columnDefs": [{
+        "targets": 'no-sort',
+        "orderable": false,
+      }],
+      "destroy": true,
+      "retrieve": true,
+      buttons: [{
+        extend: 'excel',
+        text: '匯出Excel',
+        messageTop: $('#name_group').val(),
+        exportOptions: {
+          columns: [0, 1, 2, 3, 4]
+        }
+      }],
+      // "ordering": false,
+    });
   });
 
   // 追單資料關閉
@@ -892,20 +917,35 @@
       // console.log(array_old_studentid)
       $.each(array_old_studentid, function(index, val) {
         if (val['name'] != null) {
+          datasource = val['datasource']
+          submissiondate = val['submissiondate']
+          email = val['email']
+          if (datasource == null) {
+            datasource = ''
+          }
+
+          if (submissiondate == null) {
+            submissiondate = ''
+          }
+          if (email == null) {
+            email = ''
+          }
           data +=
             '<tr>' +
             '<td>' + val['name'] + '</td>' +
             '<td>' + val['phone'] + '</td>' +
-            '<td>' + val['email'] + '</td>' +
-            '<td>' + val['datasource'] + '</td>' +
-            '<td>' + val['submissiondate'] + '</td>' +
+            '<td>' + email + '</td>' +
+            '<td>' + datasource + '</td>' +
+            '<td>' + submissiondate + '</td>' +
             '<td>' +
             '<button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + val['id'] + ');" > 完整內容 </button>'
           '</td>' +
           '</tr>'
         }
       });
-      $('#data_student').html(data);
+      // $('#data_student').html(data);
+      $('#tableBody').html(data);
+
     }
   }
 
@@ -1088,7 +1128,7 @@
           id_student: id_student_old
         },
         async: false,
-        "dataSrc": function(json) {
+        " ": function(json) {
           for (var i = 0, ien = json.length; i < ien; i++) {
 
             var status = '',
