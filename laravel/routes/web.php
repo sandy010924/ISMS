@@ -399,6 +399,20 @@ Route::post('messageApi', 'Backend\MessageController@messageApi');
 /*** [訊息推播] 多筆簡訊API***/
 Route::post('messageBulkApi', 'Backend\MessageController@messageBulkApi');
 
+/*** [自動訊息] 場次選擇 ***/
+Route::get('message_form', 'Frontend\MessageFormController@show')->name('message_form');
+
+/*** [自動訊息] 場次選擇 ***/
+Route::post('message_form_apply', 'Backend\MessageFormController@update');
+
+/*** [自動訊息] 場次選擇成功 ***/
+Route::get('message_form_success', function () {
+    return view('frontend.message_form_success');
+})->name('message_form_success');
+
+
+
+
 /*
 ------------
 |
