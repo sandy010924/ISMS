@@ -83,18 +83,17 @@
                       </div>
                     </div>
                   @endforeach
-                  <div class="d-block my-2">
+                  {{-- <div class="d-block my-2">
                     <div class="custom-control custom-radio my-3">
                       <input type="radio" id="other{{ $key }}" value="other{{ $data['id_course'] }}" name="ievent" class="custom-control-input ievent" required>
                       <label class="custom-control-label" for="other{{ $key }}">我要選擇其他場次</label>
                     </div>
-                  </div>
+                  </div> --}}
                 </div>
               @endforeach
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary px-4 mt-3">確定</button>
-    <h2>{{$status}}</h2>
             </div>
           </form>
           <div id="complete" style="display:none;">
@@ -105,7 +104,7 @@
         </div>
       </div>
     </div>
-    @if ( $status == "success")
+    {{-- @if ( $status == "success")
       <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert">
         {{ $status }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -124,7 +123,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div> 
-    @endif
+    @endif --}}
 
   </main>
 </body>

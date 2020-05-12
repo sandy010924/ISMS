@@ -232,16 +232,24 @@
         </div>
         <div class="row">
           <div class="col-3 mb-2">
-            <h6>該場總金額 : {{ $cash }}</h6>
+            <h6>該場總金額 : 
+              <span id="cash">{{ $cash }}</span>
+            </h6>
           </div>
           <div class="col-3">
-            <h6>完款 : {{ $count_settle }}</h6>
+            <h6>完款 : 
+              <span id="count_settle">{{ $count_settle }}</span>
+            </h6>
           </div>
           <div class="col-3">
-            <h6>付訂 : {{ $count_deposit }}</h6>
+            <h6>付訂 : 
+              <span id="count_deposit">{{ $count_deposit }}</span>
+            </h6>
           </div>
           <div class="col-3">
-            <h6>留單 : {{ $count_order }}</h6>
+            <h6>留單 : 
+              <span id="count_order">{{ $count_order }}</span>
+            </h6>
           </div>
         </div>
         <div class="row">
@@ -313,13 +321,34 @@
               <td class="align-middle">{{ $data['phone'] }}</td>
               <td class="align-middle">
                 <div class="form-group m-0">
-                  <select class="custom-select border-0 bg-transparent input_width" id="status_payment{{ $data['id'] }}" name="status_payment" value="{{$data['status_payment']}}">
-                    <option selected disabled value="{{$data['status_payment']}}">{{$data['status_payment_name']}}
+                  <select class="custom-select border-0 bg-transparent input_width" id="status_payment{{ $data['id'] }}" name="status_payment" value="{{$data['status_payment']}}" data-orgvalue="{{$data['status_payment']}}">
+                    {{-- <option selected disabled value="{{$data['status_payment']}}">{{$data['status_payment_name']}}
                     </option>
                     <option value="6">留單</option>
                     <option value="7">完款</option>
                     <option value="8">付訂</option>
-                    <option value="9">退款</option>
+                    <option value="9">退款</option> --}}
+                    @if($data['status_payment'] == 6)
+                      <option value="6" selected>留單</option>
+                      <option value="7">完款</option>
+                      <option value="8">付訂</option>
+                      <option value="9">退款</option>
+                    @elseif($data['status_payment'] == 7)
+                      <option value="6">留單</option>
+                      <option value="7" selected>完款</option>
+                      <option value="8">付訂</option>
+                      <option value="9">退款</option>
+                    @elseif($data['status_payment'] == 8)
+                      <option value="6">留單</option>
+                      <option value="7">完款</option>
+                      <option value="8" selected>付訂</option>
+                      <option value="9">退款</option>
+                    @elseif($data['status_payment'] == 9)
+                      <option value="6">留單</option>
+                      <option value="7">完款</option>
+                      <option value="8">付訂</option>
+                      <option value="9" selected>退款</option>
+                    @endif
                   </select>
                 </div>
               </td>
@@ -466,6 +495,7 @@
     //     (day < 10 ? '0' : '') + day;
 
     // $("#idate").val(output);
+    
 
     //日期&g時間選擇器 Sandy (2020/02/27)
     var iconlist = {  time: 'fas fa-clock',
@@ -609,7 +639,61 @@
     $('body').on('change','select[name="status_payment"]',function(){
       var data_id = ($(this).attr('id')).substr(14);
       var data_type = 'status_payment';
-      save_data($(this), data_type, data_id);
+      var status = '';
+
+      if($(this).val() == 7){
+        var msg = "確認此學員付款狀態為「完款」? 確認後系統將寄出報名成功訊息給此學員。";
+        if (confirm(msg)==true){
+          status = save_data($(this), data_type, data_id);
+          //寄訊息
+          sendMsg(data_id);
+        }else{          
+          $(this).val($(this).data('orgvalue'));
+          return false;
+        }
+      }else{
+        status = save_data($(this), data_type, data_id);
+      }
+
+      //完款、付訂、留單數目更新
+      if(status == 'success'){
+        switch ($(this).val()) {
+          case '6':
+            var count_order = parseInt($('#count_order').text())+1;
+            $('#count_order').html(count_order);
+            break;
+          case '7':
+            var count_settle = parseInt($('#count_settle').text())+1;
+            $('#count_settle').html(count_settle);
+            break;
+          case '8':
+            var count_deposit = parseInt($('#count_deposit').text())+1;
+            $('#count_deposit').html(count_deposit);
+            break;
+          default:
+            break;
+        }
+
+        switch ($(this).data('orgvalue').toString()) {
+          case '6':
+            var count_order = parseInt($('#count_order').text())-1;
+            $('#count_order').html(count_order);
+            break;
+          case '7':
+            var count_settle = parseInt($('#count_settle').text())-1;
+            $('#count_settle').html(count_settle);
+            break;
+          case '8':
+            var count_deposit = parseInt($('#count_deposit').text())-1;
+            $('#count_deposit').html(count_deposit);
+            break;
+          default:
+            break;
+        }
+      }
+      $(this).data('orgvalue', $(this).val());
+      
+
     });
 
     // 應付
@@ -723,6 +807,14 @@
           return parseInt($('#amount_payable' + id_registration).val() - $('#amount_paid' + id_registration).html());
         });
       }
+
+      //總金額更新
+      $('#cash').html( function(){
+        return $('input[name="cash"]').toArray().reduce(function(tot, val) {
+          return tot + parseInt(val.value);
+        }, 0);
+      });
+
     });
     $('body').on('keyup','input[name="cash"]',function(e){
       e.preventDefault();
@@ -750,6 +842,13 @@
             return parseInt($('#amount_payable' + id_registration).val() - $('#amount_paid' + id_registration).html());
           });
         }
+        
+        //總金額更新
+        $('#cash').html( function(){
+          return $('input[name="cash"]').toArray().reduce(function(tot, val) {
+            return tot + parseInt(val.value);
+          }, 0);
+        });
       }
     });
     
@@ -792,9 +891,11 @@
     function save_data(data, data_type, data_id){
       var id_events = $("#id_events").val();
       var data_val = data.val();
+      var status = '';
       $.ajax({
         type:'POST',
         url:'course_return_update',
+        async : false,
         data:{
           id_events: id_events,
           data_type : data_type,
@@ -805,24 +906,32 @@
           // console.log(JSON.stringify(data));
 
           if( data == 'success' ){
+            status = 'success';
+
             /** alert **/
             $("#success_alert_text").html("資料儲存成功");
             fade($("#success_alert"));
           }else{
+            status = 'error';  
+
             /** alert **/ 
             $("#error_alert_text").html("資料儲存失敗");
-            fade($("#error_alert"));     
+            fade($("#error_alert"));      
           }
 
         },
         error: function(jqXHR){
           // console.log(JSON.stringify(jqXHR));  
 
+          status = 'error';    
+
           /** alert **/ 
           $("#error_alert_text").html("資料儲存失敗");
-          fade($("#error_alert"));      
+          fade($("#error_alert"));  
         }
       });
+
+      return status;
     }
 
   /* 資料儲存 End */
@@ -958,6 +1067,66 @@
     }    
   }
   /* 刪除付款 Sandy(2020/03/22) */
+
+
+  /* 完款後寄出報名成功訊息 Sandy(2020/05/13) */
+  function sendMsg(id){
+    $.ajax({
+      type:'POST',
+      url:'course_return_sendmsg',
+      data:{
+        id: id
+      },
+      success:function(res){
+        console.log(res);  
+        
+        // if( res['status'] == 'success' && res['AccountPoint'] != null){
+        //   /** alert **/
+        //   $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
+        //   fade($("#success_alert"));
+
+        //   $('button').prop('disabled', 'disabled');
+        //   setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+        // }else if( res['status'] == 'success' ){
+        //   /** alert **/ 
+        //   $("#success_alert_text").html("寄送成功。");
+        //   fade($("#success_alert"));    
+          
+        //   $('button').prop('disabled', 'disabled');
+        //   setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+        // }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
+        //   /** alert **/ 
+        //   $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
+        //   fade($("#error_alert"));    
+          
+        //   $('#sendMessageBtn').html('立即傳送');
+        //   $('#sendMessageBtn').prop('disabled', false);
+        // }else if( res['status'] == 'error' ){
+        //   /** alert **/ 
+        //   $("#error_alert_text").html("寄送失敗。");
+        //   fade($("#error_alert"));   
+
+        //   $('#sendMessageBtn').html('立即傳送');
+        //   $('#sendMessageBtn').prop('disabled', false); 
+        // }else{
+        //   /** alert **/ 
+        //   $("#error_alert_text").html("寄送失敗。");
+        //   fade($("#error_alert"));   
+
+        //   $('#sendMessageBtn').html('立即傳送');
+        //   $('#sendMessageBtn').prop('disabled', false); 
+        // }
+
+      },
+      error: function(jqXHR, textStatus, errorMessage){
+          console.log("error: "+ errorMessage);    
+          console.log(jqXHR);
+          $(this).html('立即傳送');
+          $(this).prop('disabled', false);
+      }
+    });
+  }
+  /* 完款後寄出報名成功訊息 Sandy(2020/05/13) */
 
 </script>
 @endsection

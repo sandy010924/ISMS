@@ -29,7 +29,7 @@ class MessageFormController extends Controller
           //有選擇課程
           $course = Course::join('events_course', 'events_course.id_course' , '=', 'course.id')
                             ->select('course.*')
-                            ->Where('course.id_type', $apply->id_course)
+                            ->Where('course.id', $apply->id_course)
                             ->Where('events_course.unpublish', 0)
                             ->distinct('id')
                             ->get();
@@ -46,7 +46,7 @@ class MessageFormController extends Controller
                             ->get();
 
         }
-                          
+        
         foreach( $course as $key_course => $data_course){
 
           $events_table = EventsCourse::join('course', 'course.id' , '=', 'events_course.id_course')
@@ -111,6 +111,6 @@ class MessageFormController extends Controller
         }
       }
 
-      return view('frontend.message_form', compact('id', 'course', 'events', 'student'), ['status'=>'55']);
+      return view('frontend.message_form', compact('id', 'course', 'events', 'student'));
     }
 }

@@ -34,8 +34,9 @@
     {{-- <h4 class="text-center text-white font-weight-bold m-4">無極限國際有限公司</h4> --}}
     <div div="row">
       <div class="col-md-6 mx-auto text-center my-3">
-          <i data-feather="check-circle" class="text-success my-5"></i>
-          <h1>報名成功！</h1>
+          <i data-feather="x-circle" class="text-danger my-5"></i>
+          <h1>報名失敗！</h1>
+          <a role="button" class="btn btn-danger px-4 mt-3" href="{{ route('message_form',['id'=>$id]) }}" >重新報名</a>
       </div>
     </div>
   </div>
