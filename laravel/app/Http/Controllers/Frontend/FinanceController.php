@@ -115,6 +115,7 @@ class FinanceController extends Controller
     // 顯示獎金詳細資料(完整內容)
     public function showeditdata(Request $request)
     {
+        $datas = [];
         $id_bonus = $request->get('id');
 
         // 獎金規則
@@ -123,29 +124,36 @@ class FinanceController extends Controller
             ->where('Bonus.id', $id_bonus)
             ->get();
 
-        $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
-            ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
-            ->leftjoin('student as d', 'b.id_student', '=', 'd.id', 'c.id_student', '=', 'd.id')
-            ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
-            ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
-            ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name')
-            ->where(function ($query) use ($datas_rule) {
-                foreach ($datas_rule as $key => $data) {
-                    $array_datasource = explode(',', $data['value']);
-                    switch ($data['name_id']) {
-                        case "0":
-                            // 名單來源包含
-                            for ($i = 0; $i < count($array_datasource); $i++) {
-                                $query->orwhere('c.datasource', 'like', '%' . $array_datasource[$i] . '%');
-                            }
-                            // $query->wherein('c.datasource', explode(',', $data['value']));
-                            break;
-                    }
-                }
-            })
-            ->groupby('b.id')
-            ->get();
+        foreach ($datas_rule as $key => $data) {
+            $array_datasource = explode(',', $data['value']);
+            switch ($data['name_id']) {
+                case "0":
+                    // 名單來源包含                    
 
+                    $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
+                        ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
+                        ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
+                        ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
+                        ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
+                        ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name')
+                        ->where(function ($query) use ($datas_rule) {
+                            foreach ($datas_rule as $key => $data) {
+                                $array_datasource = explode(',', $data['value']);
+                                switch ($data['name_id']) {
+                                    case "0":
+                                        // 名單來源包含
+                                        for ($i = 0; $i < count($array_datasource); $i++) {
+                                            $query->orwhere('c.datasource', 'like', '%' . $array_datasource[$i] . '%');
+                                        }
+                                        // $query->wherein('c.datasource', explode(',', $data['value']));
+                                        break;
+                                }
+                            }
+                        })
+                        ->groupby('b.id')
+                        ->get();
+            }
+        }
         return view('frontend.bonus_detail', compact('datas', 'datas_rule', 'id_bonus'));
     }
 
@@ -165,28 +173,35 @@ class FinanceController extends Controller
 
         // 學員資料
         if ($type == "0") {
-            $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
-                ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
-                ->leftjoin('student as d', 'b.id_student', '=', 'd.id', 'c.id_student', '=', 'd.id')
-                ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
-                ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
-                ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name', 'c.datasource')
-                ->where(function ($query) use ($datas_rule) {
-                    foreach ($datas_rule as $key => $data) {
-                        switch ($data['name_id']) {
-                            case "0":
-                                // 名單來源包含
-                                $array_datasource = explode(',', $data['value']);
-                                for ($i = 0; $i < count($array_datasource); $i++) {
-                                    $query->orwhere('c.datasource', 'like', '%' . $array_datasource[$i] . '%');
+            foreach ($datas_rule as $key => $data) {
+                switch ($data['name_id']) {
+                    case "0":
+                        // 名單來源包含 
+
+                        $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
+                            ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
+                            ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
+                            ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
+                            ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
+                            ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name', 'c.datasource')
+                            ->where(function ($query) use ($datas_rule) {
+                                foreach ($datas_rule as $key => $data) {
+                                    switch ($data['name_id']) {
+                                        case "0":
+                                            // 名單來源包含
+                                            $array_datasource = explode(',', $data['value']);
+                                            for ($i = 0; $i < count($array_datasource); $i++) {
+                                                $query->orwhere('c.datasource', 'like', '%' . $array_datasource[$i] . '%');
+                                            }
+                                            // $query->wherein('c.datasource', explode(',', $data['value']));
+                                            break;
+                                    }
                                 }
-                                // $query->wherein('c.datasource', explode(',', $data['value']));
-                                break;
-                        }
-                    }
-                })
-                ->groupby('b.id')
-                ->get();
+                            })
+                            ->groupby('b.id')
+                            ->get();
+                }
+            }
         } else {
             if (count($datas_rule) != 0) {
                 $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
