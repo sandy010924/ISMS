@@ -125,7 +125,7 @@ class FinanceController extends Controller
 
         $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
             ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
-            ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
+            ->leftjoin('student as d', 'b.id_student', '=', 'd.id', 'c.id_student', '=', 'd.id')
             ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
             ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
             ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name')
@@ -167,7 +167,7 @@ class FinanceController extends Controller
         if ($type == "0") {
             $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
                 ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
-                ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
+                ->leftjoin('student as d', 'b.id_student', '=', 'd.id', 'c.id_student', '=', 'd.id')
                 ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
                 ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
                 ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name', 'c.datasource')
