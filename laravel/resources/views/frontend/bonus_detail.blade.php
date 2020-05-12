@@ -275,9 +275,17 @@
         $('#history_data_detail').html('');
         if (data['datas'].length > 0) {
           $.each(data['datas'], function(index, val) {
-            var memo = ''
+            var memo = '',
+              email = '',
+              phone = ''
             if (val['memo'] != null) {
               memo = val['memo']
+            }
+            if (val['email'] != null) {
+              email = val['email']
+            }
+            if (val['phone'] != null) {
+              phone = val['phone']
             }
             data_table +=
               '<tr>' +
@@ -286,8 +294,8 @@
               '<td>' + val['course_name'] + '</td>' +
               '<td>' + val['events_name'] + '</td>' +
               '<td>' + val['student_name'] + '</td>' +
-              '<td>' + val['email'] + '</td>' +
-              '<td>' + val['phone'] + '</td>' +
+              '<td>' + email + '</td>' +
+              '<td>' + phone + '</td>' +
               '<td>' + val['status_name'] + '</td>' +
               '<td><input type="text" class="form-control form-control-sm" value="' + memo + '" onblur="auto_update_data($(this),' + val['id'] + ');"></td>' +
               '</tr>'
