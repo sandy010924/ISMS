@@ -808,7 +808,7 @@
           }else if($("ul#reportTab a.active").data('nav') == "income" || $("ul#reportTab a.active").data('nav') == "cost"){
             lineChart.config.options.scales.yAxes[0].ticks.stepSize = 2000;
           }else{
-            lineChart.config.options.scales.yAxes[0].ticks.stepSize = 5;
+            lineChart.config.options.scales.yAxes[0].ticks.stepSize = 20;
           }
 
           //表格標頭
