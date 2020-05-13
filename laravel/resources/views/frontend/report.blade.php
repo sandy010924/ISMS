@@ -629,7 +629,7 @@
                         return value.toLocaleString();
                     },
                     fontSize: 16,
-                    stepSize: 5,
+                    stepSize: 20,
                     min: 0, 
                 },
                 // stacked: true
