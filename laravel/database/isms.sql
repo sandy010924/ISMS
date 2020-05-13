@@ -704,3 +704,6 @@ UPDATE users SET status = '1'
 
 -- 正課資料表 - 來源欄位 Sandy(2020/05/13)
 ALTER TABLE `registration` ADD COLUMN datasource VARCHAR(20) NULL COMMENT '表單來源';
+
+-- 修改場次資料表 訊息成本欄位 Sandy (2020/05/13)
+ALTER TABLE `events_course` modify COLUMN cost_message INT NOT NULL DEFAULT 0 COMMENT '訊息成本';

@@ -69,7 +69,6 @@ class ReportController extends Controller
                                 // ->leftjoin('registration as d', 'd.id_group', '=', 'events_course.id_group')
                                 ->selectRaw("
                                     events_course.id as id,
-                                    events_course.id_group as id_group,
                                     events_course.name as events,
                                     b.type as type,
                                     b.name as course,
@@ -317,7 +316,7 @@ class ReportController extends Controller
             if($nav == "income"){
                 //報名數
                 foreach( $search as $key_search => $data_search ){
-                    $events = [];
+                    // $events = [];
                     // if( $data_search['type'] == 1 ){
                     //     //銷講
                     //     $check = SalesRegistration::where('id_events', $data_search['id']);
@@ -329,20 +328,34 @@ class ReportController extends Controller
                     //     //正課
                     //     $check = Register::where('id_events', $data_search['id']);
                     // }
+
+                    //來源
+                    if($data[2] != '0'){
+                        //銷講
+                        $check = SalesRegistration::where('id_events', $data_search['id']);
+                        $check->where('datasource', $data[2]);
+                    }
+
                     $income = 0;
                     
+                    $pay = Registration::select('amount_payable');
+
+                    //來源
+                    if($data[6] != '0'){
+                        $pay->where('source_events', $data_search['id']);
+                    }
+
                     //付款狀態
                     if($data[6] != '0'){
-                        $pay = Registration::select('amount_payable')
-                                            ->where('id_group', $data_search['id_group'])
-                                            ->where('status_payment', $data[6])
-                                            ->get();
+                        $pay->where('status_payment', $data[6]);
                     }else{
-                        $pay = Registration::select('amount_payable')
-                                            ->where('id_group', $data_search['id_group'])
-                                            ->where('status_payment', '<>', 6)
-                                            ->get();
+                        $pay->where('status_payment', '<>', 6);
                     }
+
+
+                    $pay
+                        ->get();
+
                     foreach( $pay as $data){
                         $income += $data['amount_payable'];
                     }
@@ -387,12 +400,27 @@ class ReportController extends Controller
                     
                     $cost_all = EventsCourse::where('id', $data_search['id'])
                                             ->first();
-
+                                                                    
                     //成本
                     if($data[7] != '0'){
-                        $cost = $cost_all->$data[8];
+                        switch ($data[7]) {
+                            case 'cost_ad':
+                                $cost = $cost_all->cost_ad;
+                                break;
+                            case 'cost_message':
+                                $cost = $cost_all->cost_message;
+                                break;
+                            case 'cost_events':
+                                $cost = $cost_all->cost_events;
+                                break;
+                            
+                            default:
+                                # code...
+                                break;
+                        }
+                        // $cost = $cost_all->$data[7];
                     }else{
-                        $cost = $cost_all->cosr_ad + $cost_all->cost_message + $cost_all->cost_events;
+                        $cost = $cost_all->cost_ad + $cost_all->cost_message + $cost_all->cost_events;
                     }
                                         
                     $out = 0;

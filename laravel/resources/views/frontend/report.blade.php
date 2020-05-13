@@ -114,7 +114,7 @@
               <option value="0" selected>所有費用</option>
               <option value="cost_events">場地費</option>
               <option value="cost_ad">廣告費</option>
-              {{-- <option value="cost_message">訊息費</option> --}}
+              <option value="cost_message">訊息費</option>
             </select>
           </div>
           <div class="col">
@@ -200,7 +200,7 @@
               <option value="0" selected>所有費用</option>
               <option value="cost_events">場地費</option>
               <option value="cost_ad">廣告費</option>
-              {{-- <option value="cost_message">訊息費</option> --}}
+              <option value="cost_message">訊息費</option>
             </select>
           </div>
           <div class="col">
@@ -285,7 +285,7 @@
               <option value="0" selected>所有費用</option>
               <option value="cost_events">場地費</option>
               <option value="cost_ad">廣告費</option>
-              {{-- <option value="cost_message">訊息費</option> --}}
+              <option value="cost_message">訊息費</option>
             </select>
           </div>
           <div class="col">
@@ -370,7 +370,7 @@
               <option value="0" selected>所有費用</option>
               <option value="cost_events">場地費</option>
               <option value="cost_ad">廣告費</option>
-              {{-- <option value="cost_message">訊息費</option> --}}
+              <option value="cost_message">訊息費</option>
             </select>
           </div>
           <div class="col">
@@ -455,7 +455,7 @@
               <option value="0" selected>所有費用</option>
               <option value="cost_events">場地費</option>
               <option value="cost_ad">廣告費</option>
-              {{-- <option value="cost_message">訊息費</option> --}}
+              <option value="cost_message">訊息費</option>
             </select>
           </div>
           <div class="col"></div>
@@ -561,15 +561,15 @@
         }
         if($(this).text() == "單場成本"){
           $('.itemCost').prop('disabled',false);
+          $('.itemSource').prop('disabled', 'disabled');
         }else{
           $('.itemCost').prop('disabled', 'disabled');
+          $('.itemSource').prop('disabled', false);
         }
         if($(this).text() == "名單數據"){
           $('.itemAction').prop('disabled', false);
-          $('.itemSource').prop('disabled', false);
         }else{
           $('.itemAction').prop('disabled', 'disabled');
-          $('.itemSource').prop('disabled', 'disabled');
         }
       });
 
@@ -727,7 +727,6 @@
 
   });
 
-  
 
     var table = $('#table_list').DataTable({
           "dom": '<B<t>>',
@@ -736,6 +735,7 @@
           buttons: [{
             extend: 'excel',
             text: '匯出Excel',
+            padding: 3
             // messageTop: $('#h3_title').text(),
           }],
       });
@@ -838,7 +838,7 @@
 
 
 
-
+            if( res['result'][i].length > 0){
               tableBody += "<tr><th>" + "第"+ chNum[i] + "組" + "</th>";
                 
               for( var k = 0 ; k < res['labelDate'].length ; k++ ){
@@ -854,6 +854,9 @@
               }
               
               tableBody += "</tr>";
+            }else{
+              tableBody += "<tr><th>查無資料</th></tr>";
+            }
           }
 
           $('#reportTable #tableBody').html(tableBody);

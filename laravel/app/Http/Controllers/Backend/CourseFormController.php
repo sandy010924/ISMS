@@ -11,6 +11,7 @@ use App\Model\Payment;
 use App\Model\Registration;
 use App\Model\Register;
 use App\Model\Debt;
+use DB;
 
 class CourseFormController extends Controller
 {
@@ -223,7 +224,14 @@ class CourseFormController extends Controller
                             $registration->save();
                             $id_registration = $registration->id;
                         // }
-                            
+
+                            //更新場次訊息成本
+                            if( $datasource == 'SMS'){
+                                EventsCourse::where('id_group', $id_group)
+                                            ->update([
+                                                'cost_message' => DB::raw('cost_message+1'),
+                                            ]);
+                            }
                     } else {
                         foreach ($check_registration as $data) {
                             $id_registration = $data ->id;
