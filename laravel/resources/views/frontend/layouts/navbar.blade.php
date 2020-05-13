@@ -86,9 +86,9 @@
           訊息推播
         </a>
         @endif
-        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' )
+        {{-- @if (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' )
         <a class="nav-link nav-sub-item" href="#">自動訊息</a>
-        @endif
+        @endif --}}
         <a class="nav-link nav-sub-item" href="{{ route('message_result') }}">推播成效</a>
       </li>
       @endif

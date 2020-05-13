@@ -701,3 +701,6 @@ ALTER TABLE `users` ADD COLUMN status VARCHAR(10) NULL COMMENT '狀態(0:暫停,
 
 -- User資料表 - 更新狀態欄位 Rocky(2020/05/07)
 UPDATE users SET status = '1'
+
+-- 正課資料表 - 來源欄位 Sandy(2020/05/13)
+ALTER TABLE `registration` ADD COLUMN datasource VARCHAR(20) NULL COMMENT '表單來源';

@@ -39,6 +39,7 @@
   <main role="main" class="mw-100 container">
     <input type="hidden" id="source_course" value="{{ $source_course }}">
     <input type="hidden" id="source_events" value="{{ $source_events }}">
+    <input type="hidden" id="datasource" value="{{ $datasource }}">
     <img src="{{ asset('img/logo.png') }}" width="100" alt="logo" class="d-block mx-auto mt-5">
     <h4 class="text-center text-white font-weight-bold m-4">無極限國際有限公司</h4>
     <div div="row">
@@ -680,8 +681,8 @@ function second_judge(x,send){
     }
 
     //get data
-    var source_course = $('#course_id').val();
-    var source_events = $('#events_id').val();
+    // var source_course = $('#course_id').val();
+    // var source_events = $('#events_id').val();
     // var idate = new Date();
     var iname = $('#iname').val();
     var isex = $('input[name="isex"]:checked').val();
@@ -707,6 +708,7 @@ function second_judge(x,send){
     }).get();
     // var events_len = $('#events_len').val();
     var source_events = $('#source_events').val();
+    var datasource = $('#datasource').val();
 
     //電子簽名
 
@@ -739,6 +741,7 @@ function second_judge(x,send){
         icompanytitle : icompanytitle,
         id_group : id_group,
         source_events : source_events,
+        datasource: datasource,
         array_course: array_course,
         imgBase64: dataURL
       },
@@ -796,8 +799,8 @@ function second_judge(x,send){
 
 
     //get data
-    var source_course = $('#course_id').val();
-    var source_events = $('#events_id').val();
+    // var source_course = $('#course_id').val();
+    // var source_events = $('#events_id').val();
     // var idate = new Date();
     var iname = $('#iname').val();
     var isex = $('input[name="isex"]:checked').val();
@@ -809,6 +812,7 @@ function second_judge(x,send){
     var iprofession = $('#iprofession').val();
     var iaddress = $('#iaddress').val();
     var source_events = $('#source_events').val();
+    var datasource = $('#datasource').val();
 
     $.ajax({
       type:'POST',
@@ -827,6 +831,7 @@ function second_judge(x,send){
         iprofession : iprofession,
         iaddress : iaddress,
         source_events : source_events,
+        datasource : datasource,
       },
       success:function(data){
         // console.log(data);

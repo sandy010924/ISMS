@@ -17,6 +17,7 @@ class CourseFormController extends Controller
 
         $source_course = $request->get('source_course');
         $source_events = $request->get('source_events');
+        $datasource = $request->get('datasource');
 
         // $name = $request->get('name');
         
@@ -124,7 +125,7 @@ class CourseFormController extends Controller
 
         // dd($events);
         
-        return view('frontend.course_form', compact('course', 'events', 'source_course', 'source_events'));
+        return view('frontend.course_form', compact('course', 'events', 'source_course', 'source_events', 'datasource'));
     }
 
     

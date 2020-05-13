@@ -51,10 +51,12 @@ class MessageResultController extends Controller
           $endDate =  date("Y-m-d H:i:s",strtotime("+1 day",strtotime($data['created_at'])));
           if( $type == 1 ){
             $count_apply = count(SalesRegistration::where('id_course', $data['id_course'])
+                                                  ->where('datasource', 'SMS')
                                                   ->whereBetween('created_at', [$startDate, $endDate])
                                                   ->get());
           }else if( $type == 2 || $type == 3 ){
             $count_apply = count(Registration::where('id_course', $data['id_course'])
+                                            ->where('datasource', 'SMS')
                                             ->whereBetween('created_at', [$startDate, $endDate])
                                             ->get());
           }

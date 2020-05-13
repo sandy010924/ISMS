@@ -41,6 +41,7 @@ class CourseFormController extends Controller
         $id_group = $request->get('id_group');
 
         $source_events =  $request->get('source_events');
+        $datasource =  $request->get('datasource');
         
         
         /* 防錯 */
@@ -216,6 +217,7 @@ class CourseFormController extends Controller
                             $registration->number_taxid      = $number_taxid;                 // 統編
                             $registration->companytitle      = $companytitle;                 // 抬頭
                             $registration->source_events     = $source_events;          
+                            $registration->datasource        = $datasource;          
                             $registration->submissiondate    = $submissiondate;                                    // 來源場次ID
                             
                             $registration->save();
@@ -425,7 +427,8 @@ class CourseFormController extends Controller
                         $registration->type_invoice      = $type_invoice;                 // 統一發票
                         $registration->number_taxid      = $number_taxid;                 // 統編
                         $registration->companytitle      = $companytitle;                 // 抬頭
-                        $registration->source_events     = $source_events;                 // 抬頭
+                        $registration->source_events     = $source_events;                 // 來源場次
+                        $registration->datasource        = $datasource;                    // 表單來源
                         $registration->submissiondate    = $submissiondate;                // 報名日期
                         
                         $registration->save();

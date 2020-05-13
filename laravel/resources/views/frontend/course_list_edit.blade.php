@@ -28,7 +28,7 @@
         </div>
         <div class="col align-middle align-self-end">
           @if( $course->id_type != "" && ( $course->type == 2 || $course->type == 3 ) ) 
-          <a role="button" href="{{ route('course_form',['source_course'=>$course->id_type, 'source_events'=>0]) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
+          <a role="button" href="{{ route('course_form',['source_course'=>$course->id_type, 'source_events'=>0, 'datasource'=>'web']) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
               預覽報名表
             </a>
           @endif
