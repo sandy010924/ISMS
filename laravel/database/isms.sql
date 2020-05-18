@@ -707,3 +707,11 @@ ALTER TABLE `registration` ADD COLUMN datasource VARCHAR(20) NULL COMMENT '表�
 
 -- 修改場次資料表 訊息成本欄位 Sandy (2020/05/13)
 ALTER TABLE `events_course` modify COLUMN cost_message INT NOT NULL DEFAULT 0 COMMENT '訊息成本';
+
+
+-- 正課資料表 - 新增原始付款狀態欄位 Rocky(2020/05/18)
+ALTER TABLE `registration` ADD COLUMN status_payment_original VARCHAR(30) NULL COMMENT '原始付款狀態';
+
+-- 追單資料表 - 新增付款狀態欄位 Rocky(2020/05/18)
+ALTER TABLE `debt` ADD COLUMN status_payment_name VARCHAR(30) NULL COMMENT '付款狀態名稱';
+
