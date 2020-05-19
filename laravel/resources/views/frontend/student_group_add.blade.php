@@ -93,8 +93,8 @@
     </form>
     <!-- 添加另一條件 Rocky (2020/04/04) -->
     <div class="row">
-      <div class="col-3 mt-2">
-        <button class="btn btn-primary" type="button" onclick="condition2();" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
+      <div class="col-2 mt-2">
+        <button class="btn btn-primary" type="button" id="btn_condition2" onclick="condition2();" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
           <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>
         </button>
       </div>
@@ -158,11 +158,13 @@
       </form>
       <!-- 添加另一條件 Rocky (2020/04/04) -->
       <div class="row">
-        <div class="col-3  mt-2">
+        <div class="col-2  mt-2">
           <button class="btn btn-primary" type="button" onclick="condition3();" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
             <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>
           </button>
-          </i>
+          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
       </div>
     </div>
@@ -223,6 +225,13 @@
           </div>
         </div>
       </form>
+      <div class="row">
+        <div class="col-2  mt-2">
+          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -611,6 +620,7 @@
     $('#show_contact').modal('hide');
   });
 
+  // 篩選條件關閉 Rocky(2020/05/19)
 
   /*增加條件*/
   function condition2() {

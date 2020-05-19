@@ -144,7 +144,9 @@
           <button class="btn btn-primary" type="button" onclick="condition3();" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
             <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>
           </button>
-          </i>
+          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
       </div>
     </div>
@@ -205,6 +207,13 @@
           </div>
         </div>
       </form>
+      <div class="row">
+        <div class="col-3  mt-2">
+          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
