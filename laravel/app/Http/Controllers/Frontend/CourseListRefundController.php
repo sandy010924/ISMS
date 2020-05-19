@@ -188,6 +188,12 @@ class CourseListRefundController extends Controller
                         break;
                 }
 
+                //當時付款金額
+                $refund_cash = 0;
+                $refund_cash = Payment::Where('id_registration', $data['id_registration'])
+                                        ->sum('cash');
+
+
                 //refund
                 $refund[$key] = array(
                     'id' => $data['id'],
@@ -200,6 +206,7 @@ class CourseListRefundController extends Controller
                     'pay_model' => $pay_model,
                     'refund_reason' => $data['refund_reason'],
                     'event' => $event,
+                    'refund_cash' => $refund_cash,
                     'review' => $review,
                 );
 

@@ -44,7 +44,8 @@
           </div>
         </div>
         <div class="col-3 text-right">
-          <button type="button" class="btn btn-outline-secondary mr-3" data-toggle="modal" data-target="#listform_new">新增退費</button>
+          <a role="button" href="{{ route('refund_form',['id_course'=>$course->id]) }}" target="_blank" class="btn btn-outline-secondary mr-3">退費表單連結</a>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listform_new">新增退費</button>
           <div class="modal fade" id="listform_new" tabindex="-1" role="dialog" aria-labelledby="listform_newLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -61,8 +62,8 @@
                     <div class="form-group required">
                       <label for="form_date" class="col-form-label">申請退款日期</label>
                       <br/>
-                      <div class="input-group date" id="form_date" data-target-input="nearest">
-                          <input type="text" name="form_date" class="form-control datetimepicker-input" data-target="#form_date" required/>
+                      <div class="input-group date" data-target-input="nearest">
+                          <input type="text" id="form_date" name="form_date" class="form-control datetimepicker-input" data-target="#form_date" required/>
                           <div class="input-group-append" data-target="#form_date" data-toggle="datetimepicker">
                               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                           </div>
@@ -155,7 +156,7 @@
       @component('components.datatable')
         @slot('thead')
           <tr>
-            <th>Submission Date</th>
+            <th>當時報名日期</th>
             <th>申請退費日期</th>
             <th>姓名</th>
             <th>聯絡電話</th>
@@ -164,6 +165,7 @@
             <th>退費原因</th>
             <th>當時付款方式</th>
             <th>帳號/卡號後五碼</th>
+            <th>當時付款金額</th>
             <th>審核狀態</th>
             <th class="no-sort"></th>
           </tr>
@@ -180,6 +182,7 @@
               <td>{{ $data['refund_reason'] }}</td>
               <td>{{ $data['pay_model'] }}</td>
               <td>{{ $data['number'] }}</td>
+              <td>{{ $data['refund_cash'] }}</td>
               <td>{{ $data['review'] }}</td>
               <td><a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a></td>
             </tr>
@@ -220,7 +223,7 @@
       $('#form_date').datetimepicker({ 
         format: 'YYYY-MM-DD',
         // icons: iconlist,
-        defaultDate: moment(), 
+        defaultDate: moment().format('YYYY-MM-DD'), 
       });
 
       //DataTable
