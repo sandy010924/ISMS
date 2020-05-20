@@ -263,4 +263,31 @@ class StudentController extends Controller
         }
         return json_encode(array('data' => $status));
     }
+
+
+    public function viewformsave(Request $request)
+    {
+        //取回data
+        $id = $request->input('id');
+        $type = $request->input('type');
+        $data = $request->input('data');
+
+        switch ($type) {
+            case '0':
+                // 銷講
+                SalesRegistration::where('id', $id)
+                    ->update(['id_events' => $data]);
+                break;
+            case '1':
+                // 正課
+                Registration::where('id', $id)
+                    ->update(['id_events' => $data]);
+                break;
+            default:
+                return 'error';
+                break;
+        }
+
+        return 'success';
+    }
 }

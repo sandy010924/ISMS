@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Response;
+use DB;
 use App\Http\Controllers\Controller;
 use App\Model\Student;
 use App\Model\SalesRegistration;
@@ -9,6 +11,7 @@ use App\Model\Registration;
 use App\Model\Refund;
 use App\Model\Debt;
 use App\Model\Mark;
+use App\Model\EventsCourse;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -68,24 +71,42 @@ class StudentController extends Controller
     {
         $type = $request->get('type');
         $id = $request->get('id');
+        $datas_events = "";
         if ($type == "0") {
             // 銷售講座
             $datas = SalesRegistration::leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
                 ->leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
-                ->select('sales_registration.*', 'student.*', 'course.name as course')
+                ->leftjoin('events_course', 'events_course.id', '=', 'sales_registration.id_events')
+                ->select('sales_registration.*', 'student.*', 'course.name as course', 'events_course.course_start_at as events_start')
                 ->where('sales_registration.id', $id)
+                ->get();
+
+            $datas_events = EventsCourse::where('id_course', function ($query) use ($id) {
+                $query->select(DB::raw("(SELECT id_course FROM sales_registration WHERE id='" . $id . "')"));
+            })
+                ->select('events_course.id', 'events_course.name')
                 ->get();
         } elseif ($type == "1") {
             // 正課
             $datas = Registration::leftjoin('course', 'course.id', '=', 'registration.id_course')
                 ->leftjoin('student', 'student.id', '=', 'registration.id_student')
                 ->leftjoin('payment', 'payment.id_student', '=', 'registration.id_student')
-                ->select('registration.*', 'student.*', 'payment.*', 'course.name as course')
+                ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
+                ->select('registration.*', 'student.*', 'payment.*', 'course.name as course', 'events_course.course_start_at as events_start')
                 ->where('registration.id', $id)
+                ->get();
+
+            $datas_events = EventsCourse::where('id_course', function ($query) use ($id) {
+                $query->select(DB::raw("(SELECT id_course FROM registration WHERE id='" . $id . "')"));
+            })
+                ->select('events_course.id', 'events_course.name')
                 ->get();
         }
 
-        return $datas;
+        return response::json([
+            'datas' => $datas,
+            'events' => $datas_events
+        ]);
     }
 
 
