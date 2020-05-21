@@ -252,13 +252,14 @@ class CourseController extends Controller
                         foreach ($check_course as $data_course) {
                             $id_course = $data_course->id;
                         }
-                    } elseif ($check != 1) {
+                    } else {
                         $course->id_teacher       = $id_teacher;    // 講師ID
                         $course->name             = $name;          // 課程名稱
                         $course->type             = '1';            // 課程類型:(1:銷講,2:2階正課,3:3階正課)
                         $course->save();
                         $id_course = $course->id;
                     }
+                    $check_excel_status++;
                 }
                 /*課程資料 - E*/
 
@@ -318,14 +319,8 @@ class CourseController extends Controller
                 $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
                     ->where('id_events', $id_events)
                     ->get();
-                echo count($check_SalesRegistration);
-                // 檢查是否報名過
-                // if (count($check_SalesRegistration) == 0 && $id_student != "") {
+                // 檢查是否報名過               
                 if (count($check_SalesRegistration) == 0 && $id_student != "") {
-                    // 如果是我很遺憾 -> id_course = -99 Rocky(2020/03/31)
-                    if ($check == 1) {
-                        $id_course = -99;
-                    }
                     // 新增銷售講座報名資料
                     if ($id_course != "" && $id_student != "") {
                         $date = gmdate('Y-m-d H:i:s', $submissiondate);

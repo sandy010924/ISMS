@@ -637,6 +637,7 @@
 
       // 課程
       function view_form(id_student) {
+        $('#v-pills-tabContent').html('')
         $.ajax({
           type: 'POST',
           url: 'view_form',
@@ -647,13 +648,16 @@
           success: function(data) {
             var course = '';
             $.each(data, function(index, val) {
-              // if (typeof(val['id_payment']) != 'undefined') {
               if (typeof(val['status_payment']) != 'undefined') {
                 // 正課資料
                 course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
               } else {
                 // 銷講資料
-                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
+                var status = ''
+                if (val['status'] == '我很遺憾') {
+                  status = '（' + val['status'] + '）'
+                }
+                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + status + '</a>';
               }
             });
             $('#v-pills-tab').html(course);
@@ -676,13 +680,18 @@
             type: type
           },
           success: function(data) {
+
             var detail = '',
               student = '',
-              payment = '';
+              payment = '',
+              course = '',
+              sign = '',
+              id_select_events = '',
+              id_events
             // console.log(data)
-            $.each(data, function(index, val) {
+            $.each(data['datas'], function(index, val) {
               // 學員資料
-              var id_identity, sex, phone, email, birthday, company, profession, address
+              var id_identity, sex, phone, email, birthday, company, profession, address, events
               if (val['id_identity'] != null) {
                 id_identity = val['id_identity'];
               } else {
@@ -698,13 +707,11 @@
               } else {
                 phone = '無'
               }
-
               if (val['email'] != null) {
                 email = val['email'];
               } else {
                 email = '無'
               }
-
               if (val['birthday'] != null) {
                 birthday = val['birthday'];
               } else {
@@ -728,6 +735,8 @@
               } else {
                 address = '無'
               }
+
+
               student = '<div style="text-align:left"><b>課程服務報名表</b>' + '<br>' + '姓名:' + val['name'] + '<br>' + '性別:' + sex + '<br>' + '身分證字號:' + id_identity + '<br>' +
                 '聯絡電話:' + phone + '<br>' + '電子郵件:' + email + '<br>' + '出生日期:' + birthday + '<br>' +
                 '公司名稱:' + company + '<br>' + '職業:' + profession + '<br>' + '聯絡地址:' + address +
@@ -757,11 +766,50 @@
                 payment = '<hr/><div style="text-align:left;padding-top: 1%;"><b>繳款明細</b>' + '<br>' + '付款金額:' + val['cash'] + '<br>' + '付款方式:' + pay_model + '<br>' + '卡號後五碼:' + val['number'] + '<br>' +
                   '服務人員:' + val['person'] + '<br>' + '統編:' + val['number_taxid'] + '<br>' + '抬頭:' + val['companytitle'] +
                   '</div>'
+
+                // 簽名 Rocky(2020/05/20)
+                if (val['sign'] != '') {
+                  sign = '<hr/><div style="text-align:left;padding-top: 1%;"><b>簽名</b>' + '<br>' +
+                    '<img src = "../public/sign/' + val['sign'] + '" alt = "無簽名" width = "50%" height = "150" > ' +
+                    '</div>'
+                }
               }
 
-              detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + payment + '</div>'
+
+              // 課程資料 Rocky(2020/05/20)
+
+              /*場次 - S*/
+              id_select_events = "select_events_" + id
+              select_events = '<select class="custom-select form-control col-sm-4 " id="' + id_select_events + '" name="select_teacher"  onblur="update_events($(this),' + id + ',' + type + ');" > </select >'
+              /*場次 - E*/
+
+              course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
+                '課程開始時間:' + val['events_start'] + '<br>' +
+                '<div class="form-group row">' +
+                '<label class="col-sm-2" >場次: </label>' + select_events +
+                '</div>' +
+                '</div>'
+
+
+              detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + course + sign + payment + '</div>'
+              id_events = val['id_events']
             });
+
+
             $('#v-pills-tabContent').html(detail);
+
+            // 場次
+            id_select_events = "#" + id_select_events
+            $(id_select_events).append("<option value=''>請選擇</option>");
+            $.each(data['events'], function(index, val) {
+              $(id_select_events).append("<option value='" + val['id'] + "'>" + val['name'] + "</option>");
+            })
+            if (id_events != "") {
+              $(id_select_events).val(id_events) // 場次
+            } else {
+              $(id_select_events).val('') // 場次 
+            }
+
           },
           error: function(error) {
             console.log(JSON.stringify(error));
@@ -1380,6 +1428,35 @@
       /*聯絡狀況 - 顯示 - E*/
 
       /* 自動儲存 - S Rocky(2020/03/08) */
+
+      // 已填表單 - 場次更新 Rocky(2020/05/21)
+      function update_events(data, id, type) {
+        // console.log(type)
+        $.ajax({
+          type: 'POST',
+          url: 'view_form_save',
+          // dataType:'JSON',
+          data: {
+            id: id,
+            type: type,
+            data: data.val()
+          },
+          success: function(data) {
+            // console.log(data);
+
+            /** alert **/
+            $("#success_alert_text").html("資料儲存成功");
+            fade($("#success_alert"));
+          },
+          error: function(jqXHR) {
+            console.log(JSON.stringify(jqXHR));
+
+            /** alert **/
+            $("#error_alert_text").html("資料儲存失敗");
+            fade($("#error_alert"));
+          }
+        });
+      }
 
       // 日期
       function update_time(data, id, type) {

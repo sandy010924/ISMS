@@ -241,6 +241,8 @@ Route::get('student_addblacklist', 'Backend\StudentController@blacklist');
 Route::post('view_form', 'Frontend\StudentController@viewform');
 /*** 已填表單-詳細資料 Rocky(2020/02/28) ***/
 Route::post('view_form_detail', 'Frontend\StudentController@formdetail');
+/*** 已填表單-詳細資料-自動儲存 Rocky(2020/05/21) ***/
+Route::post('view_form_save', 'Backend\StudentController@viewformsave');
 /*** 完整內容-基本資料 Rocky(2020/02/29) ***/
 Route::post('course_data', 'Frontend\StudentController@coursedata');
 /*** 完整內容-標記 - 顯示 Rocky(2020/03/10) ***/
