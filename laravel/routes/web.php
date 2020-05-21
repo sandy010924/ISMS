@@ -137,6 +137,11 @@ Route::post('course_list_refund_insert', 'Backend\CourseListRefundController@ins
 /*** 刪除 ***/
 Route::post('course_list_refund_delete', 'Backend\CourseListRefundController@delete');
 
+/*** 退費表單 ***/
+Route::get('refund_form', function () {
+    return view('frontend.refund_form');
+})->name('refund_form');
+
 // Route::get('course_list_refund', function () {
 //     return view('frontend.course_list_refund');
 // })->name('course_list_refund');
