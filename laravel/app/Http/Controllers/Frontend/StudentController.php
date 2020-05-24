@@ -20,9 +20,11 @@ class StudentController extends Controller
     // 顯示資料
     public function show()
     {
-        // 講師ID Rocky(2020/05/11)
-        $id_teacher = Auth::user()->id_teacher;
-        if (Auth::user()->role == "teacher") {
+        // 講師ID Rocky(2020/05/11)        
+        if (isset(Auth::user()->role) == '') {
+            return view('frontend.error_authority');
+        } elseif (isset(Auth::user()->role) != '' && Auth::user()->role == "teacher") {
+            $id_teacher = Auth::user()->id_teacher;
             $students = Student::leftjoin('sales_registration', 'student.id', '=', 'sales_registration.id_student')
                 ->join('course', 'sales_registration.id_course', '=', 'course.id')
                 ->select('student.*', 'sales_registration.datasource')

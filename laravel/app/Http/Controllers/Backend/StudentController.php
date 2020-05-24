@@ -120,6 +120,7 @@ class StudentController extends Controller
         $debt_status_date = $request->get('debt_status_date');
         $debt_contact = $request->get('debt_contact');
         $debt_status = $request->get('debt_status');
+        $debt_status_payment_name = $request->get('debt_status_payment_name');
         $debt_person = $request->get('debt_person');
         $debt_remind = $request->get('debt_remind');
 
@@ -127,15 +128,16 @@ class StudentController extends Controller
         $debt = new Debt;
 
         // 新增資料
-        $debt->id_student       = $id_student;
-        $debt->created_at       = $debt_date;
-        $debt->updated_at       = $debt_date;
-        $debt->status_payment   = $debt_status_date;
-        $debt->contact          = $debt_contact;
-        $debt->id_status        = $debt_status;
-        $debt->remind_at        = $debt_remind;
-        $debt->person           = $debt_person;
-        $debt->name_course      = $debt_course;
+        $debt->id_student               = $id_student;
+        $debt->created_at               = $debt_date;
+        $debt->updated_at               = $debt_date;
+        $debt->status_payment           = $debt_status_date;
+        $debt->contact                  = $debt_contact;
+        $debt->id_status                = $debt_status;
+        $debt->status_payment_name      = $debt_status_payment_name;
+        $debt->remind_at                = $debt_remind;
+        $debt->person                   = $debt_person;
+        $debt->name_course              = $debt_course;
 
         $debt->save();
         $id_debt = $debt->id;
@@ -204,6 +206,11 @@ class StudentController extends Controller
                 // 追單課程
                 Debt::where('id', $id)
                     ->update(['name_course' => $data]);
+                break;
+            case '7':
+                // 付款狀態 
+                Debt::where('id', $id)
+                    ->update(['status_payment_name' => $data]);
                 break;
             default:
                 return 'error';

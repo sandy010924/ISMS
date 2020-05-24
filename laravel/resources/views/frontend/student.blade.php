@@ -320,45 +320,13 @@
                       <th class="text-nowrap">追單課程</th>
                       <th class="text-nowrap">付款狀態/日期</th>
                       <th class="text-nowrap">聯絡內容</th>
+                      <th class="text-nowrap">付款狀態</th>
                       <th class="text-nowrap">最新狀態</th>
                       <th class="text-nowrap">追單人員</th>
                       <th class="text-nowrap">設提醒</th>
                     </tr>
                   </thead>
                   <tbody id="contact_data_detail">
-                    <tr>
-                      <td class="align-middle"></td>
-                      <td class="align-middle"></td>
-                      <td class="align-middle">
-                        <!-- <div class="form-group m-0">
-                                  <select class="custom-select border-0 bg-transparent input_width">
-                                    <option selected disabled value=""></option>
-                                    <option value="1">現金</option>
-                                    <option value="2">匯款</option>
-                                    <option value="3">輕鬆付</option>
-                                    <option value="4">一次付</option>
-                                  </select>
-                                </div> -->
-                      </td>
-                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                      <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                      <td class="align-middle">
-                        <div class="form-group m-0">
-                          <select class="custom-select border-0 bg-transparent input_width">
-                            <option selected disabled value=""></option>
-                            <option value="1">完款</option>
-                            <option value="2">付訂</option>
-                            <option value="3">待追</option>
-                            <option value="4">退款中</option>
-                            <option value="5">退款完成</option>
-                            <option value="6">無意願</option>
-                            <option value="7">推薦其他講師</option>
-                          </select>
-                        </div>
-                      </td>
-                      <td class="align-middle">追單人員</td>
-                      <td class="align-middle">設提醒</td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -397,13 +365,19 @@
                       </div>
                       <div class="form-group">
                         <label for="recipient-name" class="col-form-label">付款狀態:</label>
+                        <select id="debt_status_payment_name" class="form-control custom-select border-0 bg-transparent input_width">
+                          <option selected="" disabled="" value=""></option>
+                          <option value="留單">留單</option>
+                          <option value="完款">完款</option>
+                          <option value="付訂">付訂</option>
+                          <option value="退費">退費</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">最新狀態:</label>
                         <select id="debt_status" class="form-control custom-select border-0 bg-transparent input_width">
                           <option selected="" disabled="" value=""></option>
-                          <option value="11">完款</option>
-                          <option value="10">付訂</option>
                           <option value="12">待追</option>
-                          <option value="13">退款中</option>
-                          <option value="14">退款完成</option>
                           <option value="15">無意願</option>
                           <option value="16">推薦其他講師</option>
                         </select>
@@ -1163,33 +1137,20 @@
           },
           // async: false,
           success: function(data) {
-            updatetime = '', remindtime = '';
+            updatetime = '', remindtime = '', id_debt_status_payment_name = '', id_status = '', val_status = '', val_status_payment_name = ''
             $.each(data, function(index, val) {
               opt1 = '', opt2 = '', opt3 = '', opt4 = '', opt5 = '', opt6 = '', opt7 = '';
               id = val['id'];
-              switch (val['id_status']) {
-                case 10:
-                  opt1 = 'selected';
-                  break;
-                case 11:
-                  opt2 = 'selected';
-                  break;
-                case 12:
-                  opt3 = 'selected';
-                  break;
-                case 13:
-                  opt4 = 'selected';
-                  break;
-                case 14:
-                  opt5 = 'selected';
-                  break;
-                case 15:
-                  opt6 = 'selected';
-                  break;
-                case 16:
-                  opt7 = 'selected';
-                  break;
-              }
+
+              // 付款狀態下拉ID
+              id_debt_status_payment_name = 'debt_status_payment_name_' + id
+
+              // 最新狀態下拉ID
+              id_status = id + '_status'
+
+              val_status_payment_name = val['status_payment_name']
+              val_status = val['id_status']
+
               updatetime += "#new_starttime" + id + ','
               remindtime += "#remind" + id + ','
               var status_payment = '',
@@ -1216,30 +1177,34 @@
                 '<td><i class="fa fa-trash auth_hidden" aria-hidden="true" onclick="debt_delete(' + id + ');" style="cursor:pointer;padding-top: 40%; color:#eb6060"></i></td>' +
                 '<td>' +
                 '<div class="input-group date show_datetime" id="new_starttime' + id + '" data-target-input="nearest"> ' +
-                ' <input type="text" onblur="update_time($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" required/> ' +
+                ' <input type="text" onblur="save_data($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" required/> ' +
                 ' <div class="input-group-append" data-target="#new_starttime' + id + '" data-toggle="datetimepicker"> ' +
                 ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
                 '</div> ' +
                 '</div>' +
                 '</td>' +
-                '<td>' + '<input type="text"  class="form-control auth_readonly" onblur="name_course($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
-                '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="status_payment($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
-                '<td>' + '<input type="text"  class=" auth_readonly form-control" onblur="contact($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
-                '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id + '_status" onblur="status($(this),' + id + ',3);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+                '<td>' + '<input type="text"  class="form-control auth_readonly" onblur="save_data($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="save_data($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td>' + '<input type="text"  class=" auth_readonly form-control" onblur="save_data($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_debt_status_payment_name + '" onblur="save_data($(this),' + id + ',7);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
                 '<option selected disabled value=""></option>' +
-                '<option value="11" ' + opt2 + '>完款</option>' +
-                '<option value="10" ' + opt1 + '>付訂</option>' +
-                '<option value="12" ' + opt3 + '>待追</option>' +
-                '<option value="13" ' + opt4 + '>退款中</option>' +
-                '<option value="14" ' + opt5 + '>退款完成</option>' +
-                '<option value="15" ' + opt6 + '>無意願</option>' +
-                '<option value="16" ' + opt7 + '>推薦其他講師</option>' +
+                '<option value="留單">留單</option>' +
+                '<option value="完款">完款</option>' +
+                '<option value="付訂">付訂</option>' +
+                '<option value="退費">退費</option>' +
                 '</select>' +
                 '</div> </td>' +
-                '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="person($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
+                '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_status + '" onblur="save_data($(this),' + id + ',3);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+                '<option selected disabled value=""></option>' +
+                '<option value="12">待追</option>' +
+                '<option value="15">無意願</option>' +
+                '<option value="16">推薦其他講師</option>' +
+                '</select>' +
+                '</div> </td>' +
+                '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="save_data($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
                 '<td>' +
                 '<div class="input-group date show_datetime" id="remind' + id + '" data-target-input="nearest"> ' +
-                ' <input type="text" onblur="remind($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" required/> ' +
+                ' <input type="text" onblur="save_data($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" required/> ' +
                 ' <div class="input-group-append" data-target="#remind' + id + '" data-toggle="datetimepicker"> ' +
                 ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
                 '</div> ' +
@@ -1272,6 +1237,29 @@
               defaultDate: new Date(),
               pickerPosition: "bottom-left"
             });
+
+            /*付款狀態、最新狀態 - S*/
+
+            // 付款狀態
+            id_debt_status_payment_name = "#" + id_debt_status_payment_name
+
+            if (val_status_payment_name != "") {
+              $(id_debt_status_payment_name).val(val_status_payment_name)
+            } else {
+              $(id_debt_status_payment_name).val('')
+            }
+
+            // 最新狀態
+            id_status = "#" + id_status
+
+            if (val_status != "") {
+              $(id_status).val(val_status)
+            } else {
+              $(id_status).val('')
+            }
+
+            /*付款狀態、最新狀態 - E*/
+
 
             // 權限判斷 Rocky(2020/05/10)
             check_auth();
@@ -1333,6 +1321,7 @@
             debt_status_date = $("#debt_status_date").val();
             debt_contact = $("#debt_contact").val();
             debt_status = $("#debt_status").val();
+            debt_status_payment_name = $("#debt_status_payment_name").val();
             debt_person = $("#debt_person").val();
             debt_remind = $("#debt_remind").val();
             id_student = id_student_old;
@@ -1347,6 +1336,7 @@
                 debt_status_date: debt_status_date,
                 debt_contact: debt_contact,
                 debt_status: debt_status,
+                debt_status_payment_name: debt_status_payment_name,
                 debt_person: debt_person,
                 debt_remind: debt_remind
               },
@@ -1496,11 +1486,10 @@
         $.ajax({
           type: 'POST',
           url: 'contact_data_save',
-          // dataType:'JSON',
           data: {
             id: id,
             type: type,
-            data: data
+            data: data.val()
           },
           success: function(data) {
             // console.log(data);
