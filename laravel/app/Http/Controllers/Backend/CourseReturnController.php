@@ -44,6 +44,7 @@ class CourseReturnController extends Controller
         $type_invoice = $request->get('iinvoice');
         $number_taxid = $request->get('inum');
         $companytitle = $request->get('icompanytitle');
+        $istatus = $request->get('istatus');
 
         $events_len =  $request->get('events_len');
         for($i = 0 ; $i < $events_len ; $i++){
@@ -184,8 +185,9 @@ class CourseReturnController extends Controller
                             $registration->amount_payable    = '';                            // 應付金額
                             #// $registration->amount_paid       = '';                            // 已付金額
                             // $registration->memo              = '';                            // 備註
-                            $registration->sign              = '';                            // 簽名檔案
-                            $registration->status_payment    = 6;                             // 付款狀態
+                            $registration->sign              = '';                             // 簽名檔案
+                            $registration->status_payment    = $istatus;                       // 付款狀態
+                            $registration->status_payment_original    = $istatus;              //原始付款狀態 
 
                             if(strpos($array_group, 'other') !== false){
                                 /* 選擇其他場次 */
@@ -356,6 +358,8 @@ class CourseReturnController extends Controller
                             $debt->person           = '';                   // 追單人員
                             $debt->remind_at        = '';                   // 提醒
                             $debt->id_registration  = $id_registration;     // 報名表ID
+                            // $debt->id_events        = $id_registration;     // 場次ID
+                            $debt->status_payment_name  = $istatus;     // 付款狀態名稱
                             
                             $debt->save();
                             $id_debt = $debt->id;
@@ -398,10 +402,12 @@ class CourseReturnController extends Controller
                         #// $registration->amount_paid       = '';                            // 已付金額
                         // $registration->memo              = '';                            // 備註
                         $registration->sign              = '';                            // 簽名檔案
-                        $registration->status_payment    = 6;                             // 付款狀態
+                        // $registration->status_payment    = 6;                             // 付款狀態
+                        $registration->status_payment             = $istatus;             // 付款狀態
+                        $registration->status_payment_original    = $istatus;             //原始付款狀態 
                         $registration->id_events         = -99;                           // 場次ID
                         $registration->registration_join = $join;                         // 我想參加課程
-                        $registration->id_group          = null;                            // 群組ID
+                        $registration->id_group          = null;                          // 群組ID
                         $registration->pay_date          = null;                          // 付款日期
                         $registration->pay_memo          = '';                            // 付款備註
                         $registration->person            = '';                            // 服務人員
@@ -492,6 +498,7 @@ class CourseReturnController extends Controller
                     $debt->person           = '';                   // 追單人員
                     $debt->remind_at        = '';                   // 提醒
                     $debt->id_registration  = $id_registration;     // 報名表ID
+                    $debt->status_payment_name  = $istatus;     // 付款狀態名稱
                     
                     $debt->save();
                     $id_debt = $debt->id;

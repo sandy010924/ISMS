@@ -205,6 +205,15 @@
                         <label for="icompanytitle" class="col-form-label"><strong>抬頭</strong></label>
                         <input type="text" class="form-control" name="icompanytitle" id="icompanytitle">
                       </div>
+                      <div class="form-group">
+                        <label for="add_status" class="col-form-label">付款狀態</label>
+                        <select class="custom-select" id="istatus" name="istatus">
+                            <option value="6">留單</option>
+                            <option value="7">完款</option>
+                            <option value="8">付訂</option>
+                            <option value="9">退款</option>
+                        </select>
+                      </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                         <button type="submit" class="btn btn-primary">確認報名</button>
@@ -468,7 +477,6 @@
                     <label for="add_number" class="col-form-label">帳號/卡號後四碼</label>
                     <input type="number" class="form-control" name="add_number" id="add_number">
                   </div>
-                  </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                     <button type="submit" class="btn btn-primary" id="btn_payment">確認新增</button>
@@ -642,18 +650,22 @@
       var status = '';
 
       if($(this).val() == 7){
-        var msg = "確認此學員付款狀態為「完款」? 確認後系統將寄出報名成功訊息給此學員。";
+        // var msg = "確認此學員付款狀態為「完款」? 確認後系統將寄出報名成功訊息給此學員。";
+        var msg = "付款狀態為「完款」，是否傳訊息報名成功訊息此學員？ 確認後系統將寄出報名成功訊息給此學員。";
         if (confirm(msg)==true){
-          status = save_data($(this), data_type, data_id);
+          // status = save_data($(this), data_type, data_id);
           //寄訊息
           sendMsg(data_id);
-        }else{          
-          $(this).val($(this).data('orgvalue'));
-          return false;
+        // }else{          
+        //   $(this).val($(this).data('orgvalue'));
+        //   return false;
         }
-      }else{
-        status = save_data($(this), data_type, data_id);
       }
+      // else{
+      //   status = save_data($(this), data_type, data_id);
+      // }
+
+        status = save_data($(this), data_type, data_id);
 
       //完款、付訂、留單數目更新
       if(status == 'success'){
