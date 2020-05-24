@@ -212,10 +212,11 @@ class ReportController extends Controller
                         if( $data_search['x'] == $data_result['x'] ){
                             // $index = array_search($data_search['x'], $data_result);
                             if(count($check)!=0 && count($apply)!=0){
-                                $result[$key][$key_result]['y'] += count($check) / count($apply);
-                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 2);
+                                // $result[$key][$key_result]['y'] += count($check) / count($apply)*100;
+                                $result[$key][$key_result]['y'] = round(($result[$key][$key_result]['y'] + (count($check) / count($apply)*100)) / 2, 2);
                             }else if($result[$key][$key_result]['y'] != 0){
-                                $result[$key][$key_result]['y'] /= 2;
+                                // $result[$key][$key_result]['y'] /= 2;
+                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 2);
                             }
                             $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
                             // $events['title'] .= "、".$data_search['course'];
@@ -225,7 +226,7 @@ class ReportController extends Controller
                     }
                     if( $out == 0 ){
                         if(count($check)!=0 && count($apply)!=0){
-                            $events['y'] = round(count($check) / count($apply),2);
+                            $events['y'] = round(count($check) / count($apply) * 100 /2 ,2);
                         }else{
                             $events['y'] = 0;
                         }
@@ -276,10 +277,12 @@ class ReportController extends Controller
                         if( $data_search['x'] == $data_result['x'] ){
                             // $index = array_search($data_search['x'], $data_result);
                             if(count($deal)!=0 && count($check)!=0){
-                                $result[$key][$key_result]['y'] += count($deal) / count($check);
-                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 2);
+                                // $result[$key][$key_result]['y'] += count($deal) / count($check)*100;
+                                $result[$key][$key_result]['y'] = round(($result[$key][$key_result]['y'] + (count($deal) / count($check)*100))/ 2, 2);
                             }else if($result[$key][$key_result]['y'] != 0){
-                                $result[$key][$key_result]['y'] /= 2;
+                                // $result[$key][$key_result]['y'] /= 2;
+                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 2);
+
                             }
                             $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
                             // $events['title'] .= "、".$data_search['course'];
@@ -289,7 +292,7 @@ class ReportController extends Controller
                     }
                     if( $out == 0 ){
                         if(count($deal)!=0 && count($check)!=0){
-                            $events['y'] = round(count($deal) / count($check),2);
+                            $events['y'] = round(count($deal) / count($check) *100 / 2,2);
                         }else{
                             $events['y'] = 0;
                         }
@@ -317,47 +320,78 @@ class ReportController extends Controller
                 //報名數
                 foreach( $search as $key_search => $data_search ){
                     // $events = [];
+
                     // if( $data_search['type'] == 1 ){
                     //     //銷講
-                    //     $check = SalesRegistration::where('id_events', $data_search['id']);
+                    //     $source = SalesRegistration::where('id_events', $data_search['id']);
                     //     //來源
                     //     if($data[2] != '0'){
-                    //         $check->where('datasource', $data[2]);
+                    //         $source->where('datasource', $data[2]);
                     //     }
                     // }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                     //     //正課
-                    //     $check = Register::where('id_events', $data_search['id']);
+                    //     $source = Register::where('id_events', $data_search['id']);
+                    // }
+                    
+                    // //場次報名學員
+                    // $source->get();
+
+
+                    //找出該場次進階填表人
+                    //先判斷是否有選擇來源
+                    if($data[2] != '0'){
+                        //有選擇來源則是找出銷講的營業額
+                                            
+                        //若該場為銷講
+                        if( $data_search['type'] == 1 ){
+                            $pay = Registration::leftjoin('sales_registration', 'sales_registration.id_events', '=', 'registration.source_events')
+                                                ->leftjoin('payment', 'payment.id_registration', '=', 'registration.id')
+                                                ->where('source_events', $data_search['id'])
+                                                ->where('datasource', $data[2]);
+                                                        
+                            //付款狀態
+                            if($data[6] != '0'){
+                                $pay->where('status_payment', $data[6]);
+                            }else{
+                                $pay->where('status_payment', '<>', 6);
+                            }
+
+                            $pay->get();
+
+                        }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
+                            //正課沒有來源故為0
+                            $pay = [];
+                        }
+
+                    }else{
+                        
+                        $pay = Registration::leftjoin('payment', 'payment.id_registration', '=', 'registration.id')
+                                            ->where('source_events', $data_search['id']);
+                                            
+                        //付款狀態
+                        if($data[6] != '0'){
+                            $pay->where('status_payment', $data[6]);
+                        }else{
+                            $pay->where('status_payment', '<>', 6);
+                        }
+
+                        $pay->get();
+                    
+                    }
+
+                    // //付款狀態
+                    // if($data[6] != '0'){
+                    //     $pay->where('status_payment', $data[6]);
+                    // }else{
+                    //     $pay->where('status_payment', '<>', 6);
                     // }
 
-                    //來源
-                    if($data[2] != '0'){
-                        //銷講
-                        $check = SalesRegistration::where('id_events', $data_search['id']);
-                        $check->where('datasource', $data[2]);
-                    }
+                    // $pay->get();
 
+                    //將該場次填表人所有付款資訊相加
                     $income = 0;
-                    
-                    $pay = Registration::select('amount_payable');
-
-                    //來源
-                    if($data[6] != '0'){
-                        $pay->where('source_events', $data_search['id']);
-                    }
-
-                    //付款狀態
-                    if($data[6] != '0'){
-                        $pay->where('status_payment', $data[6]);
-                    }else{
-                        $pay->where('status_payment', '<>', 6);
-                    }
-
-
-                    $pay
-                        ->get();
-
                     foreach( $pay as $data){
-                        $income += $data['amount_payable'];
+                        $income += $data['cash'];
                     }
                                         
                     $out = 0;

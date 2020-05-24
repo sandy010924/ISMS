@@ -533,6 +533,7 @@
     var endDate = moment(new Date()).format("YYYY-MM-DD")
     var lineChart;
     var chartLineColor = ['#3e95cd','#e83131','#0dd168', '#f70fe0', '#f58300'];
+    var table;
 
     $(document).ready(function () {
 
@@ -621,13 +622,19 @@
       options: {
         scales: {
             yAxes: [{
-                scaleLabel: { display: true },
+                scaleLabel: { 
+                  display: true,
+                  labelString: '',
+                  fontSize: 14,
+                  fontFamily: '微軟正黑體',
+                },
                 ticks: {
                     beginAtZero: false,
                     callback: function (value, index, values) {
                         // return value.toLocaleString()+'%';
                         return value.toLocaleString();
                     },
+                    fontFamily: '微軟正黑體',
                     fontSize: 16,
                     stepSize: 20,
                     min: 0, 
@@ -650,6 +657,7 @@
                         // return value.toLocaleString()+'%';
                         return value.toLocaleString();
                     },
+                    fontFamily: '微軟正黑體',
                     fontSize: 16,
                 }
             }]
@@ -724,12 +732,8 @@
       };
       */
 
-
-  });
-
-
-    var table = $('#table_list').DataTable({
-          "dom": '<B<t>>',
+    table = $('#table_list').DataTable({
+          "dom": '<<t>>',
           "ordering": false,
           // "order": [ 0 , 'desc'],      
           buttons: [{
@@ -739,6 +743,10 @@
             // messageTop: $('#h3_title').text(),
           }],
       });
+
+  });
+
+
       
   /* 搜尋按鈕click */
   $('#searchBtn').click(function(){
@@ -803,12 +811,61 @@
           //圖表重設
           lineChart.data.datasets = [];
 
-          if($("ul#reportTab a.active").data('nav') == "check" || $("ul#reportTab a.active").data('nav') == "deal"){
-            lineChart.config.options.scales.yAxes[0].ticks.stepSize = 1;
-          }else if($("ul#reportTab a.active").data('nav') == "income" || $("ul#reportTab a.active").data('nav') == "cost"){
-            lineChart.config.options.scales.yAxes[0].ticks.stepSize = 2000;
-          }else{
-            lineChart.config.options.scales.yAxes[0].ticks.stepSize = 20;
+          // if($("ul#reportTab a.active").data('nav') == "check" || $("ul#reportTab a.active").data('nav') == "deal"){
+          //   lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
+          // }else if($("ul#reportTab a.active").data('nav') == "income" || $("ul#reportTab a.active").data('nav') == "cost"){
+          //   lineChart.config.options.scales.yAxes[0].ticks.stepSize = 2000;
+          // }else{
+          //   lineChart.config.options.scales.yAxes[0].ticks.stepSize = 20;
+          // }
+
+          //圖表title
+          lineChart.config.options.title.text = $("ul#reportTab a.active").text();
+
+          //y軸title
+          lineChart.config.options.scales.yAxes[0].scaleLabel.labelString = $("ul#reportTab a.active").text();
+
+          //y軸距差、tooltips內容
+          switch ($("ul#reportTab a.active").data('nav')) {
+            case 'check':
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
+              lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const currentValue = dataset.data[tooltipItem.index];
+                const { y, x, course } = currentValue
+                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}%`];
+              };
+              break;
+            case 'deal':
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
+              lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const currentValue = dataset.data[tooltipItem.index];
+                const { y, x, course } = currentValue
+                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}%`];
+              };
+              break;
+            case 'income':
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 2000;
+              lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const currentValue = dataset.data[tooltipItem.index];
+                const { y, x, course } = currentValue
+                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+              };
+              break;
+            case 'cost':
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 2000;
+              lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const currentValue = dataset.data[tooltipItem.index];
+                const { y, x, course } = currentValue
+                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+              };
+              break;
+            default:
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 20;
+              break;
           }
 
           //表格標頭
@@ -818,6 +875,13 @@
             tableHead += "<th>" + res['labelDate'][i] + "</th>";
           }
           $('#reportTable #tableHead tr').html(tableHead);
+
+
+          // console.log(table);
+          // $('#table_list').DataTable().ajax.reload();
+          // table.ajax.reload( function ( json ) {
+          //     $('#reportTable #tableHead tr').html( tableHead );
+          // } );
           
           //圖表資料
           for( var i = 0 ; i < res['result'].length ; i++ ){
@@ -866,6 +930,9 @@
           $('#reportChart').show();
           $('#reportTable').show();
 
+// $('#table_list').dataTable().fnClearTable();
+// $('#table_list').dataTable().fnAddData( [
+//         1,2,3,4,5] );
 
           // /** alert **/
           // $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
