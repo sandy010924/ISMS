@@ -142,6 +142,9 @@ Route::get('refund_form', function () {
     return view('frontend.refund_form');
 })->name('refund_form');
 
+/*** 申請退費 ***/
+Route::post('refund_form_insert', 'Backend\RefundFormController@insert');
+
 // Route::get('course_list_refund', function () {
 //     return view('frontend.course_list_refund');
 // })->name('course_list_refund');
