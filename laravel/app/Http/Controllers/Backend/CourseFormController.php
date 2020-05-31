@@ -42,7 +42,7 @@ class CourseFormController extends Controller
         $id_group = $request->get('id_group');
 
         $source_events =  $request->get('source_events');
-        $datasource =  $request->get('datasource');
+        // $datasource =  $request->get('datasource');
         
         
         /* 防錯 */
@@ -218,20 +218,20 @@ class CourseFormController extends Controller
                             $registration->number_taxid      = $number_taxid;                 // 統編
                             $registration->companytitle      = $companytitle;                 // 抬頭
                             $registration->source_events     = $source_events;          
-                            $registration->datasource        = $datasource;          
+                            // $registration->datasource        = $datasource;          
                             $registration->submissiondate    = $submissiondate;                                    // 來源場次ID
                             
                             $registration->save();
                             $id_registration = $registration->id;
                         // }
 
-                            //更新場次訊息成本
-                            if( $datasource == 'SMS'){
-                                EventsCourse::where('id_group', $id_group)
-                                            ->update([
-                                                'cost_message' => DB::raw('cost_message+1'),
-                                            ]);
-                            }
+                            // //更新場次訊息成本
+                            // if( $datasource == 'SMS'){
+                            //     EventsCourse::where('id_group', $id_group)
+                            //                 ->update([
+                            //                     'cost_message' => DB::raw('cost_message+1'),
+                            //                 ]);
+                            // }
                     } else {
                         foreach ($check_registration as $data) {
                             $id_registration = $data ->id;
@@ -249,6 +249,7 @@ class CourseFormController extends Controller
                                             'type_invoice' => $type_invoice,
                                             'number_taxid' => $number_taxid,
                                             'companytitle' => $companytitle,
+                                            'registration_join' => $join,
                                         ]);
 
                         }else{
@@ -260,6 +261,7 @@ class CourseFormController extends Controller
                                             'type_invoice' => $type_invoice,
                                             'number_taxid' => $number_taxid,
                                             'companytitle' => $companytitle,
+                                            'registration_join' => $join,
                                         ]);
                         }
                     }
@@ -436,7 +438,7 @@ class CourseFormController extends Controller
                         $registration->number_taxid      = $number_taxid;                 // 統編
                         $registration->companytitle      = $companytitle;                 // 抬頭
                         $registration->source_events     = $source_events;                 // 來源場次
-                        $registration->datasource        = $datasource;                    // 表單來源
+                        // $registration->datasource        = $datasource;                    // 表單來源
                         $registration->submissiondate    = $submissiondate;                // 報名日期
                         
                         $registration->save();
@@ -456,6 +458,7 @@ class CourseFormController extends Controller
                                     'type_invoice' => $type_invoice,
                                     'number_taxid' => $number_taxid,
                                     'companytitle' => $companytitle,
+                                    'registration_join' => $join,
                                 ]);
                 }
                 /*正課報名資料 - E*/

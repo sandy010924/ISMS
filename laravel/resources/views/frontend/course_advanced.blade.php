@@ -113,6 +113,7 @@
     // datatable Sandy (2020/03/09)
     table = $('#table_list').DataTable({
         "dom": '<l<t>p>',
+        "order": [[ 0, "desc" ]],
         "columnDefs": [ {
           "targets": 'no-sort',
           "orderable": false,

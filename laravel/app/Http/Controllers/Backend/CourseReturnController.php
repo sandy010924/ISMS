@@ -232,6 +232,7 @@ class CourseReturnController extends Controller
                                             'type_invoice' => $type_invoice,
                                             'number_taxid' => $number_taxid,
                                             'companytitle' => $companytitle,
+                                            'registration_join' => $join,
                                         ]);
 
                         }else{
@@ -243,6 +244,7 @@ class CourseReturnController extends Controller
                                             'type_invoice' => $type_invoice,
                                             'number_taxid' => $number_taxid,
                                             'companytitle' => $companytitle,
+                                            'registration_join' => $join,
                                         ]);
                         }
                     }
@@ -434,6 +436,7 @@ class CourseReturnController extends Controller
                                     'type_invoice' => $type_invoice,
                                     'number_taxid' => $number_taxid,
                                     'companytitle' => $companytitle,
+                                    'registration_join' => $join,
                                 ]);
                 }
                 /*正課報名資料 - E*/

@@ -44,8 +44,15 @@ class CourseAdvancedController extends Controller
 
         //填單名單
         $fill_all = Registration::join('student', 'student.id', '=', 'registration.id_student')
-                            ->join('events_course', 'events_course.id', '=', 'registration.id_events')
-                            ->select('student.name as student','student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*', 'events_course.name as event', 'events_course.id_group as id_group')
+                            // ->join('events_course', 'events_course.id', '=', 'registration.id_events')
+                            ->select('student.name as student',
+                                    'student.phone as phone', 
+                                    'student.email as email', 
+                                    'student.profession as profession', 
+                                    'registration.*'
+                                    // 'events_course.name as event', 
+                                    // 'events_course.id_group as id_group'
+                                    )
                             ->Where('registration.source_events', $id )
                             // ->Where('registration.id_course', $next_course->id_course)
                             // ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
@@ -59,35 +66,46 @@ class CourseAdvancedController extends Controller
             // if ($id_group == $data['id_group']){ 
             //     continue;
             // }
+            
+            if( $data['id_group'] != null ){
+                $course_group = EventsCourse::Where('id_group', $data['id_group'])
+                                            ->get();
+                                            
+                $numItems = count($course_group);
+                $i = 0;
 
-            $course_group = EventsCourse::Where('id_group', $data['id_group'])
-                                        ->get();
+                $events_date = '';
 
-            $numItems = count($course_group);
-            $i = 0;
-
-            $events_date = '';
-
-            foreach( $course_group as $key_group => $data_group ){
-                //日期
-                $date = date('Y-m-d', strtotime($data_group['course_start_at']));
-                //星期
-                $weekarray = array("日","一","二","三","四","五","六");
-                $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
-                
-                if( ++$i === $numItems){
-                    $events_date .= $date . '(' . $week . ')';
-                }else {
-                    $events_date .= $date . '(' . $week . ')' . '、';
+                foreach( $course_group as $key_group => $data_group ){
+                    //日期
+                    $date = date('Y-m-d', strtotime($data_group['course_start_at']));
+                    //星期
+                    $weekarray = array("日","一","二","三","四","五","六");
+                    $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
+                    
+                    if( ++$i === $numItems){
+                        $events_date .= $date . '(' . $week . ')';
+                    }else {
+                        $events_date .= $date . '(' . $week . ')' . '、';
+                    }
                 }
+
+                $event = EventsCourse::Where('id_group', $data['id_group'])
+                                            ->first()->name;
+            }else{                
+                $events_date = '尚未選擇報名場次';
+                $event = '尚未選擇報名場次';
             }
+
 
             //我想參加課程
             $join = ''; 
             if( $data['registration_join'] == 0){
                 $join = '現場最優惠價格';
-            }elseif( $data['join'] == 1){
+            }elseif( $data['registration_join'] == 1){
                 $join = '五日內優惠價格';
+            }elseif( $data['registration_join'] == 2){
+                $join = '分期優惠價格';
             }
 
             //付款狀態
@@ -118,7 +136,7 @@ class CourseAdvancedController extends Controller
                 'phone' => $data['phone'],
                 'email' => $data['email'],
                 'join' => $join,
-                'event' => $data['event'],
+                'event' => $event,
                 'status_payment' => $status_payment,
             );
 

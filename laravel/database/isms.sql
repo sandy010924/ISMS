@@ -715,3 +715,9 @@ ALTER TABLE `registration` ADD COLUMN status_payment_original VARCHAR(30) NULL C
 -- 追單資料表 - 新增付款狀態欄位 Rocky(2020/05/18)
 ALTER TABLE `debt` ADD COLUMN status_payment_name VARCHAR(30) NULL COMMENT '付款狀態名稱';
 
+
+-- 正課資料表 - 刪除欄位 Sandy (2020/05/31)
+ALTER TABLE `registration` DROP COLUMN `datasource`;
+
+-- 修改正課表單資料欄位 - 我想參加課程 Sandy (2020/05/31)
+ALTER TABLE `registration` modify COLUMN registration_join VARCHAR(20) NULL COMMENT '我想參加課程(0:現場最優惠價格,1:五日內優惠價格,2:分期優惠價格)';

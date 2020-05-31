@@ -75,8 +75,10 @@
       @endif
 
       <td>{{ $data['event'] }}</td>
-      <td>{{ substr_replace($data['phone'], '***', 4, 3) }}</td>
-      <td>{{ substr_replace($data['email'], '***', strrpos($data['email'], '@')) }}</td>
+      <td>{{ $data['phone'] }}</td>
+      <td>{{ $data['email'] }}</td>
+      {{-- <td>{{ substr_replace($data['phone'], '***', 4, 3) }}</td>
+      <td>{{ substr_replace($data['email'], '***', strrpos($data['email'], '@')) }}</td> --}}
       <td>{{ $data['profession'] }}</td>
 
       <!-- 如果是銷講多加我想在講座中了解的內容 -->
