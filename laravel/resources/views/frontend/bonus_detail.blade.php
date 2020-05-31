@@ -31,7 +31,8 @@
       <div class="col-2"></div>
       <div class="col-3">
         <div class="input-group date" data-target-input="nearest">
-          <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期">
+          <!-- <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期"> -->
+          <input type="text" class="form-control px-3" name="daterange" id="daterange">
           <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
           </div>
@@ -126,11 +127,15 @@
 
   $("document").ready(function() {
 
-    // 日期選擇器 Rocky(2020/04/24)
-    $('#search_date').datetimepicker({
-      format: 'YYYY-MM-DD'
+    //日期區間 Rocky (2020/05/31)
+    $('input[name="daterange"]').daterangepicker({
+      startDate: $('#daterange').startDate,
+      endDate: $('#daterange').startDate,
+      locale: {
+        format: 'YYYY-MM-DD',
+        separator: ' ~ '
+      }
     });
-
     /* Datatable.js Rocky(2020/04/24) - S */
 
     table2 = $('#table_list_history').DataTable();
@@ -161,7 +166,7 @@
 
   // 權限判斷
   function check_auth() {
-    var role = ''   
+    var role = ''
     role = JSON.parse($('#auth_role').val())['role']
     if (role != "admin") {
       $('.auth_readonly').attr('readonly', 'readonly')
@@ -252,7 +257,7 @@
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
-        "data": null,
+        "data": "",
       }],
       "orderCellsTop": true,
       "destroy": true,
@@ -271,9 +276,6 @@
         },
         async: false,
         "dataSrc": function(json) {
-          console.log(json)
-          console.log(json['datas'])
-
           if (json['datas'].length > 0) {
             for (var i = 0; i < json['datas'].length; i++) {
               var memo = '',
@@ -297,7 +299,7 @@
               json['datas'][i][5] = email;
               json['datas'][i][6] = phone;
               json['datas'][i][7] = json['datas'][i]['student_name'];
-              json['datas'][i][8] = json['datas'][i]['student_name'];
+              json['datas'][i][8] = '<input type="text" class="form-control form-control-sm auth_readonly"  onblur="auto_update_data($(this),' + json['datas'][i]['id'] + ',1);"  value="' + memo + '">';
             }
           }
           return json['datas'];
@@ -307,9 +309,27 @@
   }
   /* 顯示學員資料 - E Rocky(2020/04/25) */
 
-  $("#btn_search").click(function() {
-    table2.search($('#search_name').val() + " " + $('#search_date').val()).draw();
+  //日期區間搜尋
+  $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+    $.fn.dataTable.ext.search.push(
+      function(settings, data, dataIndex) {
+
+        var min = picker.startDate.format('YYYY-MM-DD');
+        var max = picker.endDate.format('YYYY-MM-DD');
+
+        var startDate = data[1];
+        if (startDate <= max && startDate >= min) {
+          return true;
+        }
+        return false;
+      });
+    table2.draw();
   });
+
+  $("#btn_search").click(function() {
+    table2.search($('#search_name').val()).draw();
+  });
+
   /* 搜尋 Rocky(2020/04/24) - E */
 </script>
 @endsection
