@@ -8,7 +8,7 @@
 <!--搜尋課程頁面內容-->
 <div class="card m-3">
   <!-- 權限 Rocky(2020/05/10) -->
-  <input type="hidden" id="auth_role" value="{{ Auth::user()->role }}" />
+  <input type="hidden" id="auth_role" value="{{ Auth::user()}}" />
   <div class="card-body">
     <div class="row mb-3">
       <div class="col-2">
@@ -16,7 +16,7 @@
         <input type="hidden" id="id_bonus" value="{{$id_bonus}}">
       </div>
       <div class="col-2">
-        <select id="cars" name="carlist" class=form-control onchange="show_student($(this));">
+        <select id="cars" name="carlist" class=form-control onchange="show_student($(this).val());">
           <option value="0">名單來源</option>
           <option value="1">工作人員</option>
           <option value="2">主持開場</option>
@@ -60,19 +60,6 @@
       </tr>
       @endslot
       @slot('tbody')
-      @foreach($datas as $key => $data )
-      <tr>
-        <td>{{$datas_rule[0]['value']}}</td>
-        <td>{{ $data['course_start_at'] }}</td>
-        <td>{{ $data['course_name'] }}</td>
-        <td>{{ $data['events_name'] }}</td>
-        <td>{{ $data['student_name'] }}</td>
-        <td>{{ $data['email'] }}</td>
-        <td>{{ $data['phone'] }}</td>
-        <td>{{ $data['status_name'] }}</td>
-        <td><input type="text" class="form-control form-control-sm auth_readonly" value="{{ $data['memo'] }}" onblur="auto_update_data($(this), {{ $data['id'] }});"></td>
-      </tr>
-      @endforeach
       @endslot
       @endcomponent
     </div>
@@ -138,6 +125,7 @@
   var table2;
 
   $("document").ready(function() {
+
     // 日期選擇器 Rocky(2020/04/24)
     $('#search_date').datetimepicker({
       format: 'YYYY-MM-DD'
@@ -145,19 +133,11 @@
 
     /* Datatable.js Rocky(2020/04/24) - S */
 
-    table2 = $('#table_list_history').DataTable({
-      "dom": '<l<td>Bt>',
-      "columnDefs": [{
-        "targets": 'no-sort',
-        "orderable": false,
-      }],
-      lengthChange: false,
-      buttons: [{
-        extend: 'excel',
-        text: '匯出Excel',
-        messageTop: $('#h3_title').text(),
-      }],
-    });
+    table2 = $('#table_list_history').DataTable();
+
+    // 顯示學員資料 - 名單來源
+    show_student('0');
+
     /* Datatable.js Rocky(2020/04/24) - E */
 
     /* 輸入框 Rocky(2020/04/24) - S */
@@ -176,12 +156,13 @@
       check_auth();
     });
     check_auth();
+
   });
 
   // 權限判斷
   function check_auth() {
-    var role = ''
-    role = $('#auth_role').val()
+    var role = ''   
+    role = JSON.parse($('#auth_role').val())['role']
     if (role != "admin") {
       $('.auth_readonly').attr('readonly', 'readonly')
     }
@@ -261,74 +242,70 @@
 
   /* 顯示學員資料 - S Rocky(2020/04/25) */
   function show_student(type) {
-    $.ajax({
-      type: 'POST',
-      url: 'show_bonus_student',
-      dataType: 'json',
-      data: {
-        id_bonus: $('#id_bonus').val(),
-        type: type.val()
-      },
-      success: function(data) {
-        var data_table = '';
 
-        $('#history_data_detail').html('');
-        if (data['datas'].length > 0) {
-          $.each(data['datas'], function(index, val) {
-            var memo = '',
-              email = '',
-              phone = ''
-            if (val['memo'] != null) {
-              memo = val['memo']
+
+    table2.clear().draw();
+    table2.destroy();
+
+    table2 = $('#table_list_history').DataTable({
+      "dom": '<l<td>Bt>',
+      "columnDefs": [{
+        "targets": 'no-sort',
+        "orderable": false,
+        "data": null,
+      }],
+      "orderCellsTop": true,
+      "destroy": true,
+      "retrieve": true,
+      buttons: [{
+        extend: 'excel',
+        text: '匯出Excel',
+        messageTop: $('#h3_title').text(),
+      }],
+      "ajax": {
+        "url": "show_bonus_student",
+        "type": "POST",
+        "data": {
+          id_bonus: $('#id_bonus').val(),
+          type: type
+        },
+        async: false,
+        "dataSrc": function(json) {
+          console.log(json)
+          console.log(json['datas'])
+
+          if (json['datas'].length > 0) {
+            for (var i = 0; i < json['datas'].length; i++) {
+              var memo = '',
+                email = '',
+                phone = ''
+              if (json['datas'][i]['memo'] != null) {
+                memo = json['datas'][i]['memo']
+              }
+              if (json['datas'][i]['email'] != null) {
+                email = json['datas'][i]['email']
+              }
+              if (json['datas'][i]['phone'] != null) {
+                phone = json['datas'][i]['phone']
+              }
+
+              json['datas'][i][0] = json['datas_rule_vlue'];
+              json['datas'][i][1] = json['datas'][i]['course_start_at'];
+              json['datas'][i][2] = json['datas'][i]['course_name'];
+              json['datas'][i][3] = json['datas'][i]['events_name'];
+              json['datas'][i][4] = json['datas'][i]['student_name'];
+              json['datas'][i][5] = email;
+              json['datas'][i][6] = phone;
+              json['datas'][i][7] = json['datas'][i]['student_name'];
+              json['datas'][i][8] = json['datas'][i]['student_name'];
             }
-            if (val['email'] != null) {
-              email = val['email']
-            }
-            if (val['phone'] != null) {
-              phone = val['phone']
-            }
-            data_table +=
-              '<tr>' +
-              '<td>' + data['datas_rule_vlue'] + '</td>' +
-              '<td>' + val['course_start_at'] + '</td>' +
-              '<td>' + val['course_name'] + '</td>' +
-              '<td>' + val['events_name'] + '</td>' +
-              '<td>' + val['student_name'] + '</td>' +
-              '<td>' + email + '</td>' +
-              '<td>' + phone + '</td>' +
-              '<td>' + val['status_name'] + '</td>' +
-              '<td><input type="text" class="form-control form-control-sm" value="' + memo + '" onblur="auto_update_data($(this),' + val['id'] + ');"></td>' +
-              '</tr>'
-          })
-        };
-        $('#history_data_detail').html(data_table);
-      },
-      error: function(jqXHR) {
-        console.log(JSON.stringify(jqXHR));
+          }
+          return json['datas'];
+        }
       }
     });
   }
   /* 顯示學員資料 - E Rocky(2020/04/25) */
-
-  /* 搜尋 Rocky(2020/04/24) - S */
-  // $.fn.dataTable.ext.search.push(
-  //   function(settings, data, dataIndex) {
-  //     if (settings.nTable == document.getElementById('table_list_history')) {
-  //       var seatch_date = $('#search_date').val();
-  //       var search_name = $('#search_name').val();
-  //       var date = data[1];
-  //       var name = data[4];
-  //       var phone = data[6];
-
-  //       if ((isNaN(seatch_date) && isNaN(search_name)) || (date.includes(seatch_date) && isNaN(search_name)) ||
-  //         ((phone.includes(search_name) || name.includes(search_name)) && isNaN(seatch_date)) ||
-  //         ((phone.includes(search_name) || name.includes(search_name)) && date.includes(seatch_date))) {
-  //         return true;
-  //       }
-  //       return false;
-  //     }
-  //   }
-  // );
 
   $("#btn_search").click(function() {
     table2.search($('#search_name').val() + " " + $('#search_date').val()).draw();
