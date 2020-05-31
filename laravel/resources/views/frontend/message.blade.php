@@ -264,7 +264,8 @@ $(document).ready(function () {
   //預約日期選擇器
   $('#datetimepicker1').datetimepicker({
     format: "YYYY-MM-DD HH:mm",
-    defaultDate:new Date(),
+    defaultDate: new Date(),
+    minDate : new Date(),
     // locale:"zh-tw"
   });
 
@@ -566,15 +567,24 @@ $(document).ready(function () {
 
     var month = d.getMonth()+1;
     var day = d.getDate();
+    var h = d.getHours();
+    var n = d.getMinutes();
 
     var scheduleDate = d.getFullYear() + '-' +
     (month<10 ? '0' : '') + month + '-' +
-    (day<10 ? '0' : '') + day;
+    (day<10 ? '0' : '') + day + ' ' +
+    (h<10 ? '0' : '') + h + ':' +
+    (n<10 ? '0' : '') + n;
     
-    var today = moment().format("YYYY-MM-DD");
+    var rule = moment().add(10, 'minutes').format("YYYY-MM-DD HH:mm");
 
-    if( today == scheduleDate ){
-      alert('無法排程當日訊息，請選擇今天以後的日期。');
+    // if( today == scheduleDate ){
+    //   alert('無法排程當日訊息，請選擇今天以後的日期。');
+    //   return false;
+    // }
+
+    if( rule >= scheduleDate ){
+      alert('輸入的預約時間必須⼤於系統時間10分鐘。');
       return false;
     }
     
