@@ -199,8 +199,8 @@
                 </button>
               </div>
               <div class="modal-body text-center">
-                <a href="{{ route('course_form',['source_course'=>$course->id_course, 'source_events'=>$course->id, 'datasource'=>'web']) }}">
-                  <img class="img-thumbnail" src="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl={{ route('course_form') }}%3Fsource_course={{$course->id_course}}%26source_events={{$course->id }}%26datasource=web&choe=UTF-8" />
+                <a href="{{ route('course_form',['source_course'=>$course->id_course, 'source_events'=>$course->id]) }}">
+                  <img class="img-thumbnail" src="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl={{ route('course_form') }}%3Fsource_course={{$course->id_course}}%26source_events={{$course->id }}&choe=UTF-8" />
                 </a>
               </div>
               <div class="modal-footer">

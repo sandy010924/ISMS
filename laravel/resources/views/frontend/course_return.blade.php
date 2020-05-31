@@ -37,8 +37,9 @@
           </h6>
           {{-- <h6>零秒成交數&nbsp;&nbsp;2019/11/20&nbsp;&nbsp;台北下午場&nbsp;&nbsp;講座地點 : 台北市金山南路一段17號5樓(博宇藝享空間)</h6> --}}
         </div>
-        <div class="col-2 text-right">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_form">新增資料</button>
+        <div class="col text-right">
+          <a role="button" class="btn btn-outline-secondary mx-2" href="{{ route('course_list_chart', ['id'=> $course->id ]) }}">場次數據圖表</a>
+          <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#new_form">新增資料</button>
           <!-- 新增資料 modal -->
           <div class="modal fade" id="new_form" tabindex="-1" role="dialog" aria-labelledby="new_formLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -127,6 +128,10 @@
                           <div class="custom-control custom-radio my-1">
                             <input type="radio" id="ijoin2" name="ijoin" class="custom-control-input" value="1">
                             <label class="custom-control-label" for="ijoin2">五日內優惠價格</label>
+                          </div>
+                          <div class="custom-control custom-radio my-1">
+                            <input type="radio" id="ijoin3" name="ijoin" class="custom-control-input" value="2">
+                            <label class="custom-control-label" for="ijoin3">分期優惠價格</label>
                           </div>
                         </div>
                       </div>
@@ -326,6 +331,7 @@
                 <span class="fas fa-angle-down fa-lg collapse_close"></span>
                 </button>
               </td>
+              {{-- <td class="align-middle" data-toggle="modal" onclick="course_data({{ $data['id_student'] }});">{{ $data['name'] }}</td> --}}
               <td class="align-middle">{{ $data['name'] }}</td>
               <td class="align-middle">{{ $data['phone'] }}</td>
               <td class="align-middle">
@@ -487,6 +493,168 @@
       </div>
       
 
+      <!-- 聯絡狀況 modal -->
+      <div class="modal fade" id="contact" tabindex="-1" role="dialog" aria-labelledby="contact Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="presentApplyLabel">聯絡狀況</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-left">
+              <div class="table-responsive">
+                <table class="table table-striped table-sm text-center">
+                  <thead>
+                    <tr>
+                      <th class="text-nowrap">
+                        <button type="button" class="btn btn-secondary btn-sm mx-1 auth_hidden" data-toggle="modal" data-target="#save_contact"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                      </th>
+                      <th class="text-nowrap"></th>
+                      <th class="text-nowrap">日期</th>
+                      <th class="text-nowrap">追單課程</th>
+                      <th class="text-nowrap">付款狀態/日期</th>
+                      <th class="text-nowrap">聯絡內容</th>
+                      <th class="text-nowrap">付款狀態</th>
+                      <th class="text-nowrap">最新狀態</th>
+                      <th class="text-nowrap">追單人員</th>
+                      <th class="text-nowrap">設提醒</th>
+                    </tr>
+                  </thead>
+                  <tbody id="contact_data_detail">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="save_contact" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">新增聯絡狀況</h5>
+              <button type="button" class="close" id="contact_close" aria-label="Close" data-number="1">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="form_debt">
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">日期:</label>
+                  <div class="input-group date" data-target-input="nearest">
+                    <input type="text" id="debt_date" name="debt_date" class="form-control datetimepicker-input" data-target="#debt_date" placeholder="日期">
+                    <div class="input-group-append" data-target="#debt_date" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">追單課程:</label>
+                  <input type="text" id="debt_course" class="form-control" placeholder="請輸入追單課程" value="" class="border-0 bg-transparent input_width" required>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">付款狀態 / 日期:</label>
+                  <input type="text" id="debt_status_date" class="form-control" placeholder="請輸入付款狀態 / 日期" value="" class="border-0 bg-transparent input_width">
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">聯絡內容:</label>
+                  <input type="text" id="debt_contact" class="form-control" value="" placeholder="請輸入聯絡內容" class="border-0 bg-transparent input_width">
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">付款狀態:</label>
+                  <select id="debt_status_payment_name" class="form-control custom-select border-0 bg-transparent input_width">
+                    <option selected="" disabled="" value=""></option>
+                    <option value="留單">留單</option>
+                    <option value="完款">完款</option>
+                    <option value="付訂">付訂</option>
+                    <option value="退費">退費</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">最新狀態:</label>
+                  <select id="debt_status" class="form-control custom-select border-0 bg-transparent input_width">
+                    <option selected="" disabled="" value=""></option>
+                    <option value="12">待追</option>
+                    <option value="15">無意願</option>
+                    <option value="16">推薦其他講師</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">追單人員:</label>
+                  <input type="text" id="debt_person" class="form-control" placeholder="請輸入追單人員" value="" class="border-0 bg-transparent input_width" required>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">設提醒:</label>
+                  <div class="input-group date" data-target-input="nearest">
+                    <input type="text" id="debt_remind" name="debt_remind" class="form-control datetimepicker-input datepicker" data-target="#debt_remind">
+                    <div class="input-group-append" data-target="#debt_remind" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" id="btnSubmit" class="btn btn-primary" onclick="debt_add();">儲存</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="show_contact" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">顯示聯絡狀況</h5>
+              <button type="button" class="close" id="show_contact_close" aria-label="Close" data-number="1">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">日期:</label>
+                <label id="lbl_debt_date"></label>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">追單課程:</label>
+                <label id="lbl_debt_course"></label>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">付款狀態 / 日期:</label>
+                <label id="lbl_debt_status_date"></label>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">聯絡內容:</label>
+                <label id="lbl_debt_contact"></label>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">付款狀態:</label>
+                <label id="lbl_debt_status"></label>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">追單人員:</label>
+                <label id="lbl_debt_person"></label>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">設提醒:</label>
+                <label id="lbl_debt_remind"></label>
+                <!-- <div class="input-group date" data-target-input="nearest">
+                  <input type="text" id="debt_remind" name="debt_remind" class="form-control datetimepicker-input datepicker" data-target="#debt_remind">
+                  <div class="input-group-append" data-target="#debt_remind" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 聯絡狀況 -->
+        <!-- 完整內容 - E -->
+      </div>
+
     </div>
   </div>
 <!-- Content End -->
@@ -537,6 +705,16 @@
     });
 
   });
+
+  // 追單資料關閉
+  $("#contact_close").click(function() {
+    $('#save_contact').modal('hide');
+  });
+
+  $("#show_contact_close").click(function() {
+    $('#show_contact').modal('hide');
+  });
+
 
   /* 日期選擇器位置 */
   $(document).on('show', $('.datepicker').datepicker(), function() {
@@ -1140,5 +1318,337 @@
   }
   /* 完款後寄出報名成功訊息 Sandy(2020/05/13) */
 
+  
+  
+  // var id_student_old = '';
+
+  // 基本訊息
+  function course_data(id_student) {
+    id_student_old = id_student;
+    // contact_data();
+    $("#contact").modal('show');
+    
+  }
+
+  // /* 聯絡狀況 */
+  // function contact_data() {
+  //   $('#contact_data_detail').html('');
+  //   $.ajax({
+  //     type: 'POST',
+  //     url: 'contact_data',
+  //     dataType: 'json',
+  //     data: {
+  //       id_student: id_student_old
+  //     },
+  //     // async: false,
+  //     success: function(data) {
+  //       updatetime = '', remindtime = '', id_debt_status_payment_name = '', id_status = '', val_status = '', val_status_payment_name = ''
+  //       $.each(data, function(index, val) {
+  //         opt1 = '', opt2 = '', opt3 = '', opt4 = '', opt5 = '', opt6 = '', opt7 = '';
+  //         id = val['id'];
+
+  //         // 付款狀態下拉ID
+  //         id_debt_status_payment_name = 'debt_status_payment_name_' + id
+
+  //         // 最新狀態下拉ID
+  //         id_status = id + '_status'
+
+  //         val_status_payment_name = val['status_payment_name']
+  //         val_status = val['id_status']
+
+  //         updatetime += "#new_starttime" + id + ','
+  //         remindtime += "#remind" + id + ','
+  //         var status_payment = '',
+  //           contact = '',
+  //           person = '';
+
+  //         if (typeof(val['status_payment']) == 'object') {
+  //           status_payment = ''
+  //         } else {
+  //           status_payment = val['status_payment']
+  //         }
+
+  //         if (val['contact'] != null) {
+  //           contact = val['contact']
+  //         }
+
+  //         if (val['person'] != null) {
+  //           person = val['person']
+  //         }
+
+  //         data +=
+  //           '<tr>' +
+  //           '<td><i class="fa fa-address-card " aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 20%;"></i></td>' +
+  //           '<td><i class="fa fa-trash auth_hidden" aria-hidden="true" onclick="debt_delete(' + id + ');" style="cursor:pointer;padding-top: 40%; color:#eb6060"></i></td>' +
+  //           '<td>' +
+  //           '<div class="input-group date show_datetime" id="new_starttime' + id + '" data-target-input="nearest"> ' +
+  //           ' <input type="text" onblur="save_data($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" required/> ' +
+  //           ' <div class="input-group-append" data-target="#new_starttime' + id + '" data-toggle="datetimepicker"> ' +
+  //           ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
+  //           '</div> ' +
+  //           '</div>' +
+  //           '</td>' +
+  //           '<td>' + '<input type="text"  class="form-control auth_readonly" onblur="save_data($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
+  //           '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="save_data($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
+  //           '<td>' + '<input type="text"  class=" auth_readonly form-control" onblur="save_data($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
+  //           '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_debt_status_payment_name + '" onblur="save_data($(this),' + id + ',7);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+  //           '<option selected disabled value=""></option>' +
+  //           '<option value="留單">留單</option>' +
+  //           '<option value="完款">完款</option>' +
+  //           '<option value="付訂">付訂</option>' +
+  //           '<option value="退費">退費</option>' +
+  //           '</select>' +
+  //           '</div> </td>' +
+  //           '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_status + '" onblur="save_data($(this),' + id + ',3);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+  //           '<option selected disabled value=""></option>' +
+  //           '<option value="12">待追</option>' +
+  //           '<option value="15">無意願</option>' +
+  //           '<option value="16">推薦其他講師</option>' +
+  //           '</select>' +
+  //           '</div> </td>' +
+  //           '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="save_data($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
+  //           '<td>' +
+  //           '<div class="input-group date show_datetime" id="remind' + id + '" data-target-input="nearest"> ' +
+  //           ' <input type="text" onblur="save_data($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" required/> ' +
+  //           ' <div class="input-group-append" data-target="#remind' + id + '" data-toggle="datetimepicker"> ' +
+  //           ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
+  //           '</div> ' +
+  //           '</div>' +
+  //           '</td>' +
+  //           '</tr>'
+  //       });
+  //       $('#contact_data_detail').html(data);
+  //       // 日期
+  //       var iconlist = {
+  //         time: 'fas fa-clock',
+  //         date: 'fas fa-calendar',
+  //         up: 'fas fa-arrow-up',
+  //         down: 'fas fa-arrow-down',
+  //         previous: 'fas fa-arrow-circle-left',
+  //         next: 'fas fa-arrow-circle-right',
+  //         today: 'far fa-calendar-check-o',
+  //         clear: 'fas fa-trash',
+  //         close: 'far fa-times'
+  //       }
+  //       $(updatetime.substring(0, updatetime.length - 1)).datetimepicker({
+  //         format: "YYYY-MM-DD",
+  //         icons: iconlist,
+  //         defaultDate: new Date(),
+  //         pickerPosition: "bottom-left"
+  //       });
+  //       $(remindtime.substring(0, remindtime.length - 1)).datetimepicker({
+  //         format: "YYYY-MM-DD",
+  //         icons: iconlist,
+  //         defaultDate: new Date(),
+  //         pickerPosition: "bottom-left"
+  //       });
+
+  //       /*付款狀態、最新狀態 - S*/
+
+  //       // 付款狀態
+  //       id_debt_status_payment_name = "#" + id_debt_status_payment_name
+
+  //       if (val_status_payment_name != "") {
+  //         $(id_debt_status_payment_name).val(val_status_payment_name)
+  //       } else {
+  //         $(id_debt_status_payment_name).val('')
+  //       }
+
+  //       // 最新狀態
+  //       id_status = "#" + id_status
+
+  //       if (val_status != "") {
+  //         $(id_status).val(val_status)
+  //       } else {
+  //         $(id_status).val('')
+  //       }
+
+  //       /*付款狀態、最新狀態 - E*/
+
+  //     },
+  //     error: function(error) {
+  //       console.log(JSON.stringify(error));
+  //     }
+  //   });
+  // }
+  // /* 聯絡狀況 Sandy(2020/05/31) */
+
+  
+
+  // /*聯絡狀況 - 新增 - S Rocky(2020/04/02)*/
+  // function debt_add() {
+  //   var isValidForm = document.forms['form_debt'].checkValidity();
+  //   if ($("#debt_course").val() == "" || $("#debt_person").val() == "") {
+  //     alert('請填寫追單課程 / 追單人員');
+  //     return false;
+  //   } else {
+  //     if (isValidForm) {
+  //       debt_date = $("#debt_date").val();
+  //       debt_course = $("#debt_course").val();
+  //       debt_status_date = $("#debt_status_date").val();
+  //       debt_contact = $("#debt_contact").val();
+  //       debt_status = $("#debt_status").val();
+  //       debt_status_payment_name = $("#debt_status_payment_name").val();
+  //       debt_person = $("#debt_person").val();
+  //       debt_remind = $("#debt_remind").val();
+  //       id_student = id_student_old;
+
+  //       $.ajax({
+  //         type: 'POST',
+  //         url: 'debt_save',
+  //         data: {
+  //           id_student: id_student,
+  //           debt_date: debt_date,
+  //           debt_course: debt_course,
+  //           debt_status_date: debt_status_date,
+  //           debt_contact: debt_contact,
+  //           debt_status: debt_status,
+  //           debt_status_payment_name: debt_status_payment_name,
+  //           debt_person: debt_person,
+  //           debt_remind: debt_remind
+  //         },
+  //         success: function(data) {
+  //           if (data = "儲存成功") {
+  //             contact_data();
+  //             $("#success_alert_text").html("儲存成功");
+  //             fade($("#success_alert"));
+  //             $("#save_contact").modal('hide');
+  //           } else {
+  //             $("#error_alert_text").html("儲存失敗");
+  //             fade($("#error_alert"));
+  //           }
+  //         },
+  //         error: function(error) {
+  //           console.log(JSON.stringify(error));
+  //         }
+  //       });
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+  // }
+  // /*聯絡狀況 - 新增 - E*/
+
+  // /*聯絡狀況 - 刪除 - S Rocky(2020/04/02)*/
+  // function debt_delete(id) {
+  //   var msg = "是否刪除此筆資料?";
+  //   if (confirm(msg) == true) {
+  //     $.ajax({
+  //       type: 'POST',
+  //       url: 'debt_delete',
+  //       data: {
+  //         id: id
+  //       },
+  //       success: function(data) {
+  //         if (data = "刪除成功") {
+  //           contact_data();
+  //           $("#success_alert_text").html("刪除成功");
+  //           fade($("#success_alert"));
+  //         } else {
+  //           $("#error_alert_text").html("刪除失敗");
+  //           fade($("#error_alert"));
+  //         }
+  //       },
+  //       error: function(error) {
+  //         console.log(JSON.stringify(error));
+  //       }
+  //     });
+  //   } else {
+  //     return false;
+  //   }
+  // }
+  // /*聯絡狀況 - 刪除 - E*/
+
+  // /*聯絡狀況 - 顯示 - S Rocky(2020/04/21)*/
+  // function debt_show(id) {
+  //   $("#show_contact").modal('show');
+  //   $.ajax({
+  //     type: 'POST',
+  //     url: 'debt_show',
+  //     data: {
+  //       id: id
+  //     },
+  //     success: function(data) {
+  //       $("#lbl_debt_date").text(data[0]['created_at']);
+  //       $("#lbl_debt_course").text(data[0]['name_course']);
+  //       $("#lbl_debt_status_date").text(data[0]['status_payment']);
+  //       $("#lbl_debt_contact").text(data[0]['contact']);
+  //       $("#lbl_debt_status").text(data[0]['status_name']);
+  //       $("#lbl_debt_person").text(data[0]['person']);
+  //       $("#lbl_debt_remind").text(data[0]['remind_at']);
+  //     },
+  //     error: function(error) {
+  //       console.log(JSON.stringify(error));
+  //     }
+  //   });
+  // }
+  // /*聯絡狀況 - 顯示 - E*/
+
+  
+  // // 聯絡內容
+  // function contact(data, id, type) {
+  //   save_data(data.val(), id, type)
+  // }
+
+
+  // // 日期
+  // function update_time(data, id, type) {
+  //   // console.log(data.val()) 
+  //   save_data(data.val(), id, type)
+  // }
+  // // 付款狀態 / 日期
+  // function status_payment(data, id, type) {
+  //   save_data(data.val(), id, type)
+  // }
+
+  // // 聯絡內容
+  // function contact(data, id, type) {
+  //   save_data(data.val(), id, type)
+  // }
+
+  // // 最新狀態
+  // function status(data, id, type) {
+  //   save_data(data.val(), id, type)
+  // }
+  // // 提醒
+  // function remind(data, id, type) {
+  //   save_data(data.val(), id, type)
+  // }
+
+  // // 追單人員
+  // function person(data, id, type) {
+  //   save_data(data.val(), id, type)
+  // }
+
+  // // 追單課程
+  // function name_course(data, id, type) {
+  //   save_data(data.val(), id, type)
+  // }
+  
+  // function save_data(data, id, type) {
+  //   $.ajax({
+  //     type: 'POST',
+  //     url: 'contact_data_save',
+  //     data: {
+  //       id: id,
+  //       type: type,
+  //       data: data.val()
+  //     },
+  //     success: function(data) {
+  //       // console.log(data);
+
+  //       /** alert **/
+  //       $("#success_alert_text").html("資料儲存成功");
+  //       fade($("#success_alert"));
+  //     },
+  //     error: function(jqXHR) {
+  //       console.log(JSON.stringify(jqXHR));
+
+  //       /** alert **/
+  //       $("#error_alert_text").html("資料儲存失敗");
+  //       fade($("#error_alert"));
+  //     }
+  //   });
+  // }
 </script>
 @endsection
