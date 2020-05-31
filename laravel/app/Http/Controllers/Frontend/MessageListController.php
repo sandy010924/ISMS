@@ -42,14 +42,14 @@ class MessageListController extends Controller
           case 21:
             //已預約
             //過時預約訊息不得取消故不顯示
-            if( strtotime($data['send_at']) > strtotime('now') ){
+            if( date( 'Y-m-d H:i' ,strtotime($data['send_at'])) > date( 'Y-m-d H:i' ,strtotime('now')) ){
               $scheduleMsg[count($scheduleMsg)] = [
                 'created_at' => $data['created_at'],
                 'id' => $data['id'],
                 'name' => $data['name'],
                 'content' => strip_tags($data['content']),
                 'type' => $type,
-                'send_at' => $data['send_at'],
+                'send_at' => date( 'Y-m-d H:i' ,strtotime($data['send_at'])),
                 'count' => $count,
               ];
             }
