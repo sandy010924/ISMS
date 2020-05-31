@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
 use App\Model\EventsCourse;
+use App\Model\SalesRegistration;
+use App\Model\Registration;
+use App\Model\Register;
+use App\Model\Debt;
+use App\Model\Refund;
+use App\Model\Payment;
 
 class CourseListEditController extends Controller
 {
@@ -101,4 +107,64 @@ class CourseListEditController extends Controller
         return $status;
     }
     /*  更新資料(講師、課程名稱)Sandy (2020/04/02) e */
+
+    
+    // 刪除 Sandy (2020/05/31)
+    public function delete(Request $request)
+    {
+        $status = "";
+        $id_group = $request->get('id_group');
+
+        $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+            ->select('course.type as type', 'events_course.*')
+            ->where('events_course.id_group', $id_group)
+            ->get();
+
+        // 刪除資料
+        if (!empty($events)) {
+            if ($events[0]->type == 1) {
+                //銷講
+                foreach ($events as $data) {
+                    //刪除報名表
+                    SalesRegistration::where('id_events', $data->id)->delete();
+
+                    // $apply_table = SalesRegistration::where('id_events', $events->id)
+                    //                                 ->get();
+
+                }
+            } elseif ($events[0]->type == 2 || $events[0]->type == 3) {
+                //正課
+                // foreach( $events as $data){
+
+                $apply_table = Registration::where('id_group', $id_group)->get();
+
+                foreach ($apply_table as $data_apply) {
+                    //刪除報到
+                    Register::where('id_registration', $data_apply['id'])->delete();
+
+                    //刪除追單
+                    Debt::where('id_registration', $data_apply['id'])->delete();
+
+                    //刪除退費
+                    Refund::where('id_registration', $data_apply['id'])->delete();
+
+                    //刪除付款
+                    Payment::where('id_registration', $data_apply['id'])->delete();
+                }
+
+                //刪除報名表
+                Registration::where('id_group', $id_group)->delete();
+                // }
+
+            }
+
+            //刪除場次  
+            EventsCourse::where('id_group', $id_group)->delete();
+
+            $status = "ok";
+        } else {
+            $status = "error";
+        }
+        return json_encode(array('data' => $status));
+    }
 }

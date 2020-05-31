@@ -28,7 +28,7 @@
         </div>
         <div class="col align-middle align-self-end">
           @if( $course->id_type != "" && ( $course->type == 2 || $course->type == 3 ) ) 
-          <a role="button" href="{{ route('course_form',['source_course'=>$course->id_type, 'source_events'=>0, 'datasource'=>'web']) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
+          <a role="button" href="{{ route('course_form',['source_course'=>$course->id_type, 'source_events'=>0]) }}" target="_blank" class="btn btn-outline-secondary btn_date mr-3">    
               預覽報名表
             </a>
           @endif
@@ -114,10 +114,11 @@
               <td>{{ $data['location'] }}</td>
               <td>
                 @if( $data['unpublish'] == 0)
-                  <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_update( {{ $data['id_group'] }}, 1 );">取消場次</a>
+                  <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" onclick="btn_update( {{ $data['id_group'] }}, 1 );">取消場次</a>
                 @else
                   <a role="button" class="btn btn-success btn-sm mx-1 text-white" onclick="btn_update( {{ $data['id_group'] }}, 0 );">上架場次</a>
                 @endif
+                <button class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data['id_group'] }});">刪除</button>
               </td>
             </tr>
           @endforeach
@@ -262,5 +263,48 @@
     }
     /* 資料自動儲存 end */
 
+  // 刪除 Sandy(2020/05/31) start
+  function btn_delete(id_group) {
+    //判斷是否有群組場次
+    var msg = "是否刪除該場次?";
+
+    if (confirm(msg) == true) {
+      $.ajax({
+        type: 'POST',
+        url: 'course_list_edit_delete',
+        dataType: 'json',
+        data: {
+          // id_events: id_events,
+          id_group: id_group
+        },
+        success: function(data) {
+          if (data['data'] == "ok") {
+            alert('刪除成功！！')
+            /** alert **/
+            // $("#success_alert_text").html("刪除課程成功");
+            // fade($("#success_alert"));
+
+            location.reload();
+          } else {
+            // alert('刪除失敗！！')
+
+            /** alert **/
+            $("#error_alert_text").html("刪除場次失敗");
+            fade($("#error_alert"));
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error));
+
+          /** alert **/
+          $("#error_alert_text").html("刪除場次失敗");
+          fade($("#error_alert"));
+        }
+      });
+    } else {
+      return false;
+    }
+  }
+  // 刪除 Sandy(2020/05/31) end
   </script>
 @endsection

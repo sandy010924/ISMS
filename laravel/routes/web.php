@@ -168,6 +168,8 @@ Route::post('course_list_edit_insert', 'Backend\CourseListEditController@insert'
 Route::post('course_list_edit_update', 'Backend\CourseListEditController@update');
 /*** 更新資料 ***/
 Route::post('course_list_edit_updatedata', 'Backend\CourseListEditController@update_data');
+/*** 刪除資料 ***/
+Route::post('course_list_edit_delete', 'Backend\CourseListEditController@delete');
 
 
 
