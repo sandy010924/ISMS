@@ -24,7 +24,9 @@ class CourseListController extends Controller
         // 講師ID Rocky(2020/05/11)
         $id_teacher = Auth::user()->id_teacher;
 
-        if (Auth::user()->role == "teacher") {
+        if (isset(Auth::user()->role) == '') {
+            return view('frontend.error_authority');
+        } elseif (isset(Auth::user()->role) != '' &&  Auth::user()->role == "teacher") {
             $course_table = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
                 ->select('course.id as id_course', 'course.name as course', 'course.type as type', 'teacher.id as id_teacher', 'teacher.name as teacher')
                 ->where('course.id_teacher', $id_teacher)

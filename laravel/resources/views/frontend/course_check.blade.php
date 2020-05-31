@@ -6,7 +6,7 @@
 @section('content')
 <!-- Content Start -->
 <!-- 權限 Rocky(2020/05/10) -->
-<input type="hidden" id="auth_role" value="{{ Auth::user()->role }}" />
+<input type="hidden" id="auth_role" value="{{ Auth::user()}}" />
 <!--簽到表內容-->
 <input type="hidden" id="event_id" value="{{ $course->id }}">
 <input type="hidden" id="course_type" value="{{ $course->type }}">
@@ -295,7 +295,7 @@
   // 權限判斷
   function check_auth() {
     var role = ''
-    role = $('#auth_role').val()
+    role = JSON.parse($('#auth_role').val())['role']
     if (role == "accountant" || role == "teacher" ||
       role == "staff") {
       $('.auth_readonly').attr('readonly', 'readonly')

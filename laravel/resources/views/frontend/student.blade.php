@@ -29,7 +29,7 @@
 <!--搜尋學員頁面內容-->
 <div class="card m-3">
   <!-- 權限 Rocky(2020/05/10) -->
-  <input type="hidden" id="auth_role" value="{{ Auth::user()->role }}" />
+  <input type="hidden" id="auth_role" value="{{ Auth::user()}}" />
   <div class="card-body">
     <div class="row mb-3">
       <div class="col-4"></div>
@@ -574,7 +574,7 @@
       // 權限判斷
       function check_auth() {
         var role = ''
-        role = $('#auth_role').val()
+        role = JSON.parse($('#auth_role').val())['role']
         if (role != "admin" && role != "marketer" && role != "officestaff" && role != "msaleser" && role != "saleser") {
           $('.auth_readonly').attr('readonly', 'readonly')
           $('.auth_readonly').attr("disabled", true);
