@@ -90,7 +90,7 @@
       <th>場次</th>
       <th>報名/取消筆數</th>
       <th>實到筆數</th>
-      <th></th>
+      <th class="no-sort"></th>
     </tr>
     @endslot
     @slot('tbody')
@@ -170,7 +170,12 @@
     // Sandy (2020/02/26)
     table = $('#table_list').DataTable({
       "dom": '<l<t>p>',
-      "ordering": false
+      "order": [[ 0, "desc" ]],
+      "columnDefs": [{
+        "targets": 'no-sort',
+        "orderable": false,
+      }]
+      // "ordering": false
     });
 
     //日期選擇器
