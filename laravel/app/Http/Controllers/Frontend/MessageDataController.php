@@ -28,7 +28,7 @@ class MessageDataController extends Controller
           //講師
           $teacher = Teacher::where('id', $msg['id_teacher'])
                           ->get();
-          if( !empty($teacher) ){
+          if( $teacher == null ){
             $teacher = Teacher::where('id', $msg['id_teacher'])
                               ->first()->name;
           }else{
@@ -38,7 +38,7 @@ class MessageDataController extends Controller
           //課程
           $course = Course::where('id', $msg['id_course'])
                           ->get();
-          if( !empty($course) ){
+          if( $course == null ){
             $course = Course::where('id', $msg['id_course'])
                               ->first()->name;
           }else{
@@ -49,7 +49,7 @@ class MessageDataController extends Controller
           //課程
           $course = Course::where('id', $msg['id_course'])
                           ->get();
-          if( !empty($course) ){
+          if( $course == null ){
             $course = Course::where('id', $msg['id_course'])
                               ->first()->name;
           }else{
@@ -59,7 +59,7 @@ class MessageDataController extends Controller
           //講師
           $teacher = Teacher::where('id', $msg['id_teacher'])
                           ->get();
-          if( !empty($teacher) ){
+          if( $teacher == null ){
             $teacher = Teacher::where('id', $msg['id_teacher'])
                               ->first()->name;
           }else{
@@ -70,6 +70,7 @@ class MessageDataController extends Controller
           $teacher = '無相關講師';
           $course = '無相關課程';
         }
+        
 
 
       return view('frontend.message_data', compact('msg', 'receiver', 'teacher', 'course'));
