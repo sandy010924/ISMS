@@ -43,7 +43,7 @@
               <div class="col">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">相關老師</span>
+                    <span class="input-group-text">相關講師</span>
                   </div>
                   <input type="text" class="form-control bg-white" aria-label="Group's name" value="{{ $teacher }}" disabled readonly>
                 </div>
