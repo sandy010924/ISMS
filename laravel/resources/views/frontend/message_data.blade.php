@@ -9,6 +9,16 @@
         <div class="card m-3">
           <div class="card-body">
             <div class="row mb-3">
+              <div class="col">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">訊息名稱</span>
+                  </div>
+                  <input type="text" class="form-control bg-white" aria-label="Group's name" value="{{ $msg->name }}" disabled readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
               {{-- <div class="col-5">
                 <h5>寄件日期：2020-02-18</h5>
               </div> --}}
@@ -26,6 +36,24 @@
                     <span class="input-group-text">發送方式</span>
                   </div>
                   <input type="text" class="form-control bg-white" aria-label="Group's name" value=" @if($msg->type==0)簡訊 @elseif($msg->type==1) Email @else 簡訊、E-mail @endif" disabled readonly>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">相關老師</span>
+                  </div>
+                  <input type="text" class="form-control bg-white" aria-label="Group's name" value="{{ $teacher }}" disabled readonly>
+                </div>
+              </div>
+              <div class="col">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">相關課程</span>
+                  </div>
+                  <input type="text" class="form-control bg-white" aria-label="Group's name" value="{{ $course }}" disabled readonly>
                 </div>
               </div>
             </div>
