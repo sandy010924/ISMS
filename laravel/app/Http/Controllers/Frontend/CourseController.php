@@ -19,12 +19,13 @@ class CourseController extends Controller
     // Sandy (2020/01/14)
     public function show()
     {
-        // 講師ID Rocky(2020/05/11)
-        $id_teacher = Auth::user()->id_teacher;
+
 
         if (isset(Auth::user()->role) == '') {
             return view('frontend.error_authority');
         } elseif (isset(Auth::user()->role) != '' && Auth::user()->role == "teacher") {
+            // 講師ID Rocky(2020/05/11)
+            $id_teacher = Auth::user()->id_teacher;
             $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
                 ->select('events_course.*', 'course.name as course', 'course.type as type')
                 ->where('course.id_teacher', $id_teacher)

@@ -25,14 +25,14 @@ class StudentController extends Controller
             return view('frontend.error_authority');
         } elseif (isset(Auth::user()->role) != '' && Auth::user()->role == "teacher") {
             $id_teacher = Auth::user()->id_teacher;
-            $students = Student::leftjoin('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+            $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
                 ->join('course', 'sales_registration.id_course', '=', 'course.id')
                 ->select('student.*', 'sales_registration.datasource')
                 ->where('course.id_teacher', $id_teacher)
                 ->groupBy('id')
                 ->get();
         } else {
-            $students = Student::leftjoin('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+            $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
                 ->join('course', 'sales_registration.id_course', '=', 'course.id')
                 ->select('student.*', 'sales_registration.datasource')
                 ->groupBy('id')
@@ -73,7 +73,7 @@ class StudentController extends Controller
     {
         $type = $request->get('type');
         $id = $request->get('id');
-        $datas_events = "";
+        $datas_events = array();
         if ($type == "0") {
             // 銷售講座
             $datas = SalesRegistration::leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
@@ -83,11 +83,61 @@ class StudentController extends Controller
                 ->where('sales_registration.id', $id)
                 ->get();
 
-            $datas_events = EventsCourse::where('id_course', function ($query) use ($id) {
-                $query->select(DB::raw("(SELECT id_course FROM sales_registration WHERE id='" . $id . "')"));
-            })
-                ->select('events_course.id', 'events_course.name')
+            // $datas_events = EventsCourse::where('id_course', function ($query) use ($id) {
+            //     $query->select(DB::raw("(SELECT id_course FROM sales_registration WHERE id='" . $id . "')"));
+            // })
+            //     ->select('events_course.id', 'events_course.name', 'events_course.course_start_at', 'events_course.course_end_at')
+            //     ->get();
+
+
+            $events_table = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                ->select('events_course.*')
+                ->where('events_course.id_course', function ($query) use ($id) {
+                    $query->select(DB::raw("(SELECT id_course FROM sales_registration WHERE id='" . $id . "')"));
+                })
                 ->get();
+
+            $id_group = '';
+            $events_list = array();
+
+            foreach ($events_table as $key_events => $data_events) {
+                if ($id_group == $data_events['id_group']) {
+                    continue;
+                }
+
+                $course_group = EventsCourse::Where('id_group', $data_events['id_group'])
+                    ->get();
+
+                $numItems = count($course_group);
+                $i = 0;
+
+                $events_group = '';
+
+                foreach ($course_group as $key_group => $data_group) {
+                    //日期
+                    $date = date('Y-m-d', strtotime($data_group['course_start_at']));
+                    //星期
+                    $weekarray = array("日", "一", "二", "三", "四", "五", "六");
+                    $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
+
+                    if (++$i === $numItems) {
+                        $events_group .= $date . '(' . $week . ')';
+                    } else {
+                        $events_group .= $date . '(' . $week . ')' . '、';
+                    }
+                }
+                //時間
+                $time_strat = date('H:i', strtotime($data_group['course_start_at']));
+                $time_end = date('H:i', strtotime($data_group['course_end_at']));
+
+                $datas_events[$key_events] = [
+                    'events' => $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data_events['name'] . '-' . $data_events['location'],
+                    'id' => $data_events['id'],
+                    'id_group' => $data_events['id_group']
+                ];
+
+                $id_group = $data_events['id_group'];
+            }
         } elseif ($type == "1") {
             // 正課
             $datas = Registration::leftjoin('course', 'course.id', '=', 'registration.id_course')
@@ -98,11 +148,59 @@ class StudentController extends Controller
                 ->where('registration.id', $id)
                 ->get();
 
-            $datas_events = EventsCourse::where('id_course', function ($query) use ($id) {
-                $query->select(DB::raw("(SELECT id_course FROM registration WHERE id='" . $id . "')"));
-            })
-                ->select('events_course.id', 'events_course.name')
+            // $datas_events = EventsCourse::where('id_course', function ($query) use ($id) {
+            //     $query->select(DB::raw("(SELECT id_course FROM registration WHERE id='" . $id . "')"));
+            // })
+            //     ->select('events_course.id', 'events_course.name', 'events_course.course_start_at', 'events_course.course_end_at')
+            //     ->get();
+
+            $events_table = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                ->select('events_course.*')
+                ->where('events_course.id_course', function ($query) use ($id) {
+                    $query->select(DB::raw("(SELECT id_course FROM registration WHERE id='" . $id . "')"));
+                })
                 ->get();
+
+            $id_group = '';
+            $events_list = array();
+
+            foreach ($events_table as $key_events => $data_events) {
+                if ($id_group == $data_events['id_group']) {
+                    continue;
+                }
+
+                $course_group = EventsCourse::Where('id_group', $data_events['id_group'])
+                    ->get();
+
+                $numItems = count($course_group);
+                $i = 0;
+
+                $events_group = '';
+
+                foreach ($course_group as $key_group => $data_group) {
+                    //日期
+                    $date = date('Y-m-d', strtotime($data_group['course_start_at']));
+                    //星期
+                    $weekarray = array("日", "一", "二", "三", "四", "五", "六");
+                    $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
+
+                    if (++$i === $numItems) {
+                        $events_group .= $date . '(' . $week . ')';
+                    } else {
+                        $events_group .= $date . '(' . $week . ')' . '、';
+                    }
+                }
+                //時間
+                $time_strat = date('H:i', strtotime($data_group['course_start_at']));
+                $time_end = date('H:i', strtotime($data_group['course_end_at']));
+
+                $datas_events[$key_events] = [
+                    'events' => $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data_events['name'] . '(' . $data_events['location'] . ')',
+                    'id' => $data_events['id']
+                ];
+
+                $id_group = $data_events['id_group'];
+            }
         }
 
         return response::json([

@@ -8,6 +8,7 @@ use App\Model\Blacklist;
 use App\Model\SalesRegistration;
 use App\Model\Payment;
 use App\Model\Registration;
+use App\Model\EventsCourse;
 use App\Model\Debt;
 use App\Model\Refund;
 use App\Http\Controllers\Controller;
@@ -170,61 +171,57 @@ class StudentController extends Controller
         $type = $request->input('type');
         $data = $request->input('data');
 
-        // try{
-        switch ($type) {
-            case '0':
-                // 日期時間
-                Debt::where('id', $id)
-                    ->update(['updated_at' => $data]);
-                break;
-            case '1':
-                // 付款狀態/日期
-                Debt::where('id', $id)
-                    ->update(['status_payment' => $data]);
-                break;
-            case '2':
-                // 聯絡內容
-                Debt::where('id', $id)
-                    ->update(['contact' => $data]);
-                break;
-            case '3':
-                // 最新狀態
-                Debt::where('id', $id)
-                    ->update(['id_status' => $data]);
-                break;
-            case '4':
-                // 設提醒
-                Debt::where('id', $id)
-                    ->update(['remind_at' => $data]);
-                break;
-            case '5':
-                // 追單人員
-                Debt::where('id', $id)
-                    ->update(['person' => $data]);
-                break;
-            case '6':
-                // 追單課程
-                Debt::where('id', $id)
-                    ->update(['name_course' => $data]);
-                break;
-            case '7':
-                // 付款狀態 
-                Debt::where('id', $id)
-                    ->update(['status_payment_name' => $data]);
-                break;
-            default:
-                return 'error';
-                break;
+        try {
+            switch ($type) {
+                case '0':
+                    // 日期時間
+                    Debt::where('id', $id)
+                        ->update(['updated_at' => $data]);
+                    break;
+                case '1':
+                    // 付款狀態/日期
+                    Debt::where('id', $id)
+                        ->update(['status_payment' => $data]);
+                    break;
+                case '2':
+                    // 聯絡內容
+                    Debt::where('id', $id)
+                        ->update(['contact' => $data]);
+                    break;
+                case '3':
+                    // 最新狀態
+                    Debt::where('id', $id)
+                        ->update(['id_status' => $data]);
+                    break;
+                case '4':
+                    // 設提醒
+                    Debt::where('id', $id)
+                        ->update(['remind_at' => $data]);
+                    break;
+                case '5':
+                    // 追單人員
+                    Debt::where('id', $id)
+                        ->update(['person' => $data]);
+                    break;
+                case '6':
+                    // 追單課程
+                    Debt::where('id', $id)
+                        ->update(['name_course' => $data]);
+                    break;
+                case '7':
+                    // 付款狀態 
+                    Debt::where('id', $id)
+                        ->update(['status_payment_name' => $data]);
+                    break;
+                default:
+                    return 'error';
+                    break;
+            }
+
+            return 'success';
+        } catch (Exception $e) {
+            return 'error';
         }
-
-        return 'success';
-
-        // }catch (Exception $e) {
-        //     return 'error';
-        //     // return json_encode(array(
-        //     //     'errorMsg' => '儲存失敗'
-        //     // ));
-        // }
     }
 
     // 標記儲存 (2020/03/10)
@@ -278,7 +275,7 @@ class StudentController extends Controller
         $id = $request->input('id');
         $type = $request->input('type');
         $data = $request->input('data');
-
+        $id_group = '';
         switch ($type) {
             case '0':
                 // 銷講
@@ -287,8 +284,15 @@ class StudentController extends Controller
                 break;
             case '1':
                 // 正課
+
+                $array_id_group = EventsCourse::where('id', $data)
+                    ->select('events_course.id_group')
+                    ->get();
+                if (count($array_id_group) != 0) {
+                    $id_group = $array_id_group[0]['id_group'];
+                }
                 Registration::where('id', $id)
-                    ->update(['id_events' => $data]);
+                    ->update(['id_events' => $data, 'id_group' => $id_group]);
                 break;
             default:
                 return 'error';

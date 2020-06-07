@@ -665,7 +665,7 @@
             // console.log(data)
             $.each(data['datas'], function(index, val) {
               // 學員資料
-              var id_identity, sex, phone, email, birthday, company, profession, address, events
+              var id_identity, sex, phone, email, birthday, company, profession, address, events, events_start
               if (val['id_identity'] != null) {
                 id_identity = val['id_identity'];
               } else {
@@ -710,6 +710,11 @@
                 address = '無'
               }
 
+              if (val['events_start'] != null) {
+                events_start = val['events_start']
+              } else {
+                events_start = '無'
+              }
 
               student = '<div style="text-align:left"><b>課程服務報名表</b>' + '<br>' + '姓名:' + val['name'] + '<br>' + '性別:' + sex + '<br>' + '身分證字號:' + id_identity + '<br>' +
                 '聯絡電話:' + phone + '<br>' + '電子郵件:' + email + '<br>' + '出生日期:' + birthday + '<br>' +
@@ -754,11 +759,11 @@
 
               /*場次 - S*/
               id_select_events = "select_events_" + id
-              select_events = '<select class="custom-select form-control col-sm-4 " id="' + id_select_events + '" name="select_teacher"  onblur="update_events($(this),' + id + ',' + type + ');" > </select >'
+              select_events = '<select class="custom-select form-control col-sm-8" id="' + id_select_events + '" name="select_teacher"  onblur="update_events($(this),' + id + ',' + type + ');" > </select >'
               /*場次 - E*/
 
               course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
-                '課程開始時間:' + val['events_start'] + '<br>' +
+                '課程開始時間:' + events_start + '<br>' +
                 '<div class="form-group row">' +
                 '<label class="col-sm-2" >場次: </label>' + select_events +
                 '</div>' +
@@ -776,7 +781,7 @@
             id_select_events = "#" + id_select_events
             $(id_select_events).append("<option value=''>請選擇</option>");
             $.each(data['events'], function(index, val) {
-              $(id_select_events).append("<option value='" + val['id'] + "'>" + val['name'] + "</option>");
+              $(id_select_events).append("<option value='" + val['id'] + "'>" + val['events'] + "</option>");
             })
             if (id_events != "") {
               $(id_select_events).val(id_events) // 場次

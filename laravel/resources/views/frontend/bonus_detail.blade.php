@@ -298,7 +298,7 @@
               json['datas'][i][4] = json['datas'][i]['student_name'];
               json['datas'][i][5] = email;
               json['datas'][i][6] = phone;
-              json['datas'][i][7] = json['datas'][i]['student_name'];
+              json['datas'][i][7] = json['datas'][i]['status_name'];
               json['datas'][i][8] = '<input type="text" class="form-control form-control-sm auth_readonly"  onblur="auto_update_data($(this),' + json['datas'][i]['id'] + ',1);"  value="' + memo + '">';
             }
           }

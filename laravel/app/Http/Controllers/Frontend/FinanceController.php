@@ -212,42 +212,42 @@ class FinanceController extends Controller
                     ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name')
                     ->where(function ($query) use ($datas_rule) {
                         foreach ($datas_rule as $key => $data) {
-                            $array_value = explode(',', $data['value']);
+                            // $array_value = explode(',', $data['value']);
                             switch ($data['name_id']) {
                                 case "1":
                                     // 工作人員包含
-                                    for ($i = 0; $i < count($array_value); $i++) {
-                                        $query->orwhere('events_course.staff', 'like', '%' . $array_value[$i] . '%');
-                                    }
-                                    // $query->wherein('events_course.staff', explode(',', $data['value']));
+                                    // for ($i = 0; $i < count($array_value); $i++) {
+                                    //     $query->orwhere('events_course.staff', 'like', '%' . $array_value[$i] . '%');
+                                    // }
+                                    $query->wherein('events_course.staff', explode(',', $data['value']));
                                     break;
                                 case "2":
                                     // 主持開場包含
-                                    for ($i = 0; $i < count($array_value); $i++) {
-                                        $query->orwhere('events_course.host', 'like', '%' . $array_value[$i] . '%');
-                                    }
-                                    // $query->wherein('events_course.host', explode(',', $data['value']));
+                                    // for ($i = 0; $i < count($array_value); $i++) {
+                                    //     $query->orwhere('events_course.host', 'like', '%' . $array_value[$i] . '%');
+                                    // }
+                                    $query->wherein('events_course.host', explode(',', $data['value']));
                                     break;
                                 case "3":
                                     // 結束收單包含
-                                    for ($i = 0; $i < count($array_value); $i++) {
-                                        $query->orwhere('events_course.closeorder', 'like', '%' . $array_value[$i] . '%');
-                                    }
-                                    // $query->wherein('events_course.closeorder', explode(',', $data['value']));
+                                    // for ($i = 0; $i < count($array_value); $i++) {
+                                    //     $query->orwhere('events_course.closeorder', 'like', '%' . $array_value[$i] . '%');
+                                    // }
+                                    $query->wherein('events_course.closeorder', explode(',', $data['value']));
                                     break;
                                 case "4":
                                     // 服務人員包含
-                                    for ($i = 0; $i < count($array_value); $i++) {
-                                        $query->orwhere('b.person', 'like', '%' . $array_value[$i] . '%');
-                                    }
-                                    // $query->wherein('b.person', explode(',', $data['value']));
+                                    // for ($i = 0; $i < count($array_value); $i++) {
+                                    //     $query->orwhere('b.person', 'like', '%' . $array_value[$i] . '%');
+                                    // }
+                                    $query->wherein('b.person', explode(',', $data['value']));
                                     break;
                                 case "5":
                                     // 追單人員包含
-                                    for ($i = 0; $i < count($array_value); $i++) {
-                                        $query->orwhere('g.person', 'like', '%' . $array_value[$i] . '%');
-                                    }
-                                    // $query->wherein('g.person', explode(',', $data['value']));
+                                    // for ($i = 0; $i < count($array_value); $i++) {
+                                    //     $query->orwhere('g.person', 'like', '%' . $array_value[$i] . '%');
+                                    // }
+                                    $query->wherein('g.person', explode(',', $data['value']));
                                     break;
                             }
                         }
