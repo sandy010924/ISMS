@@ -1146,6 +1146,11 @@
     var cash = $("#add_cash").val();
     var number = $("#add_number").val();
     
+    if(cash == ""){
+      alert('請輸入金額');
+      return false;
+    }
+
     var payment_len = $('tr[name="tr'+id_registration+'"]').length;
 
     $.ajax({
@@ -1181,10 +1186,14 @@
                   <input type="number" class="form-control form-control-sm" id="number${ data.id }" name="number" value="${ data.number }">               
                 </td>
                 <td class="align-middle">
-                  <button type="button" class="btn btn-danger btn-sm mx-1">刪除</button>
+                  <button type="button" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(${ data.id });">刪除</button>
                 </td>
               </tr>
             `);
+
+            if($('#payment_table' + id_registration + ' tbody tr').length == 3){
+              $('#payment' + id_registration + ' button.add_payment').remove();
+            }
             
             //已付更新
             $('#amount_paid' + data.id_registration).html( function(){

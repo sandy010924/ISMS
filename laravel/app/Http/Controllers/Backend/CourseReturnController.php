@@ -539,7 +539,9 @@ class CourseReturnController extends Controller
                 $payment->id_student        = $check_registration->id_student;      // 學員ID
                 $payment->cash              = $cash;                                // 金額
                 $payment->pay_model         = $pay_model;                           // 付款方式
-                $payment->number            = $number;                              // 帳戶/卡號後四碼
+                if($number != ""){
+                    $payment->number            = $number;                              // 帳戶/卡號後四碼
+                }
                 $payment->id_registration   = $id_registration;                     // 正課報名ID
                 $payment->save();
                 $id_payment = $payment->id;
