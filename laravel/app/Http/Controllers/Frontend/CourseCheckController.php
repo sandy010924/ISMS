@@ -81,7 +81,7 @@ class CourseCheckController extends Controller
                 //         ->orWhere('id_status', 5);
                 // })
                 // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
-                ->orderBy('created_at')
+                ->orderBy('sales_registration.created_at')
                 ->get();
 
 
@@ -144,7 +144,7 @@ class CourseCheckController extends Controller
                 //         ->orWhere('id_status', 5);
                 // })
                 // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
-                ->orderBy('created_at')
+                ->orderBy('register.created_at')
                 ->get();
 
             $coursechecks = array();
@@ -179,7 +179,6 @@ class CourseCheckController extends Controller
                 ->get());
 
         }
-        
         return view('frontend.course_check', compact('coursechecks', 'course', 'week', 'count_apply', 'count_check', 'count_cancel', 'nextLevel'));
             
     }
