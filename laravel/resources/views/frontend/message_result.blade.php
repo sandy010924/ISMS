@@ -163,6 +163,9 @@
         buttons: [{
           extend: 'excel',
           text: '匯出Excel',
+          exportOptions: {
+              columns: ':visible'
+          }
           // messageTop: $('#h3_title').text(),
         }],
     });
