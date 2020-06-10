@@ -96,10 +96,12 @@ class StudentController extends Controller
         $sales_registration_old = $request->get('sales_registration_old');
         $old_datasource = $request->get('old_datasource');
         $student_phone = $request->get('student_phone');
+        $student_name = $request->get('student_name');
+        $student_email = $request->get('student_email');
 
         // 更新學員資料
         $data = Student::where('id', $id)
-            ->update(['profession' => $profession, 'address' => $address, 'phone' => $student_phone]);
+            ->update(['profession' => $profession, 'address' => $address, 'phone' => $student_phone, 'name' => $student_name, 'email' => $student_email]);
 
         // 更新原始來源
         $data_datasource = SalesRegistration::where('id', $sales_registration_old)

@@ -89,20 +89,10 @@
             <div class="row">
               <div class="col-4">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                  <!-- 已填報名表課程詳細資料 -->
-                  <!-- <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                          <a class="nav-link active" id="form_finished1" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="form_finished_content1" aria-selected="true">60天財富計畫報名表</a>
-                          <a class="nav-link" id="form_finished2" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="form_finished_content2" aria-selected="false">自在交易工作坊報名表</a>
-                          <a class="nav-link" id="form_finished3" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="form_finished_content3" aria-selected="false">實戰課程退費表</a>
-                        </div> -->
                 </div>
               </div>
               <div class="col-8">
                 <div class="tab-content" id="v-pills-tabContent">
-                  <!-- 已填報名表詳細資料 -->
-                  <!-- <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="form_finished1">.fffff.</div>
-                          <div class="tab-pane fade" id="form_finished_content2" role="tabpanel" aria-labelledby="form_finished2">...</div>
-                          <div class="tab-pane fade" id="form_finished_content3" role="tabpanel" aria-labelledby="form_finished3">...</div> -->
                 </div>
               </div>
             </div>
@@ -116,12 +106,36 @@
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content p-3">
           <div class="row">
-            <div class="col-5 py-2">
-              <h5 id="student_name"></h5>
-              <h5 id="student_email"></h5>
-              <h5 id="title_student_phone"></h5>
+            <div class="pt-2 pl-3">
+              <h3>完整內容</h3>
             </div>
-            <div class="col-4">
+            <div class="col-12 pt-5">
+              <div class="row">
+                <div class="col-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">學員姓名</span>
+                    </div>
+                    <input type="text" id="student_name" class="form-control bg-white basic-inf col-sm-10">
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">E-mail</span>
+                    </div>
+                    <input type="text" id="student_email" class="form-control bg-white basic-inf col-sm-8">
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">電話</span>
+                    </div>
+                    <input type="text" id="title_student_phone" class="form-control bg-white basic-inf col-sm-5" aria-label="# input" aria-describedby="#" readonly>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-4 py-3">
               <h7 id="title_old_datasource"></h7><br>
@@ -815,6 +829,10 @@
           async: false,
           success: function(data) {
             // console.log(data)
+
+            // 宣告
+            var datasource_old = ''
+
             // 銷講報到率
             var sales_successful_rate = '0',
               course_cancel_rate = '0';
@@ -827,17 +845,24 @@
             if (data['count_sales_no'] != 0) {
               course_cancel_rate = (data['count_sales_no'] / data['count_sales'] * 100).toFixed(0)
             }
+
+            if (data[0]['datasource_old'] != null) {
+              datasource_old = data[0]['datasource_old']
+            } else {
+              datasource_old = "無"
+            }
+
             // 學員資料
-            $('#student_name').text(data[0]['name']);
-            $('#student_email').text(data[0]['email']);
-            $('#title_student_phone').text(data[0]['phone']);
+            $('#student_name').val(data[0]['name']);
+            $('#student_email').val(data[0]['email']);
+            $('#title_student_phone').val(data[0]['phone']);
             $('#title_old_datasource').text('原始來源:' +
-              data[0]['datasource_old']);
+              datasource_old);
             $('#student_date').text('加入日期 :' + data['submissiondate']);
             $('#student_profession').val(data[0]['profession']);
             $('#student_address').val(data[0]['address']);
             $('#sales_registration_old').val(data[0]['sales_registration_old']);
-            $('#old_datasource').val(data[0]['datasource_old']);
+            $('#old_datasource').val(datasource_old);
             $('#student_phone').val(data[0]['phone']);
 
             // 銷講      
@@ -1277,6 +1302,8 @@
 
       // 儲存
       function save() {
+        student_name = $("#student_name").val();
+        student_email = $("#student_email").val();
         student_profession = $("#student_profession").val();
         student_address = $("#student_address").val();
         sales_registration_old = $("#sales_registration_old").val();
@@ -1293,7 +1320,9 @@
             address: student_address,
             sales_registration_old: sales_registration_old,
             old_datasource: old_datasource,
-            student_phone: student_phone
+            student_phone: student_phone,
+            student_name: student_name,
+            student_email: student_email
           },
           success: function(data) {
             if (data = "更新成功") {
