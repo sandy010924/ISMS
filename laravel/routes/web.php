@@ -237,7 +237,7 @@ Route::get('ots_return', function () {
 /*** 顯示資料 Rocky(2020/02/23) ***/
 Route::get('student', 'Frontend\StudentController@show')->name('student');
 /*** 搜尋資料 Rocky(2020/02/23) ***/
-Route::get('student_search', 'Frontend\StudentController@search')->name('student_search');
+Route::post('student_search', 'Frontend\StudentController@search')->name('student_search');
 /*** 刪除資料 Rocky(2020/02/23) ***/
 Route::get('student_delete', 'Backend\StudentController@delete');
 /*** 加入黑名單 Rocky(2020/02/23) ***/

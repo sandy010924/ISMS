@@ -20,7 +20,7 @@ class StudentController extends Controller
     // 顯示資料
     public function show()
     {
-        // 講師ID Rocky(2020/05/11)        
+        // 講師ID Rocky(2020/05/11)
         if (isset(Auth::user()->role) == '') {
             return view('frontend.error_authority');
         } elseif (isset(Auth::user()->role) != '' && Auth::user()->role == "teacher") {
@@ -30,12 +30,16 @@ class StudentController extends Controller
                 ->select('student.*', 'sales_registration.datasource')
                 ->where('course.id_teacher', $id_teacher)
                 ->groupBy('id')
+                ->orderby('created_at', 'desc')
+                ->take(500)
                 ->get();
         } else {
             $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
                 ->join('course', 'sales_registration.id_course', '=', 'course.id')
                 ->select('student.*', 'sales_registration.datasource')
                 ->groupBy('id')
+                ->orderby('created_at', 'desc')
+                ->take(500)
                 ->get();
         }
 
@@ -409,20 +413,51 @@ class StudentController extends Controller
     // 搜尋
     public function search(Request $request)
     {
-        $pagesize = 15;
         $search_data = $request->get('search_data');
-
-        if (!empty($search_data)) {
-            $students = Student::Where('email', 'like', '%' . $search_data . '%')
-                ->orWhere('phone', 'like', '%' . $search_data . '%')
-                ->paginate($pagesize);
+        
+        // 講師ID Rocky(2020/05/11)
+        if (isset(Auth::user()->role) == '') {
+            return view('frontend.error_authority');
+        } elseif (isset(Auth::user()->role) != '' && Auth::user()->role == "teacher") {
+            $id_teacher = Auth::user()->id_teacher;
+            $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+                ->join('course', 'sales_registration.id_course', '=', 'course.id')
+                ->select('student.*', 'sales_registration.datasource')
+                ->where('course.id_teacher', $id_teacher)
+                ->groupBy('id')
+                ->orderby('created_at', 'desc')
+                ->take(500)
+                ->get();
         } else {
-            $students = Student::paginate($pagesize);
+            $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+                ->join('course', 'sales_registration.id_course', '=', 'course.id')
+                ->select('student.*', 'sales_registration.datasource')
+                ->Where('email', 'like', '%' . $search_data . '%')
+                ->orWhere('phone', 'like', '%' . $search_data . '%')
+                ->groupBy('id')
+                ->orderby('created_at', 'desc')
+                ->take(500)
+                ->get();
         }
 
+        return $students;
 
-        // $returnHTML = view('frontend.student')->with('students', $students)->renderSections()['content'];
-        $returnHTML = view('frontend.student')->with('students', $students)->render();
-        return $returnHTML;
+        // return view('frontend.student', compact('students'));
+
+        // $pagesize = 15;
+        // $search_data = $request->get('search_data');
+
+        // if (!empty($search_data)) {
+        //     $students = Student::Where('email', 'like', '%' . $search_data . '%')
+        //         ->orWhere('phone', 'like', '%' . $search_data . '%')
+        //         ->paginate($pagesize);
+        // } else {
+        //     $students = Student::paginate($pagesize);
+        // }
+
+
+        // // $returnHTML = view('frontend.student')->with('students', $students)->renderSections()['content'];
+        // $returnHTML = view('frontend.student')->with('students', $students)->render();
+        // return $returnHTML;
     }
 }
