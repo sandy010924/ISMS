@@ -52,25 +52,25 @@
       </tr>
       @endslot
       @slot('tbody')
-        @foreach($students as $student)
-        <tr>
-          <td class="align-middle">{{ $student['name'] }}</td>
-          <td class="align-middle">{{ $student['phone'] }}</td>
-          <td class="align-middle">{{ $student['email'] }}</td>
-          <td class="align-middle">{{ $student['datasource'] }}</td>
-          <td class="align-middle">
-            <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
+      @foreach($students as $student)
+      <tr>
+        <td class="align-middle">{{ $student['name'] }}</td>
+        <td class="align-middle">{{ $student['phone'] }}</td>
+        <td class="align-middle">{{ $student['email'] }}</td>
+        <td class="align-middle">{{ $student['datasource'] }}</td>
+        <td class="align-middle">
+          <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
 
-            @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' ) )
-            <button type="button" id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}"><i class="fa fa-bug"></i>列入黑名單</button>
-            @endif
-            <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
-            @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff'))
-            <button id="{{ $student['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student['id'] }});" value="{{ $student['id'] }}">刪除</button>
-            @endif
-          </td>
-        </tr>
-        @endforeach
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' ) )
+          <button type="button" id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}"><i class="fa fa-bug"></i>列入黑名單</button>
+          @endif
+          <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff'))
+          <button id="{{ $student['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student['id'] }});" value="{{ $student['id'] }}">刪除</button>
+          @endif
+        </td>
+      </tr>
+      @endforeach
       @endslot
       @endcomponent
     </div>
@@ -132,7 +132,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">電話</span>
                     </div>
-                    <input type="text" id="title_student_phone" class="form-control bg-white basic-inf col-sm-5" aria-label="# input" aria-describedby="#" readonly>
+                    <input id="student_phone" type="text" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
                   </div>
                 </div>
               </div>
@@ -199,7 +199,7 @@
               <div class="row">
                 <div class="col-6">
                   <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text">最新來源</span>
@@ -207,7 +207,7 @@
                         <input type="text" name="new_datasource" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
                       </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text">職業</span>
@@ -215,10 +215,7 @@
                         <input id="student_profession" type="text" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
                       </div>
                     </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text">原始來源</span>
@@ -227,13 +224,17 @@
                         <input type="hidden" id="sales_registration_old">
                       </div>
                     </div>
-                    <div class="col-6">
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12">
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                          <span class="input-group-text">電話</span>
+                          <span class="input-group-text">正課報名場次</span>
                         </div>
-                        <input id="student_phone" type="text" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
+                        <input type="text" name="course_events" class="form-control bg-white basic-inf demo2" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="" readonly>
                       </div>
+
                     </div>
                   </div>
                   <div class="input-group mb-3">
@@ -262,12 +263,6 @@
                   </div>
                 </div>
                 <div class="col-6">
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">正課報名場次</span>
-                    </div>
-                    <input type="text" name="course_events" class="form-control bg-white basic-inf demo2" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="" readonly>
-                  </div>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">參與活動</span>
@@ -535,10 +530,10 @@
       $("#btn_search").click(function() {
 
         // 宣告
-        var role = '',btn_blacklist = '',btn_delete = ''        
+        var role = '',
+          btn_blacklist = '',
+          btn_delete = ''
         role = JSON.parse($('#auth_role').val())['role']
-
-        console.log(role)
 
 
         // 修改搜尋方式 Rocky (2020/06/11)
@@ -559,7 +554,7 @@
             "url": "student_search",
             "type": "POST",
             "data": {
-               search_data: $('#search_input').val()
+              search_data: $('#search_input').val()
             },
             async: false,
             "dataSrc": function(json) {
@@ -567,19 +562,19 @@
 
                 // 權限判斷 - 黑名單按鈕 / 刪除按鈕
                 if (role != "admin" && role != "marketer" && role != "officestaff" && role != "msaleser" && role != "saleser") {
-                  btn_blacklist = '<button type="button" id="' + json[i]['id']  + '" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist(' + json[i]['id']  + ');" value="' + json[i]['id']  + '"><i class="fa fa-bug"></i>列入黑名單</button> '
+                  btn_blacklist = '<button type="button" id="' + json[i]['id'] + '" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist(' + json[i]['id'] + ');" value="' + json[i]['id'] + '"><i class="fa fa-bug"></i>列入黑名單</button> '
 
-                   btn_delete =  '<button id="' + json[i]['id']  + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + json[i]['id']  + ');" value="' + json[i]['id']  + '">刪除</button> '
+                  btn_delete = '<button id="' + json[i]['id'] + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + json[i]['id'] + ');" value="' + json[i]['id'] + '">刪除</button> '
                 }
 
                 json[i][0] = json[i]['name'];
                 json[i][1] = json[i]['phone'];
                 json[i][2] = json[i]['email'];
                 json[i][3] = json[i]['datasource'];
-                json[i][4] = '<button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + json[i]['id']  + ');">完整內容</button> ' + 
-                btn_blacklist +
-                ' <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form(' + json[i]['id']  + ');">已填表單</button> ' + 
-                btn_delete               
+                json[i][4] = '<button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + json[i]['id'] + ');">完整內容</button> ' +
+                  btn_blacklist +
+                  ' <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form(' + json[i]['id'] + ');">已填表單</button> ' +
+                  btn_delete
               }
               return json;
 
