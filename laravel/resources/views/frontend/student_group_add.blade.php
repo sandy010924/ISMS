@@ -1335,21 +1335,15 @@
         $('#condition_option2').append(new Option('包含', 'like'));
         $('#condition_option2').append(new Option('不包含', 'notlike'));
 
-        // <option value="yes">是</option>
-        //                 <option value="no">未</option>
-        //                 <option value="like">包含</option>
-        //                 <option value="notlike">不包含</option>
-        // condition_option1.innerHTML='<option value="">請選擇</option><option>原始來源</option><option>最新來源</option><option>報名場次</option><option>目前職業</option><option>居住地址</option><option>銷講後最新狀態</option><option>想了解的內容</option>';
-        // condition_option2.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option><option>包含</option><option>不包含</option>';
         condition_input3.style.display = 'block';
-        // condition_option3.style.display='none';
+
       } else if (this.value == 'action') {
         // 選項一
         $('#condition_option1').empty();
         $('#condition_option1').append(new Option('請選擇', ''));
         $('#condition_option1').append(new Option('是', 'yes'));
         $('#condition_option1').append(new Option('未', 'no'));
-        // condition_option1.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option>';
+
         // 選項二
         $('#condition_option2').empty();
         $('#condition_option2').append(new Option('請選擇', ''));
@@ -1357,6 +1351,7 @@
         $('#condition_option2').append(new Option('取消', '5'));
         $('#condition_option2').append(new Option('未到', '3'));
         $('#condition_option2').append(new Option('交付', ''));
+        $('#condition_option2').append(new Option('留單', '6'));
         $('#condition_option2').append(new Option('完款', '7'));
         $('#condition_option2').append(new Option('付訂', '8'));
         $('#condition_option2').append(new Option('參與', ''));
