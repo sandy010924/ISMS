@@ -915,14 +915,36 @@
     }
 
     $.each(array_studentid, function(index, val) {
+      var datasource = '',
+        submissiondate = '',
+        email = ''
       id_student = val['id_student'];
+
+      if (val['email'] != null) {
+        email = val['email'];
+      } else {
+        email = "無";
+      }
+
+      if (val['datasource'] != null) {
+        datasource = val['datasource'];
+      } else {
+        datasource = "無";
+      }
+
+      if (val['submissiondate'] != null) {
+        submissiondate = val['submissiondate'];
+      } else {
+        submissiondate = "無";
+      }
+
       data +=
         '<tr>' +
         '<td>' + val['name'] + '</td>' +
         '<td>' + val['phone'] + '</td>' +
-        '<td>' + val['email'] + '</td>' +
-        '<td>' + val['datasource'] + '</td>' +
-        '<td>' + val['submissiondate'] + '</td>' +
+        '<td>' + email + '</td>' +
+        '<td>' + datasource + '</td>' +
+        '<td>' + submissiondate + '</td>' +
         '<td>' +
         '<button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + val['id'] + ');" > 完整內容 </button>'
       '</td>' +
