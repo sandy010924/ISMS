@@ -321,7 +321,7 @@ class StudentGroupController extends Controller
                     ->leftjoin('register as c', 'c.id_registration', '=', 'registration.id')
                     ->leftjoin('events_course as d', 'c.id_events', '=', 'd.id')
                     ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id')
-                    ->select('b.*', 'd.name as name_events', 'e.datasource')
+                    ->select('b.*', 'd.name as name_events', 'e.datasource', 'e.submissiondate')
                     ->where(function ($query2) use ($id_course) {
                         $query2->whereIn('registration.id_course', $id_course);
                     })
@@ -357,7 +357,7 @@ class StudentGroupController extends Controller
                         ->leftjoin('register as c', 'c.id_registration', '=', 'registration.id')
                         ->leftjoin('events_course as d', 'c.id_events', '=', 'd.id')
                         ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id')
-                        ->select('b.*', 'd.name as name_events', 'e.datasource')
+                        ->select('b.*', 'd.name as name_events', 'e.datasource', 'e.submissiondate')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereIn('registration.id_course', $id_course);
                         })
@@ -375,7 +375,7 @@ class StudentGroupController extends Controller
                         ->leftjoin('register as c', 'c.id_registration', '=', 'registration.id')
                         ->leftjoin('events_course as d', 'c.id_events', '=', 'd.id')
                         ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id')
-                        ->select('b.*', 'd.name as name_events', 'e.datasource')
+                        ->select('b.*', 'd.name as name_events', 'e.datasource', 'e.submissiondate')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereIn('registration.id_course', $id_course);
                         })
@@ -393,7 +393,7 @@ class StudentGroupController extends Controller
                         ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
                         ->leftjoin('mark as d', 'd.id_student', '=', 'student.id', 'd.course_id', '=', 'c.id')
                         ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id_student')
-                        ->select('student.*', 'e.datasource', 'c.name as name_events')
+                        ->select('student.*', 'e.datasource', 'c.name as name_events', 'e.submissiondate')
                         ->where('c.type', '<>', '1')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereIn('d.course_id', $id_course);
@@ -427,7 +427,7 @@ class StudentGroupController extends Controller
                     $datas = Student::leftjoin('registration as b', 'student.id', '=', 'b.id_student')
                         ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
                         ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id_student')
-                        ->select('student.*', 'e.datasource', 'c.name as name_events')
+                        ->select('student.*', 'e.datasource', 'c.name as name_events', 'e.submissiondate')
                         ->where('c.type', '<>', '1')
                         ->whereNotExists(function ($query) {
                             $query->from('mark')

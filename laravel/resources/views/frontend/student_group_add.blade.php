@@ -913,6 +913,7 @@
         }
       });
     }
+
     $.each(array_studentid, function(index, val) {
       id_student = val['id_student'];
       data +=
