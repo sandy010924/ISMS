@@ -214,48 +214,61 @@
         @endif
       </div>
     </div>
-    @component('components.datatable')
-    @slot('thead')
-    <tr>
-      <th>編號</th>
-      <th>姓名</th>
-      <th>聯絡電話</th>
-      <th>電子郵件</th>
-      <th>報到</th>
-      <th width="20%">報到備註</th>
-    </tr>
-    @endslot
-    @slot('tbody')
-    @foreach($coursechecks as $key => $coursecheck)
-    <tr>
-      <td class="align-middle">{{ $coursecheck['row']  }}</td>
-      <td scope="row" class="align-middle" name="search_name">{{ $coursecheck['name'] }}</td>
-      <td class="align-middle" name="search_phone">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
-      <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
-      <td class="align-middle">
-        <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck['check_id'] }}" value="{{ $coursecheck['check_status_val'] }}">{{ $coursecheck['check_status_name'] }}</button>
-        <div class="btn-group">
-          <button class="btn btn-sm" type="button" data-toggle="dropdown">
-            •••
-          </button>
-          <div class="dropdown-menu">
-            <button class="dropdown-item update_status" name="dropdown_check" value="{{ $coursecheck['check_id'] }}" type="button">報到</button>
-            <button class="dropdown-item update_status" name="dropdown_absent" value="{{ $coursecheck['check_id'] }}" type="button">未到</button>
-            <button class="dropdown-item update_status" name="dropdown_cancel" value="{{ $coursecheck['check_id'] }}" type="button">取消</button>
+    <div id="datatableDiv">
+      @component('components.datatable')
+      @slot('thead')
+      <tr>
+        <th>編號</th>
+        <th>姓名</th>
+        <th>聯絡電話</th>
+        <th>電子郵件</th>
+        <th>報到</th>
+        <th class="d-none">報到</th>
+        <th width="20%">報到備註</th>
+        <th class="d-none">報到備註</th>
+      </tr>
+      @endslot
+      @slot('tbody')
+      @foreach($coursechecks as $key => $coursecheck)
+      <tr>
+        <td class="align-middle">{{ $coursecheck['row']  }}</td>
+        <td scope="row" class="align-middle" name="search_name">{{ $coursecheck['name'] }}</td>
+        <td class="align-middle" name="search_phone">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
+        <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
+        <td class="align-middle">
+          <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck['check_id'] }}" value="{{ $coursecheck['check_status_val'] }}">{{ $coursecheck['check_status_name'] }}</button>             
+          <div class="btn-group">
+            <button class="btn btn-sm" type="button" data-toggle="dropdown">
+              •••
+            </button>
+            <div class="dropdown-menu">
+              <button class="dropdown-item update_status" name="dropdown_check" value="{{ $coursecheck['check_id'] }}" type="button">報到</button>
+              <button class="dropdown-item update_status" name="dropdown_absent" value="{{ $coursecheck['check_id'] }}" type="button">未到</button>
+              <button class="dropdown-item update_status" name="dropdown_cancel" value="{{ $coursecheck['check_id'] }}" type="button">取消</button>
+            </div>
           </div>
-        </div>
-      </td>
-      <td class="align-middle">
-        <!-- 報到備註 -->
-        <input type="text" class="form-control input-sm checkNote auth_readonly" id="{{ $coursecheck['check_id'] }}" value="{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}">
-      </td>
-    </tr>
-    @endforeach
-    @endslot
-    @endcomponent
+        </td>
+        <td class="align-middle d-none" id="check{{ $coursecheck['check_id'] }}">{{ $coursecheck['check_status_name'] }}</td>
+        <td class="align-middle">
+          <!-- 報到備註 -->
+          <input type="text" class="form-control input-sm checkNote auth_readonly" id="{{ $coursecheck['check_id'] }}" value="{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}">
+        </td>
+        <td class="align-middle d-none" id="checkmemo{{ $coursecheck['check_id'] }}">{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}</td>
+      </tr>
+      @endforeach
+      @endslot
+      @endcomponent
+    </div>
   </div>
 </div>
-
+<style>
+  div.dt-buttons {
+    float: right;
+  }
+  table#table_list {
+      width: 100% !important;
+  }
+</style>
 <script>
   var table;
   //針對姓名與電話末三碼搜尋 Sandy(2020/02/26)
@@ -273,23 +286,27 @@
   );
 
   $("document").ready(function() {
-    // Sandy (2020/02/26)
-    table = $('#table_list').DataTable({
-      "dom": '<l<t>p>',
-      "ordering": false,
-      drawCallback: function() {
-        //換頁或切換每頁筆數按鈕觸發報到狀態樣式
-        $('.paginate_button, .dataTables_length', this.api().table().container()).on('click', function() {
-          status_onload();
-        });
-      }
-    });
+    table_onload();
 
     // 權限判斷 Rocky(2020/05/10)
     $('#table_list').on('draw.dt', function() {
       check_auth();
     });
     check_auth();
+
+    
+    // Restore state
+    var state = table.state.loaded();
+    if ( state ) {
+      //     console.log(state);
+      // table.columns().eq( 0 ).each( function ( colIdx ) {
+      //   var colSearch = state.columns[colIdx].search;
+      //   if ( colSearch.search ) {
+      //   }
+      // } );
+      $( '#search_keyword' ).val( state.search.search );
+      // table.draw();
+    }
   });
 
   // 權限判斷
@@ -301,6 +318,40 @@
       $('.auth_readonly').attr('readonly', 'readonly')
     }
   }
+
+  //datatable onload
+  function table_onload(){
+    // Sandy (2020/02/26)
+    table = $('#table_list').DataTable({
+      "dom": '<Bl<t>p>',
+      "ordering": false,
+      "bStateSave": true,
+      "fnStateSave": function (oSettings, oData) {
+          localStorage.setItem('offersDataTables', JSON.stringify(oData));
+      },
+      "fnStateLoad": function (oSettings) {
+          return JSON.parse(localStorage.getItem('offersDataTables'));
+      },
+      drawCallback: function() {
+        //換頁或切換每頁筆數按鈕觸發報到狀態樣式
+        $('.paginate_button, .dataTables_length', this.api().table().container()).on('click', function() {
+          status_onload();
+        });
+      },
+      buttons: [{
+          extend: 'excel',
+          text: '匯出Excel',
+          exportOptions: {
+              // columns: ':visible',
+              columns: [0,1,2,3,5,7]
+          }
+          // messageTop: $('#h3_title').text(),
+        }]
+    });
+
+  }
+
+
   // 輸入框 Rocky(2020/02/19)
   $('#search_keyword').on('keyup', function(e) {
     if (e.keyCode === 13) {
@@ -355,14 +406,22 @@
       },
       success: function(data) {
         // console.log(data);  
+        $("#datatableDiv").load(window.location.href + " #datatableDiv" , function() {
+          status_onload();
+          table_onload();
+        });
 
-        $("#" + data["list"].check_id).val(data["list"].check_status_val);
-        $("#" + data["list"].check_id).html(data["list"].check_status_name);
+        // $("#" + data["list"].check_id).val(data["list"].check_status_val);
+        // $("#" + data["list"].check_id).html(data["list"].check_status_name);
 
-        $("#count_check").html(data.count_check);
-        $("#count_cancel").html(data.count_cancel);
+        // $("#count_check").html(data.count_check);
+        // $("#count_cancel").html(data.count_cancel);
 
-        status_style(data["list"].check_id, data["list"].check_status_val);
+        // status_style(data["list"].check_id, data["list"].check_status_val);
+
+        // //更新隱藏報到狀態欄位(export用)
+        // $("#check"+data["list"].check_id).html(data["list"].check_status_name);
+        
 
         /** alert **/
         $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
@@ -459,6 +518,17 @@
       },
       success: function(data) {
         // console.log(JSON.stringify(data));
+
+
+        $("#datatableDiv").load(window.location.href + " #datatableDiv" , function() {
+          status_onload();
+          table_onload();
+        });
+        // //更新隱藏報到備註欄位(export用)
+        // if( course_type == "checkNote"){
+        //   $("#checkmemo"+data_id).html(data_val);
+        // }
+        // table.ajax.reload();
 
         /** alert **/
         $("#success_alert_text").html("資料儲存成功");
