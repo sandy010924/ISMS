@@ -118,42 +118,47 @@ class CourseController extends Controller
         // 抓取欄位順序
         for ($i = 0; $i < count($headings[0][0]); $i++) {
             $value = $headings[0][0][$i];
-            switch ($value) {
-                case "Submission Date":
-                    $int_submissiondate = $i;
-                    break;
-                case ($value == "表單來源" || $value == "名單來源"):
-                    $int_form = $i;
-                    break;
-                case "姓名":
-                    $int_name = $i;
-                    break;
-                case "聯絡電話":
-                    $int_phone = $i;
-                    break;
-                case "電子郵件":
-                    $int_email = $i;
-                    break;
-                case "居住區域":
-                    $int_address = $i;
-                    break;
-                    // case ($value == "課程名稱報名時間地點" || $value == "場次報名時間地點" || $value == "百萬狙擊操盤手報名時間地點" || $value == "黑心外匯交易員的告白場次報名時間"):
-                    // 更改篩選方式(Rocky 2020/05/06)
-                case ((strchr($value, "報名")) != ""):
-                    $int_coursedata = $i;
-                    break;
-                case "目前職業":
-                    $int_job = $i;
-                    break;
-                case "付款方式":
-                    $int_pay = $i;
-                    break;
-                case "帳號/卡號後五碼":
-                    $int_account = $i;
-                    break;
-                case "我想在講座中瞭解到的內容？":
-                    $int_text = $i;
-                    break;
+            if ($value != '') {
+                switch ($value) {
+                    case "Submission Date":
+                        $int_submissiondate = $i;
+                        break;
+                    case "表單來源":
+                        $int_form = $i;
+                        break;
+                    case "名單來源":
+                        $int_form = $i;
+                        break;
+                    case "姓名":
+                        $int_name = $i;
+                        break;
+                    case "聯絡電話":
+                        $int_phone = $i;
+                        break;
+                    case "電子郵件":
+                        $int_email = $i;
+                        break;
+                    case "居住區域":
+                        $int_address = $i;
+                        break;
+                        // case ($value == "課程名稱報名時間地點" || $value == "場次報名時間地點" || $value == "百萬狙擊操盤手報名時間地點" || $value == "黑心外匯交易員的告白場次報名時間"):
+                        // 更改篩選方式(Rocky 2020/05/06)
+                    case ((strchr($value, "報名")) != ""):
+                        $int_coursedata = $i;
+                        break;
+                    case "目前職業":
+                        $int_job = $i;
+                        break;
+                    case "付款方式":
+                        $int_pay = $i;
+                        break;
+                    case "帳號/卡號後五碼":
+                        $int_account = $i;
+                        break;
+                    case "我想在講座中瞭解到的內容？":
+                        $int_text = $i;
+                        break;
+                }
             }
         }
         /* 依照Excel欄位標題新增資料 Rocky (2020/02/05) - E */
@@ -359,7 +364,8 @@ class CourseController extends Controller
                 /*銷售講座報名資料 - E*/
             }
         }
-        if ($id_student != "" && $id_course != "" && $id_SalesRegistration != "") {
+
+        if (($id_student != "" || $id_course != "") && $id_SalesRegistration != "") {
             return redirect('course')->with('status', '匯入成功');
         } else {
             return redirect('course')->with('status', '匯入失敗');

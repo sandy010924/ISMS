@@ -46,8 +46,6 @@ class CourseListController extends Controller
         }
 
 
-
-
         if ($type == 1) {
             // /* 銷講 */
 
@@ -127,41 +125,46 @@ class CourseListController extends Controller
             // 抓取欄位順序
             for ($i = 0; $i < count($headings[0][0]); $i++) {
                 $value = $headings[0][0][$i];
-                switch ($value) {
-                    case "Submission Date":
-                        $int_submissiondate = $i;
-                        break;
-                    case ($value == "表單來源" || $value == "名單來源"):
-                        $int_form = $i;
-                        break;
-                    case "姓名":
-                        $int_name = $i;
-                        break;
-                    case "聯絡電話":
-                        $int_phone = $i;
-                        break;
-                    case "電子郵件":
-                        $int_email = $i;
-                        break;
-                    case "居住區域":
-                        $int_address = $i;
-                        break;
-                        // 更改篩選方式(Rocky 2020/05/06)
-                    case ((strchr($value, "報名")) != ""):
-                        $int_coursedata = $i;
-                        break;
-                    case "目前職業":
-                        $int_job = $i;
-                        break;
-                    case "付款方式":
-                        $int_pay = $i;
-                        break;
-                    case "帳號/卡號後五碼":
-                        $int_account = $i;
-                        break;
-                    case "我想在講座中瞭解到的內容？":
-                        $int_text = $i;
-                        break;
+                if ($value != '') {
+                    switch ($value) {
+                        case "Submission Date":
+                            $int_submissiondate = $i;
+                            break;
+                        case "表單來源":
+                            $int_form = $i;
+                            break;
+                        case "名單來源":
+                            $int_form = $i;
+                            break;
+                        case "姓名":
+                            $int_name = $i;
+                            break;
+                        case "聯絡電話":
+                            $int_phone = $i;
+                            break;
+                        case "電子郵件":
+                            $int_email = $i;
+                            break;
+                        case "居住區域":
+                            $int_address = $i;
+                            break;
+                            // 更改篩選方式(Rocky 2020/05/06)
+                        case ((strchr($value, "場次報名")) != ""):
+                            $int_coursedata = $i;
+                            break;
+                        case "目前職業":
+                            $int_job = $i;
+                            break;
+                        case "付款方式":
+                            $int_pay = $i;
+                            break;
+                        case "帳號/卡號後五碼":
+                            $int_account = $i;
+                            break;
+                        case "我想在講座中瞭解到的內容？":
+                            $int_text = $i;
+                            break;
+                    }
                 }
             }
             /* 依照Excel欄位標題新增資料 Rocky (2020/02/05) - E */
@@ -335,14 +338,16 @@ class CourseListController extends Controller
                         $date = gmdate('Y-m-d H:i:s', $submissiondate);
                         $SalesRegistration->submissiondate   = $date;                           // Submission Date
                         $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
-                        $SalesRegistration->id_student       = $id_student;                     // 學員ID
-                        $SalesRegistration->id_events        = $id_events;                       // 場次ID
+                        $SalesRegistration->id_student       = $id_student;                     // 學員ID                       
                         if ($check == 1) {
                             // 我很遺憾
+                            $SalesRegistration->id_events    = -99;                             // 場次ID
+                            $SalesRegistration->id_course    = $id_course;                      // 課程ID
                             $SalesRegistration->id_status    = 2;                               // 報名狀態ID
                             $SalesRegistration->events       = $events;                         // 追蹤場次
                         } else {
                             // 報名成功
+                            $SalesRegistration->id_events        = $id_events;                   // 場次ID
                             $SalesRegistration->id_course       = $id_course;                   // 課程ID
                             $SalesRegistration->id_status       = 1;                            // 報名狀態ID
                         }
@@ -357,6 +362,7 @@ class CourseListController extends Controller
                         $SalesRegistration->save();
                         $id_SalesRegistration = $SalesRegistration->id;
                     }
+                    $check = 0;
                 } else {
                     foreach ($check_SalesRegistration as $data_SalesRegistration) {
                         $id_SalesRegistration = $data_SalesRegistration->id;
