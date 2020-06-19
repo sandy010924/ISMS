@@ -156,28 +156,58 @@
       <!-- alert End -->
 
   <!-- Content End -->
+  <style>
+    div.dt-buttons {
+      float: right;
+    }
+  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
     // Sandy(2020/02/26) dt列表搜尋 S
     var table;
     $("document").ready(function(){
+      table_onload();
       status_onload();
+
+      //排序按鈕觸發報到狀態樣式
+      $('#table_list').on( 'order.dt',  function () { 
+        status_onload();
+      });
+      
+      // Restore state
+      var state = table.state.loaded();
+      if ( state ) {
+        $( '#search_keyword' ).val( state.search.search );
+      }
+    });
+
+    
+    //datatable onload
+    function table_onload(){
       // Sandy (2020/02/26)
       table = $('#table_list').DataTable({
-          "dom": '<l<t>p>',
+          "dom": '<Bl<t>p>',
           // "ordering": false,
+          "bStateSave": true,
+          "fnStateSave": function (oSettings, oData) {
+              localStorage.setItem('offersDataTables', JSON.stringify(oData));
+          },
+          "fnStateLoad": function (oSettings) {
+              return JSON.parse(localStorage.getItem('offersDataTables'));
+          },
           drawCallback: function(){
             //換頁或切換每頁筆數按鈕觸發報到狀態樣式
             $('.paginate_button, .dataTables_length', this.api().table().container()).on('click', function(){
                 status_onload();
             });       
-          }
+          },
+          buttons: [{
+            extend: 'excel',
+            text: '匯出Excel',
+          }]
       });
-      //排序按鈕觸發報到狀態樣式
-      $('#table_list').on( 'order.dt',  function () { 
-        status_onload();
-      });
-    });
+    }
+
 
     // 輸入框 Sandy(2020/02/25)
     $("#btn_search").click(function(){
@@ -211,13 +241,19 @@
            success:function(data){
               console.log(data); 
 
-              $("#"+data["list"].id).val(data["list"].id_status);
-              $("#"+data["list"].id).html(data["list"].status_name);
-              
-              $("#count_check").html(data.count_check);
-              $("#count_cancel").html(data.count_cancel);
+              //重整datatable區塊
+              $("#datatableDiv").load(window.location.href + " #datatableDiv" , function() {
+                status_onload();
+                table_onload();
+              });
 
-              status_style(data["list"].id, data["list"].id_status);
+              // $("#"+data["list"].id).val(data["list"].id_status);
+              // $("#"+data["list"].id).html(data["list"].status_name);
+              
+              // $("#count_check").html(data.count_check);
+              // $("#count_cancel").html(data.count_cancel);
+
+              // status_style(data["list"].id, data["list"].id_status);
               
               /** alert **/
               $("#success_alert_text").html(data["list"].name + " 報名狀態修改成功");
