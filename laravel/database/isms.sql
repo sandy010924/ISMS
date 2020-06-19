@@ -700,7 +700,7 @@ ALTER TABLE `registration` CHANGE COLUMN `amount_payable` `amount_payable` INT n
 ALTER TABLE `users` ADD COLUMN status VARCHAR(10) NULL COMMENT '狀態(0:暫停,1:啟用)';
 
 -- User資料表 - 更新狀態欄位 Rocky(2020/05/07)
-UPDATE users SET status = '1'
+UPDATE users SET status = '1';
 
 -- 正課資料表 - 來源欄位 Sandy(2020/05/13)
 ALTER TABLE `registration` ADD COLUMN datasource VARCHAR(20) NULL COMMENT '表單來源';
@@ -721,3 +721,7 @@ ALTER TABLE `registration` DROP COLUMN `datasource`;
 
 -- 修改正課表單資料欄位 - 我想參加課程 Sandy (2020/05/31)
 ALTER TABLE `registration` modify COLUMN registration_join VARCHAR(20) NULL COMMENT '我想參加課程(0:現場最優惠價格,1:五日內優惠價格,2:分期優惠價格)';
+
+-- 追單資料表 - 刪掉外部鍵 Rocky (2020/06/19)
+ALTER TABLE debt DROP FOREIGN KEY `debt_ibfk_1`;
+ALTER TABLE debt DROP FOREIGN KEY `debt_ibfk_2`;

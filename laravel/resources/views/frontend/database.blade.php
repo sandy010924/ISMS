@@ -175,7 +175,7 @@
             id: id
           },
           success: function(data) {
-            console.log(data)
+            // console.log(data)
             if (data == "ok") {
               /** alert **/
               $("#success_alert_text").html("還原成功");
