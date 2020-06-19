@@ -145,7 +145,6 @@ class DatabaseController extends Controller
         TRUNCATE `student`;
         TRUNCATE `student_group`;
         TRUNCATE `student_groupdetail`;
-        TRUNCATE `sender`;
         TRUNCATE `teacher`;
         TRUNCATE `users`; 
         TRUNCATE `course`;        
