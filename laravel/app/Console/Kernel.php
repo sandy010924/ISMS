@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\Backup::class,
         \App\Console\Commands\SendEmail::class,
+        \App\Console\Commands\AutoMsg::class,
     ];
 
     /**
@@ -38,6 +39,11 @@ class Kernel extends ConsoleKernel
         // 每日早上8點 Artisan 命令 emails:send
         $schedule->command('emails:send')->everyMinute()->withoutOverlapping();
         // $schedule->command('emails:send')->dailyAt('8:00')->withoutOverlapping();
+
+
+        // 每週一早上8點 Artisan 命令 auto:msg
+        // $schedule->command('auto:msg')->weekly()->wednesdays()->at('7:10');
+
     }
 
     /**
