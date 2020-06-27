@@ -561,7 +561,7 @@
               for (var i = 0, ien = json.length; i < ien; i++) {
 
                 // 權限判斷 - 黑名單按鈕 / 刪除按鈕
-                if (role != "admin" && role != "marketer" && role != "officestaff" && role != "msaleser" && role != "saleser") {
+                if (role == "admin" || role == "marketer" || role == "officestaff" || role == "msaleser" || role == "saleser") {
                   btn_blacklist = '<button type="button" id="' + json[i]['id'] + '" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist(' + json[i]['id'] + ');" value="' + json[i]['id'] + '"><i class="fa fa-bug"></i>列入黑名單</button> '
 
                   btn_delete = '<button id="' + json[i]['id'] + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + json[i]['id'] + ');" value="' + json[i]['id'] + '">刪除</button> '

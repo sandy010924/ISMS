@@ -99,6 +99,7 @@ class StudentController extends Controller
                 ->where('events_course.id_course', function ($query) use ($id) {
                     $query->select(DB::raw("(SELECT id_course FROM sales_registration WHERE id='" . $id . "')"));
                 })
+                ->orderby('events_course.course_start_at', 'asc')
                 ->get();
 
             $id_group = '';
@@ -414,7 +415,7 @@ class StudentController extends Controller
     public function search(Request $request)
     {
         $search_data = $request->get('search_data');
-        
+
         // 講師ID Rocky(2020/05/11)
         if (isset(Auth::user()->role) == '') {
             return view('frontend.error_authority');

@@ -281,8 +281,14 @@ class StudentController extends Controller
         switch ($type) {
             case '0':
                 // 銷講
-                SalesRegistration::where('id', $id)
-                    ->update(['id_events' => $data]);
+                if ($data != "") {
+                    SalesRegistration::where('id', $id)
+                        ->update(['id_events' => $data, 'id_status' => '1']);
+                } else {
+                    SalesRegistration::where('id', $id)
+                        ->update(['id_events' => $data]);
+                }
+
                 break;
             case '1':
                 // 正課
