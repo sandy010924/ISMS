@@ -395,7 +395,7 @@ class CourseController extends Controller
                         if ($data[$int_job] != "") {
                             $sprofession = $data[$int_job];
                         }
-                        if ($data[$int_address] != "") {
+                        if ($int_address != 0) {
                             $saddress = $data[$int_address];
                         }
 
