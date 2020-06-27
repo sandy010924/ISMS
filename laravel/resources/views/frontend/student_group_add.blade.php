@@ -95,7 +95,12 @@
     <div class="row">
       <div class="col-2 mt-2">
         <button class="btn btn-primary" type="button" id="btn_condition2" onclick="condition2();" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
-          <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>
+          <i class="fa fa-plus" aria-hidden="true">添加條件</i>
+        </button>
+      </div>
+      <div class="col-2 mt-2">
+        <button class="btn btn-success" type="button" onclick="search();">
+          <i class="fa fa-search" aria-hidden="true">搜尋</i>
         </button>
       </div>
     </div>
@@ -160,7 +165,7 @@
       <div class="row">
         <div class="col-2  mt-2">
           <button class="btn btn-primary" type="button" onclick="condition3();" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
-            <i class="fa fa-toggle-on" aria-hidden="true">添加條件</i>
+            <i class="fa fa-plus" aria-hidden="true">添加條件</i>
           </button>
           <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
             <span aria-hidden="true">&times;</span>
@@ -239,7 +244,6 @@
   <div class="card-body">
     <div class="row mt-2 mb-3">
       <div class="col">
-        <button type="button" class="btn btn-primary mr-2" onclick="search();">搜尋</button>
         <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#model_show_log" aria-expanded="false" aria-controls="model_show_log" onclick="show_log();">
           <i class="fa fa-search" aria-hidden="true"></i>查看條件
         </button>

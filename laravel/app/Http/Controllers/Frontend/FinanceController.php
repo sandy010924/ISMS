@@ -126,10 +126,10 @@ class FinanceController extends Controller
 
         foreach ($datas_rule as $key => $data) {
             $array_datasource = explode(',', $data['value']);
+            // echo $array_datasource[0] . "<br>";
             switch ($data['name_id']) {
                 case "0":
                     // 名單來源包含                    
-
                     $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
                         ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
                         ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
@@ -144,6 +144,7 @@ class FinanceController extends Controller
                                         // 名單來源包含
                                         for ($i = 0; $i < count($array_datasource); $i++) {
                                             $query->orwhere('c.datasource', 'like', '%' . $array_datasource[$i] . '%');
+                                            echo $array_datasource[$i] . "<br>";
                                         }
                                         // $query->wherein('c.datasource', explode(',', $data['value']));
                                         break;
@@ -153,6 +154,7 @@ class FinanceController extends Controller
                         ->groupby('b.id')
                         ->get();
             }
+            // echo count($datas) . "<br>";
         }
         return view('frontend.bonus_detail', compact('datas', 'datas_rule', 'id_bonus'));
     }
