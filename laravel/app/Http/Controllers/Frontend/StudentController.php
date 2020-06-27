@@ -246,7 +246,7 @@ class StudentController extends Controller
 
         // 正課
         $data_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
-            ->leftjoin('isms_status', 'isms_status.id', '=', 'register.id_status')
+            ->leftjoin('isms_status', 'isms_status.id', '=', 'registration.status_payment')
             ->leftjoin('course', 'course.id', '=', 'registration.id_course')
             ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
             // ->leftjoin('isms_status as t1', 't1.id', '=', 'registration.status_payment')

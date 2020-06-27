@@ -880,7 +880,8 @@
             // 銷講報到率
             var sales_successful_rate = '0',
               course_cancel_rate = '0';
-            var course_sales_status = '';
+            var course_sales_status = '',
+              course_sales_events = '';
             if (data['count_sales_ok'] != 0) {
               sales_successful_rate = (data['count_sales_ok'] / (data['count_sales'] - data['count_sales_no']) * 100).toFixed(0)
             }
@@ -900,8 +901,7 @@
             $('#student_name').val(data[0]['name']);
             $('#student_email').val(data[0]['email']);
             $('#title_student_phone').val(data[0]['phone']);
-            $('#title_old_datasource').text('原始來源:' +
-              datasource_old);
+            $('#title_old_datasource').text('原始來源:' + datasource_old);
             $('#student_date').text('加入日期 :' + data['submissiondate']);
             $('#student_profession').val(data[0]['profession']);
             $('#student_address').val(data[0]['address']);
@@ -911,13 +911,57 @@
 
             // 銷講      
             $('input[name="new_datasource"]').val(data['datasource']);
-            if (data['course_sales_events'] != null) {
-              $('input[name="course_sales_events"]').val(data['course_sales'] + data['course_sales_events'] + '(' + data['sales_registration_course_start_at'] + ')');
+            if (data['course_sales'] != null) {
+              var course_sales = '',
+                course_sales_events = '',
+                sales_registration_course_start_at = ''
+              if (data['course_sales'] == null) {
+                course_sales = " "
+              } else {
+                course_sales = data['course_sales']
+              }
+
+              if (data['course_sales_events'] == null) {
+                course_sales_events = " "
+              } else {
+                course_sales_events = data['course_sales_events']
+              }
+
+              if (data['sales_registration_course_start_at'] == null) {
+                sales_registration_course_start_at = "無"
+              } else {
+                sales_registration_course_start_at = data['sales_registration_course_start_at']
+              }
+
+              course_sales_events = course_sales + ' ' + course_sales_events + '(' + sales_registration_course_start_at + ' )'
             }
+            $('input[name="course_sales_events"]').val(course_sales_events);
+
             $('input[name="course_content"]').val(data['course_content']);
             $('input[name="status_payment"]').val('');
             if (typeof(data['status_registration']) != 'undefined') {
-              course_sales_status = data['status_registration'] + '(' + data['course_registration'] + data['course_events'] + ')'
+              var course_events = '',
+                course_registration = '',
+                status_registration = ''
+              if (data['course_events'] == null) {
+                course_events = "無"
+              } else {
+                course_events = data['course_events']
+              }
+
+              if (data['course_registration'] == null) {
+                course_registration = " "
+              } else {
+                course_registration = data['course_registration']
+              }
+
+              if (data['status_registration'] == null) {
+                status_registration = " "
+              } else {
+                status_registration = data['status_registration']
+              }
+
+              course_sales_status = status_registration + '(' + course_registration + ' ' + course_events + ' )'
             }
             $('input[name="course_sales_status"]').val(course_sales_status);
             if (data['count_sales_ok'] == null) {
@@ -947,7 +991,21 @@
             // 正課
             $('input[name="course_events"]').val('');
             if (typeof(data['course_registration']) != 'undefined') {
-              $('input[name="course_events"]').val(data['course_registration'] + data['course_events']);
+              var course_events = '',
+                course_registration = ''
+              if (data['course_events'] == null) {
+                course_events = " "
+              } else {
+                course_events = data['course_events']
+              }
+
+              if (data['course_registration'] == null) {
+                course_registration = " "
+              } else {
+                course_registration = data['course_registration']
+              }
+
+              $('input[name="course_events"]').val(course_registration + ' ' + course_events);
             }
 
             // 退款
