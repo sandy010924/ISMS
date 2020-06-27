@@ -725,3 +725,6 @@ ALTER TABLE `registration` modify COLUMN registration_join VARCHAR(20) NULL COMM
 -- 追單資料表 - 刪掉外部鍵 Rocky (2020/06/19)
 ALTER TABLE debt DROP FOREIGN KEY `debt_ibfk_1`;
 ALTER TABLE debt DROP FOREIGN KEY `debt_ibfk_2`;
+
+-- 修改正課表單資料欄位 - 統一發票 Sandy (2020/06/27)
+ALTER TABLE `registration` modify COLUMN type_invoice VARCHAR(20) NULL COMMENT '統一發票(0:捐贈社會福利機構（由無極限國際公司另行辦理）,1:二聯式,2:三聯式)';

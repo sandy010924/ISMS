@@ -230,4 +230,76 @@ class CourseReturnController extends Controller
             return 'nodata';
         }
     }
+
+    
+    // 編輯資料填入 Sandy (2020/06/26)
+    public function edit_fill( Request $request )
+    {
+        $id = $request->input('id');
+        $phone = $request->input('phone');
+        $data = Student::join('registration','id_student','=','student.id')
+                        // ->join('payment','id_registration','=','registration.id')
+                        ->Where('registration.id', $id)
+                        ->Where('student.phone', $phone)
+                        ->first();
+
+        $events = "";
+        if( $data['id_course'] == -99 || $data['id_course'] == null || $data['id_course'] == ""){
+            $events = "尚無選擇報名課程";
+        }else{
+            $course = Course::where('id', $data['id_course'])->get();
+            if( !empty($course) ){
+                $course = Course::where('id', $data['id_course'])->first()->name;
+                $events = $course;
+
+                if( $data['id_group'] == null || $data['id_group'] == ""){
+                    $events .= "，尚未選擇場次";
+                }else{
+                    $event = EventsCourse::where('id_group', $data['id_group'])->get();
+
+                    if( !empty($event) ){
+                        
+                        foreach( $event as $data_event ){
+
+                            $numItems = count($event);
+                            $i = 0;
+
+                            $events_group = "";
+
+                            //日期
+                            $date = date('Y-m-d', strtotime($data_event['course_start_at']));
+                            //星期
+                            $weekarray = array("日","一","二","三","四","五","六");
+                            $week = $weekarray[date('w', strtotime($data_event['course_start_at']))];
+                            
+                            if( ++$i === $numItems){
+                                $events_group .= $date . '(' . $week . ')';
+                            }else {
+                                $events_group .= $date . '(' . $week . ')' . '、';
+                            }
+                        }
+
+                    }
+
+                    
+                    //時間
+                    $time_strat = date('H:i', strtotime($data_event['course_start_at']));
+                    $time_end = date('H:i', strtotime($data_event['course_end_at']));
+
+
+                    $events .= " " . $events_group . " " . $data_event['name'];
+                }
+            }else{
+                $events = "尚無選擇報名課程";
+            }
+        }
+        
+
+
+        if( !empty($data) ){
+            return array('data' => $data, 'events' => $events);
+        }else {
+            return 'nodata';
+        }
+    }
 }

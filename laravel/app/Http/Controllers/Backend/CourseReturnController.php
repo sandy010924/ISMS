@@ -12,10 +12,11 @@ use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Register;
 use App\Model\Payment;
+use App\Model\Refund;
 use App\Model\Debt;
-use Mail;
-use App\Model\Message;
-use App\Model\Receiver;
+// use Mail;
+// use App\Model\Message;
+// use App\Model\Receiver;
 
 class CourseReturnController extends Controller
 {
@@ -27,7 +28,7 @@ class CourseReturnController extends Controller
         $id_group = array();
 
         //讀取data
-        $submissiondate = date('Y-m-d H:i:s');
+        $submissiondate = $request->get('idate');
         $name = $request->get('iname');
         $sex = $request->get('isex');
         $id_identity = $request->get('iid');
@@ -258,7 +259,7 @@ class CourseReturnController extends Controller
 
 
                     /*報到資料 - S*/
-                    if(strpos($array_group, 'other') === false){
+                    // if(strpos($array_group, 'other') === false){
                         // 檢查是否報名過
                         // $check_register = Register::where('id_registration', $id_registration)
                         //                         ->get();
@@ -302,23 +303,16 @@ class CourseReturnController extends Controller
                             $payment = new Payment;
 
                             $payment->id_student     = $id_student;      // 學員ID
-                            // if($cash == ""){
-                            //     $payment->cash       = 0;            // 付款金額
-                            // }else {
-                            //     $payment->cash           = $cash;            // 付款金額
-                            // }
                             $payment->cash           = $cash;            // 付款金額
                             $payment->pay_model      = $pay_model;       // 付款方式
-                            // if($number == ""){
-                            //     $payment->number         = $number;          // 卡號後四碼
-                            // }else {
-                                $payment->number         = $number;          // 卡號後四碼
-                            // }
+                            $payment->number         = $number;          // 卡號後四碼
                             $payment->id_registration     = $id_registration;      // 報名ID
                             
                             
                             $payment->save();
                             $id_payment = $payment->id;
+
+
                         }else{
                             foreach ($check_payment as $data) {
                                 $id_payment = $data ->id;
@@ -370,11 +364,11 @@ class CourseReturnController extends Controller
                                 $id_debt = $data ->id;
                             }
                         }
-                    }else{
-                        // $id_register = 0;
-                        $id_payment = 0;
-                        $id_debt = 0;
-                    }
+                    // }else{
+                    //     // $id_register = 0;
+                    //     $id_payment = 0;
+                    //     $id_debt = 0;
+                    // }
                     /*追單資料 - E*/
 
                     if ($id_student != "" && $id_registration != "" && $id_payment != "" && $id_debt != "") {
@@ -518,6 +512,129 @@ class CourseReturnController extends Controller
         
         }catch (Exception $e) {
             return redirect()->route('course_return', ['id' => $id_events])->with('status', '報名失敗');
+        }
+    }
+
+    // Sandy (2020/06/27)
+    public function edit_data(Request $request)
+    {
+        //讀取data
+        $id_events = $request->get('edit_idevents');
+        $id = $request->get('edit_id');
+        $submissiondate = $request->get('edit_date');
+        $phone = $request->get('edit_phone');
+        $name = $request->get('edit_name');
+        $sex = $request->get('edit_sex');
+        $id_identity = $request->get('edit_identity');
+        $email = $request->get('edit_email');
+        $birthday = $request->get('edit_birthday');
+        $company = $request->get('edit_company');
+        $profession = $request->get('edit_profession');
+        $address = $request->get('edit_address');
+        $join = $request->get('edit_join');
+        // $pay_model = $request->get('ipay_model');
+        // $cash = $request->get('icash');
+        // $number = $request->get('inumber');
+        $type_invoice = $request->get('edit_invoice');
+        $number_taxid = $request->get('edit_num');
+        $companytitle = $request->get('edit_companytitle');
+        // $istatus = $request->get('istatus');
+        
+        /* 防錯 */
+        if($address == ""){
+            $address = ""; 
+        }
+
+        try{
+
+            /*學員報名資料 - S*/
+
+            //判斷系統是否已有該學員資料
+            $check_student = Student::where('phone', $phone)->get();
+
+            // 檢查學員資料
+            if (count($check_student) != 0) {
+
+                if($name == ""){
+                    $name = Student::where('phone', $phone)->first()->name;
+                }
+                if($sex == ""){
+                    $sex = Student::where('phone', $phone)->first()->sex;
+                }
+                if($id_identity == ""){
+                    $id_identity = Student::where('phone', $phone)->first()->id_identity;
+                }
+                if($email == ""){
+                    $email = Student::where('phone', $phone)->first()->email;
+                }
+                if($birthday == ""){
+                    $birthday = Student::where('phone', $phone)->first()->birthday;
+                }
+                if($company == ""){
+                    $company = Student::where('phone', $phone)->first()->company;
+                }
+                if($profession == ""){
+                    $profession = Student::where('phone', $phone)->first()->profession;
+                }
+                if($address == ""){
+                    $address = Student::where('phone', $phone)->first()->address;
+                }
+
+                //更新學員資料
+                Student::where('phone', $phone)
+                    ->update([
+                        'name' => $name,
+                        'sex' => $sex,
+                        'id_identity' => $id_identity,
+                        'email' => $email,
+                        'birthday' => $birthday,
+                        'company' => $company,
+                        'profession' => $profession,
+                        'address' => $address,
+                    ]);
+            } 
+            /*學員報名資料 - E*/
+
+
+            /*正課報名資料 - S*/
+
+            //判斷系統是否已有該正課報名資料
+            $check_registration = Registration::where('id', $id)->get();
+
+            // 檢查正課報名資料
+            if (count($check_registration) != 0) {
+
+                if($submissiondate == ""){
+                    $submissiondate = Registration::where('id', $id)->first()->submissiondate;
+                }
+                if($type_invoice == ""){
+                    $type_invoice = Registration::where('id', $id)->first()->type_invoice;
+                }
+                if($number_taxid == ""){
+                    $number_taxid = Registration::where('id', $id)->first()->number_taxid;
+                }
+                if($companytitle == ""){
+                    $companytitle = Registration::where('id', $id)->first()->companytitle;
+                }
+                if($join == ""){
+                    $join = Registration::where('id', $id)->first()->join;
+                }
+
+                Registration::where('id', $id)->update([
+                    'submissiondate' => $submissiondate,
+                    'type_invoice' => $type_invoice,
+                    'number_taxid' => $number_taxid,
+                    'companytitle' => $companytitle,
+                    'registration_join' => $join,
+                ]);                     
+           }
+        
+            /*正課報名資料 - E*/
+            
+            return redirect()->route('course_return', ['id' => $id_events])->with('status', '修改成功');
+        
+        }catch (Exception $e) {
+            return redirect()->route('course_return', ['id' => $id_events])->with('status', '修改失敗');
         }
     }
 
@@ -735,8 +852,36 @@ class CourseReturnController extends Controller
         }
     }
 
-    // 刪除 Sandy (2020/03/22)
-    public function delete(Request $request)
+    // 刪除資料 Sandy (2020/06/26)
+    public function delete_data(Request $request)
+    {
+        $status = "";
+        $id_apply = $request->get('id_apply');
+            
+        $formal = Registration::where('id', $id_apply)
+                                ->get();
+
+        if( count($formal) != 0 ){
+            //刪除報到表
+            Register::where('id_registration', $id_apply)->delete();
+            //刪除付款表
+            Debt::where('id_registration', $id_apply)->delete();   
+            //刪除追單表
+            Payment::where('id_registration', $id_apply)->delete();
+            //刪除退費
+            Refund::where('id_registration', $id_apply)->delete();   
+            //刪除報名表
+            Registration::where('id', $id_apply)->delete();
+        }
+
+        $status = "ok";
+        
+         return json_encode(array('data' => $status));
+    }
+
+    
+    // 刪除付款 Sandy (2020/03/22)
+    public function delete_payment(Request $request)
     {
         $status = "";
         $id_payment = $request->get('id_payment');
@@ -760,340 +905,337 @@ class CourseReturnController extends Controller
         return json_encode(array('data' => $status));
     }
 
+    // /**
+    //  * 發送訊息
+    //  */
+    // public function sendmsg(Request $request)
+    // {
+    //     $id = $request->get('id');
+    //     $course = "";
+    //     $id_course = null;
+    //     $id_teacher = null;
 
-
-
-    /**
-     * 發送訊息
-     */
-    public function sendmsg(Request $request)
-    {
-        $id = $request->get('id');
-        $course = "";
-        $id_course = null;
-        $id_teacher = null;
-
-        /* 報名資訊 */
-        $registration = Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
-                                    ->where('registration.id', $id)
-                                    ->first();
+    //     /* 報名資訊 */
+    //     $registration = Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+    //                                 ->where('registration.id', $id)
+    //                                 ->first();
                         
    
-        if( $registration->id_course != -99 && $registration->id_course != '' && $registration->id_course != null){
-            //有選擇課程
+    //     if( $registration->id_course != -99 && $registration->id_course != '' && $registration->id_course != null){
+    //         //有選擇課程
 
-            $id_course = $registration->id_course;
-            $id_teacher = Course::where('id', $registration->id_course)
-                            ->first()->id_teacher;
+    //         $id_course = $registration->id_course;
+    //         $id_teacher = Course::where('id', $registration->id_course)
+    //                         ->first()->id_teacher;
             
-            $course = Course::where('id', $registration->id_course)
-                            ->first()->name;
+    //         $course = Course::where('id', $registration->id_course)
+    //                         ->first()->name;
                             
-            // if( $registration->id_group != null || $registration->id_group != ''){
-            //     //有選擇場次
+    //         // if( $registration->id_group != null || $registration->id_group != ''){
+    //         //     //有選擇場次
 
-            //     $course = Course::leftjoin('events_course', 'events_course.id_course', '=', 'course.id')
-            //                     ->where('course.id', $registration->id_course)
-            //                     ->first();
+    //         //     $course = Course::leftjoin('events_course', 'events_course.id_course', '=', 'course.id')
+    //         //                     ->where('course.id', $registration->id_course)
+    //         //                     ->first();
 
-                // $course_group = EventsCourse::Where('id_group', $registration->id_group)
-                //                             ->get();
+    //             // $course_group = EventsCourse::Where('id_group', $registration->id_group)
+    //             //                             ->get();
                                             
-                // $numItems = count($course_group);
-                // $i = 0;
+    //             // $numItems = count($course_group);
+    //             // $i = 0;
 
-                // $events = '';
+    //             // $events = '';
 
-                // foreach( $course_group as $key_group => $data_group ){
-                //     //日期
-                //     $date = date('Y-m-d', strtotime($data_group['course_start_at']));
-                //     //星期
-                //     $weekarray = array("日","一","二","三","四","五","六");
-                //     $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
+    //             // foreach( $course_group as $key_group => $data_group ){
+    //             //     //日期
+    //             //     $date = date('Y-m-d', strtotime($data_group['course_start_at']));
+    //             //     //星期
+    //             //     $weekarray = array("日","一","二","三","四","五","六");
+    //             //     $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
                     
-                //     if( ++$i === $numItems){
-                //         $events .= $date . '(' . $week . ')';
-                //     }else {
-                //         $events .= $date . '(' . $week . ')' . '、';
-                //     }
-                // }
+    //             //     if( ++$i === $numItems){
+    //             //         $events .= $date . '(' . $week . ')';
+    //             //     }else {
+    //             //         $events .= $date . '(' . $week . ')' . '、';
+    //             //     }
+    //             // }
 
                 
 
-            // }else{
-            //     //無選擇場次
+    //         // }else{
+    //         //     //無選擇場次
 
-            // }
+    //         // }
             
-            $content =  "恭喜您成功報名 ". $course . "<br>" .
-                        "請點選以下連結選擇報名課程及場次" . "<br>" .
-                        "<a href='" . route('message_form', ['id' => $id]) . "'>" . route('message_form', ['id' => $id]) . "</a>";
-                        // "歡迎揪您的親朋好友一起學習!<br>"+
-                        // "[場地座位有限，若要來現場請先填好報名表保留座位!]<br>"+
-                        // "請點以下連結加入Line@，掌握第一手課程資訊~!<br>"+
-                        // "<a href='https://line.me/R/ti/p/%40hcw0100u'>https://line.me/R/ti/p/%40hcw0100u</a><br>"+
-                        // "聯絡時間: 平日10:00 ~ 18:00<br>"+
-                        // "上課前夕會以簡訊、E-mail做最後通知<br>"+
-                        // "時間地點以最後通知為主哦<br>"+
-                        // "提醒您，開課20分鐘後將無法進入教室。<br>"+
-                        // "造成不便，敬請見諒!";
-        }else{
-            //無選擇課程
-            // $id_course = $registration->id_course;
-            // $id_teacher = Course::where('id', $registration->id_course)
-            //                 ->first()->id_teacher;
+    //         $content =  "恭喜您成功報名 ". $course . "<br>" .
+    //                     "請點選以下連結選擇報名課程及場次" . "<br>" .
+    //                     "<a href='" . route('message_form', ['id' => $id]) . "'>" . route('message_form', ['id' => $id]) . "</a>";
+    //                     // "歡迎揪您的親朋好友一起學習!<br>"+
+    //                     // "[場地座位有限，若要來現場請先填好報名表保留座位!]<br>"+
+    //                     // "請點以下連結加入Line@，掌握第一手課程資訊~!<br>"+
+    //                     // "<a href='https://line.me/R/ti/p/%40hcw0100u'>https://line.me/R/ti/p/%40hcw0100u</a><br>"+
+    //                     // "聯絡時間: 平日10:00 ~ 18:00<br>"+
+    //                     // "上課前夕會以簡訊、E-mail做最後通知<br>"+
+    //                     // "時間地點以最後通知為主哦<br>"+
+    //                     // "提醒您，開課20分鐘後將無法進入教室。<br>"+
+    //                     // "造成不便，敬請見諒!";
+    //     }else{
+    //         //無選擇課程
+    //         // $id_course = $registration->id_course;
+    //         // $id_teacher = Course::where('id', $registration->id_course)
+    //         //                 ->first()->id_teacher;
 
-            $content =  "恭喜您成功報名！" . "<br>" .
-                        "請點選以下連結選擇報名課程及場次" . "<br>" .
-                        "<a href='" . route('message_form', ['id' => $id]) . "'>" . route('message_form', ['id' => $id]) . "</a>";
+    //         $content =  "恭喜您成功報名！" . "<br>" .
+    //                     "請點選以下連結選擇報名課程及場次" . "<br>" .
+    //                     "<a href='" . route('message_form', ['id' => $id]) . "'>" . route('message_form', ['id' => $id]) . "</a>";
                         
-        }
+    //     }
 
-        $student = Student::where('id', $registration->id_student)->first();
+    //     $student = Student::where('id', $registration->id_student)->first();
 
 
-        if( !empty($student) ){
+    //     if( !empty($student) ){
             
-    //   contentStr : content,
-    //   content : content.replace("\n", "<br>"),
+    //         //   contentStr : content,
+    //         //   content : content.replace("\n", "<br>"),
 
-            $send_at = date('YmdHis');
-            $send_at_DB = date('Y-m-d H:i:s');
-            $type = 0;
-            $mailTitle = "";
-            $msg_name = "自動訊息-成功報名" . $course ;
+    //         $send_at = date('YmdHis');
+    //         $send_at_DB = date('Y-m-d H:i:s');
+    //         $type = 0;
+    //         $mailTitle = "";
+    //         $msg_name = "自動訊息-成功報名" . $course ;
 
-            //sms
-            if( $student->phone != '' || $student->phone != null){
-                $phoneNum = $student->phone;
-                //單筆簡訊
-                $sms = $this->messageApi($phoneNum, $content, $send_at);   
-            }
+    //         //sms
+    //         if( $student->phone != '' || $student->phone != null){
+    //             $phoneNum = $student->phone;
+    //             //單筆簡訊
+    //             $sms = $this->messageApi($phoneNum, $content, $send_at);   
+    //         }
 
-            //email
-            if( $student->email != '' || $student->email != null){
-                $mailTitle = "恭喜您成功報名！";
-                $mailAddr = $student->email;
-                $email = $this->sendMail($mailAddr, $mailTitle, $content);
-                $type = 2;
-            }else{
-                $email['status'] = "";
-            }
+    //         //email
+    //         if( $student->email != '' || $student->email != null){
+    //             $mailTitle = "恭喜您成功報名！";
+    //             $mailAddr = $student->email;
+    //             $email = $this->sendMail($mailAddr, $mailTitle, $content);
+    //             $type = 2;
+    //         }else{
+    //             $email['status'] = "";
+    //         }
             
 
                 
-            if( $sms['status'] != "error" && $email['status'] != "error"){
-                //訊息儲存進資料庫
-                $num = mb_strlen( strip_tags($content, "utf-8") );
-                $sms_num = ceil($num/70);
+    //         if( $sms['status'] != "error" && $email['status'] != "error"){
+    //             //訊息儲存進資料庫
+    //             $num = mb_strlen( strip_tags($content, "utf-8") );
+    //             $sms_num = ceil($num/70);
 
-                /* 新增訊息資料 */
-                $message = new Message;
+    //             /* 新增訊息資料 */
+    //             $message = new Message;
 
-                // $message->id_student_group   = null;        // 細分組ID
-                $message->type               = $type;                 // 類型
-                $message->title              = $mailTitle;            // email標題
-                $message->content            = $content;              // 內容               
-                $message->send_at            = $send_at_DB;              // 寄送日期         
-                $message->name               = $msg_name;                 // 訊息名稱          
-                $message->id_teacher         = $id_teacher;           // 講師ID        
-                $message->id_course          = $id_course;            // 課程ID    
-                $message->id_status          = 19;            // 發送狀態      
-                $message->sms_num            = $sms_num;                  // 簡訊封數   
+    //             // $message->id_student_group   = null;        // 細分組ID
+    //             $message->type               = $type;                 // 類型
+    //             $message->title              = $mailTitle;            // email標題
+    //             $message->content            = $content;              // 內容               
+    //             $message->send_at            = $send_at_DB;              // 寄送日期         
+    //             $message->name               = $msg_name;                 // 訊息名稱          
+    //             $message->id_teacher         = $id_teacher;           // 講師ID        
+    //             $message->id_course          = $id_course;            // 課程ID    
+    //             $message->id_status          = 19;            // 發送狀態      
+    //             $message->sms_num            = $sms_num;                  // 簡訊封數   
             
-                $message->save();
-                $id_message = $message->id;
+    //             $message->save();
+    //             $id_message = $message->id;
             
-                if( $id_message != ""){
-                    //收件人儲存進資料庫
+    //             if( $id_message != ""){
+    //                 //收件人儲存進資料庫
                     
-                    if( $type == 0){
-                        //只有簡訊
-                        /* 新增寄件資料 */
-                        $receiver = new Receiver;
+    //                 if( $type == 0){
+    //                     //只有簡訊
+    //                     /* 新增寄件資料 */
+    //                     $receiver = new Receiver;
 
-                        $receiver->id_message       = $id_message;     // 訊息ID
-                        $receiver->id_student       = $registration->id_student;     // 學員ID               
-                        $receiver->phone            = $phoneNum;       // 聯絡電話         
-                        $receiver->email            = '';            // email         
-                        $receiver->id_status        = 19;            // 發送狀態   
-                        $receiver->memo             = '';                    // 備註
-                        $receiver->msgid            = '';                // 簡訊序號       
+    //                     $receiver->id_message       = $id_message;     // 訊息ID
+    //                     $receiver->id_student       = $registration->id_student;     // 學員ID               
+    //                     $receiver->phone            = $phoneNum;       // 聯絡電話         
+    //                     $receiver->email            = '';            // email         
+    //                     $receiver->id_status        = 19;            // 發送狀態   
+    //                     $receiver->memo             = '';                    // 備註
+    //                     $receiver->msgid            = '';                // 簡訊序號       
                     
-                        $receiver->save();
+    //                     $receiver->save();
 
-                    }else{
-                        //簡訊&信箱
-                        /* 新增寄件資料 */
-                        $receiver = new Receiver;
+    //                 }else{
+    //                     //簡訊&信箱
+    //                     /* 新增寄件資料 */
+    //                     $receiver = new Receiver;
 
-                        $receiver->id_message       = $id_message;     // 訊息ID
-                        $receiver->id_student       = $registration->id_student;     // 學員ID               
-                        $receiver->phone            = $phoneNum;       // 聯絡電話         
-                        $receiver->email            = $mailAddr;            // email         
-                        $receiver->id_status        = 19;            // 發送狀態   
-                        $receiver->memo             = '';                    // 備註
-                        $receiver->msgid            = '';                // 簡訊序號       
+    //                     $receiver->id_message       = $id_message;     // 訊息ID
+    //                     $receiver->id_student       = $registration->id_student;     // 學員ID               
+    //                     $receiver->phone            = $phoneNum;       // 聯絡電話         
+    //                     $receiver->email            = $mailAddr;            // email         
+    //                     $receiver->id_status        = 19;            // 發送狀態   
+    //                     $receiver->memo             = '';                    // 備註
+    //                     $receiver->msgid            = '';                // 簡訊序號       
                     
-                        $receiver->save();
-                    }
-                    $id_receiver = $receiver->id;
+    //                     $receiver->save();
+    //                 }
+    //                 $id_receiver = $receiver->id;
 
-                    if($id_receiver != "" ){
-                        return 'success';
-                    }
-                }
-            }
-        }
-    }
+    //                 if($id_receiver != "" ){
+    //                     return 'success';
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
 
     /**
      * 單筆簡訊發送
      */
-    public function messageApi($phoneNum, $sendContents, $dlvtime)
-    {
-        $sendContents = str_replace("<br>", chr(6), $sendContents);
+    // public function messageApi($phoneNum, $sendContents, $dlvtime)
+    // {
+    //     $sendContents = str_replace("<br>", chr(6), $sendContents);
 
-        try{
+    //     try{
 
-            $url = 'http://smsb2c.mitake.com.tw/b2c/mtk/SmSend?';
-            $url .= '&username=0908916687';
-            $url .= '&password=wjx2020';
-            $url .= '&dstaddr='.$phoneNum;
-            $url .= '&dlvtime='.$dlvtime;
-            $url .= '&smbody='.urlencode(strip_tags($sendContents));
-            // $url .= '&response='.route('');
-            $url .= '&CharsetURL=UTF-8';
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            $output = curl_exec($curl);
-            curl_close($curl);
+    //         $url = 'http://smsb2c.mitake.com.tw/b2c/mtk/SmSend?';
+    //         $url .= '&username=0908916687';
+    //         $url .= '&password=wjx2020';
+    //         $url .= '&dstaddr='.$phoneNum;
+    //         $url .= '&dlvtime='.$dlvtime;
+    //         $url .= '&smbody='.urlencode(strip_tags($sendContents));
+    //         // $url .= '&response='.route('');
+    //         $url .= '&CharsetURL=UTF-8';
+    //         $curl = curl_init();
+    //         curl_setopt($curl, CURLOPT_URL, $url);
+    //         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    //         $output = curl_exec($curl);
+    //         curl_close($curl);
 
-            // $output = '[1]' . "\r\n";
-            // $output .= 'msgid=0010698913' . "\r\n";
-            // $output .= 'statuscode=1' . "\r\n";
-            // // $output .= 'Error=v' . "\r\n";
-            // $output .= 'AccountPoint=91666';
+    //         // $output = '[1]' . "\r\n";
+    //         // $output .= 'msgid=0010698913' . "\r\n";
+    //         // $output .= 'statuscode=1' . "\r\n";
+    //         // // $output .= 'Error=v' . "\r\n";
+    //         // $output .= 'AccountPoint=91666';
             
-            // [1]
-            // msgid=0010698913
-            // statuscode=1
-            // AccountPoint=91666
+    //         // [1]
+    //         // msgid=0010698913
+    //         // statuscode=1
+    //         // AccountPoint=91666
 
-            // return $output;
+    //         // return $output;
 
-        }catch(\Exception $e){
-            return 'error: db insert.';
-        }
+    //     }catch(\Exception $e){
+    //         return 'error: db insert.';
+    //     }
          
         
-        /* 切割簡訊Response */
-        $output = preg_split("/[\s,]+/", $output);
-        $array_output = [];
+    //     /* 切割簡訊Response */
+    //     $output = preg_split("/[\s,]+/", $output);
+    //     $array_output = [];
 
-        /* 得到Response陣列 */
-        foreach( $output as $data){
-            $title = strstr($data, '=', true);
-            if( strpos($data, '=') != false){
-                $array_output += [
-                    $title => substr($data, strlen($title)+1 )
-                ];
-            }
-        }
+    //     /* 得到Response陣列 */
+    //     foreach( $output as $data){
+    //         $title = strstr($data, '=', true);
+    //         if( strpos($data, '=') != false){
+    //             $array_output += [
+    //                 $title => substr($data, strlen($title)+1 )
+    //             ];
+    //         }
+    //     }
 
-        $msgid = '';
-        //寄發簡訊成功
-        if( !empty($array_output['msgid']) ){
-            $msgid = $array_output['msgid'];
-            $statuscode = $array_output['statuscode'];
+    //     $msgid = '';
+    //     //寄發簡訊成功
+    //     if( !empty($array_output['msgid']) ){
+    //         $msgid = $array_output['msgid'];
+    //         $statuscode = $array_output['statuscode'];
             
-            //驗證是否成功送達/預約簡訊
-            $id_status = $this->verify($statuscode);
+    //         //驗證是否成功送達/預約簡訊
+    //         $id_status = $this->verify($statuscode);
 
-            switch ($id_status) {
-                case 19:
-                    //已傳送
-                    return array(
-                        'status'=>'success', 
-                        'msg'=>'傳送成功', 
-                        'phone'=> array($phoneNum), 
-                        'AccountPoint'=>$array_output['AccountPoint'], 
-                        'msgid'=> array($msgid)
-                    );
-                    break;
-                case 21:
-                    //已預約                    
-                    return array('status'=>'success', 
-                    'msg'=>'預約成功', 
-                    'phone'=> array($phoneNum), 
-                    'AccountPoint'=>$array_output['AccountPoint'], 
-                    'msgid'=> array($msgid)
-                    );
-                    break;
-                case 20:
-                    //無法傳送
-                    return array('status'=>'error', 'msg'=>'無法傳送');
-                    break;
-                default:
-                    return array('status'=>'error', 'msg'=>'無法傳送');
-                    break;
-            }
-        }else{
-            return array('status'=>'error', 'msg'=>$array_output['Error']);
-        }
-    }
+    //         switch ($id_status) {
+    //             case 19:
+    //                 //已傳送
+    //                 return array(
+    //                     'status'=>'success', 
+    //                     'msg'=>'傳送成功', 
+    //                     'phone'=> array($phoneNum), 
+    //                     'AccountPoint'=>$array_output['AccountPoint'], 
+    //                     'msgid'=> array($msgid)
+    //                 );
+    //                 break;
+    //             case 21:
+    //                 //已預約                    
+    //                 return array('status'=>'success', 
+    //                 'msg'=>'預約成功', 
+    //                 'phone'=> array($phoneNum), 
+    //                 'AccountPoint'=>$array_output['AccountPoint'], 
+    //                 'msgid'=> array($msgid)
+    //                 );
+    //                 break;
+    //             case 20:
+    //                 //無法傳送
+    //                 return array('status'=>'error', 'msg'=>'無法傳送');
+    //                 break;
+    //             default:
+    //                 return array('status'=>'error', 'msg'=>'無法傳送');
+    //                 break;
+    //         }
+    //     }else{
+    //         return array('status'=>'error', 'msg'=>$array_output['Error']);
+    //     }
+    // }
 
-    /**
-     * Mail
-     */
-    public function sendMail($emailAddr, $mailTitle, $mailContents) 
-    {
-        $mailContents = str_replace("\n", "<br>", $mailContents);
+    // /**
+    //  * Mail
+    //  */
+    // public function sendMail($emailAddr, $mailTitle, $mailContents) 
+    // {
+    //     $mailContents = str_replace("\n", "<br>", $mailContents);
         
-        Mail::send('frontend.testMail', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
-            $message->subject($mailTitle);
-            $message->to($emailAddr);
-        });
+    //     Mail::send('frontend.testMail', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
+    //         $message->subject($mailTitle);
+    //         $message->to($emailAddr);
+    //     });
 
-        return array('status'=>'success', 'email'=> $emailAddr);
+    //     return array('status'=>'success', 'email'=> $emailAddr);
 
-    }
+    // }
     
-    /**
-     * 驗證寄送簡訊狀況
-     */
-    public function verify($statuscode)
-    {
-        $id_status = '';
-        switch ($statuscode) {
-            case '0':
-                //預約傳送中
-                $id_status = 21;
-                break;
-            case '1':
-                //已送達業者
-                $id_status = 19;
-                break;
-            case '2':
-                //已送達業者
-                $id_status = 19;
-                break;
-            case '4':
-                //已送達手機
-                $id_status = 19;
-                break;
-            case "v":
-                //無效的手機號碼
-                $id_status = 20;
-                break;
-            default:
-                //傳送失敗
-                $id_status = 20;
-                break;
-        }
-        return $id_status;
-    }
+    // /**
+    //  * 驗證寄送簡訊狀況
+    //  */
+    // public function verify($statuscode)
+    // {
+    //     $id_status = '';
+    //     switch ($statuscode) {
+    //         case '0':
+    //             //預約傳送中
+    //             $id_status = 21;
+    //             break;
+    //         case '1':
+    //             //已送達業者
+    //             $id_status = 19;
+    //             break;
+    //         case '2':
+    //             //已送達業者
+    //             $id_status = 19;
+    //             break;
+    //         case '4':
+    //             //已送達手機
+    //             $id_status = 19;
+    //             break;
+    //         case "v":
+    //             //無效的手機號碼
+    //             $id_status = 20;
+    //             break;
+    //         default:
+    //             //傳送失敗
+    //             $id_status = 20;
+    //             break;
+    //     }
+    //     return $id_status;
+    // }
 
 }
