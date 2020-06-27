@@ -200,14 +200,21 @@ Route::get('course_return', 'Frontend\CourseReturnController@show')->name('cours
 Route::post('course_return_update', 'Backend\CourseReturnController@update');
 /*** 新增付款資料 Sandy(2020/03/16) ***/
 Route::post('course_return_insert_payment', 'Backend\CourseReturnController@insert_payment');
-/*** 刪除資料 Sandy(2020/03/16) ***/
-Route::post('course_return_delete', 'Backend\CourseReturnController@delete');
+/*** 刪除資料 Sandy(2020/06/26) ***/
+Route::post('course_return_delete_data', 'Backend\CourseReturnController@delete_data');
+/*** 刪除付款資料 Sandy(2020/03/16) ***/
+Route::post('course_return_delete_payment', 'Backend\CourseReturnController@delete_payment');
 /*** 新增報表資料 Sandy(2020/03/16) ***/
 Route::post('course_return_insert_data', 'Backend\CourseReturnController@insert_data');
 /*** 新增填入既有學員資料 Sandy(2020/03/29) ***/
 Route::get('course_return_fill', 'Frontend\CourseReturnController@fill');
 /*** 完款後寄送訊息 Sandy(2020/05/13) ***/
 Route::post('course_return_sendmsg', 'Backend\CourseReturnController@sendmsg');
+/*** 編輯填入既有學員資料 Sandy(2020/06/26) ***/
+Route::get('course_return_edit_fill', 'Frontend\CourseReturnController@edit_fill');
+/*** 編輯填入既有學員資料 Sandy(2020/06/26) ***/
+Route::post('course_return_edit_data', 'Backend\CourseReturnController@edit_data');
+
 
 
 

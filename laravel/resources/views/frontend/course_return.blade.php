@@ -58,10 +58,10 @@
                         <label class="col-form-label" for="idate"><strong>報名日期</strong></label>
                         {{-- <input type="text" id="idate" name="idate" class="form-control"> --}}
                         <div class="input-group date" id="idate" data-target-input="nearest">
-                            <input type="text" name="idate" class="form-control datetimepicker-input" data-target="#idate" autocomplete="off" required/>
-                            <div class="input-group-append" data-target="#idate" data-toggle="datetimepicker">
+                            <input type="text" name="idate" class="form-control datetimepicker-input" data-target="#idate" data-toggle="datetimepicker" autocomplete="off" required/>
+                            {{-- <div class="input-group-append" data-target="#idate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
+                            </div> --}}
                         </div>
                         {{-- <input type="text" class="form-control" id="idate" name="idate" data-provide="datepicker" autocomplete="off"> --}}
                       </div>
@@ -320,6 +320,7 @@
             <th class="text-nowrap">付款日期</th>
             <th class="text-nowrap">服務人員</th>
             <th class="text-nowrap">備註</th>
+            <th class="text-nowrap"></th>
           </tr>
         @endslot
         @slot('tbody')
@@ -379,7 +380,10 @@
                 @endif
               </td>
               <td class="align-middle">
-                <input type="date" id="pay_date{{ $data['id'] }}" name="pay_date" class="form-control form-control-sm" value="{{ $data['pay_date'] }}"/>
+                {{-- <input type="date" id="pay_date{{ $data['id'] }}" name="pay_date" class="form-control form-control-sm" value="{{ $data['pay_date'] }}"/> --}}
+                {{-- <div class="input-group date" data-target-input="nearest"> --}}
+                    <input type="text" id="pay_date{{ $data['id'] }}" name="pay_date{{ $data['id'] }}" class="form-control form-control-sm pay_date" data-target="#pay_date{{ $data['id'] }}" data-toggle="datetimepicker" autocomplete="off" value="{{ $data['pay_date'] }}"/>
+                {{-- </div> --}}
               </td>
               <td class="align-middle">
                 <input type="text" class="form-control form-control-sm" id="person{{ $data['id'] }}" name="person" value="{{ $data['person'] }}">
@@ -387,9 +391,13 @@
               <td class="align-middle">
                 <input type="text" class="form-control form-control-sm" id="pay_memo{{ $data['id'] }}" name="pay_memo" value="{{ $data['pay_memo'] }}">
               </td>
+              <td class="align-middle">
+                <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $data['id'] }}" data-phone="{{ $data['phone'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
+                <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete_data({{ $data['id'] }});">刪除</a>
+              </td>
             </tr>
             <tr>
-              <td colspan="10">
+              <td colspan="11">
                 <div class="collapse multi-collapse" id="payment{{ $data['id'] }}">
                   <div class="card card-body p-1">
                     <div class="table-responsive">
@@ -426,7 +434,7 @@
                               <td class="align-middle">
                                 {{-- <button type="button" class="btn btn-secondary btn-sm mx-1">修改</button>
                                 <button type="button" class="btn btn-success btn-sm mx-1">儲存</button> --}}
-                                <button type="button" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data_payment['id_payment'] }});">刪除</button>
+                                <button type="button" class="btn btn-danger btn-sm mx-1" onclick="btn_delete_payment({{ $data_payment['id_payment'] }});">刪除</button>
                               </td>
                             </tr>
                           @endforeach
@@ -443,6 +451,171 @@
           @endforeach
         @endslot
       @endcomponent
+
+      <!-- 編輯資料 modal -->
+      <div class="modal fade" id="edit_form" tabindex="-1" role="dialog" aria-labelledby="edit_formLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">編輯資料</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-left">
+              <form action="{{ url('course_return_edit_data') }}" method="POST" >
+                @csrf
+                  <input type="hidden" id="edit_idevents" name="edit_idevents" value="">
+                  <input type="hidden" id="edit_id" name="edit_id" value="">
+                  <div class="form-group required">
+                    <label class="col-form-label" for="edit_date"><strong>報名日期</strong></label>
+                    <div class="input-group date" data-target-input="nearest">
+                        <input type="text" id="edit_date" name="edit_date" class="form-control datetimepicker-input edit_input" data-target="#edit_date" autocomplete="off" data-toggle="datetimepicker" required/>
+                        {{-- <div class="input-group-append" data-target="#edit_date" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div> --}}
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label for="edit_phone" class="col-form-label"><strong>聯絡電話</strong></label>
+                    <input type="text" class="form-control edit_input" name="edit_phone" id="edit_phone" readonly required>
+                  </div>
+                  <div class="form-group required">
+                    <label for="edit_name" class="col-form-label"><strong>姓名</strong></label>
+                    <input type="text" class="form-control edit_input" name="edit_name" id="edit_name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_sex" class="col-form-label edit_input"><strong>性別</strong></label>
+                    <div class="d-block my-2">
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="edit_sex1" name="edit_sex" class="custom-control-input edit_input" value="男">
+                        <label class="custom-control-label" for="edit_sex1">男</label>
+                      </div>
+                      <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="edit_sex2" name="edit_sex" class="custom-control-input edit_input" value="女">
+                        <label class="custom-control-label" for="edit_sex2">女</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_identity" class="col-form-label"><strong>身分證字號</strong></label>
+                    <input type="text" class="form-control edit_input" name="edit_identity" id="edit_identity">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_email" class="col-form-label"><strong>電子郵件</strong></label>
+                    <input type="text" class="form-control edit_input" name="edit_email" id="edit_email">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_birthday" class="col-form-label"><strong>出生日期</strong></label>
+                    <input type="text" class="form-control edit_input" id="edit_birthday" name="edit_birthday" data-provide="datepicker" autocomplete="off">
+                    <label class="text-secondary px-2 py-1"><small>(民國年-月-日)</small></label>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_company" class="col-form-label"><strong>公司名稱</strong></label>
+                    <input type="text" class="form-control edit_input" name="edit_company" id="edit_company">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_profession" class="col-form-label"><strong>職業</strong></label>
+                    <input type="text" class="form-control edit_input" name="edit_profession" id="edit_profession">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_address" class="col-form-label"><strong>聯絡地址</strong></label>
+                    <input type="text" class="form-control edit_input" name="edit_address" id="edit_address">
+                  </div>
+                  <div class="form-group">
+                    <label for="1" class="col-form-label"><strong>我想參加課程</strong></label>
+                    <div class="d-block my-2">
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_join1" name="edit_join" class="custom-control-input edit_input" value="0">
+                        <label class="custom-control-label" for="edit_join1">現場最優惠價格</label>
+                      </div>
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_join2" name="edit_join" class="custom-control-input edit_input" value="1">
+                        <label class="custom-control-label" for="edit_join2">五日內優惠價格</label>
+                      </div>
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_join3" name="edit_join" class="custom-control-input edit_input" value="2">
+                        <label class="custom-control-label" for="edit_join3">分期優惠價格</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_events" class="col-form-label edit_input"><strong>報名場次</strong></label>
+                    <p name="edit_events" id="edit_events"></p>
+                  </div>
+                  {{-- <div class="form-group">
+                    <label for="edit_pay_model" class="col-form-label"><strong>付款方式</strong></label>
+                    <div class="d-block my-2">
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_pay_model1" name="edit_pay_model" class="custom-control-input" value="0">
+                        <label class="custom-control-label" for="epay_model1">現金</label>
+                      </div>
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_pay_model2" name="epay_model" class="custom-control-input" value="1">
+                        <label class="custom-control-label" for="epay_model2">匯款</label>
+                      </div>
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_pay_model3" name="edit_pay_model" class="custom-control-input" value="2">
+                        <label class="custom-control-label" for="edit_pay_model3">刷卡：輕鬆付</label>
+                      </div>
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_pay_model4" name="edit_pay_model" class="custom-control-input" value="3">
+                        <label class="custom-control-label" for="edit_pay_model4">刷卡：一次付</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_cash" class="col-form-label"><strong>付款金額</strong></label>
+                    <input type="number" class="form-control" name="edit_cash" id="edit_cash">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_number" class="col-form-label"><strong>匯款帳號/卡號後五碼</strong></label>
+                    <input type="number" class="form-control" name="edit_number" id="edit_number">
+                  </div> --}}
+                  <div class="form-group">
+                    <label for="edit_invoice" class="col-form-label"><strong>統一發票</strong></label>
+                    <div class="d-block my-2">
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_invoice1" name="edit_invoice" class="custom-control-input edit_input" value="0">
+                        <label class="custom-control-label" for="edit_invoice1">捐贈社會福利機構（由無極限國際公司另行辦理）</label>
+                      </div>
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_invoice2" name="edit_invoice" class="custom-control-input edit_input" value="1">
+                        <label class="custom-control-label" for="edit_invoice2">二聯式</label>
+                      </div>
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="edit_invoice3" name="edit_invoice" class="custom-control-input edit_input" value="2">
+                        <label class="custom-control-label" for="edit_invoice3">三聯式</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_num" class="col-form-label"><strong>統編</strong></label>
+                    <input type="number" class="form-control edit_input" name="edit_num" id="edit_num">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_companytitle" class="col-form-label"><strong>抬頭</strong></label>
+                    <input type="text" class="form-control edit_input" name="edit_companytitle" id="edit_companytitle">
+                  </div>
+                  {{-- <div class="form-group">
+                    <label for="edit_dit_status" class="col-form-label">付款狀態</label>
+                    <select class="custom-select" id="edit_status" name="edit_status">
+                        <option value="6">留單</option>
+                        <option value="7">完款</option>
+                        <option value="8">付訂</option>
+                        <option value="9">退款</option>
+                    </select>
+                  </div> --}}
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">確認修改</button>
+                  </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <!-- 新增付款 modal -->
       <div class="modal fade" id="add_payment" tabindex="-1" role="dialog" aria-labelledby="add_paymentLabel" aria-hidden="true">
@@ -684,11 +857,23 @@
                   clear: 'fas fa-trash',
                   close: 'far fa-times' } 
 
+    $('.pay_date').datetimepicker({ 
+      languate: 'zh-TW',
+      format: 'YYYY-MM-DD',
+      icons: iconlist
+    });
+
     $('#idate').datetimepicker({ 
       defaultDate: new Date(),
       languate: 'zh-TW',
       format: 'YYYY-MM-DD',
-      icons: iconlist, 
+      icons: iconlist
+    });
+
+    $('#ibirthday').datepicker({ 
+      // defaultDate: new Date(),
+      languate: 'zh-TW',
+      format: 'twy-mm-dd',
     });
 
     // $('#ibirthday').datetimepicker({ 
@@ -698,8 +883,14 @@
     //   icons: iconlist, 
     // });
     
-    $('#ibirthday').datepicker({ 
-      // defaultDate: new Date(),
+    $('#edit_date').datetimepicker({ 
+      defaultDate: new Date(),
+      languate: 'zh-TW',
+      format: 'YYYY-MM-DD',
+      icons: iconlist, 
+    });
+
+    $('#edit_birthday').datepicker({ 
       languate: 'zh-TW',
       format: 'twy-mm-dd',
     });
@@ -770,6 +961,123 @@
     }
   /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
 
+  /* 編輯資料 S Sandy(2020/06/25) */
+  $('.edit_data').on('click', function (e) {
+    var id = $(this).data('id');
+    var phone = $(this).data('phone');
+    $.ajax({
+      type:'GET',
+      url:'course_return_edit_fill',
+      data:{
+        id:id,
+        phone:phone
+      },
+      success:function(data){
+        console.log(data);  
+        
+        // $('.edit_input').val('');
+        // $('.edit_input').prop('checked',false);
+
+        if( data != "nodata" ){    
+          $("#edit_id").val(id);  //報名ID
+          $("#edit_idevents").val($('#id_events').val());  //場次ID
+          $("#edit_date").val(data['data']['submissiondate']);  //報名日期
+          $("#edit_phone").val(data['data']['phone']);  //電話
+          $("#edit_name").val(data['data']['name']);
+          if( data['data']['sex'] == '男'){
+            $("#edit_sex1").click();
+          }else{
+            $("#edit_sex2").click();
+          }
+          $("#edit_identity").val(data['data']['id_identity']);  //身分證
+          $("#edit_email").val(data['data']['email']);  //信箱
+          $("#edit_birthday").val(data['data']['birthday']);  //生日
+          $("#edit_company").val(data['data']['company']);  //公司
+          $("#edit_profession").val(data['data']['profession']);  //職業
+          $("#edit_address").val(data['data']['address']);  //地址
+          //我想參加課程
+          switch (data['data']['registration_join']) {
+            case "0":
+              $('#edit_join1').click();
+              break;
+            case "1":
+              $('#edit_join2').click();
+              break;
+            case "2":
+              $('#edit_join3').click();
+              break;
+            default:
+              break;
+          }
+          $("#edit_events").text(data['events']);  //報名場次
+          switch (data['data']['type_invoice']) {  //統一發票
+            case "0":
+              $('#edit_invoice1').click();  
+              break;
+            case "1":
+              $('#edit_invoice2').click();  
+              break;
+            case "2": 
+              $('#edit_invoice3').click(); 
+              break;
+            default:
+              break;
+          }
+          $("#edit_num").val(data['data']['number_taxid']);   //統編
+          $("#edit_companytitle").val(data['data']['companytitle']);  //抬頭
+        }
+
+
+      },
+      error: function(jqXHR, textStatus, errorMessage){
+          console.log(jqXHR);    
+      }
+    });
+  });
+  /* 編輯資料 E Sandy(2020/06/25) */
+
+  /* 刪除資料 S Sandy(2020/06/25) */
+  function btn_delete_data(id_apply) {
+    var msg = "是否刪除此筆資料?";
+    if (confirm(msg) == true) {
+      $.ajax({
+        type: 'POST',
+        url: 'course_return_delete_data',
+        dataType: 'json',
+        data: {
+          id_apply: id_apply
+        },
+        success: function(data) {
+          console.log(data);
+          if (data['data'] == "ok") {
+            alert('刪除成功！！')
+            /** alert **/
+            // $("#success_alert_text").html("刪除資料成功");
+            // fade($("#success_alert"));
+
+            location.reload();
+          } else {
+            // alert('刪除失敗！！')
+
+            /** alert **/
+            $("#error_alert_text").html("刪除資料失敗");
+            fade($("#error_alert"));
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error));
+
+          /** alert **/
+          $("#error_alert_text").html("刪除資料失敗");
+          fade($("#error_alert"));
+        }
+      });
+    } else {
+      return false;
+    }
+  }
+  /* 刪除資料 E Sandy(2020/06/25) */
+  
 
   /* 資料儲存 Start */
 
@@ -827,18 +1135,18 @@
       var data_type = 'status_payment';
       var status = '';
 
-      if($(this).val() == 7){
-        // var msg = "確認此學員付款狀態為「完款」? 確認後系統將寄出報名成功訊息給此學員。";
-        var msg = "付款狀態為「完款」，是否傳訊息報名成功訊息此學員？ 確認後系統將寄出報名成功訊息給此學員。";
-        if (confirm(msg)==true){
-          // status = save_data($(this), data_type, data_id);
-          //寄訊息
-          sendMsg(data_id);
-        // }else{          
-        //   $(this).val($(this).data('orgvalue'));
-        //   return false;
-        }
-      }
+      // if($(this).val() == 7){
+      //   // var msg = "確認此學員付款狀態為「完款」? 確認後系統將寄出報名成功訊息給此學員。";
+      //   var msg = "付款狀態為「完款」，是否傳訊息報名成功訊息此學員？ 確認後系統將寄出報名成功訊息給此學員。";
+      //   if (confirm(msg)==true){
+      //     // status = save_data($(this), data_type, data_id);
+      //     //寄訊息
+      //     sendMsg(data_id);
+      //   // }else{          
+      //   //   $(this).val($(this).data('orgvalue'));
+      //   //   return false;
+      //   }
+      // }
       // else{
       //   status = save_data($(this), data_type, data_id);
       // }
@@ -923,16 +1231,18 @@
     });
 
     // 付款日期
-    $('body').on('blur','input[name="pay_date"]',function(){
+    $('body').on('blur','input[name^="pay_date"]',function(){
       var data_id = ($(this).attr('id')).substr(8);
       var data_type = 'pay_date';
       save_data($(this), data_type, data_id);
+      $('.pay_date').datetimepicker('hide');
     });
-    $('body').on('keyup','input[name="pay_date"]',function(e){
+    $('body').on('keyup','input[name^="pay_date"]',function(e){
       if (e.keyCode === 13) {
         var data_id = ($(this).attr('id')).substr(8);
         var data_type = 'pay_date';
         save_data($(this), data_type, data_id);
+        $('.pay_date').datetimepicker('hide');
       }
     });
     
@@ -1186,7 +1496,7 @@
                   <input type="number" class="form-control form-control-sm" id="number${ data.id }" name="number" value="${ data.number }">               
                 </td>
                 <td class="align-middle">
-                  <button type="button" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(${ data.id });">刪除</button>
+                  <button type="button" class="btn btn-danger btn-sm mx-1" onclick="btn_delete_payment(${ data.id });">刪除</button>
                 </td>
               </tr>
             `);
@@ -1204,6 +1514,12 @@
             //待付更新
             $('#pending' + data.id_registration).html( function(){
               return parseInt($('#amount_payable' + data.id_registration).val() - $('#amount_paid' + data.id_registration).html());
+            });
+            //總金額更新
+            $('#cash').html( function(){
+              return $('input[name="cash"]').toArray().reduce(function(tot, val) {
+                return tot + parseInt(val.value);
+              }, 0);
             });
 
             $('#add_payment').modal('hide');
@@ -1233,12 +1549,12 @@
 
 
   /* 刪除付款 Sandy(2020/03/22) */
-  function btn_delete(id_payment){
+  function btn_delete_payment(id_payment){
     var msg = "是否刪除此付款資訊?";
     if (confirm(msg)==true){
       $.ajax({
           type : 'POST',
-          url:'course_return_delete', 
+          url:'course_return_delete_payment', 
           dataType: 'json',    
           data:{
             id_payment: id_payment,
@@ -1269,75 +1585,75 @@
 
 
   /* 完款後寄出報名成功訊息 Sandy(2020/05/13) */
-  function sendMsg(id){
-    $.ajax({
-      type:'POST',
-      url:'course_return_sendmsg',
-      data:{
-        id: id
-      },
-      success:function(res){
-        console.log(res);  
+  // function sendMsg(id){
+  //   $.ajax({
+  //     type:'POST',
+  //     url:'course_return_sendmsg',
+  //     data:{
+  //       id: id
+  //     },
+  //     success:function(res){
+  //       console.log(res);  
         
-        // if( res['status'] == 'success' && res['AccountPoint'] != null){
-        //   /** alert **/
-        //   $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
-        //   fade($("#success_alert"));
+  //       // if( res['status'] == 'success' && res['AccountPoint'] != null){
+  //       //   /** alert **/
+  //       //   $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
+  //       //   fade($("#success_alert"));
 
-        //   $('button').prop('disabled', 'disabled');
-        //   setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
-        // }else if( res['status'] == 'success' ){
-        //   /** alert **/ 
-        //   $("#success_alert_text").html("寄送成功。");
-        //   fade($("#success_alert"));    
+  //       //   $('button').prop('disabled', 'disabled');
+  //       //   setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+  //       // }else if( res['status'] == 'success' ){
+  //       //   /** alert **/ 
+  //       //   $("#success_alert_text").html("寄送成功。");
+  //       //   fade($("#success_alert"));    
           
-        //   $('button').prop('disabled', 'disabled');
-        //   setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
-        // }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
-        //   /** alert **/ 
-        //   $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
-        //   fade($("#error_alert"));    
+  //       //   $('button').prop('disabled', 'disabled');
+  //       //   setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+  //       // }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
+  //       //   /** alert **/ 
+  //       //   $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
+  //       //   fade($("#error_alert"));    
           
-        //   $('#sendMessageBtn').html('立即傳送');
-        //   $('#sendMessageBtn').prop('disabled', false);
-        // }else if( res['status'] == 'error' ){
-        //   /** alert **/ 
-        //   $("#error_alert_text").html("寄送失敗。");
-        //   fade($("#error_alert"));   
+  //       //   $('#sendMessageBtn').html('立即傳送');
+  //       //   $('#sendMessageBtn').prop('disabled', false);
+  //       // }else if( res['status'] == 'error' ){
+  //       //   /** alert **/ 
+  //       //   $("#error_alert_text").html("寄送失敗。");
+  //       //   fade($("#error_alert"));   
 
-        //   $('#sendMessageBtn').html('立即傳送');
-        //   $('#sendMessageBtn').prop('disabled', false); 
-        // }else{
-        //   /** alert **/ 
-        //   $("#error_alert_text").html("寄送失敗。");
-        //   fade($("#error_alert"));   
+  //       //   $('#sendMessageBtn').html('立即傳送');
+  //       //   $('#sendMessageBtn').prop('disabled', false); 
+  //       // }else{
+  //       //   /** alert **/ 
+  //       //   $("#error_alert_text").html("寄送失敗。");
+  //       //   fade($("#error_alert"));   
 
-        //   $('#sendMessageBtn').html('立即傳送');
-        //   $('#sendMessageBtn').prop('disabled', false); 
-        // }
+  //       //   $('#sendMessageBtn').html('立即傳送');
+  //       //   $('#sendMessageBtn').prop('disabled', false); 
+  //       // }
 
-      },
-      error: function(jqXHR, textStatus, errorMessage){
-          console.log("error: "+ errorMessage);    
-          console.log(jqXHR);
-          $(this).html('立即傳送');
-          $(this).prop('disabled', false);
-      }
-    });
-  }
+  //     },
+  //     error: function(jqXHR, textStatus, errorMessage){
+  //         console.log("error: "+ errorMessage);    
+  //         console.log(jqXHR);
+  //         $(this).html('立即傳送');
+  //         $(this).prop('disabled', false);
+  //     }
+  //   });
+  // }
   /* 完款後寄出報名成功訊息 Sandy(2020/05/13) */
 
   
   
   // var id_student_old = '';
 
-  // 基本訊息
-  function course_data(id_student) {
-    id_student_old = id_student;
-    // contact_data();
-    $("#contact").modal('show');
+  // // 基本訊息
+  // function course_data(id_student) {
+  //   id_student_old = id_student;
+  //   // contact_data();
+  //   $("#contact").modal('show');
     
-  }
+  // }
 
   // /* 聯絡狀況 */
   // function contact_data() {

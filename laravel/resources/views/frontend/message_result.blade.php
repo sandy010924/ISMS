@@ -68,7 +68,7 @@
                 <td>{{ $data['count_apply'] }}</td>
                 <td>{{ $data['cost_apply'] }}</td>
                 <td>{{ $data['rate_apply'] }}%</td>
-                <td class="d-none"> {{ $data['id_teacher'] }}</td>
+                <td class="d-none">{{ $data['id_teacher'] }}</td>
               </tr>
               @endforeach
             @endslot
@@ -172,7 +172,7 @@
 
     table
       .columns( 9 )
-      .search( $('a[name="teacher_tab"]').eq( 0 ).data('id') )
+      .search( $('a.active[name="teacher_tab"]').eq( 0 ).data('id') )
       .draw();
 
 
