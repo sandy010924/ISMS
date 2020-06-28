@@ -170,6 +170,10 @@ Route::post('course_list_edit_update', 'Backend\CourseListEditController@update'
 Route::post('course_list_edit_updatedata', 'Backend\CourseListEditController@update_data');
 /*** 刪除資料 ***/
 Route::post('course_list_edit_delete', 'Backend\CourseListEditController@delete');
+/*** 填入資料 ***/
+Route::get('course_list_edit_fill', 'Frontend\CourseListEditController@fill');
+/*** 編輯資料 ***/
+Route::post('course_list_edit_editdata', 'Backend\CourseListEditController@edit');
 
 
 

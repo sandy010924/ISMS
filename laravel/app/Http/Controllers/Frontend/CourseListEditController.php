@@ -133,4 +133,38 @@ class CourseListEditController extends Controller
 
         return view('frontend.course_list_edit', compact('course', 'course_all', 'events'));    
     }
+    
+    // 編輯資料填入 Sandy (2020/06/28)
+    public function fill( Request $request )
+    {
+        $id = $request->input('id');
+        $data = EventsCourse::Where('id_group', $id)->first();
+        $count = count(EventsCourse::Where('id_group', $id)->get());
+
+        if( !empty($data) ){
+            $group = EventsCourse::Where('id_group', $id)->get();
+            $i = 0;
+            $events_group = "";
+            foreach($group as $item){
+                //日期
+                $date = date('Y-m-d', strtotime($item['course_start_at']));
+                //星期
+                $weekarray = array("日","一","二","三","四","五","六");
+                $week = $weekarray[date('w', strtotime($item['course_start_at']))];
+                
+                if( ++$i === $count){
+                    $events_group .= $date . '（' . $week . '）';
+                }else {
+                    $events_group .= $date . '（' . $week . '）' . '、';
+                }
+
+                $start = date('H:i', strtotime($item['course_start_at']));
+                $end = date('H:i', strtotime($item['course_end_at']));
+            }
+
+            return array('data' => $data, 'events_group'=> $events_group, 'count' => $count, 'start' => $start, 'end' => $end);
+        }else {
+            return 'nodata';
+        }
+    }
 }

@@ -109,6 +109,47 @@ class CourseListEditController extends Controller
     /*  更新資料(講師、課程名稱)Sandy (2020/04/02) e */
 
     
+    // 編輯資料 Sandy (2020/06/27)
+    public function edit(Request $request)
+    {
+        //讀取data
+        $id_course = $request->get('edit_idcourse');
+        $id_group = $request->get('edit_idgroup');
+        $event = $request->get('edit_event');
+        $start = $request->get('edit_starttime');
+        $end = $request->get('edit_endtime');
+        $location = $request->get('edit_location');
+        
+        try{
+
+            /*場次資料 - S*/
+
+            //判斷系統是否已有該場次資料
+            $events = EventsCourse::where('id_group', $id_group)->get();
+
+            // 檢查正課報名資料
+            if (count($events) != 0) {
+                foreach($events as $data){
+                    $date = date('Y-m-d', strtotime(EventsCourse::where('id', $data['id'])->first()->course_start_at));
+
+                    EventsCourse::where('id', $data['id'])->update([
+                        'name' => $event,
+                        'course_start_at' => date('Y-m-d H:i:s', strtotime($date . " " . $start)),
+                        'course_end_at' => date('Y-m-d H:i:s', strtotime($date . " " . $end)),
+                        'location' => $location,
+                    ]);     
+                }                
+           }
+        
+            /*正課報名資料 - E*/
+            
+            return redirect()->route('course_list_edit', ['id' => $id_course])->with('status', '修改成功');
+        
+        }catch (Exception $e) {
+            return redirect()->route('course_list_edit', ['id' => $id_course])->with('status', '修改失敗');
+        }
+    }
+
     // 刪除 Sandy (2020/05/31)
     public function delete(Request $request)
     {
