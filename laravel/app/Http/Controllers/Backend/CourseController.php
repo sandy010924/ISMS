@@ -189,15 +189,17 @@ class CourseController extends Controller
                     $semail = "Excel無資料";
                     $sname = "Excel無資料";
                     $ssubmissiondate = 25569;
-                    if ($data[$int_name] != "") {
+
+                    if ($int_name != 0 && $data[$int_name] != "") {
                         $sname = $data[$int_name];
                     }
-                    if ($data[$int_phone] != "") {
+                    if ($int_phone != 0 && $data[$int_phone] != "") {
                         $sphone = $data[$int_phone];
                     }
-                    if ($data[$int_email] != "") {
+                    if ($int_email != 0 && $data[$int_email] != "") {
                         $semail = $data[$int_email];
                     }
+
                     if ($data[$int_submissiondate] != "") {
                         $ssubmissiondate = $data[$int_submissiondate];
                     }
@@ -383,22 +385,21 @@ class CourseController extends Controller
                         $sprofession = "Excel無資料";
                         $saddress = "Excel無資料";
 
-                        if ($data[$int_name] != "") {
+                        if ($int_name != 0 && $data[$int_name] != "") {
                             $sname = $data[$int_name];
                         }
-                        if ($data[$int_phone] != "") {
+                        if ($int_phone != 0 && $data[$int_phone] != "") {
                             $sphone = $data[$int_phone];
                         }
-                        if ($data[$int_email] != "") {
+                        if ($int_email != 0 && $data[$int_email] != "") {
                             $semail = $data[$int_email];
                         }
-                        if ($data[$int_job] != "") {
+                        if ($int_job != 0 && $data[$int_job] != "") {
                             $sprofession = $data[$int_job];
                         }
-                        if ($int_address != 0) {
+                        if ($int_address != 0 && $data[$int_address] != "") {
                             $saddress = $data[$int_address];
                         }
-
 
                         // 新增學員資料
                         $student->name          = $sname;                   // 學員姓名
