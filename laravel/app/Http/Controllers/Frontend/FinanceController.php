@@ -20,7 +20,7 @@ class FinanceController extends Controller
 
         $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
             ->select('events_course.*', 'course.name as course', 'course.type as type')
-            ->where('unpublish', '0')
+            // ->where('unpublish', '0')
             ->groupBy('events_course.id_group')
             ->orderBy('events_course.course_start_at', 'desc')
             ->get();
@@ -28,24 +28,49 @@ class FinanceController extends Controller
         foreach ($events as $key => $data) {
             $type = "";
 
-            $count_invoice = Registration::Where('status_payment', '7')
-                ->selectRaw('COUNT(*)  as total')
+            // $count_invoice = Registration::Where('status_payment', '7')
+            //     ->selectRaw('COUNT(*)  as total')
+            //     ->selectRaw("SUM(CASE WHEN invoice is NOT null THEN 1 ELSE 0 END) as count_invoice")
+            //     ->Where('id_group', $data['id_group'])
+            //     ->get();
+
+            // 銷講要看到下一階報名的學員資料 Rocky(2020/06/28)
+            $count_invoice = Registration::selectRaw('COUNT(*)  as total')
                 ->selectRaw("SUM(CASE WHEN invoice is NOT null THEN 1 ELSE 0 END) as count_invoice")
-                ->Where('id_group', $data['id_group'])
+                ->Where('source_events', $data['id'])
+                ->Where('status_payment', '7')
                 ->get();
 
+            $events_multi = EventsCourse::where('id_group', $data['id_group'])
+                ->select('events_course.course_start_at')
+                ->orderBy('events_course.course_start_at', 'desc')
+                ->get();
+            $course = '';
+            $events_multi_data = '';
+            // if (count($events_multi) > 1) {
+            //     foreach ($events_multi as $key => $data2) {
+            //         // $events_multi_data .= date('Y-m-d', strtotime('2020-06-28 16:18:00'));
+            //         $events_multi_data .= date('Y-m-d', strtotime($data2['course_start_at'])) . ',';
+            //     }
+            //     $course = $data['course'] . "(多天)";
+            // } else {
+            //     $course = $data['course'];
+            // }
+            $course = $data['course'];
             $events[$key] = [
                 'id' => $data['id'],
                 'id_group' => $data['id_group'],
                 'id_course' => $data['id_course'],
                 'course_start_at' => date('Y-m-d', strtotime($data['course_start_at'])),
-                'course' => $data['course'],
+                'course' =>   $course,
                 'event' => $data['name'],
                 'cost_ad' => $data['cost_ad'],
                 'cost_message' => $data['cost_message'],
                 'cost_events' => $data['cost_events'],
                 'count_invoice' => $count_invoice[0]['count_invoice'],
-                'total' => $count_invoice[0]['total']
+                'total' => $count_invoice[0]['total'],
+                // 'events_multi_data' => substr($events_multi_data, 0, -1),
+                // 'count' => $data['id_group']
             ];
         }
         return view('frontend.finance', compact('events'));
@@ -55,12 +80,12 @@ class FinanceController extends Controller
     // 顯示學員資料
     public function showstudent(Request $request)
     {
-        $id_group = $request->get('id_group');
+        $id_events = $request->get('id_events');
 
         $data = Registration::join('student', 'registration.id_student', '=', 'student.id')
             ->select('registration.*', 'student.name', 'student.address')
             ->Where('status_payment', '7')
-            ->Where('id_group', $id_group)
+            ->Where('source_events', $id_events)
             ->orderby('registration.created_at', 'desc')
             ->get();
 

@@ -39,7 +39,6 @@
         <th>廣告成本</th>
         <th>訊息成本</th>
         <th>場地成本</th>
-        <!-- <th>獎金分配</th> -->
       </tr>
       @endslot
       @slot('tbody')
@@ -47,10 +46,11 @@
       <tr>
         <input type="hidden" id="id_group" value="{{ $event['id_group'] }}">
         <td>{{ $event['course_start_at']  }}</td>
-        <td>{{ $event['course'] }}</td>
+        <td style="text-align:left;">
+          {{ $event['course'] }}
+        </td>
         <td>{{ $event['event'] }}</td>
-        <td><a href="javascript:void(0)" onclick="show_invoice({{ $event['id_group'] }})">{{ (empty($event['count_invoice'])) ? '0' : $event['count_invoice']  }}/{{ $event['total'] }}</a> </td>
-
+        <td><a href="javascript:void(0)" onclick="show_invoice({{ $event['id'] }})">{{ (empty($event['count_invoice'])) ? '0' : $event['count_invoice']  }}/{{ $event['total'] }}</a> </td>
         <td>
           <div class="col-sm-8">
             <input type="number" class="form-control form-control-sm auth_readonly" name="advertise_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,0);" value="{{ $event['cost_ad'] }}" />
@@ -66,7 +66,6 @@
             <input type="number" class="form-control form-control-sm auth_readonly" name="space_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,2);" value="{{ $event['cost_events'] }}">
           </div>
         </td>
-
       </tr>
       @endforeach
       @endslot
@@ -198,7 +197,7 @@
   }
 
   /* 顯示學員資料 - S Rocky(2020/04/25) */
-  function show_invoice(id_group) {
+  function show_invoice(id_events) {
     var updatetime = ''
     $("#invoice").modal('show');
     $("#invoice_search_date").val('');
@@ -220,10 +219,11 @@
         "url": "show_student",
         "type": "POST",
         "data": {
-          id_group: id_group
+          id_events: id_events
         },
         async: false,
         "dataSrc": function(json) {
+          console.log(json)
           for (var i = 0, ien = json.length; i < ien; i++) {
             var type_invoice = ''
 
