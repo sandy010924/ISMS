@@ -404,12 +404,12 @@ class CourseCheckController extends Controller
             // 檢查報名資料
             if (count($check_salesregistration) != 0) {
 
-                if($pay_model == ""){
-                    $pay_model = SalesRegistration::where('id', $id)->first()->pay_model;
-                }
-                if($account == ""){
-                    $account = SalesRegistration::where('id', $id)->first()->account;
-                }
+                // if($pay_model == ""){
+                //     $pay_model = SalesRegistration::where('id', $id)->first()->pay_model;
+                // }
+                // if($account == ""){
+                //     $account = SalesRegistration::where('id', $id)->first()->account;
+                // }
 
                 SalesRegistration::where('id', $id)->update([
                     'pay_model' => $pay_model,

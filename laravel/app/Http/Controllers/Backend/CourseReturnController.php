@@ -28,7 +28,7 @@ class CourseReturnController extends Controller
         $id_group = array();
 
         //讀取data
-        $submissiondate = $request->get('idate');
+        $submissiondate = date('Y-m-d H:i:s',strtotime($request->get('idate')));
         $name = $request->get('iname');
         $sex = $request->get('isex');
         $id_identity = $request->get('iid');
@@ -604,21 +604,21 @@ class CourseReturnController extends Controller
             // 檢查正課報名資料
             if (count($check_registration) != 0) {
 
-                if($submissiondate == ""){
-                    $submissiondate = Registration::where('id', $id)->first()->submissiondate;
-                }
-                if($type_invoice == ""){
-                    $type_invoice = Registration::where('id', $id)->first()->type_invoice;
-                }
-                if($number_taxid == ""){
-                    $number_taxid = Registration::where('id', $id)->first()->number_taxid;
-                }
-                if($companytitle == ""){
-                    $companytitle = Registration::where('id', $id)->first()->companytitle;
-                }
-                if($join == ""){
-                    $join = Registration::where('id', $id)->first()->join;
-                }
+                // if($submissiondate == ""){
+                //     $submissiondate = Registration::where('id', $id)->first()->submissiondate;
+                // }
+                // if($type_invoice == ""){
+                //     $type_invoice = Registration::where('id', $id)->first()->type_invoice;
+                // }
+                // if($number_taxid == ""){
+                //     $number_taxid = Registration::where('id', $id)->first()->number_taxid;
+                // }
+                // if($companytitle == ""){
+                //     $companytitle = Registration::where('id', $id)->first()->companytitle;
+                // }
+                // if($join == ""){
+                //     $join = Registration::where('id', $id)->first()->join;
+                // }
 
                 Registration::where('id', $id)->update([
                     'submissiondate' => $submissiondate,
