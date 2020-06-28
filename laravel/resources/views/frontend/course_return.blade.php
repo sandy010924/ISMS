@@ -1449,7 +1449,6 @@
     //   `);
     // }
   });
-
   $('body').on('click', '#btn_payment',function(){
     var id_registration = $("#id_registration").val();
     var pay_model = $("#add_paymodel").val();

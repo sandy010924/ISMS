@@ -191,6 +191,12 @@ Route::post('course_check_insert', 'Backend\CourseCheckController@insert');
 Route::post('course_check_status', 'Backend\CourseCheckController@update_status');
 /*** 課程資訊修改 Sandy ***/
 Route::post('course_check_data', 'Backend\CourseCheckController@update_data');
+/*** 報名編輯填入 Sandy ***/
+Route::get('course_check_fill', 'Frontend\CourseCheckController@fill');
+/*** 課程資訊修改 Sandy ***/
+Route::post('course_check_edit', 'Backend\CourseCheckController@edit');
+/*** 課程資訊刪除 Sandy ***/
+Route::post('course_check_delete', 'Backend\CourseCheckController@delete');
 
 
 /*** [課程管理] 場次報表 ***/

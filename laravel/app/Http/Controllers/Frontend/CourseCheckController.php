@@ -85,6 +85,7 @@ class CourseCheckController extends Controller
                 ->get();
 
 
+            $coursechecks = array();
             foreach ($list as $key => $data) {
                 $coursechecks[$key] = [
                     'row' => $key+1,
@@ -181,5 +182,23 @@ class CourseCheckController extends Controller
         }
         return view('frontend.course_check', compact('coursechecks', 'course', 'week', 'count_apply', 'count_check', 'count_cancel', 'nextLevel'));
             
+    }
+
+    
+    // 編輯資料填入 Sandy (2020/06/26)
+    public function fill( Request $request )
+    {
+        $id = $request->input('id');
+
+        $data = SalesRegistration::join('student','student.id','=','sales_registration.id_student')
+                        // ->join('payment','id_registration','=','registration.id')
+                        ->Where('sales_registration.id', $id)
+                        ->first();    
+
+        if( !empty($data) ){
+            return $data;
+        }else {
+            return 'nodata';
+        }
     }
 }

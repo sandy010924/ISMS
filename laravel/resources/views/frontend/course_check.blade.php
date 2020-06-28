@@ -225,6 +225,9 @@
       <th class="d-none">報到</th>
       <th width="20%">報到備註</th>
       <th class="d-none">報到備註</th>
+      @if( $course->type == 1 )
+        <th></th>
+      @endif
     </tr>
     @endslot
     @slot('tbody')
@@ -253,12 +256,103 @@
         <input type="text" class="form-control input-sm checkNote auth_readonly" id="{{ $coursecheck['check_id'] }}" value="{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}">
       </td>
       <td class="align-middle d-none" id="checkmemo{{ $coursecheck['check_id'] }}">{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}</td>
+      @if( $course->type == 1 )
+        <td class="align-middle">
+          <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $coursecheck['check_id'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
+          <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete({{ $coursecheck['check_id'] }});">刪除</a>
+        </td>
+      @endif
     </tr>
     @endforeach
     @endslot
     @endcomponent
   </div>
 </div>
+
+
+<!-- 編輯報名 modal -->
+<div class="modal fade" id="edit_form" tabindex="-1" role="dialog" aria-labelledby="EditCheckLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="EditCheckLabel">現場報名</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-left">
+        <form action="{{ url('course_check_edit') }}" method="POST">
+          @csrf
+          <input type="hidden" name="edit_idevents" id="edit_idevents" value="">
+          <input type="hidden" name="edit_id" id="edit_id" value="">
+          <div class="form-group required">
+            <label for="edit_name" class="col-form-label">姓名</label>
+            <input type="text" class="form-control" name="edit_name" id="edit_name" required>
+          </div>
+          <div class="form-group required">
+            <label for="edit_phone" class="col-form-label">聯絡電話</label>
+            <input type="text" class="form-control" name="edit_phone" id="edit_phone" readonly>
+            <label class="text-secondary"><small>聯繫方式</small></label>
+          </div>
+          <div class="form-group">
+            <label for="edit_email">電子郵件</label>
+            <input type="text" class="form-control" name="edit_email" id="edit_email">
+            <label class="text-secondary"><small>example@example.com</small></label>
+          </div>
+          <div class="form-group">
+            <label for="edit_address" class="col-form-label">居住區域</label>
+            <select class="custom-select form-control" name="edit_address" id="edit_address" readonly>
+              <option selected disabled>請選擇居住區域</option>
+              <option>宜蘭</option>
+              <option>基隆</option>
+              <option>台北</option>
+              <option>新北</option>
+              <option>桃園</option>
+              <option>新竹</option>
+              <option>苗栗</option>
+              <option>台中</option>
+              <option>彰化</option>
+              <option>南投</option>
+              <option>雲林</option>
+              <option>嘉義</option>
+              <option>台南</option>
+              <option>高雄</option>
+              <option>屏東</option>
+              <option>台東</option>
+              <option>花蓮</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit_profession">目前職業</label>
+            <input type="text" class="form-control" name="edit_profession" id="edit_profession">
+            <label class="text-secondary"><small>目前的工作職稱</small></label>
+          </div>
+          <div class="form-group">
+            <label for="edit_paymodel" class="col-form-label">付款方式</label>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="edit_paymodel1" name="edit_paymodel" value="刷卡">
+              <label class="custom-control-label" for="edit_paymodel1">刷卡</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="edit_paymodel2" name="edit_paymodel" value="匯款">
+              <label class="custom-control-label" for="edit_paymodel2">匯款</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="edit_account" class="col-form-label">帳號/卡號後五碼</label>
+            <input type="text" class="form-control" name="edit_account" id="edit_account">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary">確認修改</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
 <style>
   div.dt-buttons {
     float: right;
@@ -544,5 +638,97 @@
     });
   }
   // 資料自動儲存 End
+
+
+  /* 編輯資料 S Sandy(2020/06/28) */
+  $('.edit_data').on('click', function (e) {
+    var id = $(this).data('id');
+    $.ajax({
+      type:'GET',
+      url:'course_check_fill',
+      data:{
+        id:id
+      },
+      success:function(data){
+        console.log(data);  
+        
+        // $('.edit_input').val('');
+        // $('.edit_input').prop('checked',false);
+
+        if( data != "nodata" ){    
+          $("#edit_idevents").val($('#event_id').val());   //場次ID
+          $("#edit_id").val(id);  //報名ID
+          $("#edit_name").val(data['name']);
+          $("#edit_phone").val(data['phone']);  //電話
+          $("#edit_email").val(data['email']);  //信箱
+          $("#edit_address").val(data['address']);  //居住地區
+          $("#edit_profession").val(data['profession']);  //職業
+          //付款方式
+          switch (data['pay_model']) {
+            case "刷卡":
+              $('#edit_paymodel1').click();
+              break;
+            case "匯款":
+              $('#edit_paymodel2').click();
+              break;
+            default:
+              break;
+          }
+          $("#edit_account").val(data['account']);   //帳號/卡號後五碼
+        }
+
+
+      },
+      error: function(jqXHR, textStatus, errorMessage){
+          console.log(jqXHR);    
+      }
+    });
+  });
+  /* 編輯資料 E Sandy(2020/06/28) */
+
+
+  /* 刪除資料 S Sandy(2020/06/25) */
+  function btn_delete(id_apply) {
+    var type = $('#course_type').val();
+    var msg = "是否刪除此筆資料?";
+    if (confirm(msg) == true) {
+      $.ajax({
+        type: 'POST',
+        url: 'course_check_delete',
+        dataType: 'json',
+        data: {
+          type: type,
+          id_apply: id_apply
+        },
+        success: function(data) {
+          console.log(data);
+          if (data == "ok") {
+            alert('刪除成功！！')
+            /** alert **/
+            // $("#success_alert_text").html("刪除資料成功");
+            // fade($("#success_alert"));
+
+            location.reload();
+          } else {
+            // alert('刪除失敗！！')
+
+            /** alert **/
+            $("#error_alert_text").html("刪除資料失敗");
+            fade($("#error_alert"));
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error));
+
+          /** alert **/
+          $("#error_alert_text").html("刪除資料失敗");
+          fade($("#error_alert"));
+        }
+      });
+    } else {
+      return false;
+    }
+  }
+  /* 刪除資料 E Sandy(2020/06/25) */
 </script>
 @endsection

@@ -341,4 +341,135 @@ class CourseCheckController extends Controller
             // ));
         }
     }
+
+
+    /*** 修改資料  Sandy(2020/06/28) ***/
+    public function edit(Request $request)
+    {
+        //讀取data
+        $id_events = $request->get('edit_idevents');
+        $id = $request->get('edit_id');
+        $name = $request->get('edit_name');
+        $phone = $request->get('edit_phone');
+        $email = $request->get('edit_email');
+        $address = $request->get('edit_address');
+        $profession = $request->get('edit_profession');
+        $pay_model = $request->get('edit_paymodel');
+        $account = $request->get('edit_account');
+        
+        try{
+
+            /*學員報名資料 - S*/
+
+            //判斷系統是否已有該學員資料
+            $check_student = Student::where('phone', $phone)->get();
+
+            // 檢查學員資料
+            if (count($check_student) != 0) {
+
+                if($name == ""){
+                    $name = Student::where('phone', $phone)->first()->name;
+                }
+                if($email == ""){
+                    $email = Student::where('phone', $phone)->first()->email;
+                }
+                
+                //如果原本有地址就不更新地址
+                $old_address = Student::where('phone', $phone)->first()->address;
+                if($old_address != ""){
+                    $address = $old_address;
+                }
+                    
+                if($profession == ""){
+                    $profession = Student::where('phone', $phone)->first()->profession;
+                }
+
+                //更新學員資料
+                Student::where('phone', $phone)
+                    ->update([
+                        'name' => $name,
+                        'email' => $email,
+                        'address' => $address,
+                        'profession' => $profession,
+                    ]);
+            } 
+            /*學員報名資料 - E*/
+
+
+            /*報名資料 - S*/
+
+            //判斷系統是否已有該報名資料
+            $check_salesregistration = SalesRegistration::where('id', $id)->get();
+
+            // 檢查報名資料
+            if (count($check_salesregistration) != 0) {
+
+                if($pay_model == ""){
+                    $pay_model = SalesRegistration::where('id', $id)->first()->pay_model;
+                }
+                if($account == ""){
+                    $account = SalesRegistration::where('id', $id)->first()->account;
+                }
+
+                SalesRegistration::where('id', $id)->update([
+                    'pay_model' => $pay_model,
+                    'account' => $account,
+                ]);                     
+           }
+        
+            /*報名資料 - E*/
+            
+            return redirect()->route('course_check', ['id' => $id_events])->with('status', '修改成功');
+        
+        }catch (Exception $e) {
+            return redirect()->route('course_check', ['id' => $id_events])->with('status', '修改失敗');
+        }
+    }
+
+    /*** 刪除資料 Sandy (2020/06/28) ***/
+    public function delete(Request $request)
+    {
+        $status = "";
+        $type = $request->get('type');
+        $id_apply = $request->get('id_apply');
+            
+        if($type == 1){
+            //銷講
+            $sale = SalesRegistration::where('id', $id_apply)
+                                      ->get();
+
+            if( count($sale) != 0 ){
+                //刪除報名表
+                SalesRegistration::where('id', $id_apply)->delete();
+            }
+
+            $status = "ok";
+            
+        }elseif( $type == 2 || $type == 3) {
+            //正課
+            $formal = Registration::where('id', $id_apply)
+                                  ->get();
+
+            if( count($formal) != 0 ){
+                //刪除報到表
+                Register::where('id_registration', $id_apply)->delete();
+                //刪除付款表
+                Debt::where('id_registration', $id_apply)->delete();   
+                //刪除追單表
+                Payment::where('id_registration', $id_apply)->delete();
+                //刪除退費
+                Refund::where('id_registration', $id_apply)->delete();   
+                //刪除報名表
+                Registration::where('id', $id_apply)->delete();
+            }
+
+            $status = "ok";
+
+        }else {
+            $status = "error";
+        }
+        
+         return json_encode($status);
+    }
+
 }
