@@ -48,12 +48,13 @@
     @component('components.datatable')
     @slot('thead')
     <tr>
-      <th>Submission Date</th>
+      <th>報名日期</th>
       <!-- 如果是銷講多加名單來源 -->
       @if( $course->type == 1 )
       <th>名單來源</th>
       @endif
       <th>報名場次</th>
+      <th>姓名</th>
       <th>聯絡電話</th>
       <th>電子郵件</th>
       <th>目前職業</th>
@@ -75,6 +76,7 @@
       @endif
 
       <td>{{ $data['event'] }}</td>
+      <td>{{ $data['name'] }}</td>
       <td>{{ $data['phone'] }}</td>
       <td>{{ $data['email'] }}</td>
       {{-- <td>{{ substr_replace($data['phone'], '***', 4, 3) }}</td>
@@ -96,6 +98,11 @@
     @endcomponent
   </div>
 </div>
+<style>
+  table td{
+    vertical-align: middle !important;
+  }
+</style>
 <!-- Content End -->
 <script>
   var table;

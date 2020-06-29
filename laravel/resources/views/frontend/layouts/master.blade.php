@@ -87,6 +87,14 @@
       color: #fff;
       background-color: #28a745;
     }
+
+    /* table */
+    /* th, td {
+        white-space:nowrap;
+    } */
+    #table_list th, #table_list td{
+      vertical-align: middle;
+    }
   </style>
   <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
   <script src="{{ asset('js/jszip.min.js') }}"></script>
