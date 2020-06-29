@@ -47,6 +47,9 @@
         <input type="hidden" id="id_group" value="{{ $event['id_group'] }}">
         <td>{{ $event['course_start_at']  }}</td>
         <td style="text-align:left;">
+          @if($event['events_multi_data'] != '')
+          <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" data-target="#bonus_edite{{$event['id']}}">多天</button>
+          @endif
           {{ $event['course'] }}
         </td>
         <td>{{ $event['event'] }}</td>
@@ -66,6 +69,17 @@
             <input type="number" class="form-control form-control-sm auth_readonly" name="space_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,2);" value="{{ $event['cost_events'] }}">
           </div>
         </td>
+        <!-- 場次多天詳細資料 Rocky (2002/06/28) - S -->
+        <div class="modal fade text-left " id="bonus_edite{{$event['id']}}" tabindex="-1" role="dialog" aria-labelledby="bonus_editeLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-body">
+                {{ $event['events_multi_data'] }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 編輯獎金 Rocky (2002/04/26) - E -->
       </tr>
       @endforeach
       @endslot

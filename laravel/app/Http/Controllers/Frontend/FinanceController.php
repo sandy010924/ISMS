@@ -27,6 +27,8 @@ class FinanceController extends Controller
 
         foreach ($events as $key => $data) {
             $type = "";
+            $course = '';
+            $events_multi_data = '';
 
             // $count_invoice = Registration::Where('status_payment', '7')
             //     ->selectRaw('COUNT(*)  as total')
@@ -41,22 +43,21 @@ class FinanceController extends Controller
                 ->Where('status_payment', '7')
                 ->get();
 
-            $events_multi = EventsCourse::where('id_group', $data['id_group'])
-                ->select('events_course.course_start_at')
+            // 篩選多天 Rocky(2020/06/30)
+            $events_multi = EventsCourse::where('events_course.id_group', '=', $data['id_group'])
+                ->select('events_course.course_start_at', 'events_course.id_group')
                 ->orderBy('events_course.course_start_at', 'desc')
                 ->get();
-            $course = '';
-            $events_multi_data = '';
-            // if (count($events_multi) > 1) {
-            //     foreach ($events_multi as $key => $data2) {
-            //         // $events_multi_data .= date('Y-m-d', strtotime('2020-06-28 16:18:00'));
-            //         $events_multi_data .= date('Y-m-d', strtotime($data2['course_start_at'])) . ',';
-            //     }
-            //     $course = $data['course'] . "(多天)";
-            // } else {
-            //     $course = $data['course'];
-            // }
-            $course = $data['course'];
+
+            if (count($events_multi) > 1) {
+                foreach ($events_multi as $key2 => $data2) {
+                    $events_multi_data .= date('Y-m-d', strtotime($data2['course_start_at'])) . ',  ';
+                }
+                $course = $data['course'] . "(多天)";
+            } else {
+                $course = $data['course'];
+            }
+
             $events[$key] = [
                 'id' => $data['id'],
                 'id_group' => $data['id_group'],
@@ -69,8 +70,7 @@ class FinanceController extends Controller
                 'cost_events' => $data['cost_events'],
                 'count_invoice' => $count_invoice[0]['count_invoice'],
                 'total' => $count_invoice[0]['total'],
-                // 'events_multi_data' => substr($events_multi_data, 0, -1),
-                // 'count' => $data['id_group']
+                'events_multi_data' => substr($events_multi_data, 0, -3),
             ];
         }
         return view('frontend.finance', compact('events'));
