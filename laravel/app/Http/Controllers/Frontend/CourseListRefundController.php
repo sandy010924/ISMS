@@ -106,6 +106,7 @@ class CourseListRefundController extends Controller
                                         //   'events_course.name as event', 
                                         //   'events_course.id_group as id_group')
                                  ->Where('registration.id_course', $id)
+                                 ->orderby('review')
                                  ->get();
  
                                  

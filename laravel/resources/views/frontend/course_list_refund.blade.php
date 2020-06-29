@@ -167,7 +167,7 @@
             <th>帳號/卡號後五碼</th>
             <th>當時付款金額</th>
             <th width="10%">審核狀態</th>
-            <th class="no-sort"></th>
+            <th></th>
           </tr>
         @endslot
         @slot('tbody')
@@ -273,11 +273,11 @@
       //DataTable
       table=$('#table_list').DataTable({
         "dom": '<l<t>p>',
-        columnDefs: [ {
-          "targets": 'no-sort',
-          "orderable": false,
-        } ],
-        "order": [0, 'desc'],
+        // columnDefs: [ {
+        //   "targets": 'no-sort',
+        //   "orderable": false,
+        // } ],
+        "ordering": false,
       });
     }
 
