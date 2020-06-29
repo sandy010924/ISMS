@@ -119,7 +119,7 @@
           </div>
           <div class="col">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
-              <i id="firstCondition" class="fa fa-toggle-on" aria-hidden="true">比較條件</i>
+              <i id="firstCondition" class="fa fa-toggle-on" aria-hidden="true">增加比較</i>
             </button>
             <button id="searchBtn" type="button" class="btn btn-outline-secondary float-right">搜尋</button>
           </div>
@@ -205,7 +205,7 @@
           </div>
           <div class="col">
           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
-            <i class="fa fa-toggle-on" aria-hidden="true">比較條件</i>
+            <i class="fa fa-toggle-on" aria-hidden="true">增加比較</i>
           </button>
           </div>
         </div>
@@ -290,7 +290,7 @@
           </div>
           <div class="col">
           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition4" aria-expanded="false" aria-controls="dev_condition4">
-            <i class="fa fa-toggle-on" aria-hidden="true">比較條件</i>
+            <i class="fa fa-toggle-on" aria-hidden="true">增加比較</i>
           </button>
           </div>
         </div>
@@ -375,7 +375,7 @@
           </div>
           <div class="col">
           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition5" aria-expanded="false" aria-controls="dev_condition5">
-            <i class="fa fa-toggle-on" aria-hidden="true">比較條件</i>
+            <i class="fa fa-toggle-on" aria-hidden="true">增加比較</i>
           </button>
           </div>
         </div>
