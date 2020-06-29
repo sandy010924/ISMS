@@ -91,48 +91,53 @@ class CourseListRefundController extends Controller
             //                      ->get();
             
             $refund_table = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
-                                 ->join('events_course', 'events_course.id', '=', 'registration.id_events')
+                                //  ->join('events_course', 'events_course.id', '=', 'registration.id_events')
                                  ->join('student', 'student.id', '=', 'refund.id_student')
                                  ->select('student.name as name', 
                                           'student.phone as phone', 
                                           'student.email as email',  
                                           'registration.id as id_registration', 
                                           'registration.created_at as date', 
+                                          'registration.id_group as id_group', 
                                           'refund.id as id', 
                                           'refund.refund_date as refund_date', 
                                           'refund.refund_reason as refund_reason', 
-                                          'refund.review as review',
-                                          'events_course.name as event', 
-                                          'events_course.id_group as id_group')
+                                          'refund.review as review')
+                                        //   'events_course.name as event', 
+                                        //   'events_course.id_group as id_group')
                                  ->Where('registration.id_course', $id)
                                  ->get();
  
                                  
             foreach( $refund_table as $key => $data ){
 
-                //場次群組
-                $events_group = EventsCourse::Where('id_group', $data['id_group'])
-                                            ->get();
+                if($data['id_group'] != null){
 
-                $numItems = count($events_group);
-                $i = 0;
+                    //場次群組
+                    $events_group = EventsCourse::Where('id_group', $data['id_group'])
+                                                ->get();
 
-                $event = '';
+                    $numItems = count($events_group);
+                    $i = 0;
 
-                foreach( $events_group as $key_group => $data_group ){
-                    //日期
-                    $date = date('Y-m-d', strtotime($data_group['course_start_at']));
-                    //星期
-                    $weekarray = array("日","一","二","三","四","五","六");
-                    $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
-                    
-                    if( ++$i === $numItems){
-                        $event .= $date . '(' . $week . ')';
-                    }else {
-                        $event .= $date . '(' . $week . ')' . '、';
+                    $event = '';
+
+                    foreach( $events_group as $key_group => $data_group ){
+                        //日期
+                        $date = date('Y-m-d', strtotime($data_group['course_start_at']));
+                        //星期
+                        $weekarray = array("日","一","二","三","四","五","六");
+                        $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
+                        
+                        if( ++$i === $numItems){
+                            $event .= $date . '(' . $week . ')　'. $data_group['name'];
+                        }else {
+                            $event .= $date . '(' . $week . ')' . '、';
+                        }
                     }
+                }else{
+                    $event = '尚未選擇場次';
                 }
-
 
                 //付款方式細項
                 $payment_table = Payment::Where('id_registration', $data['id_registration'])
@@ -172,27 +177,28 @@ class CourseListRefundController extends Controller
                     }
                 }
 
-                $review = '';
-                switch ($data['review']) {
-                    case 0:
-                        $review = '審核中';
-                        break;
-                    case 1:
-                        $review = '通過';
-                        break;
-                    case 2:
-                        $review = '未通過';
-                        break;
-                    default:
-                        $review = '審核中';
-                        break;
-                }
+                // $review = '';
+                // switch ($data['review']) {
+                //     case 0:
+                //         $review = '審核中';
+                //         break;
+                //     case 1:
+                //         $review = '通過';
+                //         break;
+                //     case 2:
+                //         $review = '未通過';
+                //         break;
+                //     default:
+                //         $review = '審核中';
+                //         break;
+                // }
 
                 //當時付款金額
                 $refund_cash = 0;
                 $refund_cash = Payment::Where('id_registration', $data['id_registration'])
                                         ->sum('cash');
 
+                
 
                 //refund
                 $refund[$key] = array(
@@ -207,7 +213,7 @@ class CourseListRefundController extends Controller
                     'refund_reason' => $data['refund_reason'],
                     'event' => $event,
                     'refund_cash' => $refund_cash,
-                    'review' => $review,
+                    'review' => $data['review'],
                 );
 
             }

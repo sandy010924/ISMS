@@ -166,7 +166,7 @@
             <th>當時付款方式</th>
             <th>帳號/卡號後五碼</th>
             <th>當時付款金額</th>
-            <th>審核狀態</th>
+            <th width="10%">審核狀態</th>
             <th class="no-sort"></th>
           </tr>
         @endslot
@@ -183,7 +183,13 @@
               <td>{{ $data['pay_model'] }}</td>
               <td>{{ $data['number'] }}</td>
               <td>{{ $data['refund_cash'] }}</td>
-              <td>{{ $data['review'] }}</td>
+              <td>
+                @if( $data['review'] == '0' )
+                  <a role="button" class="btn btn-sm btn-secondary text-white btn_review" id="{{ $data['id'] }}" data-val="{{ $data['review'] }}">審核中</a>       
+                @else
+                  <a role="button" class="btn btn-sm btn-success text-white btn_review" id="{{ $data['id'] }}" data-val="{{ $data['review'] }}">通過</a>
+                @endif
+              </td>
               <td><a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a></td>
             </tr>
           @endforeach
@@ -226,14 +232,6 @@
         defaultDate: moment().format('YYYY-MM-DD'), 
       });
 
-      //DataTable
-      table=$('#table_list').DataTable({
-        "dom": '<l<t>p>',
-        columnDefs: [ {
-          "targets": 'no-sort',
-          "orderable": false,
-        } ]
-      });
 
       //select2 場次下拉式搜尋 Sandy(2020/03/19)
       // $("#form_events").select2({
@@ -251,6 +249,8 @@
       // });
       // $.fn.select2.defaults.set( "theme", "bootstrap" );
 
+      table_load();
+
       //日期區間搜尋
       $('#daterange').on('apply.daterangepicker', function(ev, picker) {
         $.fn.dataTable.ext.search.push(
@@ -267,12 +267,19 @@
         table.draw();
       });
 
-
     });
 
-    // $('#form').modal(function(){
-      
-    // });
+    function table_load(){
+      //DataTable
+      table=$('#table_list').DataTable({
+        "dom": '<l<t>p>',
+        columnDefs: [ {
+          "targets": 'no-sort',
+          "orderable": false,
+        } ],
+        "order": [0, 'desc'],
+      });
+    }
 
     $('input[name="form_reason"]').on( "change", function() {
       if($('#form_reason5').prop('checked')){
@@ -292,16 +299,16 @@
       //   form.classList.add('was-validated');
       fill($(this).val());
     });
-    $('#form_phone').on('keyup', function(e) {
-      // if (form.checkValidity() === false) {
-      //     event.preventDefault();
-      //     event.stopPropagation();
-      //   }
-      //   form.classList.add('was-validated');
-      if (e.keyCode === 13) {
-        fill($(this).val());
-      }
-    });
+    // $('#form_phone').on('keyup', function(e) {
+    //   // if (form.checkValidity() === false) {
+    //   //     event.preventDefault();
+    //   //     event.stopPropagation();
+    //   //   }
+    //   //   form.classList.add('was-validated');
+    //   if (e.keyCode === 13) {
+    //     fill($(this).val());
+    //   }
+    // });
 
     function fill(phone){
       var course_id = $("#course_id").val();
@@ -425,5 +432,49 @@
       }    
     }
     // 刪除 Sandy(2020/03/20) end
+
+
+    /* 審核按鈕 Sandy(2020/06/30) */
+    $('body').on('click', '.btn_review', function() {
+      var msg = "是否確定更改審核狀態?";
+      if (confirm(msg)==true){
+        var id = $(this).attr('id');
+        var val = $(this).data(val)['val'];
+        $.ajax({
+          type: 'POST',
+          url: 'course_list_refund_review',
+          data: {
+            id: id,
+            val: val
+          },
+          success: function(data) {
+            console.log(data);  
+
+            if( data == 'success' ){
+              /** alert **/
+              $("#success_alert_text").html("審核狀態修改成功");
+              fade($("#success_alert"));
+              
+              //重整datatable區塊
+              $("#datatableDiv").load(window.location.href + " #datatableDiv", function(){
+                table_load();
+              });
+            }else{
+              /** alert **/
+              $("#error_alert_text").html("審核狀態修改失敗");
+              fade($("#error_alert"));
+            }
+          },
+          error: function(jqXHR) {
+            console.log("error: " + JSON.stringify(jqXHR));
+
+            /** alert **/
+            $("#error_alert_text").html("審核狀態修改失敗");
+            fade($("#error_alert"));
+          }
+        });
+      }
+    });
+    
   </script>
 @endsection

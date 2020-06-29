@@ -79,6 +79,40 @@ class CourseListRefundController extends Controller
 
     }
 
+    //更新審核狀態
+    public function update(Request $request)
+    {
+        try{
+            //讀取data
+            $id = $request->get('id');
+            $val = $request->get('val');
+                        
+            //判斷是否有該退費資料
+            $check_refund = Refund::where('id', $id)->get();
+            
+            if (count($check_refund) != 0) {
+                if($val == '0'){
+                    //更新退費資料
+                    Refund::where('id',  $id)
+                        ->update([
+                            'review' => 1
+                        ]);
+                }else if($val == '1'){
+                    //更新退費資料
+                    Refund::where('id',  $id)
+                        ->update([
+                            'review' => 0
+                        ]);
+                }
+            }
+
+            return 'success';
+
+        } catch (\Exception $e) {
+            return 'error';
+        }
+
+    }
     
      // 刪除 Sandy (2020/03/20)
      public function delete(Request $request)
