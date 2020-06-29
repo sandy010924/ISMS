@@ -47,6 +47,11 @@ class CourseReturnController extends Controller
         $companytitle = $request->get('icompanytitle');
         $istatus = $request->get('istatus');
 
+        $amount_payable = $request->get('ipayable');
+        $pay_date = $request->get('ipaydate');
+        $person = $request->get('iperson');
+        $pay_memo = $request->get('ipaymemo');
+
         $events_len =  $request->get('events_len');
         for($i = 0 ; $i < $events_len ; $i++){
             if(!empty($request->get('ievent'.$i))){
@@ -183,7 +188,7 @@ class CourseReturnController extends Controller
                             }
                             // $registration->id_status         = 1;                             // 報名狀態ID
                             // $registration->id_payment        = $id_payment;                   // 繳款明細ID
-                            $registration->amount_payable    = '';                            // 應付金額
+                            $registration->amount_payable    = $amount_payable;                            // 應付金額
                             #// $registration->amount_paid       = '';                            // 已付金額
                             // $registration->memo              = '';                            // 備註
                             $registration->sign              = '';                             // 簽名檔案
@@ -203,14 +208,15 @@ class CourseReturnController extends Controller
                                 $registration->id_group          = $data_group;                     // 群組ID
                             }   
 
-                            $registration->pay_date          = null;                            // 付款日期
-                            $registration->pay_memo          = '';                            // 付款備註
-                            $registration->person            = '';                            // 服務人員
+                            $registration->pay_date          = $pay_date;                            // 付款日期
+                            $registration->pay_memo          = $pay_memo;                            // 付款備註
+                            $registration->person            = $person;                            // 服務人員
                             $registration->type_invoice      = $type_invoice;                 // 統一發票
                             $registration->number_taxid      = $number_taxid;                 // 統編
                             $registration->companytitle      = $companytitle;                 // 抬頭
                             $registration->source_events     = $source_events;          
-                            $registration->submissiondate    = $submissiondate;                                    // 來源場次ID
+                            $registration->submissiondate    = $submissiondate;                    
+                        
                             
                             $registration->save();
                             $id_registration = $registration->id;
@@ -234,6 +240,10 @@ class CourseReturnController extends Controller
                                             'number_taxid' => $number_taxid,
                                             'companytitle' => $companytitle,
                                             'registration_join' => $join,
+                                            'amount_payable' => $amount_payable,
+                                            'pay_date' => $pay_date,
+                                            'person' => $person,
+                                            'memo' => $memo,
                                         ]);
 
                         }else{
@@ -246,6 +256,10 @@ class CourseReturnController extends Controller
                                             'number_taxid' => $number_taxid,
                                             'companytitle' => $companytitle,
                                             'registration_join' => $join,
+                                            'amount_payable' => $amount_payable,
+                                            'pay_date' => $pay_date,
+                                            'person' => $person,
+                                            'memo' => $memo,
                                         ]);
                         }
                     }
@@ -413,7 +427,7 @@ class CourseReturnController extends Controller
                         $registration->id_course         = -99;                           // 課程ID
                         // $registration->id_status         = 1;                             // 報名狀態ID
                         // $registration->id_payment        = $id_payment;                   // 繳款明細ID
-                        $registration->amount_payable    = '';                            // 應付金額
+                        $registration->amount_payable    = $amount_payable;                            // 應付金額
                         #// $registration->amount_paid       = '';                            // 已付金額
                         // $registration->memo              = '';                            // 備註
                         $registration->sign              = '';                            // 簽名檔案
@@ -423,9 +437,9 @@ class CourseReturnController extends Controller
                         $registration->id_events         = -99;                           // 場次ID
                         $registration->registration_join = $join;                         // 我想參加課程
                         $registration->id_group          = null;                          // 群組ID
-                        $registration->pay_date          = null;                          // 付款日期
-                        $registration->pay_memo          = '';                            // 付款備註
-                        $registration->person            = '';                            // 服務人員
+                        $registration->pay_date          = $pay_date;                          // 付款日期
+                        $registration->pay_memo          = $pay_memo;                            // 付款備註
+                        $registration->person            = $person;                            // 服務人員
                         $registration->type_invoice      = $type_invoice;                 // 統一發票
                         $registration->number_taxid      = $number_taxid;                 // 統編
                         $registration->companytitle      = $companytitle;                 // 抬頭
@@ -450,6 +464,10 @@ class CourseReturnController extends Controller
                                     'number_taxid' => $number_taxid,
                                     'companytitle' => $companytitle,
                                     'registration_join' => $join,
+                                    'amount_payable' => $amount_payable,
+                                    'pay_date' => $pay_date,
+                                    'person' => $person,
+                                    'memo' => $memo,
                                 ]);
                 }
                 /*正課報名資料 - E*/

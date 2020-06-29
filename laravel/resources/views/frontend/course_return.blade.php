@@ -204,8 +204,16 @@
                         </div>
                       </div>
                       <div class="form-group">
+                        <label for="ipayable" class="col-form-label"><strong>應付金額</strong></label>
+                        <input type="number" class="form-control" name="ipayable" id="ipayable">
+                      </div>
+                      <div class="form-group">
                         <label for="icash" class="col-form-label"><strong>付款金額</strong></label>
                         <input type="number" class="form-control" name="icash" id="icash">
+                      </div>
+                      <div class="form-group">
+                        <label for="ipaydate" class="col-form-label"><strong>付款日期</strong></label>
+                        <input type="text" id="ipaydate" name="ipaydate" class="form-control form-control-sm" data-target="#ipaydate" data-toggle="datetimepicker" autocomplete="off"/>
                       </div>
                       <div class="form-group">
                         <label for="inumber" class="col-form-label"><strong>匯款帳號/卡號後五碼</strong></label>
@@ -244,6 +252,14 @@
                             <option value="8">付訂</option>
                             <option value="9">退款</option>
                         </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="iperson" class="col-form-label"><strong>服務人員</strong></label>
+                        <input type="text" class="form-control" name="iperson" id="iperson">
+                      </div>
+                      <div class="form-group">
+                        <label for="ipaymemo" class="col-form-label"><strong>備註</strong></label>
+                        <input type="text" class="form-control" name="ipaymemo" id="ipaymemo">
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
@@ -1111,6 +1127,12 @@
 
     $('#idate').datetimepicker({ 
       defaultDate: new Date(),
+      languate: 'zh-TW',
+      format: 'YYYY-MM-DD',
+      icons: iconlist
+    });
+
+    $('#ipaydate').datetimepicker({ 
       languate: 'zh-TW',
       format: 'YYYY-MM-DD',
       icons: iconlist
