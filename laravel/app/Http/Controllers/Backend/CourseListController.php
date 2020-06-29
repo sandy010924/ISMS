@@ -22,7 +22,6 @@ class CourseListController extends Controller
     // 新增 Sandy (2020/02/27)
     public function insert(Request $request)
     {
-
         try {
             // 前端資料
             $name = $request->get('new_name');
@@ -218,7 +217,7 @@ class CourseListController extends Controller
                             ->where('email', $semail)
                             ->get();
 
-                        if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '有興趣') !== false || count($str_sec) == "1") {
+                        if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '有興趣') !== false ||  $data[$int_coursedata] == "" || strlen($data[$int_coursedata]) < 5) {
                             // 好遺憾系列、空值
                             $check = 1;
                             switch (count($str_sec)) {
@@ -257,7 +256,7 @@ class CourseListController extends Controller
                                 $events = mb_substr($location, 0, 5, 'utf8');
                             }
 
-                            // 地址 - 新版 Rocky (2020/06/26) 
+                            // 地址 - 新版 Rocky (2020/06/26)
                             if ($location != "") {
                                 $or_address = mb_substr($location, 5, strlen($location), 'utf8');
                             }
@@ -282,7 +281,7 @@ class CourseListController extends Controller
                                     // 切割 ') and ）' 不必要的符號
                                     if (strpos($address_strchr, ')') != false) {
                                         $address_strchr_finish = explode(")", $address_strchr);
-                                    } else if (strpos($address_strchr, '）') != false) {
+                                    } elseif (strpos($address_strchr, '）') != false) {
                                         $address_strchr_finish = explode("）", $address_strchr);
                                     }
 
@@ -426,14 +425,14 @@ class CourseListController extends Controller
                         $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
                             ->where('id_events', $id_events)
                             ->get();
-                        // 檢查是否報名過               
+                        // 檢查是否報名過
                         if (count($check_SalesRegistration) == 0 && $id_student != "") {
                             // 新增銷售講座報名資料
                             if ($id_course != "" && $id_student != "") {
                                 $date = gmdate('Y-m-d H:i:s', $submissiondate);
                                 $SalesRegistration->submissiondate   = $date;                           // Submission Date
                                 $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
-                                $SalesRegistration->id_student       = $id_student;                     // 學員ID                       
+                                $SalesRegistration->id_student       = $id_student;                     // 學員ID
                                 if ($check == 1) {
                                     // 我很遺憾
                                     $SalesRegistration->id_events    = -99;                             // 場次ID
@@ -466,7 +465,7 @@ class CourseListController extends Controller
                         /*銷售講座報名資料 - E*/
                     }
                 }
-            } else if ($type == 2 || $type == 3) {
+            } elseif ($type == 2 || $type == 3) {
                 /* 正課 */
 
                 //前端資料
@@ -584,13 +583,13 @@ class CourseListController extends Controller
             //刪除報名表
             $db_apply->delete();
 
-            //刪除場次  
+            //刪除場次
             EventsCourse::where('id_course', $course->id)->delete();
 
             //刪除課程
             Course::where('id', $course->id)->delete();
 
-            //刪除訊息? 
+            //刪除訊息?
 
             $status = "ok";
         } else {

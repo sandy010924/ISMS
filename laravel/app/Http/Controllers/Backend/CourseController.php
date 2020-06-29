@@ -213,7 +213,7 @@ class CourseController extends Controller
                         ->where('email', $semail)
                         ->get();
 
-                    if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '有興趣') !== false || count($str_sec) == "1") {
+                    if (strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '好遺憾') !== false || strpos(mb_convert_encoding($data[$int_coursedata], 'utf-8'), '有興趣') !== false || $data[$int_coursedata] == "" || strlen($data[$int_coursedata]) < 5) {
                         // 好遺憾系列、空值
                         $check = 1;
                         switch (count($str_sec)) {
@@ -238,6 +238,8 @@ class CourseController extends Controller
                     } else {
                         /*有報名課程*/
                         // 課程場次 + 地點
+                        // echo $data[$int_coursedata];
+                      
                         for ($array_city_number = 0; $array_city_number < count($city); $array_city_number++) {
                             if ($location == "") {
                                 $location = strchr($data[$int_coursedata], $city[$array_city_number]);
@@ -252,7 +254,7 @@ class CourseController extends Controller
                             $events = mb_substr($location, 0, 5, 'utf8');
                         }
 
-                        // 地址 - 新版 Rocky (2020/06/26) 
+                        // 地址 - 新版 Rocky (2020/06/26)
 
                         if ($location != "") {
                             $or_address = mb_substr($location, 5, strlen($location), 'utf8');
@@ -278,7 +280,7 @@ class CourseController extends Controller
                                 // 切割 ') and ）' 不必要的符號
                                 if (strpos($address_strchr, ')') != false) {
                                     $address_strchr_finish = explode(")", $address_strchr);
-                                } else if (strpos($address_strchr, '）') != false) {
+                                } elseif (strpos($address_strchr, '）') != false) {
                                     $address_strchr_finish = explode("）", $address_strchr);
                                 }
 
@@ -422,14 +424,14 @@ class CourseController extends Controller
                     $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
                         ->where('id_events', $id_events)
                         ->get();
-                    // 檢查是否報名過               
+                    // 檢查是否報名過
                     if (count($check_SalesRegistration) == 0 && $id_student != "") {
                         // 新增銷售講座報名資料
                         if ($id_course != "" && $id_student != "") {
                             $date = gmdate('Y-m-d H:i:s', $submissiondate);
                             $SalesRegistration->submissiondate   = $date;                           // Submission Date
                             $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
-                            $SalesRegistration->id_student       = $id_student;                     // 學員ID                       
+                            $SalesRegistration->id_student       = $id_student;                     // 學員ID
                             if ($check == 1) {
                                 // 我很遺憾
                                 $SalesRegistration->id_events    = -99;                             // 場次ID
@@ -482,7 +484,7 @@ class CourseController extends Controller
 
         // 查詢是否有該筆資料
         // $course = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
-        //                       ->select('course.type as type', 'events_course.*')                      
+        //                       ->select('course.type as type', 'events_course.*')
         //                       ->where('events_course.id', $id_events)
         //                       ->first();
 
@@ -501,7 +503,6 @@ class CourseController extends Controller
 
                     // $apply_table = SalesRegistration::where('id_events', $events->id)
                     //                                 ->get();
-
                 }
             } elseif ($events[0]->type == 2 || $events[0]->type == 3) {
                 //正課
@@ -527,10 +528,9 @@ class CourseController extends Controller
                 //刪除報名表
                 Registration::where('id_group', $id_group)->delete();
                 // }
-
             }
 
-            //刪除場次  
+            //刪除場次
             EventsCourse::where('id_group', $id_group)->delete();
 
             $status = "ok";
