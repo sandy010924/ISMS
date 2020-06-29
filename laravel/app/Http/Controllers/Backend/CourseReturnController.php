@@ -355,7 +355,26 @@ class CourseReturnController extends Controller
                             $debt->remind_at        = '';                   // 提醒
                             $debt->id_registration  = $id_registration;     // 報名表ID
                             // $debt->id_events        = $id_registration;     // 場次ID
-                            $debt->status_payment_name  = $istatus;     // 付款狀態名稱
+
+                            // $debt->status_payment_name  = $istatus;     // 付款狀態名稱
+                            
+                            // 付款狀態名稱
+                            switch ($istatus) {
+                                case 6:
+                                    $debt->status_payment_name  = '留單'; 
+                                    break;
+                                case 7:
+                                    $debt->status_payment_name  = '完款'; 
+                                    break;
+                                case 8:
+                                    $debt->status_payment_name  = '付訂'; 
+                                    break;
+                                case 9:
+                                    $debt->status_payment_name  = '退款'; 
+                                    break;
+                                default:
+                                    break;
+                            }
                             
                             $debt->save();
                             $id_debt = $debt->id;
@@ -495,7 +514,23 @@ class CourseReturnController extends Controller
                     $debt->person           = '';                   // 追單人員
                     $debt->remind_at        = '';                   // 提醒
                     $debt->id_registration  = $id_registration;     // 報名表ID
-                    $debt->status_payment_name  = $istatus;     // 付款狀態名稱
+                    // 付款狀態名稱
+                    switch ($istatus) {
+                        case 6:
+                            $debt->status_payment_name  = '留單'; 
+                            break;
+                        case 7:
+                            $debt->status_payment_name  = '完款'; 
+                            break;
+                        case 8:
+                            $debt->status_payment_name  = '付訂'; 
+                            break;
+                        case 9:
+                            $debt->status_payment_name  = '退款'; 
+                            break;
+                        default:
+                            break;
+                    }
                     
                     $debt->save();
                     $id_debt = $debt->id;

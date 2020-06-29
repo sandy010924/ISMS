@@ -21,7 +21,7 @@ class CourseFormController extends Controller
         $id_group = array();
 
         //讀取data
-        $submissiondate = date('Y-m-d H:i:s');
+        $submissiondate = date('Y-m-d H:i:s', strtotime($request->get('idate')));
         $name = $request->get('iname');
         $sex = $request->get('isex');
         $id_identity = $request->get('iid');
@@ -377,7 +377,7 @@ class CourseFormController extends Controller
                             $debt->person           = '';                   // 追單人員
                             $debt->remind_at        = '';                   // 提醒
                             $debt->id_registration  = $id_registration;     // 報名表ID
-                            
+
                             $debt->save();
                             $id_debt = $debt->id;
                         }else{
