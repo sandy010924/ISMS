@@ -210,6 +210,9 @@
   .bootstrap-datetimepicker-widget.dropdown-menu {
     width: fit-content !important;
   }
+  th, td {
+    white-space:nowrap;
+  }
 </style>
 <script>
     // Sandy(2020/03/08) dt列表 S
