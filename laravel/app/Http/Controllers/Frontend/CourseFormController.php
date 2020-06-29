@@ -45,6 +45,7 @@ class CourseFormController extends Controller
             $events_table = EventsCourse::join('course', 'course.id' , '=', 'events_course.id_course')
                                 ->select('events_course.*')
                                 ->Where('events_course.id_course', $data_course['id'])
+                                ->orderby('course_start_at', 'desc')
                                 ->get();
                                 
             $id_group='';
