@@ -12,9 +12,9 @@
         <div class="col-5 mx-auto">
           <div class="input-group date" data-target-input="nearest">
             <input type="text" class="form-control px-3" name="daterange" id="daterange"  placeholder="搜尋日期區間" autocomplete="off"> 
-            <div class="input-group-append" data-target="#daterange">
+            {{-- <div class="input-group-append" data-target="#daterange">
               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-            </div>  
+            </div>   --}}
           </div>
         </div>
       </div>

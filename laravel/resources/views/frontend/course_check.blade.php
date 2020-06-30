@@ -41,7 +41,7 @@
         @if( $nextLevel > 0 )
         <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary">場次報表</button></a>
         @else
-        <button type="button" class="btn btn-primary" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」按鈕，在「對應課程」選擇此課程做串接。');">場次報表</button>
+        <button type="button" class="btn btn-primary" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」按鈕，在「對應課程」選擇此課程做串接。');location.href ='{{ route('course_return', ['id' => $course->id]) }}'">場次報表</button>
         @endif
       </div>
     </div>

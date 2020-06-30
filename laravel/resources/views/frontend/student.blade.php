@@ -354,7 +354,7 @@
                       <div class="form-group">
                         <label for="recipient-name" class="col-form-label">日期:</label>
                         <div class="input-group date" data-target-input="nearest">
-                          <input type="text" id="debt_date" name="debt_date" class="form-control datetimepicker-input" data-target="#debt_date" placeholder="日期">
+                          <input type="text" id="debt_date" name="debt_date" class="form-control datetimepicker-input" data-target="#debt_date" placeholder="日期" data-toggle="datetimepicker" autocomplete="off">
                           <div class="input-group-append" data-target="#debt_date" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                           </div>
@@ -398,7 +398,7 @@
                       <div class="form-group">
                         <label for="recipient-name" class="col-form-label">設提醒:</label>
                         <div class="input-group date" data-target-input="nearest">
-                          <input type="text" id="debt_remind" name="debt_remind" class="form-control datetimepicker-input datepicker" data-target="#debt_remind">
+                          <input type="text" id="debt_remind" name="debt_remind" class="form-control datetimepicker-input datepicker" data-target="#debt_remind" data-toggle="datetimepicker" autocomplete="off">
                           <div class="input-group-append" data-target="#debt_remind" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i>
                             </div>
@@ -1309,9 +1309,9 @@
                 '<td><i class="fa fa-trash auth_hidden" aria-hidden="true" onclick="debt_delete(' + id + ');" style="cursor:pointer;padding-top: 40%; color:#eb6060"></i></td>' +
                 '<td>' +
                 '<div class="input-group date show_datetime" id="new_starttime' + id + '" data-target-input="nearest"> ' +
-                ' <input type="text" onblur="save_data($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" required/> ' +
-                ' <div class="input-group-append" data-target="#new_starttime' + id + '" data-toggle="datetimepicker"> ' +
-                ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
+                ' <input type="text" onblur="save_data($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
+                // ' <div class="input-group-append" data-target="#new_starttime' + id + '" data-toggle="datetimepicker"> ' +
+                // ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
                 '</div> ' +
                 '</div>' +
                 '</td>' +
@@ -1336,9 +1336,9 @@
                 '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="save_data($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
                 '<td>' +
                 '<div class="input-group date show_datetime" id="remind' + id + '" data-target-input="nearest"> ' +
-                ' <input type="text" onblur="save_data($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" required/> ' +
+                ' <input type="text" onblur="save_data($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
                 ' <div class="input-group-append" data-target="#remind' + id + '" data-toggle="datetimepicker"> ' +
-                ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
+                // ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
                 '</div> ' +
                 '</div>' +
                 '</td>' +

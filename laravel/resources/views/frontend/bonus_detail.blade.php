@@ -32,10 +32,10 @@
       <div class="col-3">
         <div class="input-group date" data-target-input="nearest">
           <!-- <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期"> -->
-          <input type="text" class="form-control px-3" name="daterange" id="daterange">
-          <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
+          <input type="text" class="form-control px-3" name="daterange" id="daterange" autocomplete="off">
+          {{-- <div class="input-group-append">
             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-          </div>
+          </div> --}}
         </div>
       </div>
       <div class="col-3">

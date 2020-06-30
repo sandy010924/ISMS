@@ -17,7 +17,7 @@
         <div class="input-group">
           <div class="col-md-4">
             <div class="input-group date" data-target-input="nearest">
-              <input type="text" id="search_keyword" name="debt_date" class="form-control datetimepicker-input" data-target="#search_keyword" placeholder="日期">
+              <input type="text" id="search_keyword" name="debt_date" class="form-control datetimepicker-input" data-target="#search_keyword" placeholder="日期" data-toggle="datetimepicker" autocomplete="off">
               <div class="input-group-append" data-target="#search_keyword" data-toggle="datetimepicker">
                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>

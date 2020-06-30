@@ -153,7 +153,7 @@
 
                 <div class="form-group">
                   <div class='input-group date' id='datetimepicker1' data-target-input='nearest'>
-                    <input type='text' id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker1" name="params['start_time']" />
+                    <input type='text' id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker1" name="params['start_time']" data-toggle="datetimepicker" autocomplete="off"/>
                     <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
                       <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>

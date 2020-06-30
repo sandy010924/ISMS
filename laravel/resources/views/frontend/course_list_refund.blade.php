@@ -40,7 +40,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">日期區間</span>
             </div>
-            <input type="text" class="form-control px-3" name="daterange" id="daterange"> 
+            <input type="text" class="form-control px-3" name="daterange" id="daterange" autocomplete="off"> 
           </div>
         </div>
         <div class="col-3 text-right">
@@ -63,10 +63,10 @@
                       <label for="form_date" class="col-form-label">申請退款日期</label>
                       <br/>
                       <div class="input-group date" data-target-input="nearest">
-                          <input type="text" id="form_date" name="form_date" class="form-control datetimepicker-input" data-target="#form_date" required/>
-                          <div class="input-group-append" data-target="#form_date" data-toggle="datetimepicker">
+                          <input type="text" id="form_date" name="form_date" class="form-control datetimepicker-input" data-target="#form_date" data-toggle="datetimepicker" autocomplete="off" required/>
+                          {{-- <div class="input-group-append" data-target="#form_date" data-toggle="datetimepicker">
                               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                          </div>
+                          </div> --}}
                       </div>
                     </div>
                     <div class="form-group required">

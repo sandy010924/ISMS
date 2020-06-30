@@ -36,7 +36,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">日期區間</span>
               </div>
-              <input type="text" class="form-control px-3" name="daterange" id="daterange"> 
+              <input type="text" class="form-control px-3" name="daterange" id="daterange" autocomplete="off"> 
             </div>
           </div>
         </div>

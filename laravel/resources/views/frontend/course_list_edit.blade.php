@@ -103,6 +103,7 @@
             <th>時間</th>
             <th>地點</th>
             <th></th>
+            <th class="no-sort"></th>
           </tr>
         @endslot
         @slot('tbody')
@@ -118,6 +119,8 @@
                 @else
                   <a role="button" class="btn btn-success btn-sm mx-1 text-white" onclick="btn_update( {{ $data['id_group'] }}, 0 );">上架場次</a>
                 @endif
+              </td>
+              <td>
                 <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $data['id_group'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
                 <a role="button" class="btn btn-danger btn-sm text-white mx-1" onclick="btn_delete({{ $data['id_group'] }});">刪除</a>
               </td>
@@ -177,7 +180,7 @@
             <div class="col-md-6 mb-3 required">
               <label for="edit_starttime" class="col-form-label">課程開始時間</label><br />
               <div class="input-group date" id="edit_starttime" data-target-input="nearest">
-                <input type="text" name="edit_starttime" class="form-control datetimepicker-input" data-target="#edit_starttime" required />
+                <input type="text" name="edit_starttime" class="form-control datetimepicker-input" data-target="#edit_starttime" data-toggle="datetimepicker" autocomplete="off" required />
                 <div class="input-group-append" data-target="#edit_starttime" data-toggle="datetimepicker">
                   <div class="input-group-text"><i class="fa fa-clock"></i></div>
                 </div>
@@ -186,7 +189,7 @@
             <div class="col-md-6 mb-3 required">
               <label for="edit_endtime" class="col-form-label">課程結束時間</label><br />
               <div class="input-group date" id="edit_endtime" data-target-input="nearest">
-                <input type="text" name="edit_endtime" class="form-control datetimepicker-input" data-target="#edit_endtime" required />
+                <input type="text" name="edit_endtime" class="form-control datetimepicker-input" data-target="#edit_endtime" data-toggle="datetimepicker" autocomplete="off" required />
                 <div class="input-group-append" data-target="#edit_endtime" data-toggle="datetimepicker">
                   <div class="input-group-text"><i class="fa fa-clock"></i></div>
                 </div>
@@ -234,6 +237,10 @@
       table = $('#table_list').DataTable({
           "dom": '<l<t>p>',
           // "ordering": false,
+          "columnDefs": [{
+            "targets": 'no-sort',
+            "orderable": false,
+          }]
       });
 
     //select2 對應課程 Sandy(2020/03/08)

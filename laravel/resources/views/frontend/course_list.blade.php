@@ -77,7 +77,7 @@
                       <label class="text-secondary px-2 py-1"><small>(可選擇多天，一次選擇一組場次)</small></label>
                       <br />
                       <div class="input-group date" id="new_date" data-target-input="nearest">
-                        <input type="text" name="new_date" class="form-control datetimepicker-input" data-target="#new_date" required />
+                        <input type="text" name="new_date" class="form-control datetimepicker-input" data-target="#new_date" data-toggle="datetimepicker" autocomplete="off" required />
                         <div class="input-group-append" data-target="#new_date" data-toggle="datetimepicker">
                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
@@ -87,7 +87,7 @@
                       <div class="col-md-6 mb-3 required">
                         <label for="new_starttime" class="col-form-label">課程開始時間</label><br />
                         <div class="input-group date" id="new_starttime" data-target-input="nearest">
-                          <input type="text" name="new_starttime" class="form-control datetimepicker-input" data-target="#new_starttime" required />
+                          <input type="text" name="new_starttime" class="form-control datetimepicker-input" data-target="#new_starttime" data-toggle="datetimepicker" autocomplete="off" required />
                           <div class="input-group-append" data-target="#new_starttime" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-clock"></i></div>
                           </div>
@@ -96,7 +96,7 @@
                       <div class="col-md-6 mb-3 required">
                         <label for="new_endtime" class="col-form-label">課程結束時間</label><br />
                         <div class="input-group date" id="new_endtime" data-target-input="nearest">
-                          <input type="text" name="new_endtime" class="form-control datetimepicker-input" data-target="#new_endtime" required />
+                          <input type="text" name="new_endtime" class="form-control datetimepicker-input" data-target="#new_endtime" data-toggle="datetimepicker" autocomplete="off" required />
                           <div class="input-group-append" data-target="#new_endtime" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-clock"></i></div>
                           </div>
