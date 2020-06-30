@@ -11,6 +11,7 @@ use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Student;
 use App\Model\Teacher;
+use App\Model\Refund;
 
 class CourseListApplyController extends Controller
 {
@@ -41,6 +42,28 @@ class CourseListApplyController extends Controller
                                       ->get();
                                       
             foreach( $apply_table as $key => $data ){
+
+                
+                //檢查學員是否退費成功
+                $refund = Refund::where('id_registration', $data['id'])
+                                ->where('review', 1)
+                                ->get();
+                if( count($refund) != 0){
+                    continue;
+                }
+
+                //檢查學員是否申請退費
+                $refund = Refund::where('id_registration', $data['id'])
+                                ->where('review', 0)
+                                ->get();
+                if( count($refund) != 0){
+                    $refund_status = 1;  //有
+                }else{
+                    $refund_status = 0;  //沒有
+                }
+                
+
+
                 $weekarray = array("日","一","二","三","四","五","六");
                 $week = $weekarray[date('w', strtotime($data['course_start_at']))];
 
@@ -56,6 +79,7 @@ class CourseListApplyController extends Controller
                     'email' => $data['email'],
                     'profession' => $data['profession'],
                     'content' => $data['course_content'],
+                    'refund_status' => $refund_status,
                 );
             }
 
@@ -93,9 +117,29 @@ class CourseListApplyController extends Controller
                                  
             foreach( $apply_table as $key => $data ){
 
+                //檢查學員是否退費成功
+                $refund = Refund::where('id_registration', $data['id'])
+                                ->where('review', 1)
+                                ->get();
+                if( count($refund) != 0){
+                    continue;
+                }
+
+                //檢查學員是否申請退費
+                $refund = Refund::where('id_registration', $data['id'])
+                                ->where('review', 0)
+                                ->get();
+                if( count($refund) != 0){
+                    $refund_status = 1;  //有
+                }else{
+                    $refund_status = 0;  //沒有
+                }
+                
+
                 // if ($id_student == $data['id_student'] && $id_group == $data['id_group']){ 
                 //     continue;
                 // }
+
                 if($data['id_group'] != null){
                     $course_group = EventsCourse::Where('id_group', $data['id_group'])
                                             ->get();
@@ -131,6 +175,7 @@ class CourseListApplyController extends Controller
                     'email' => $data['email'],
                     'profession' => $data['profession'],
                     'content' => $data['course_content'],
+                    'refund_status' => $refund_status,
                 );
 
 

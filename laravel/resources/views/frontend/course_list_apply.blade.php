@@ -69,13 +69,18 @@
     @foreach($apply as $data)
     <tr>
       @if( $course->type == 1 )
-      <td>{{ $data['date'] }}</td>
-      <td>{{ $data['source'] }}</td>
+        <td>{{ $data['date'] }}</td>
+        <td>{{ $data['source'] }}</td>
       @else
-      <td>{{ $data['date'] }}</td>
+        <td>{{ $data['date'] }}</td>
       @endif
 
-      <td>{{ $data['event'] }}</td>
+      @if( $data['refund_status'] == 1 )
+        <td><span class="text-danger border border-danger">退費</span> {{ $data['event'] }}</td>
+      @else
+        <td>{{ $data['event'] }}</td>
+      @endif
+
       <td>{{ $data['name'] }}</td>
       <td>{{ $data['phone'] }}</td>
       <td>{{ $data['email'] }}</td>
