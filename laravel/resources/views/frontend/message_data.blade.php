@@ -65,7 +65,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">訊息內容</span>
                   </div>
-                  <div class="form-control bg-white"  aria-label="With textarea" style="min-height:150px">
+                  <div class="form-control bg-white"  aria-label="With textarea" style="min-height:150px;height:auto;">
 {!! $msg->content !!}
                   </div>
                 </div>
