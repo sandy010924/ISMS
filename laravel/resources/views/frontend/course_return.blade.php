@@ -333,12 +333,14 @@
               <input type="number" id="money_installment" name="money_installment" class="form-control" aria-label="money_installment input" aria-describedby="money_installment input" value="{{ $course->money_installment }}">
             </div>
           </div>
+        </div>
+        <div class="row">
           <div class="col mb-2">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text">該場備註</span>
               </div>
-              <input type="text" id="memo" name="memo" class="form-control" aria-label="memo input" aria-describedby="memo input" value="{{ $course->memo }}">
+              <textarea id="memo" name="memo" class="form-control" aria-label="memo input" aria-describedby="memo input">{{ $course->memo }}</textarea>
             </div>
           </div>
           
@@ -1240,20 +1242,49 @@
         success:function(data){
           // console.log(data);  
 
-          if( data != "nodata" ){    
-            $("#iname").val(data.name);
-            if( data.sex == '男'){
-              $("#isex1").click();
-            }else{
-              $("#isex2").click();
+          if( data != "nodata" ){   
+            //針對空格做填入 
+
+            if($("#iname").val() == ""){
+              $("#iname").val(data.name);
             }
-            $("#iid").val(data.id_identity);
-            $("#iphone").val(data.phone);
-            $("#iemail").val(data.email);
-            $("#ibirthday").val(data.birthday);
-            $("#icompany").val(data.company);
-            $("#iprofession").val(data.profession);
-            $("#iaddress").val(data.address);
+
+            if(typeof($('[name="isex"]:checked').val()) == "undefined"){
+              if( data.sex == '男'){
+                $("#isex1").click();
+              }else{
+                $("#isex2").click();
+              }
+            }
+
+            if($("#iid").val() == ""){
+              $("#iid").val(data.id_identity);
+            }
+
+            if($("#iphone").val() == ""){
+              $("#iphone").val(data.phone);
+            }
+            
+            if($("#iemail").val() == ""){
+              $("#iemail").val(data.email);
+            }
+
+            if($("#ibirthday").val() == ""){
+              $("#ibirthday").val(data.birthday);
+            }
+            
+            if($("#icompany").val() == ""){
+              $("#icompany").val(data.company);
+            }
+            
+            if($("#iprofession").val() == ""){
+              $("#iprofession").val(data.profession);
+            }
+            
+            if($("#iaddress").val() == ""){
+              $("#iaddress").val(data.address);
+            }
+
           }
 
         },
