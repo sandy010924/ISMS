@@ -360,11 +360,12 @@
 
     // Rocky (2020/03/27)
     table = $('#table_list').DataTable({
-      "dom": '<l<td>Bt>',
+      "dom": '<l<td>Btp>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
       }],
+      
       "destroy": true,
       "retrieve": true,
       buttons: [{
