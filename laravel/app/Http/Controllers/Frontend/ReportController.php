@@ -292,7 +292,8 @@ class ReportController extends Controller
                     }
                     if( $out == 0 ){
                         if(count($deal)!=0 && count($check)!=0){
-                            $events['y'] = round(count($deal) / count($check) *100 / 2,2);
+                            // $events['y'] = round(count($deal) / count($check) *100 / 2,2);
+                            $events['y'] = round(count($deal) / count($check) *100, 2);
                         }else{
                             $events['y'] = 0;
                         }
@@ -356,7 +357,7 @@ class ReportController extends Controller
                                 $pay->where('status_payment', '<>', 6);
                             }
 
-                            $pay->get();
+                            $pay = $pay->get();
 
                         }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                             //正課沒有來源故為0
@@ -366,7 +367,7 @@ class ReportController extends Controller
                     }else{
                         
                         $pay = Registration::leftjoin('payment', 'payment.id_registration', '=', 'registration.id')
-                                            ->where('source_events', $data_search['id']);
+                                            ->where('registration.source_events', $data_search['id']);
                                             
                         //付款狀態
                         if($data[6] != '0'){
@@ -375,7 +376,7 @@ class ReportController extends Controller
                             $pay->where('status_payment', '<>', 6);
                         }
 
-                        $pay->get();
+                        $pay = $pay->get();
                     
                     }
 
@@ -390,8 +391,8 @@ class ReportController extends Controller
 
                     //將該場次填表人所有付款資訊相加
                     $income = 0;
-                    foreach( $pay as $data){
-                        $income += $data['cash'];
+                    foreach( $pay as $data_pay){
+                        $income += $data_pay['cash'];
                     }
                                         
                     $out = 0;
