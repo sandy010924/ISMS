@@ -1287,7 +1287,7 @@
         id: id
       },
       success: function(data) {
-        $("#lbl_debt_date").text(data[0]['created_at']);
+        $("#lbl_debt_date").text(data[0]['updated_at']);
         $("#lbl_debt_course").text(data[0]['name_course']);
         $("#lbl_debt_status_date").text(data[0]['status_payment']);
         $("#lbl_debt_contact").text(data[0]['contact']);
