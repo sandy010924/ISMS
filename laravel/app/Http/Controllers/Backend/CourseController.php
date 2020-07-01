@@ -239,7 +239,7 @@ class CourseController extends Controller
                         /*有報名課程*/
                         // 課程場次 + 地點
                         // echo $data[$int_coursedata];
-                      
+
                         for ($array_city_number = 0; $array_city_number < count($city); $array_city_number++) {
                             if ($location == "") {
                                 $location = strchr($data[$int_coursedata], $city[$array_city_number]);
@@ -354,7 +354,7 @@ class CourseController extends Controller
                     /* 場次資料 (2020/03/05) - S*/
                     $check_events = $events_course::where('name', $events)
                         ->where('id_course', $id_course)
-                        ->where('location', $address)
+                        // ->where('location', $address) 場次判斷不要判斷地址 Rocky (2020/07/01)
                         ->where('course_start_at', $time_start)
                         ->where('course_end_at', $time_end)
                         ->get();
@@ -457,9 +457,15 @@ class CourseController extends Controller
                         }
                         $check = 0;
                     } else {
-                        foreach ($check_SalesRegistration as $data_SalesRegistration) {
-                            $id_SalesRegistration = $data_SalesRegistration->id;
-                        }
+                        $id_SalesRegistration = $check_SalesRegistration[0]["id"];
+
+                        // 更新來源
+                        // SalesRegistration::where('id', $id_SalesRegistration)
+                        //     ->update(['datasource' => $data[$int_form]]);
+
+                        // foreach ($check_SalesRegistration as $data_SalesRegistration) {
+                        //     $id_SalesRegistration = $data_SalesRegistration->id;
+                        // }
                     }
                     /*銷售講座報名資料 - E*/
                 }

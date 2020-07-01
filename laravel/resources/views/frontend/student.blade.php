@@ -389,6 +389,7 @@
                           <option value="12">待追</option>
                           <option value="15">無意願</option>
                           <option value="16">推薦其他講師</option>
+                          <option value="22">通知下一梯次</option>
                         </select>
                       </div>
                       <div class="form-group">
