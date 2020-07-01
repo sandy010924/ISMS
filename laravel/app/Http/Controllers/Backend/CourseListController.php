@@ -461,8 +461,8 @@ class CourseListController extends Controller
                             $id_SalesRegistration = $check_SalesRegistration[0]["id"];
 
                             // 更新來源
-                            // SalesRegistration::where('id', $id_SalesRegistration)
-                            //     ->update(['datasource' => $data[$int_form]]);
+                            SalesRegistration::where('id', $id_SalesRegistration)
+                                ->update(['datasource' => $data[$int_form]]);
 
                             // foreach ($check_SalesRegistration as $data_SalesRegistration) {
                             //     $id_SalesRegistration = $data_SalesRegistration->id;

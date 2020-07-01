@@ -240,7 +240,7 @@ class StudentController extends Controller
             // ->selectRaw("SUM(CASE WHEN sales_registration.id_status = '4' THEN 1 ELSE 0 END) AS count_sales_ok")
             // ->selectRaw("SUM(CASE WHEN sales_registration.id_status = '5' THEN 1 ELSE 0 END) AS count_sales_no")
             ->where('sales_registration.id_student', $id_student)
-            ->groupBy('sales_registration.id_student', 'course.id')
+            // ->groupBy('sales_registration.id_student', 'course.id')
             ->orderBy('sales_registration.created_at', 'desc')
             ->first();
 
