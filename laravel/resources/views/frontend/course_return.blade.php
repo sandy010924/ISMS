@@ -590,6 +590,26 @@
                     <label for="edit_events" class="col-form-label edit_input"><strong>報名場次</strong></label>
                     <p name="edit_events" id="edit_events"></p>
                   </div>
+                  @foreach( $events as $key => $data )
+                      <div class="form-group">
+                        <label class="col-form-label" for="edit_event"><strong>{{ $data['course_name'] }} 的場次</strong></label>
+                        @foreach( $data['events'] as $data_events )
+                          <div class="d-block my-2">
+                            <div class="custom-control custom-radio my-3">
+                              <input type="radio" id="edit_events{{ $data_events['id_group'] }}" value="{{ $data_events['id_group'] }}" name="edit_events" class="custom-control-input">
+                              <label class="custom-control-label" for="edit_events{{ $data_events['id_group'] }}">{{ $data_events['events'] }}</label>
+                            </div>
+                          </div>
+                        @endforeach
+                          <div class="d-block my-2">
+                            <div class="custom-control custom-radio my-3">
+                              <input type="radio" id="edit_other{{ $data['id_course'] }}" value="{{ $data['id_course'] }}" name="edit_events" class="custom-control-input">
+                              {{-- <input type="hidden" id="other_val{{ $key }}" name="other_val{{ $key }}" value="{{ $data['id_course'] }}"> --}}
+                              <label class="custom-control-label" for="edit_other{{ $data['id_course'] }}">我要選擇其他場次</label>
+                            </div>
+                          </div>
+                      </div>
+                    @endforeach
                   {{-- <div class="form-group">
                     <label for="edit_pay_model" class="col-form-label"><strong>付款方式</strong></label>
                     <div class="d-block my-2">
@@ -1359,6 +1379,10 @@
           }
           $("#edit_num").val(data['data']['number_taxid']);   //統編
           $("#edit_companytitle").val(data['data']['companytitle']);  //抬頭
+
+          if( data['events'] != ""){
+            $("#"+data['events']).attr("checked", true);  //場次
+          }
         }
 
 

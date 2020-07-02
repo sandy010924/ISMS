@@ -596,6 +596,8 @@ class CourseReturnController extends Controller
         $number_taxid = $request->get('edit_num');
         $companytitle = $request->get('edit_companytitle');
         // $istatus = $request->get('istatus');
+
+        $events = $request->get('edit_events');
         
         /* 防錯 */
         if($address == ""){
@@ -677,6 +679,11 @@ class CourseReturnController extends Controller
                 //     $join = Registration::where('id', $id)->first()->join;
                 // }
 
+                //判斷是否有選擇場次
+                if( $edit_events != "" ){
+                    
+                }
+
                 Registration::where('id', $id)->update([
                     'submissiondate' => $submissiondate,
                     'type_invoice' => $type_invoice,
@@ -687,6 +694,7 @@ class CourseReturnController extends Controller
            }
         
             /*正課報名資料 - E*/
+            
             
             return redirect()->route('course_return', ['id' => $id_events])->with('status', '修改成功');
         
