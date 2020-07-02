@@ -11,6 +11,7 @@ use App\Model\Registration;
 use App\Model\EventsCourse;
 use App\Model\Debt;
 use App\Model\Refund;
+use App\Model\Register;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -299,8 +300,13 @@ class StudentController extends Controller
                 if (count($array_id_group) != 0) {
                     $id_group = $array_id_group[0]['id_group'];
                 }
+                // 修改報名資料
                 Registration::where('id', $id)
                     ->update(['id_events' => $data, 'id_group' => $id_group]);
+
+                // 修改報到資料
+                Register::where('id_registration', $id)
+                    ->update(['id_events' => $data, 'id_status' => '3']);
                 break;
             default:
                 return 'error';
