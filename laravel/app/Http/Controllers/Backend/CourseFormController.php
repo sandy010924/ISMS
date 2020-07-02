@@ -275,7 +275,7 @@ class CourseFormController extends Controller
 
 
                     if(strpos($array_group, 'other') === false){
-                        /*報到資料 - S*/
+                        // /*報到資料 - S*/
                         // // 檢查是否報名過
                         // $check_register = Register::where('id_registration', $id_registration)
                         //                         ->get();
@@ -305,7 +305,7 @@ class CourseFormController extends Controller
                         //     }
                         // }
 
-                        /*報到資料 - E*/
+                        // /*報到資料 - E*/
 
 
                         /*繳款資料 - S*/
@@ -319,18 +319,9 @@ class CourseFormController extends Controller
                             $payment = new Payment;
 
                             $payment->id_student     = $id_student;      // 學員ID
-                            // if($cash == ""){
-                            //     $payment->cash       = 0;            // 付款金額
-                            // }else {
-                            //     $payment->cash           = $cash;            // 付款金額
-                            // }
                             $payment->cash           = $cash;            // 付款金額
                             $payment->pay_model      = $pay_model;       // 付款方式
-                            // if($number == ""){
-                            //     $payment->number         = $number;          // 卡號後四碼
-                            // }else {
-                                $payment->number         = $number;          // 卡號後四碼
-                            // }
+                            $payment->number         = $number;          // 卡號後四碼
                             $payment->id_registration     = $id_registration;      // 報名ID
                             
                             
@@ -341,13 +332,13 @@ class CourseFormController extends Controller
                                 $id_payment = $data ->id;
                             }
 
-                            //更新付款資料
-                            Payment::where('id_registration', $id_registration)
-                                    ->update([
-                                        'cash' => $cash,
-                                        'pay_model' => $pay_model,
-                                        'number' => $number,
-                                    ]);
+                            // //更新付款資料
+                            // Payment::where('id_registration', $id_registration)
+                            //         ->update([
+                            //             'cash' => $cash,
+                            //             'pay_model' => $pay_model,
+                            //             'number' => $number,
+                            //         ]);
                         }
                         
                         
@@ -487,13 +478,13 @@ class CourseFormController extends Controller
                         $id_payment = $data ->id;
                     }
 
-                    //更新付款資料
-                    Payment::where('id_registration', $id_registration)
-                            ->update([
-                                'cash' => $cash,
-                                'pay_model' => $pay_model,
-                                'number' => $number,
-                            ]);
+                    // //更新付款資料
+                    // Payment::where('id_registration', $id_registration)
+                    //         ->update([
+                    //             'cash' => $cash,
+                    //             'pay_model' => $pay_model,
+                    //             'number' => $number,
+                    //         ]);
                 }
                 
                 

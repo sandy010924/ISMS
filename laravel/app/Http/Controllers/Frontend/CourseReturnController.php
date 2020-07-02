@@ -165,6 +165,7 @@ class CourseReturnController extends Controller
                     }
 
                     $course_group = EventsCourse::Where('id_group', $data_events['id_group'])
+                                                ->orderby('course_start_at', 'asc')    
                                                 ->get();
                     $numItems = count($course_group);
                     $i = 0;
@@ -256,16 +257,18 @@ class CourseReturnController extends Controller
                 if( $data['id_group'] == null || $data['id_group'] == ""){
                     $events .= "，尚未選擇場次";
                 }else{
-                    $event = EventsCourse::where('id_group', $data['id_group'])->get();
+                    $event = EventsCourse::where('id_group', $data['id_group'])
+                                        ->orderby('course_start_at', 'asc')   
+                                        ->get();
 
                     if( !empty($event) ){
                         
+                        $numItems = count($event);
+                        $i = 0;
+
+                        $events_group = "";
+
                         foreach( $event as $data_event ){
-
-                            $numItems = count($event);
-                            $i = 0;
-
-                            $events_group = "";
 
                             //日期
                             $date = date('Y-m-d', strtotime($data_event['course_start_at']));

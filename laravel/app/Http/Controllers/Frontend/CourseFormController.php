@@ -76,6 +76,7 @@ class CourseFormController extends Controller
                     }
 
                     $course_group = EventsCourse::Where('id_group', $data_events['id_group'])
+                                                ->orderby('course_start_at', 'asc')                       
                                                 ->get();
                                                 
                     $numItems = count($course_group);
