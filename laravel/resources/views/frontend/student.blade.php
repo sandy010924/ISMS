@@ -720,11 +720,13 @@
               course = '',
               sign = '',
               id_select_events = '',
+              id_student = '',
               id_events
-            // console.log(data)
+
             $.each(data['datas'], function(index, val) {
               // 學員資料
               var id_identity, sex, phone, email, birthday, company, profession, address, events, events_start
+              id_student = val['id_student'];
               if (val['id_identity'] != null) {
                 id_identity = val['id_identity'];
               } else {
@@ -818,7 +820,7 @@
 
               /*場次 - S*/
               id_select_events = "select_events_" + id
-              select_events = '<select class="custom-select form-control col-sm-8" id="' + id_select_events + '" name="select_teacher"  onblur="update_events($(this),' + id + ',' + type + ');" > </select >'
+              select_events = '<select class="custom-select form-control col-sm-8" id="' + id_select_events + '" name="select_teacher"  onblur="update_events($(this),' + id + ',' + type + ',' + id_student + ');" > </select >'
               /*場次 - E*/
 
               course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
@@ -1557,8 +1559,7 @@
       /* 自動儲存 - S Rocky(2020/03/08) */
 
       // 已填表單 - 場次更新 Rocky(2020/05/21)
-      function update_events(data, id, type) {
-        // console.log(type)
+      function update_events(data, id, type, id_student) {
         $.ajax({
           type: 'POST',
           url: 'view_form_save',
@@ -1566,11 +1567,10 @@
           data: {
             id: id,
             type: type,
-            data: data.val()
+            data: data.val(),
+            id_student: id_student
           },
           success: function(data) {
-            // console.log(data);
-
             /** alert **/
             $("#success_alert_text").html("資料儲存成功");
             fade($("#success_alert"));

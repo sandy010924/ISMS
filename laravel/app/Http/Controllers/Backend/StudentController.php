@@ -278,6 +278,7 @@ class StudentController extends Controller
         $id = $request->input('id');
         $type = $request->input('type');
         $data = $request->input('data');
+        $id_student = $request->input('id_student');
         $id_group = '';
         switch ($type) {
             case '0':
@@ -293,6 +294,7 @@ class StudentController extends Controller
                 break;
             case '1':
                 // 正課
+                $memo = '';
 
                 $array_id_group = EventsCourse::where('id', $data)
                     ->select('events_course.id_group')
@@ -304,9 +306,26 @@ class StudentController extends Controller
                 Registration::where('id', $id)
                     ->update(['id_events' => $data, 'id_group' => $id_group]);
 
-                // 修改報到資料
-                Register::where('id_registration', $id)
-                    ->update(['id_events' => $data, 'id_status' => '3']);
+                $datas_register = Register::where('id_registration', $id)
+                    ->orderBy('updated_at', 'desc')
+                    ->get();
+
+                if (count($datas_register) != "0") {
+                    $memo = $datas_register[0]["memo"];
+
+                    // 刪除報到資料
+                    Register::where('id_registration', $id)->delete();
+                }
+
+                // 新增報到資料
+                $register = new Register;
+
+                $register->memo                = $memo;
+                $register->id_status           = '3';
+                $register->id_events           = $data;
+                $register->id_student          = $id_student;
+                $register->id_registration      = $id;
+                $register->save();
                 break;
             default:
                 return 'error';
