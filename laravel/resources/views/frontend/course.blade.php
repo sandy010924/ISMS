@@ -69,7 +69,7 @@
       <div class="col-3">
         {{-- <input type="date" class="form-control" id="search_date" name="search_date"> --}}
         <div class="input-group date" data-target-input="nearest">
-          <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="搜尋日期" />
+          <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="搜尋日期" data-toggle="datetimepicker" autocomplete="off" />
           <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
           </div>
