@@ -171,6 +171,9 @@ class CourseReturnController extends Controller
                     $i = 0;
 
                     $events_group = '';
+                    $events_name = '';
+                    $time_strat = '';
+                    $time_end = '';
 
                     foreach( $course_group as $key_group => $data_group ){
                         //日期
@@ -187,10 +190,18 @@ class CourseReturnController extends Controller
                             // $events_id .= (string)$data_group['id'];
                         }
 
+                        // $events_name = $data_group['name'];
+        
+                        //時間
+                        $time_strat = date('H:i', strtotime($data_group['course_start_at']));
+                        $time_end = date('H:i', strtotime($data_group['course_end_at']));
                     }
+                        
+                    // $events .= " " . $events_group . " " . $events_name;
+
                     //時間
-                    $time_strat = date('H:i', strtotime($data_group['course_start_at']));
-                    $time_end = date('H:i', strtotime($data_group['course_end_at']));
+                    // $time_strat = date('H:i', strtotime($data_group['course_start_at']));
+                    // $time_end = date('H:i', strtotime($data_group['course_end_at']));
 
                     // $events[$key] = $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data['name'] . '(' . $data['location'] . ')';
 
@@ -245,69 +256,75 @@ class CourseReturnController extends Controller
                         ->Where('student.phone', $phone)
                         ->first();
 
-        $events = "";
+        $id_events = "";
         if($data['id_group'] != -99 && $data['id_group'] != null && $data['id_group'] != ""){
-            $events = "edit_events" . $data['id_group'];
+            $id_events = "edit_events" . $data['id_group'];
         }else if($data['id_course'] != -99 && $data['id_course'] != null && $data['id_course'] != ""){
-            $events = "edit_other" . $data['id_course'];
+            $id_events = "edit_other" . $data['id_course'];
         }
 
-        // if( $data['id_course'] == -99 || $data['id_course'] == null || $data['id_course'] == ""){
-        //     $events = "尚無選擇報名課程";
-        // }else{
-        //     $course = Course::where('id', $data['id_course'])->get();
-        //     if( !empty($course) ){
-        //         $course = Course::where('id', $data['id_course'])->first()->name;
-        //         $events = $course;
+        $events = "";
+        if( $data['id_course'] == -99 || $data['id_course'] == null || $data['id_course'] == ""){
+            $events = "尚無選擇報名課程";
+        }else{
+            $course = Course::where('id', $data['id_course'])->get();
+            if( !empty($course) ){
+                $course = Course::where('id', $data['id_course'])->first()->name;
+                $events = $course;
 
-        //         if( $data['id_group'] == null || $data['id_group'] == ""){
-        //             $events .= "，尚未選擇場次";
-        //         }else{
-        //             $event = EventsCourse::where('id_group', $data['id_group'])
-        //                                 ->orderby('course_start_at', 'asc')   
-        //                                 ->get();
+                if( $data['id_group'] == null || $data['id_group'] == ""){
+                    $events .= "，尚未選擇場次";
+                }else{
+                    $event = EventsCourse::where('id_group', $data['id_group'])
+                                        ->orderby('course_start_at', 'asc')   
+                                        ->get();
 
-        //             if( !empty($event) ){
+                    if( !empty($event) ){
                         
-        //                 $numItems = count($event);
-        //                 $i = 0;
+                        $numItems = count($event);
+                        $i = 0;
 
-        //                 $events_group = "";
+                        $events_group = "";
+                        $events_name = "";
 
-        //                 foreach( $event as $data_event ){
+                        foreach( $event as $data_event ){
 
-        //                     //日期
-        //                     $date = date('Y-m-d', strtotime($data_event['course_start_at']));
-        //                     //星期
-        //                     $weekarray = array("日","一","二","三","四","五","六");
-        //                     $week = $weekarray[date('w', strtotime($data_event['course_start_at']))];
+                            //日期
+                            $date = date('Y-m-d', strtotime($data_event['course_start_at']));
+                            //星期
+                            $weekarray = array("日","一","二","三","四","五","六");
+                            $week = $weekarray[date('w', strtotime($data_event['course_start_at']))];
                             
-        //                     if( ++$i === $numItems){
-        //                         $events_group .= $date . '(' . $week . ')';
-        //                     }else {
-        //                         $events_group .= $date . '(' . $week . ')' . '、';
-        //                     }
-        //                 }
+                            if( ++$i === $numItems){
+                                $events_group .= $date . '(' . $week . ')';
+                            }else {
+                                $events_group .= $date . '(' . $week . ')' . '、';
+                            }
+                            
+                            $events_name = $data_event['name'];
+                        }
+                        
+                        $events .= " " . $events_group . " " . $events_name;
 
-        //             }
+                        // $time = EventsCourse::where('id_group', $data['id_group'])
+                        //                     ->first();
+                        // //時間
+                        // $time_strat = date('H:i', strtotime($time['course_start_at']));
+                        // $time_end = date('H:i', strtotime($time['course_end_at']));
 
-                    
-        //             //時間
-        //             $time_strat = date('H:i', strtotime($data_event['course_start_at']));
-        //             $time_end = date('H:i', strtotime($data_event['course_end_at']));
 
+                    }
 
-        //             $events .= " " . $events_group . " " . $data_event['name'];
-        //         }
-        //     }else{
-        //         $events = "尚無選擇報名課程";
-        //     }
-        // }
+                }
+            }else{
+                $events = "尚無選擇報名課程";
+            }
+        }
         
 
 
         if( !empty($data) ){
-            return array('data' => $data, 'events' => $events);
+            return array('data' => $data, 'events' => $events, 'id_events' => $id_events);
         }else {
             return 'nodata';
         }

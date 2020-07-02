@@ -598,6 +598,7 @@ class CourseReturnController extends Controller
         // $istatus = $request->get('istatus');
 
         $events = $request->get('edit_events');
+        $edit_collapse = $request->get('edit_collapse_val');
         
         /* 防錯 */
         if($address == ""){
@@ -611,8 +612,12 @@ class CourseReturnController extends Controller
             //判斷系統是否已有該學員資料
             $check_student = Student::where('phone', $phone)->get();
 
+            $id_student = "";
+
             // 檢查學員資料
             if (count($check_student) != 0) {
+
+                $id_student = Student::where('phone', $phone)->first();
 
                 if($name == ""){
                     $name = Student::where('phone', $phone)->first()->name;
@@ -679,9 +684,80 @@ class CourseReturnController extends Controller
                 //     $join = Registration::where('id', $id)->first()->join;
                 // }
 
+
+                $registration = Registration::where('id', $id)->first();
+
                 //判斷是否有選擇場次
-                if( $edit_events != "" ){
-                    
+                if( $events != "" && $edit_collapse != 0){
+                    if( strpos( $events ,'edit_events')  !== false ){
+                        //選擇某場次
+
+                        //判斷選擇場次是否跟報名表一致
+                        if( substr($events, 11) != $registration['id_group']){
+                            //不一致則更新
+                            $update_group = substr($events, 11);
+                            $events_group = EventsCourse::where('id_group', $update_group)->get();
+                            
+                            if( !empty($events_group) ){
+                                $update_course = EventsCourse::where('id_group', $update_group)->orderby('course_start_at','desc')->first()->id_course;
+                                
+                                $update_events = EventsCourse::where('id_group', $update_group)->orderby('course_start_at','desc')->first()->id_events;
+                                
+                                Registration::where('id', $id)->update([
+                                    'id_course' => $update_course,
+                                    'id_group' => $update_group,
+                                    'id_events' => $update_events,
+                                ]);  
+
+                                //刪除報到表
+                                Register::where('id_registration', $id)->delete();
+
+                                foreach( $events_group as $data_group){
+                                    // 報到資料
+                                    $register = new Register;
+                                    // $date = date('Y-m-d H:i:s');
+
+                                    $register->id_registration   = $id;      // 報名ID
+                                    $register->id_student        = $id_student;           // 學員ID
+                                    $register->id_status         = 1;                     // 報名狀態ID
+                                    $register->id_events         = $data_group['id'];     // 場次ID               
+                                    $register->memo              = '';                    // 備註
+                                
+                                    $register->save();
+                                    $id_register = $register->id;
+                                }
+                            }
+                            
+                        }
+
+                    }
+
+                    if( strpos( $events ,'edit_other')  !== false ){
+                        //選擇某課程的"我要選擇其他場次"
+
+                        //判斷選擇課程是否跟報名表一致
+                        if( substr($events, 10) != $registration['id_course']){
+                            //不一致則更新
+                                
+                            $update_course = substr($events, 10);
+
+                            Registration::where('id', $id)->update([
+                                'id_course' => $update_course,
+                                'id_group' => -99,
+                                'id_events' => -99,
+                            ]);  
+
+                        }else{
+
+                            Registration::where('id', $id)->update([
+                                'id_group' => -99,
+                                'id_events' => -99,
+                            ]); 
+                        }
+
+                        //刪除報到表
+                        Register::where('id_registration', $id)->delete();
+                    }
                 }
 
                 Registration::where('id', $id)->update([
