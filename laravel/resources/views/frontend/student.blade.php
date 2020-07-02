@@ -442,6 +442,10 @@
                     </div>
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">付款狀態:</label>
+                      <label id="status_payment_name"></label>
+                    </div>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">最新狀態:</label>
                       <label id="lbl_debt_status"></label>
                     </div>
                     <div class="form-group">
@@ -1272,19 +1276,30 @@
           },
           // async: false,
           success: function(data) {
-            updatetime = '', remindtime = '', id_debt_status_payment_name = '', id_status = '', val_status = '', val_status_payment_name = ''
+            updatetime = '', remindtime = '', id_debt_status_payment_name = '', id_status = '', val_status = '', val_status_payment_name = '', id_debt_status_payment_name2 = '';
+            var array_id_status = [],
+              array_id_debt_status_payment_name = [],
+              array_val_status_payment_name = [],
+              array_val_status = []
             $.each(data, function(index, val) {
               opt1 = '', opt2 = '', opt3 = '', opt4 = '', opt5 = '', opt6 = '', opt7 = '';
               id = val['id'];
 
               // 付款狀態下拉ID
               id_debt_status_payment_name = 'debt_status_payment_name_' + id
+              array_id_debt_status_payment_name.push("#" + id_debt_status_payment_name)
 
               // 最新狀態下拉ID
               id_status = id + '_status'
+              array_id_status.push("#" + id_status)
 
+              // 付款狀態Value
               val_status_payment_name = val['status_payment_name']
+              array_val_status_payment_name.push(val['status_payment_name'])
+
+              // 最新狀態Value
               val_status = val['id_status']
+              array_val_status.push(val['id_status'])
 
               updatetime += "#new_starttime" + id + ','
               remindtime += "#remind" + id + ','
@@ -1305,7 +1320,6 @@
               if (val['person'] != null) {
                 person = val['person']
               }
-
               data +=
                 '<tr>' +
                 '<td><i class="fa fa-address-card " aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 20%;"></i></td>' +
@@ -1334,6 +1348,7 @@
                 '<option value="12">待追</option>' +
                 '<option value="15">無意願</option>' +
                 '<option value="16">推薦其他講師</option>' +
+                '<option value="22">通知下一梯次</option>' +
                 '</select>' +
                 '</div> </td>' +
                 '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="save_data($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
@@ -1375,23 +1390,23 @@
 
             /*付款狀態、最新狀態 - S*/
 
-            // 付款狀態
-            id_debt_status_payment_name = "#" + id_debt_status_payment_name
-
-            if (val_status_payment_name != "") {
-              $(id_debt_status_payment_name).val(val_status_payment_name)
-            } else {
-              $(id_debt_status_payment_name).val('')
-            }
+            // 付款狀態            
+            $.each(array_id_debt_status_payment_name, function(index, val) {
+              if (array_val_status_payment_name[index] != "") {
+                $(array_id_debt_status_payment_name[index]).val(array_val_status_payment_name[index])
+              } else {
+                $(array_id_debt_status_payment_name[index]).val('')
+              }
+            })
 
             // 最新狀態
-            id_status = "#" + id_status
-
-            if (val_status != "") {
-              $(id_status).val(val_status)
-            } else {
-              $(id_status).val('')
-            }
+            $.each(array_id_status, function(index, val) {
+              if (array_val_status[index] != "") {
+                $(array_id_status[index]).val(array_val_status[index])
+              } else {
+                $(array_id_status[index]).val('')
+              }
+            })
 
             /*付款狀態、最新狀態 - E*/
 
@@ -1545,6 +1560,7 @@
             $("#lbl_debt_course").text(data[0]['name_course']);
             $("#lbl_debt_status_date").text(data[0]['status_payment']);
             $("#lbl_debt_contact").text(data[0]['contact']);
+            $("#status_payment_name").text(data[0]['status_payment_name']);
             $("#lbl_debt_status").text(data[0]['status_name']);
             $("#lbl_debt_person").text(data[0]['person']);
             $("#lbl_debt_remind").text(data[0]['remind_at']);

@@ -728,3 +728,9 @@ ALTER TABLE debt DROP FOREIGN KEY `debt_ibfk_2`;
 
 -- 修改正課表單資料欄位 - 統一發票 Sandy (2020/06/27)
 ALTER TABLE `registration` modify COLUMN type_invoice VARCHAR(20) NULL COMMENT '統一發票(0:捐贈社會福利機構（由無極限國際公司另行辦理）,1:二聯式,2:三聯式)';
+
+-- 銷講資料表 - 增加備註欄位 Rocky(2020/07/02)
+ALTER TABLE `sales_registration` ADD COLUMN memo2 VARCHAR(100)  NULL  COMMENT '備註(填是否付費)';
+
+-- 新增資料 - 狀態資料表 Rocky(2020/07/02)
+INSERT INTO isms_status (`name`,`type`)  VALUES ('通知下一梯次課程時間','1');

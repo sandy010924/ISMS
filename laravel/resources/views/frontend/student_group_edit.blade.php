@@ -447,36 +447,13 @@
                   <th class="text-nowrap">追單課程</th>
                   <th class="text-nowrap">付款狀態/日期</th>
                   <th class="text-nowrap">聯絡內容</th>
+                  <th class="text-nowrap">付款狀態</th>
                   <th class="text-nowrap">最新狀態</th>
                   <th class="text-nowrap">追單人員</th>
                   <th class="text-nowrap">設提醒</th>
                 </tr>
               </thead>
               <tbody id="contact_data_detail">
-                <tr>
-                  <td class="align-middle"></td>
-                  <td class="align-middle"></td>
-                  <td class="align-middle">
-                  </td>
-                  <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                  <td class="align-middle"><input type="text" class="border-0 bg-transparent input_width"></td>
-                  <td class="align-middle">
-                    <div class="form-group m-0">
-                      <select class="custom-select border-0 bg-transparent input_width">
-                        <option selected disabled value=""></option>
-                        <option value="1">完款</option>
-                        <option value="2">付訂</option>
-                        <option value="3">待追</option>
-                        <option value="4">退款中</option>
-                        <option value="5">退款完成</option>
-                        <option value="6">無意願</option>
-                        <option value="7">推薦其他講師</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td class="align-middle">追單人員</td>
-                  <td class="align-middle">設提醒</td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -509,6 +486,10 @@
                 </div>
                 <div class="form-group">
                   <label for="recipient-name" class="col-form-label">付款狀態:</label>
+                  <label id="status_payment_name"></label>
+                </div>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">最新狀態:</label>
                   <label id="lbl_debt_status"></label>
                 </div>
                 <div class="form-group">
@@ -1228,18 +1209,29 @@
       // async: false,
       success: function(data) {
         updatetime = '', remindtime = '', id_debt_status_payment_name = '', id_status = '', val_status = '', val_status_payment_name = ''
+        var array_id_status = [],
+          array_id_debt_status_payment_name = [],
+          array_val_status_payment_name = [],
+          array_val_status = []
         $.each(data, function(index, val) {
           opt1 = '', opt2 = '', opt3 = '', opt4 = '', opt5 = '', opt6 = '', opt7 = '';
           id = val['id'];
 
           // 付款狀態下拉ID
           id_debt_status_payment_name = 'debt_status_payment_name_' + id
+          array_id_debt_status_payment_name.push("#" + id_debt_status_payment_name)
 
           // 最新狀態下拉ID
           id_status = id + '_status'
+          array_id_status.push("#" + id_status)
 
+          // 付款狀態Value
           val_status_payment_name = val['status_payment_name']
+          array_val_status_payment_name.push(val['status_payment_name'])
+
+          // 最新狀態Value
           val_status = val['id_status']
+          array_val_status.push(val['id_status'])
 
           updatetime += "#new_starttime" + id + ','
           remindtime += "#remind" + id + ','
@@ -1263,30 +1255,38 @@
 
           data +=
             '<tr>' +
-            '<td><i class="fa fa-address-card" aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 40%;"></i></td>' +
+            '<td><i class="fa fa-address-card " aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 40%;"></i></td>' +
             '<td>' +
             '<div class="input-group date show_datetime" id="new_starttime' + id + '" data-target-input="nearest"> ' +
-            ' <input type="text" readonly onblur="update_time($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker" data-target="#new_starttime' + id + '" required/> ' +
+            ' <input type="text" readonly onblur="save_data($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
+            '</div> ' +
             '</div>' +
             '</td>' +
-            '<td>' + '<input type="text"  readonly class="form-control" onblur="name_course($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td>' + '<input type="text"  readonly class="form-control" onblur="status_payment($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td>' + '<input type="text"  readonly class="form-control" onblur="contact($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id + '_status" disabled " class="custom-select border-0 bg-transparent input_width"> ' +
+            '<td>' + '<input type="text" readonly  class="form-control auth_readonly" onblur="save_data($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td>' + '<input type="text"   readonly class="auth_readonly form-control" onblur="save_data($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td>' + '<input type="text"  readonly class=" auth_readonly form-control" onblur="save_data($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_debt_status_payment_name + '" onblur="save_data($(this),' + id + ',7);" disabled class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
             '<option selected disabled value=""></option>' +
-            '<option value="11" ' + opt2 + '>完款</option>' +
-            '<option value="10" ' + opt1 + '>付訂</option>' +
-            '<option value="12" ' + opt3 + '>待追</option>' +
-            '<option value="13" ' + opt4 + '>退款中</option>' +
-            '<option value="14" ' + opt5 + '>退款完成</option>' +
-            '<option value="15" ' + opt6 + '>無意願</option>' +
-            '<option value="16" ' + opt7 + '>推薦其他講師</option>' +
+            '<option value="留單">留單</option>' +
+            '<option value="完款">完款</option>' +
+            '<option value="付訂">付訂</option>' +
+            '<option value="退費">退費</option>' +
             '</select>' +
             '</div> </td>' +
-            '<td>' + '<input type="text"  readonly class="form-control" onblur="person($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_status + '" disabled  onblur="save_data($(this),' + id + ',3);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+            '<option selected disabled value=""></option>' +
+            '<option value="12">待追</option>' +
+            '<option value="15">無意願</option>' +
+            '<option value="16">推薦其他講師</option>' +
+            '<option value="22">通知下一梯次</option>' +
+            '</select>' +
+            '</div> </td>' +
+            '<td>' + '<input type="text"  readonly class="auth_readonly form-control" onblur="save_data($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
             '<td>' +
             '<div class="input-group date show_datetime" id="remind' + id + '" data-target-input="nearest"> ' +
-            ' <input type="text" readonly  value="' + val['remind_at'] + '"   name="remind' + id + '" class="form-control datetimepicker-input datepicker" data-target="#remind' + id + '" required/> ' +
+            ' <input type="text" readonly onblur="save_data($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
+            ' <div class="input-group-append" data-target="#remind' + id + '" data-toggle="datetimepicker"> ' +
+            '</div> ' +
             '</div>' +
             '</td>' +
             '</tr>'
@@ -1319,23 +1319,23 @@
 
         /*付款狀態、最新狀態 - S*/
 
-        // 付款狀態
-        id_debt_status_payment_name = "#" + id_debt_status_payment_name
-
-        if (val_status_payment_name != "") {
-          $(id_debt_status_payment_name).val(val_status_payment_name)
-        } else {
-          $(id_debt_status_payment_name).val('')
-        }
+        // 付款狀態            
+        $.each(array_id_debt_status_payment_name, function(index, val) {
+          if (array_val_status_payment_name[index] != "") {
+            $(array_id_debt_status_payment_name[index]).val(array_val_status_payment_name[index])
+          } else {
+            $(array_id_debt_status_payment_name[index]).val('')
+          }
+        })
 
         // 最新狀態
-        id_status = "#" + id_status
-
-        if (val_status != "") {
-          $(id_status).val(val_status)
-        } else {
-          $(id_status).val('')
-        }
+        $.each(array_id_status, function(index, val) {
+          if (array_val_status[index] != "") {
+            $(array_id_status[index]).val(array_val_status[index])
+          } else {
+            $(array_id_status[index]).val('')
+          }
+        })
 
         /*付款狀態、最新狀態 - E*/
 
@@ -1363,6 +1363,7 @@
         $("#lbl_debt_course").text(data[0]['name_course']);
         $("#lbl_debt_status_date").text(data[0]['status_payment']);
         $("#lbl_debt_contact").text(data[0]['contact']);
+        $("#status_payment_name").text(data[0]['status_payment_name']);
         $("#lbl_debt_status").text(data[0]['status_name']);
         $("#lbl_debt_person").text(data[0]['person']);
         $("#lbl_debt_remind").text(data[0]['remind_at']);

@@ -35,6 +35,8 @@ class CourseController extends Controller
             $int_pay = 0;               // 付款方式
             $int_account = 0;           // 卡號
             $int_text = 0;              // 想聽到...內容
+            $int_memo = 0;              // 備註
+
 
             // 宣告變數
             $id_course = "";            // 課程ID
@@ -156,6 +158,9 @@ class CourseController extends Controller
                             break;
                         case "我想在講座中瞭解到的內容？":
                             $int_text = $i;
+                            break;
+                        case "備註":
+                            $int_memo = $i;
                             break;
                     }
                 }
@@ -432,6 +437,9 @@ class CourseController extends Controller
                             $SalesRegistration->submissiondate   = $date;                           // Submission Date
                             $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
                             $SalesRegistration->id_student       = $id_student;                     // 學員ID
+                            // 增加備註欄位 Rocky(2020/07/02)
+                            $SalesRegistration->memo2       =  $data[$int_memo];                    // 備註(填是否付費)
+
                             if ($check == 1) {
                                 // 我很遺憾
                                 $SalesRegistration->id_events    = -99;                             // 場次ID
