@@ -419,13 +419,13 @@
     table = $('#table_list').DataTable({
       "dom": '<Bl<t>p>',
       "ordering": false,
-      "bStateSave": true,
-      "fnStateSave": function (oSettings, oData) {
-          localStorage.setItem('offersDataTables', JSON.stringify(oData));
-      },
-      "fnStateLoad": function (oSettings) {
-          return JSON.parse(localStorage.getItem('offersDataTables'));
-      },
+      // "bStateSave": true,
+      // "fnStateSave": function (oSettings, oData) {
+      //     localStorage.setItem('offersDataTables', JSON.stringify(oData));
+      // },
+      // "fnStateLoad": function (oSettings) {
+      //     return JSON.parse(localStorage.getItem('offersDataTables'));
+      // },
       drawCallback: function() {
         //換頁或切換每頁筆數按鈕觸發報到狀態樣式
         $('.paginate_button, .dataTables_length', this.api().table().container()).on('click', function() {
