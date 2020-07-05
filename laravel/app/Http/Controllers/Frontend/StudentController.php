@@ -425,9 +425,11 @@ class StudentController extends Controller
                 ->join('course', 'sales_registration.id_course', '=', 'course.id')
                 ->select('student.*', 'sales_registration.datasource')
                 ->where('course.id_teacher', $id_teacher)
-                ->orWhere('email', 'like', '%' . $search_data . '%')
-                ->orWhere('phone', 'like', '%' . $search_data . '%')
-                ->orWhere('student.name', 'like', '%' . $search_data . '%')
+                ->where(function ($query) use ($search_data) {
+                    $query->Where('email', 'like', '%' . $search_data . '%')
+                        ->orWhere('phone', 'like', '%' . $search_data . '%')
+                        ->orWhere('student.name', 'like', '%' . $search_data . '%');
+                })
                 ->groupBy('id')
                 ->orderby('created_at', 'desc')
                 ->take(500)
