@@ -1409,11 +1409,11 @@
   });
 
   //編輯場次開啟
-  $('#edit_collapse').on('show.bs.collapse', function () {
+  $('#edit_collapse').on('show.bs.collapse', function() {
     $('#edit_collapse_val').val(1);
   })
   //編輯場次關閉
-  $('#edit_collapse').on('hidden.bs.collapse', function () {
+  $('#edit_collapse').on('hidden.bs.collapse', function() {
     $('#edit_collapse_val').val(0);
   })
   /* 編輯資料 E Sandy(2020/06/25) */
@@ -2104,7 +2104,9 @@
         $('input[name="course_events"]').val('');
         if (typeof(data['course_registration']) != 'undefined') {
           var course_events = '',
-            course_registration = ''
+            course_registration = '',
+            registration_course_start_at = '',
+            course_registration_events = ''
           if (data['course_events'] == null) {
             course_events = " "
           } else {
@@ -2117,7 +2119,15 @@
             course_registration = data['course_registration']
           }
 
-          $('input[name="course_events"]').val(course_registration + ' ' + course_events);
+          if (data['registration_course_start_at'] == null) {
+            registration_course_start_at = "無"
+          } else {
+            registration_course_start_at = data['registration_course_start_at']
+          }
+
+          course_registration_events = course_registration + ' ' + course_events + '(' + registration_course_start_at + ' )'
+
+          $('input[name="course_events"]').val(course_registration_events);
         }
 
         // 退款

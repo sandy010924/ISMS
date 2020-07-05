@@ -11,13 +11,13 @@
     <div class="row mb-3">
       <div class="col-2">
       </div>
-      <div class="col-3">
-        <div class="input-group date" data-target-input="nearest">
+      <div class="col-2">
+        <!-- <div class="input-group date" data-target-input="nearest">
           <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期" data-toggle="datetimepicker" autocomplete="off">
           <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="col-3">
         <input type="search" class="form-control" placeholder="搜尋姓名" aria-label="Class's name" id="search_name">
@@ -258,9 +258,9 @@
 
   $("document").ready(function() {
     // 日期選擇器 Rocky(2020/04/24)
-    $('#search_date').datetimepicker({
-      format: 'YYYY-MM-DD'
-    });
+    // $('#search_date').datetimepicker({
+    //   format: 'YYYY-MM-DD'
+    // });
 
     /* Datatable.js Rocky(2020/04/24) - S */
     table = $('#table_list').DataTable({

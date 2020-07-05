@@ -251,7 +251,7 @@ class StudentController extends Controller
             ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
             // ->leftjoin('isms_status as t1', 't1.id', '=', 'registration.status_payment')
             // ->select('registration.*', 'register.id_status', 't1.name as status_payment', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events')
-            ->select('registration.*', 'register.id_status', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events')
+            ->select('registration.*', 'register.id_status', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events', 'events_course.course_start_at as registration_course_start_at')
             ->where('registration.id_student', $id_student)
             ->orderBy('registration.created_at', 'desc')
             ->first();
