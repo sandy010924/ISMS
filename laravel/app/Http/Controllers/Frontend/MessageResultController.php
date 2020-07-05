@@ -67,13 +67,13 @@ class MessageResultController extends Controller
             //報名成本
             $cost_apply = 0;
             if ($cost_sms != 0 && $count_apply != 0) {
-                $cost_apply = $cost_sms / $count_apply;
+                $cost_apply = round($cost_sms / $count_apply,2);
             }
         
             //報名率
             $rate_apply = 0;
             if ($count_apply != 0 && $count_receiver != 0) {
-                $rate_apply = ($count_apply / $count_receiver)*100;
+                $rate_apply = round(($count_apply / $count_receiver)*100,2);
             }
 
             $msg[$key] = [
