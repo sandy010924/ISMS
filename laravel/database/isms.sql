@@ -734,3 +734,6 @@ ALTER TABLE `sales_registration` ADD COLUMN memo2 VARCHAR(100)  NULL  COMMENT '�
 
 -- 新增資料 - 狀態資料表 Rocky(2020/07/02)
 INSERT INTO isms_status (`name`,`type`)  VALUES ('通知下一梯次課程時間','1');
+
+-- 課程資料表 - 新增刷卡連結欄位 Sandy(2020/07/06)
+ALTER TABLE `course` ADD COLUMN pay_url INT NULL COMMENT '刷卡連結';
