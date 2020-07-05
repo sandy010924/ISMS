@@ -226,6 +226,7 @@
       <th width="20%">報到備註</th>
       <th class="d-none">報到備註</th>
       @if( $course->type == 1 )
+        <th>付費備註</th>
         <th></th>
       @endif
     </tr>
@@ -257,6 +258,7 @@
       </td>
       <td class="align-middle d-none" id="checkmemo{{ $coursecheck['check_id'] }}">{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}</td>
       @if( $course->type == 1 )
+        <td class="align-middle">{{ ($coursecheck['memo2'] == 'null')? '':$coursecheck['memo2'] }}</td>
         <td class="align-middle">
           <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $coursecheck['check_id'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
           <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete({{ $coursecheck['check_id'] }});">刪除</a>

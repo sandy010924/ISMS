@@ -71,7 +71,12 @@ class CourseCheckController extends Controller
             //報名資訊
             $list = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                 ->join('student', 'student.id', '=', 'sales_registration.id_student')
-                ->select('sales_registration.id as check_id' ,'student.*', 'sales_registration.id_status as check_status_val', 'sales_registration.memo as memo', 'isms_status.name as check_status_name')
+                ->select('sales_registration.id as check_id' ,
+                        'student.*', 
+                        'sales_registration.id_status as check_status_val', 
+                        'sales_registration.memo as memo', 
+                        'sales_registration.memo2 as memo2',
+                        'isms_status.name as check_status_name')
                 // ->selectRaw('@row:=@row+1 as row')
                 ->Where('id_events','=', $id)
                 ->Where('id_status','<>', 2)
@@ -96,7 +101,8 @@ class CourseCheckController extends Controller
                     'check_id' => $data['check_id'],
                     'check_status_val' => $data['check_status_val'],
                     'check_status_name' => $data['check_status_name'],
-                    'memo' => $data['memo']
+                    'memo' => $data['memo'],
+                    'memo2' => $data['memo2']
                 ];
             }
 
