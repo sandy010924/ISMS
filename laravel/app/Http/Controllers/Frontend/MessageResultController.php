@@ -47,7 +47,7 @@ class MessageResultController extends Controller
             $count_apply = 0;
             if ($data['id_course'] != null) {
                 $course = Course::where('id', $data['id_course'])->first();
-                if (!empty($$course)) {
+                if (!empty($course)) {
                     $type = $course->type;
                     $startDate = $data['send_at'];
                     $endDate =  date("Y-m-d H:i:s", strtotime("+1 day", strtotime($data['send_at'])));
