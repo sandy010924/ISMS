@@ -240,7 +240,14 @@
           "columnDefs": [{
             "targets": 'no-sort',
             "orderable": false,
-          }]
+          }],
+          "bStateSave": true,
+          "fnStateSave": function (oSettings, oData) {
+              localStorage.setItem('offersDataTables', JSON.stringify(oData));
+          },
+          "fnStateLoad": function (oSettings) {
+              return JSON.parse(localStorage.getItem('offersDataTables'));
+          },
       });
 
     //select2 對應課程 Sandy(2020/03/08)
