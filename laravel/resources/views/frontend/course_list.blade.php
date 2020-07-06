@@ -188,6 +188,24 @@
   </div>
 </div>
 <!-- Content End -->
+
+<!-- Rocky(2020/01/11) -->
+@if (session('status') == "匯入成功")
+<div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" style="display:block;" role="alert">
+  {{ session('status') }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+@elseif (session('status') == "匯入失敗" || session('status') == "請選檔案/填講師姓名")
+<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" style="display:block;" role="alert">
+  {{ session('status') }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+@endif
+<!-- Content End -->
 <script>
   //DataTable
   var table;
