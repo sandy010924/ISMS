@@ -243,7 +243,7 @@ class CourseReturnController extends Controller
                                             'amount_payable' => $amount_payable,
                                             'pay_date' => $pay_date,
                                             'person' => $person,
-                                            'memo' => $memo,
+                                            'pay_memo' => $pay_memo,
                                         ]);
 
                         }else{
@@ -259,7 +259,7 @@ class CourseReturnController extends Controller
                                             'amount_payable' => $amount_payable,
                                             'pay_date' => $pay_date,
                                             'person' => $person,
-                                            'memo' => $memo,
+                                            'pay_memo' => $pay_memo,
                                         ]);
                         }
                     }
@@ -471,7 +471,7 @@ class CourseReturnController extends Controller
                                     'amount_payable' => $amount_payable,
                                     'pay_date' => $pay_date,
                                     'person' => $person,
-                                    'memo' => $memo,
+                                    'pay_memo' => $pay_memo,
                                 ]);
                 }
                 /*正課報名資料 - E*/
