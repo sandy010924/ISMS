@@ -162,6 +162,12 @@ class CourseController extends Controller
                         case "備註":
                             $int_memo = $i;
                             break;
+                        case "付費備註":
+                            $int_memo = $i;
+                            break;
+                        case "付款備註":
+                            $int_memo = $i;
+                            break;
                     }
                 }
             }
@@ -438,7 +444,11 @@ class CourseController extends Controller
                             $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
                             $SalesRegistration->id_student       = $id_student;                     // 學員ID
                             // 增加備註欄位 Rocky(2020/07/02)
-                            $SalesRegistration->memo2       =  $data[$int_memo];                    // 備註(填是否付費)
+                            if ($int_memo != 0 && $data[$int_memo] != '') {
+                                $SalesRegistration->memo2       =  $data[$int_memo];                    // 備註(填是否付費)
+                            }
+
+                            
 
                             if ($check == 1) {
                                 // 我很遺憾
