@@ -117,7 +117,8 @@ class ReportController extends Controller
 
                         //來源
                         if($data[2] != '0'){
-                            $count->where('datasource', $data[2]);
+                            // $count->where('datasource', $data[2]);
+                            $count->whereIn('datasource', $data[2]);
                         }
 
                         //動作
@@ -194,8 +195,10 @@ class ReportController extends Controller
 
                         //來源
                         if($data[2] != '0'){
-                            $apply->where('datasource', $data[2]);
-                            $check->where('datasource', $data[2]);
+                            // $apply->where('datasource', $data[2]);
+                            $apply->whereIn('datasource', $data[2]);
+                            // $check->where('datasource', $data[2]);
+                            $check->whereIn('datasource', $data[2]);
                         }
                     }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                         //正課
@@ -259,7 +262,8 @@ class ReportController extends Controller
                         $check = SalesRegistration::where('id_events', $data_search['id']);
                         //來源
                         if($data[2] != '0'){
-                            $check->where('datasource', $data[2]);
+                            // $check->where('datasource', $data[2]);
+                            $check->whereIn('datasource', $data[2]);
                         }
                     }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                         //正課
@@ -348,7 +352,8 @@ class ReportController extends Controller
                             $pay = Registration::leftjoin('sales_registration', 'sales_registration.id_events', '=', 'registration.source_events')
                                                 ->leftjoin('payment', 'payment.id_registration', '=', 'registration.id')
                                                 ->where('source_events', $data_search['id'])
-                                                ->where('datasource', $data[2]);
+                                                ->whereIn('datasource', $data[2]);
+                                                // ->where('datasource', $data[2]);
                                                         
                             //付款狀態
                             if($data[6] != '0'){

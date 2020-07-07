@@ -67,8 +67,14 @@
             </select>
           </div>
           <div class="col">
-            <select  class="form-control itemSource" name="item1" data-select="itemSource">
+            {{-- <select  class="form-control itemSource" name="item1" data-select="itemSource">
               <option value="0" selected>所有來源</option>
+              @foreach($source as $data)
+                <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
+              @endforeach
+            </select> --}}
+            {{-- <select multiple class="selectpicker form-control itemSource" data-actions-box="true" name="item1" id="select_source" data-select="itemSource" value="0"> --}}
+            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item1" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -153,8 +159,13 @@
             </select>
           </div>
           <div class="col">
-            <select  class="form-control itemSource" name="item2" data-select="itemSource">
+            {{-- <select  class="form-control itemSource" name="item2" data-select="itemSource">
               <option value="0" selected>所有來源</option>
+              @foreach($source as $data)
+                <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
+              @endforeach
+            </select> --}}
+            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item2" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -238,8 +249,13 @@
             </select>
           </div>
           <div class="col">
-            <select  class="form-control itemSource" name="item3" data-select="itemSource">
+            {{-- <select  class="form-control itemSource" name="item3" data-select="itemSource">
               <option value="0" selected>所有來源</option>
+              @foreach($source as $data)
+                <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
+              @endforeach
+            </select> --}}
+            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item3" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -323,8 +339,13 @@
             </select>
           </div>
           <div class="col">
-            <select  class="form-control itemSource" name="item4" data-select="itemSource">
+            {{-- <select  class="form-control itemSource" name="item4" data-select="itemSource">
               <option value="0" selected>所有來源</option>
+              @foreach($source as $data)
+                <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
+              @endforeach
+            </select> --}}
+            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item4" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -408,8 +429,13 @@
             </select>
           </div>
           <div class="col">
-            <select  class="form-control itemSource" name="item5" data-select="itemSource">
+            {{-- <select  class="form-control itemSource" name="item5" data-select="itemSource">
               <option value="0" selected>所有來源</option>
+              @foreach($source as $data)
+                <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
+              @endforeach
+            </select> --}}
+            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item5" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -546,8 +572,8 @@
       },function(start, end) {
         // console.log("Callback has been called!");
         // $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
-        startDate = start.format('YYYY-MM-DD');
-        endDate = end.format('YYYY-MM-DD');
+        startDate = start.format('YYYY-MM-DD 00:00:00');
+        endDate = end.format('YYYY-MM-DD 24:00:00');
       });
 
       // 上方link 選取狀態切換
@@ -577,9 +603,16 @@
       //select2 講師及來源、地區下拉式搜尋 Sandy(2020/04/14)
       $("select").select2({
           width: 'resolve', // need to override the changed default
-          theme: 'bootstrap'
+          theme: 'bootstrap',
+          placeholder: "所有來源",
       });
       $.fn.select2.defaults.set( "theme", "bootstrap" );
+
+
+      // // //來源多選 Sandy(2020/07/06)
+      // $(".itemSource").selectpicker({
+      //   noneSelectedText: '所有來源' //預設顯示內容
+      // });
 
 
     // 圖表設定
@@ -750,7 +783,7 @@
       
   /* 搜尋按鈕click */
   $('#searchBtn').click(function(){
-
+    
     //抓出條件區塊
     var collapse = [];
     $('[name="condition"].collapse.show').each(function() {
@@ -766,12 +799,34 @@
     for(var i = 0 ; i < collapse.length ; i++ ){
       item[i] = new Array();
       log[i] = new Array();
-      $('select[name="item' + collapse[i] +'"] option:selected').each(function() {
+
+      $('select[name="item' + collapse[i] +'"]').each(function() {
         // return($(this).val());
         // item1.push($(this).parent().data('item'));
         // item[i][$(this).parent().data('select')] = $(this).val();
-        item[i].push($(this).val());
-        log[i].push($(this).text());
+
+
+        if($(this).data('select') == "itemSource"){
+          //判斷來源是否為空值，是則預設選項為所有來源
+          if($(this).val() == ""){
+            item[i].push(0);
+            log[i].push("所有來源");
+          }else{
+            var txt = "";
+            $(this).find('option:selected').each(function(i, selected) {
+              if( i == 0 ){
+                txt += $(selected).text();
+              }else{
+                txt += "、" + $(selected).text();
+              }
+            });
+            item[i].push($(this).val());
+            log[i].push(txt);
+          }
+        }else{
+          item[i].push($(this).val());
+          log[i].push($(this).find('option:selected').text());
+        }
       });
     }
     // console.log(log);
@@ -790,7 +845,7 @@
     
     // console.log(endDate);
 
-    console.log($("ul#reportTab a.active").data('nav'));
+    // console.log($("ul#reportTab a.active").data('nav'));
 
     $.ajax({
       type:'GET',
@@ -803,7 +858,7 @@
         item: item
       },
       success:function(res){
-          console.log(res);  
+          // console.log(res);  
           
           //圖表x軸
           // lineChart.data.labels = res['labelDate'];
