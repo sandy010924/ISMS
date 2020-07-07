@@ -167,7 +167,7 @@ class CourseListEditController extends Controller
                 //銷講
                 foreach ($events as $data) {
                     //刪除報名表
-                    SalesRegistration::where('id_events', $data->id)->delete();
+                    SalesRegistration::where('id_events', $data['id'])->delete();
 
                     // $apply_table = SalesRegistration::where('id_events', $events->id)
                     //                                 ->get();
