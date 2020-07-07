@@ -30,7 +30,14 @@
                 <div class="modal-body">
                   <div class="form-group required">
                     <label for="new_name" class="col-form-label">課程名稱</label>
-                    <input type="text" id="new_name" name="new_name" class="form-control" required>
+                    {{-- <input type="text" id="new_name" name="new_name" class="form-control" required> --}}
+                    <input type="search" list="course" id="new_name" name="new_name" class="form-control" required />
+                    <datalist class="w-100" id="course">
+                      @foreach($course_list as $data)
+                      {{-- <option value="{{ $teacher->id }}">{{ $teacher->name }}</option> --}}
+                      <option value="{{ $data->name }}"></option>
+                      @endforeach
+                    </datalist>
                   </div>
                   <div class="form-group required">
                     <label for="new_teacher" class="col-form-label">講師名稱</label>

@@ -19,7 +19,9 @@ class CourseController extends Controller
     // Sandy (2020/01/14)
     public function show()
     {
-
+        $events = array();
+        $course = array();
+        $teachers = array();
 
         if (isset(Auth::user()->role) == '') {
             return view('frontend.error_authority');
@@ -39,6 +41,8 @@ class CourseController extends Controller
         }
 
 
+        //課程、老師快速查詢輸入
+        $course = Course::all();
         $teachers = Teacher::all();
 
         foreach ($events as $key => $data) {
@@ -134,6 +138,6 @@ class CourseController extends Controller
             }
         }
 
-        return view('frontend.course', compact('events', 'teachers'));
+        return view('frontend.course', compact('events', 'course', 'teachers'));
     }
 }

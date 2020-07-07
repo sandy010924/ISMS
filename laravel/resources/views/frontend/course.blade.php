@@ -28,16 +28,17 @@
                   @csrf
                   <div class="form-group required">
                     <label for="import_name" class="col-form-label">課程名稱</label>
-                    <input type="text" class="form-control" name="import_name" id="import_name" required />
+                    {{-- <input type="search" class="form-control" name="import_name" id="import_name" required /> --}}
+                    <input type="search" list="course" id="import_name" name="import_name" class="form-control" required />
+                    <datalist class="w-100" id="course">
+                      @foreach($course as $data)
+                      {{-- <option value="{{ $teacher->id }}">{{ $teacher->name }}</option> --}}
+                      <option value="{{ $data->name }}"></option>
+                      @endforeach
+                    </datalist>
                   </div>
                   <div class="form-group required">
                     <label for="import_teacher" class="col-form-label">講師</label>
-                    {{-- <select class="custom-select" name="import_teacher" id="import_teacher" required>
-                        <option selected disabled value="">選擇講師</option>
-                        @foreach($teachers as $teacher)
-                          <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                    @endforeach
-                    </select> --}}
                     <input type="search" list="teacher" id="import_teacher" name="import_teacher" class="form-control" required />
                     <datalist class="w-100" id="teacher">
                       @foreach($teachers as $teacher)

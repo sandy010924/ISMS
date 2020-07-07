@@ -20,6 +20,7 @@ class CourseListController extends Controller
     public function show()
     {
         $course = array();
+        $course_list = array();
         $teachers = array();
 
         if (isset(Auth::user()->role) == '') {
@@ -42,7 +43,8 @@ class CourseListController extends Controller
         }
 
 
-
+        //課程、老師快速查詢輸入
+        $course_list = Course::all();
         $teachers = Teacher::all();
 
 
@@ -139,6 +141,6 @@ class CourseListController extends Controller
             ];
         }
 
-        return view('frontend.course_list', compact('course', 'teachers'));
+        return view('frontend.course_list', compact('course', 'course_list', 'teachers'));
     }
 }
