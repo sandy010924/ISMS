@@ -76,22 +76,31 @@ class CourseAdvancedController extends Controller
 
                 $events_date = '';
 
-                foreach( $course_group as $key_group => $data_group ){
-                    //日期
-                    $date = date('Y-m-d', strtotime($data_group['course_start_at']));
-                    //星期
-                    $weekarray = array("日","一","二","三","四","五","六");
-                    $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
-                    
-                    if( ++$i === $numItems){
-                        $events_date .= $date . '(' . $week . ')';
-                    }else {
-                        $events_date .= $date . '(' . $week . ')' . '、';
+                if( $numItems != 0){
+                    foreach( $course_group as $key_group => $data_group ){
+                        //日期
+                        $date = date('Y-m-d', strtotime($data_group['course_start_at']));
+                        //星期
+                        $weekarray = array("日","一","二","三","四","五","六");
+                        $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
+                        
+                        if( ++$i === $numItems){
+                            $events_date .= $date . '(' . $week . ')';
+                        }else {
+                            $events_date .= $date . '(' . $week . ')' . '、';
+                        }
                     }
+                }else{
+                    $events_date = '尚未選擇報名場次';
                 }
 
-                $event = EventsCourse::Where('id_group', $data['id_group'])
-                                            ->first()->name;
+
+                $event = EventsCourse::Where('id_group', $data['id_group'])->first();
+                if( !empty($event) ){
+                    $event = $event->name;
+                }else{
+                    $event = "尚未選擇報名場次";
+                }
             }else{                
                 $events_date = '尚未選擇報名場次';
                 $event = '尚未選擇報名場次';

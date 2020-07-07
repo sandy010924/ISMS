@@ -110,6 +110,7 @@ class CourseListApplyController extends Controller
             $apply_table = Registration::join('student', 'student.id', '=', 'registration.id_student')
                                         ->select('student.name as name','student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*')
                                         ->Where('registration.id_course', $id)
+                                        ->Where('registration.status_payment', 7)
                                         ->get();
 
             $id_group='';      
