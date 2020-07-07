@@ -122,7 +122,7 @@
               </td>
               <td>
                 <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $data['id_group'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
-                <a role="button" class="btn btn-danger btn-sm text-white mx-1" onclick="btn_delete({{ $data['id_group'] }});">刪除</a>
+                <a role="button" class="btn btn-danger btn-sm text-white mx-1 btn_delete" data-idgroup="{{ $data['id_group'] }}">刪除</a>
               </td>
             </tr>
           @endforeach
@@ -387,10 +387,11 @@
   /* 資料自動儲存 end */
 
   // 刪除 Sandy(2020/05/31) start
-  function btn_delete(id_group) {
+  // function btn_delete() {
+  $('.btn_delete').on('click', function () {
+    var id_group = $(this).data('idgroup');
     //判斷是否有群組場次
     var msg = "是否刪除該場次?";
-
     if (confirm(msg) == true) {
       $.ajax({
         type: 'POST',
@@ -401,6 +402,8 @@
           id_group: id_group
         },
         success: function(data) {
+          // console.log(data);
+
           if (data['data'] == "ok") {
             alert('刪除成功！！')
             /** alert **/
@@ -427,7 +430,7 @@
     } else {
       return false;
     }
-  }
+  });
   // 刪除 Sandy(2020/05/31) end
 
 
@@ -458,7 +461,7 @@
         id:id
       },
       success:function(data){
-        console.log(data);  
+        // console.log(data);  
         // //日期隨群組日期數變動
         // edit_date(data['count']);
         

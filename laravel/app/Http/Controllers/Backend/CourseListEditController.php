@@ -155,7 +155,7 @@ class CourseListEditController extends Controller
     {
         $status = "";
         $id_group = $request->get('id_group');
-
+        
         $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
             ->select('course.type as type', 'events_course.*')
             ->where('events_course.id_group', $id_group)
@@ -167,7 +167,7 @@ class CourseListEditController extends Controller
                 //銷講
                 foreach ($events as $data) {
                     //刪除報名表
-                    SalesRegistration::where('id_events', $data['id'])->delete();
+                    SalesRegistration::where('id_events', $data->id)->delete();
 
                     // $apply_table = SalesRegistration::where('id_events', $events->id)
                     //                                 ->get();
