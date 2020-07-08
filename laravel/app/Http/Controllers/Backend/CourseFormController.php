@@ -197,6 +197,7 @@ class CourseFormController extends Controller
                             // $registration->memo              = '';                            // 備註
                             $registration->sign              = $sign;                            // 簽名檔案
                             $registration->status_payment    = 6;                             // 付款狀態
+                            $registration->status_payment_original    = 6;                             // 原始付款狀態
 
                             if(strpos($array_group, 'other') !== false){
                                 /* 選擇其他場次 */
@@ -419,6 +420,7 @@ class CourseFormController extends Controller
                         // $registration->memo              = '';                            // 備註
                         $registration->sign              = $sign;                            // 簽名檔案
                         $registration->status_payment    = 6;                             // 付款狀態
+                        $registration->status_payment_original    = 6;                             // 原始付款狀態
                         $registration->id_events         = -99;                           // 場次ID
                         $registration->registration_join = $join;                         // 我想參加課程
                         $registration->id_group          = null;                            // 群組ID

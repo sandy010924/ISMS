@@ -260,6 +260,10 @@
                     <input type="radio" id="ipay_model4" name="ipay_model" class="custom-control-input" value="3">
                     <label class="custom-control-label" for="ipay_model4">刷卡：一次付</label>
                   </div>
+                  <div class="custom-control custom-radio my-1">
+                    <input type="radio" id="ipay_model5" name="ipay_model" class="custom-control-input" value="4">
+                    <label class="custom-control-label" for="ipay_model5">現金分期</label>
+                  </div>
                 </div>
               </div>
               <div class="form-group mb-5">

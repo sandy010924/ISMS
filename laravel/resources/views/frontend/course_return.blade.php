@@ -203,6 +203,10 @@
                         <input type="radio" id="ipay_model4" name="ipay_model" class="custom-control-input" value="3">
                         <label class="custom-control-label" for="ipay_model4">刷卡：一次付</label>
                       </div>
+                      <div class="custom-control custom-radio my-1">
+                        <input type="radio" id="ipay_model5" name="ipay_model" class="custom-control-input" value="4">
+                        <label class="custom-control-label" for="ipay_model5">現金分期</label>
+                      </div>
                     </div>
                   </div>
                   <div class="form-group">
@@ -474,6 +478,7 @@
                         <option value="1">匯款</option>
                         <option value="2">刷卡：輕鬆付</option>
                         <option value="3">刷卡：一次付</option>
+                        <option value="4">現金分期</option>
                       </select>
                     </td>
                     <td class="align-middle">
@@ -732,6 +737,7 @@
                 <option value="1">匯款</option>
                 <option value="2">刷卡：輕鬆付</option>
                 <option value="3">刷卡：一次付</option>
+                <option value="4">現金分期</option>
               </select>
             </div>
             <div class="form-group required">
@@ -1880,6 +1886,7 @@
                     <option value="1">匯款</option>
                     <option value="2">刷卡：輕鬆付</option>
                     <option value="3">刷卡：一次付</option>
+                    <option value="4">現金分期</option>
                   </select>
                 </td>
                 <td class="align-middle">

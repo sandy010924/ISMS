@@ -60,6 +60,9 @@ class CourseReturnController extends Controller
                     case 3:
                         $pay_model = '刷卡：一次付';
                         break;
+                    case 4:
+                        $pay_model = '現金分期';
+                        break;
                     default:
                         $pay_model = '現金';
                         break;

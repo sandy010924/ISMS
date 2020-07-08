@@ -737,3 +737,6 @@ INSERT INTO isms_status (`name`,`type`)  VALUES ('通知下一梯次課程時間
 
 -- 課程資料表 - 新增刷卡連結欄位 Sandy(2020/07/06)
 ALTER TABLE `course` ADD COLUMN pay_url INT NULL COMMENT '刷卡連結';
+
+-- 付款資料表 - 更改欄位註解(2020/07/09)
+ALTER TABLE `payment` CHANGE COLUMN pay_model pay_model VARCHAR(20) NOT NULL COMMENT '付款方式(0:現金,1:匯款,2:刷卡:輕鬆付,3:刷卡:一次付,4:現金分期)';
