@@ -7,19 +7,19 @@ Chart.defaults.global.defaultFontFamily = '微軟正黑體';
 const turnover_rate_config = {
   type: 'pie',
   data: {
-    labels: ["留單數", "付訂數", "完款數", "未留單"],
+    labels: ["留單數", "付訂數", "完款數", "未留單數", "退費數", "追完款數"],
     datasets: [{
-      backgroundColor: ["#F9A03F", "#D45113", "#f24"],
-      data: [order, deposit, settle, count_check - order - deposit - settle]
+      backgroundColor: ["#F9A03F", "#1f69ad", "#26a34f", "#ddd", "#d41e1e", "#1fcfbd"],
+      data: [order, deposit, chart_settle_original, count_check - order - deposit - chart_settle_original - chart_settle_new - refund, refund, chart_settle_new]
     }]
   },
   options: {
     title: {
       display: true,
-      text: '成交率: ' + rate_settle,
-      fontSize: '22'
+      text: '成交率：' + rate_settle,
+      fontSize: 24
     },
-    legend: false,
+    // legend: false,
     legendCallback: function (chart) {
 
       const labels = chart.data.labels
@@ -37,18 +37,21 @@ const turnover_rate_config = {
       return template
     },
     tooltips: {
+      titleFontSize: 16,
+      bodyFontSize: 16,
       callbacks: {
         label: function (tooltipItem, data) {
           const dataset = data.datasets[tooltipItem.datasetIndex];
           // 計算總和
-          const sum = dataset.data.reduce(function (previousValue, currentValue, currentIndex, array) {
-            return currentValue;
-            //return previousValue + currentValue;
-          });
+          // const sum = dataset.data.reduce(function (previousValue, currentValue, currentIndex, array) {
+          //   return currentValue;
+          // });
           const currentValue = dataset.data[tooltipItem.index];
-          const percent = Math.round(((currentValue / sum) * 100));
-          return (dataset.data[2] == currentValue) ? data.labels[tooltipItem.index] + ":" + currentValue : " " + data.labels[tooltipItem.index] + ":" + currentValue + " (" + percent + " %)";
-          //return " " + data.labels[tooltipItem.index] + ":" + currentValue + " (" + percent + " %)";;
+          // const percent = Math.round(((currentValue / count_check) * 1000));
+          const percent = ((currentValue / count_check) * 100).toFixed(2);
+          // console.log(count_check);
+          // return (dataset.data[2] == currentValue) ? data.labels[tooltipItem.index] + ":" + currentValue : " " + data.labels[tooltipItem.index] + ":" + currentValue + " (" + percent + " %)";
+          return " " + data.labels[tooltipItem.index] + "：" + currentValue + " (" + percent + " %)";;
         }
       }
     },
@@ -120,17 +123,17 @@ var check_in_rate_config = {
   data: {
     labels: ["實到人數", "未到人數", "取消人數"],
     datasets: [{
-      backgroundColor: ["#16F4D0", "#153B50"],
+      backgroundColor: ["#26a34f", "#ddd", "#d41e1e"],
       data: [count_check, count_apply - count_check, count_cancel]
     }]
   },
   options: {
     title: {
       display: true,
-      text: '報到率: ' + rate_check,
-      fontSize: '22'
+      text: '報到率：' + rate_check,
+      fontSize: 24
     },
-    legend: false,
+    // legend: false,
     legendCallback: function (chart) {
 
       const labels = chart.data.labels
@@ -148,6 +151,8 @@ var check_in_rate_config = {
       return template
     },
     tooltips: {
+      titleFontSize: 16,
+      bodyFontSize: 16,
       callbacks: {
         label: function (tooltipItem, data) {
           const dataset = data.datasets[tooltipItem.datasetIndex];

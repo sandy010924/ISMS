@@ -18,9 +18,15 @@
     @slot('money') {{ $events['money']}} @endslot
     @slot('money_fivedays') {{ $events['money_fivedays']}} @endslot
     @slot('money_installment') {{ $events['money_installment']}} @endslot
+    @slot('chart_settle_original') {{ $events_data['chart_settle_original']}} @endslot
+    @slot('chart_settle_new') {{ $events_data['chart_settle_new']}} @endslot
+    @slot('settle_original') {{ $events_data['settle_original']}} @endslot
     @slot('settle') {{ $events_data['settle']}} @endslot
+    @slot('deposit_original') {{ $events_data['deposit_original']}} @endslot
     @slot('deposit') {{ $events_data['deposit']}} @endslot
+    @slot('order_original') {{ $events_data['order_original']}} @endslot
     @slot('order') {{ $events_data['order']}} @endslot
+    @slot('refund_original') {{ $events_data['refund_original']}} @endslot
     @slot('refund') {{ $events_data['refund']}} @endslot
     @slot('count_apply') {{ $events_data['count_apply']}} @endslot
     @slot('count_check') {{ $events_data['count_check']}} @endslot

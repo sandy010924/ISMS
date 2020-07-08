@@ -595,7 +595,7 @@ class CourseReturnController extends Controller
         $type_invoice = $request->get('edit_invoice');
         $number_taxid = $request->get('edit_num');
         $companytitle = $request->get('edit_companytitle');
-        // $istatus = $request->get('istatus');
+        $status_payment_original = $request->get('edit_status');
 
         $events = $request->get('edit_events');
         $edit_collapse = $request->get('edit_collapse_val');
@@ -766,6 +766,7 @@ class CourseReturnController extends Controller
                     'number_taxid' => $number_taxid,
                     'companytitle' => $companytitle,
                     'registration_join' => $join,
+                    'status_payment_original' => $status_payment_original,
                 ]);                     
            }
         

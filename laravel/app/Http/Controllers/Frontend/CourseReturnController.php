@@ -83,6 +83,12 @@ class CourseReturnController extends Controller
                 $pay_date = null;
             }
 
+            //原始付款狀態
+            $status_payment_original = "";
+            if($data['status_payment_original'] != null || $data['status_payment_original'] != ""){
+                $status_payment_original = ISMSStatus::where("id", $data['status_payment_original'])->first()->name;
+            }
+
             $fill[$key] = [ 
                 'id' => $data['id'],
                 'id_student' => $data['id_student'],
@@ -90,6 +96,7 @@ class CourseReturnController extends Controller
                 'phone' => $data['phone'],
                 'status_payment_name' => $data['status_payment_name'],
                 'status_payment' => $data['status_payment'],
+                'status_payment_original' => $status_payment_original,
                 'amount_payable' => $data['amount_payable'],
                 'amount_paid' => $payment_table->sum('cash'),
                 'pay_date' => $pay_date,

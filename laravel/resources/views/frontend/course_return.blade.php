@@ -247,7 +247,7 @@
                     <input type="text" class="form-control" name="icompanytitle" id="icompanytitle">
                   </div>
                   <div class="form-group">
-                    <label for="add_status" class="col-form-label">付款狀態</label>
+                    <label for="add_status" class="col-form-label"><strong>付款狀態</strong></label>
                     <select class="custom-select" id="istatus" name="istatus">
                       <option value="6">留單</option>
                       <option value="7">完款</option>
@@ -358,6 +358,7 @@
       <th class="text-nowrap"></th>
       <th class="text-nowrap">學員姓名</th>
       <th class="text-nowrap">連絡電話</th>
+      <th class="text-nowrap">原始付款狀態</th>
       <th class="text-nowrap">付款狀態</th>
       <th class="text-nowrap">應付</th>
       <th class="text-nowrap">已付</th>
@@ -384,6 +385,7 @@
         <a class="btn_tableName" data-toggle="modal" onclick="course_data({{ $data['id_student'] }});">{{ $data['name'] }}</a>
       </td>
       <td class="align-middle">{{ $data['phone'] }}</td>
+      <td class="align-middle">{{ $data['status_payment_original'] }}</td>
       <td class="align-middle">
         <div class="form-group m-0">
           <select class="custom-select border-0 bg-transparent input_width" id="status_payment{{ $data['id'] }}" name="status_payment" value="{{$data['status_payment']}}" data-orgvalue="{{$data['status_payment']}}">
@@ -446,7 +448,7 @@
       </td>
     </tr>
     <tr>
-      <td colspan="11">
+      <td colspan="12">
         <div class="collapse multi-collapse" id="payment{{ $data['id'] }}">
           <div class="card card-body p-1">
             <div class="table-responsive">
@@ -671,6 +673,15 @@
               <div class="form-group">
                 <label for="edit_companytitle" class="col-form-label"><strong>抬頭</strong></label>
                 <input type="text" class="form-control edit_input" name="edit_companytitle" id="edit_companytitle">
+              </div>
+              <div class="form-group">
+                <label for="edit_status" class="col-form-label"><strong>原始付款狀態</strong></label>
+                <select class="custom-select" id="edit_status" name="edit_status">
+                  <option value="6">留單</option>
+                  <option value="7">完款</option>
+                  <option value="8">付訂</option>
+                  <option value="9">退款</option>
+                </select>
               </div>
               {{-- <div class="form-group">
                     <label for="edit_dit_status" class="col-form-label">付款狀態</label>
@@ -1397,6 +1408,7 @@
           }
           $("#edit_num").val(data['data']['number_taxid']); //統編
           $("#edit_companytitle").val(data['data']['companytitle']); //抬頭
+          $("#edit_status").val(data['data']['status_payment_original']); //抬頭
 
         }
 
