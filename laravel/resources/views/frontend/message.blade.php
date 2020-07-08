@@ -126,10 +126,8 @@
                 <input type="button" class="btn btn-secondary mr-3 float-left" value="排程設定" data-toggle="modal" data-target="#scheduleModal">
                 <input type="button" id="draftBtn" class="btn btn-secondary mr-2" value="儲存為草稿">
                 {{-- <button id="saveDraftBtn" class="btn btn-secondary">儲存為草稿</button> --}}
-                <button id="sendMessageBtn" class="btn btn-primary ml-auto">
+                <input type="button" id="sendMessageBtn" class="btn btn-primary ml-auto" value="立即傳送">
                   {{-- <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:hidden"></span> --}}
-                  立即傳送
-                </button>
                 <span id="displaySchedule"></span>
               </div>
 
