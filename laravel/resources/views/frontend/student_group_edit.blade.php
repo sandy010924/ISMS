@@ -580,7 +580,7 @@
     table2 = $('#table_list_history').DataTable();
 
     table = $('#table_list').DataTable({
-      "dom": '<l<td>Bt>',
+     "dom": '<l<td>Btp>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,

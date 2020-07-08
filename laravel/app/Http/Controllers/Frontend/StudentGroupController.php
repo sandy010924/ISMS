@@ -227,7 +227,8 @@ class StudentGroupController extends Controller
                             }
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->distinct()->get();
                 }
@@ -235,6 +236,7 @@ class StudentGroupController extends Controller
                 // 名單動作
                 if ($opt1 == "yes") {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                        ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
                         ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereIn('b.id_course', $id_course);
@@ -243,17 +245,20 @@ class StudentGroupController extends Controller
                             $query->where('b.id_status', '=', $opt2);
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->distinct()->get();
                 } else {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
                         ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereNotIn('b.id_course', $id_course);
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->distinct()->get();
                 }
@@ -346,7 +351,7 @@ class StudentGroupController extends Controller
                         }
                     })
                     ->where(function ($query3) use ($sdate, $edate) {
-                        $query3->whereBetween('registration.created_at', [$sdate, $edate]);
+                        $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                     })
                     ->groupby('registration.id')
                     ->distinct()->get();
@@ -366,7 +371,7 @@ class StudentGroupController extends Controller
                                 ->orwhere('registration.status_payment', '=', $opt2);
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('registration.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                         })
                         ->groupby('registration.id')
                         ->distinct()->get();
@@ -380,7 +385,7 @@ class StudentGroupController extends Controller
                             $query2->whereIn('registration.id_course', $id_course);
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('registration.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                         })
                         ->groupby('registration.id')
                         ->distinct()->get();
