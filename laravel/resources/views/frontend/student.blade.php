@@ -57,7 +57,12 @@
         <td class="align-middle">{{ $student['name'] }}</td>
         <td class="align-middle">{{ $student['phone'] }}</td>
         <td class="align-middle">{{ $student['email'] }}</td>
-        <td class="align-middle">{{ $student['datasource'] }}</td>
+
+        @if ($student['datasource'] == '')
+        <td class="align-middle">無</td>
+        @else
+        <td class="align-middle">{{ $student['datasource']}}</td>
+        @endif
         <td class="align-middle">
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
 
@@ -565,6 +570,8 @@
             "dataSrc": function(json) {
               for (var i = 0, ien = json.length; i < ien; i++) {
 
+                var datasource = '無'
+
                 // 權限判斷 - 黑名單按鈕 / 刪除按鈕
                 if (role == "admin" || role == "marketer" || role == "officestaff" || role == "msaleser" || role == "saleser") {
                   btn_blacklist = '<button type="button" id="' + json[i]['id'] + '" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist(' + json[i]['id'] + ');" value="' + json[i]['id'] + '"><i class="fa fa-bug"></i>列入黑名單</button> '
@@ -572,10 +579,15 @@
                   btn_delete = '<button id="' + json[i]['id'] + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + json[i]['id'] + ');" value="' + json[i]['id'] + '">刪除</button> '
                 }
 
+                if (json[i]['datasource'] != null) {
+                  if (json[i]['datasource']['datasource'] != null) {
+                    datasource = json[i]['datasource']['datasource'];
+                  }
+                }
                 json[i][0] = json[i]['name'];
                 json[i][1] = json[i]['phone'];
                 json[i][2] = json[i]['email'];
-                json[i][3] = json[i]['datasource'];
+                json[i][3] = datasource;
                 json[i][4] = '<button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + json[i]['id'] + ');">完整內容</button> ' +
                   btn_blacklist +
                   ' <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form(' + json[i]['id'] + ');">已填表單</button> ' +

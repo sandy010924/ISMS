@@ -414,6 +414,8 @@ class StudentController extends Controller
     // 搜尋
     public function search(Request $request)
     {
+        $array_student = array();
+        $array_search_deal = array();
         $search_data = $request->get('search_data');
 
         // 講師ID Rocky(2020/05/11)
@@ -421,30 +423,146 @@ class StudentController extends Controller
             return view('frontend.error_authority');
         } elseif (isset(Auth::user()->role) != '' && Auth::user()->role == "teacher") {
             $id_teacher = Auth::user()->id_teacher;
-            $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
-                ->join('course', 'sales_registration.id_course', '=', 'course.id')
-                ->select('student.*', 'sales_registration.datasource')
+            // $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+            //     ->join('course', 'sales_registration.id_course', '=', 'course.id')
+            //     ->select('student.*', 'sales_registration.datasource')
+            //     ->where('course.id_teacher', $id_teacher)
+            //     ->where(function ($query) use ($search_data) {
+            //         $query->Where('email', 'like', '%' . $search_data . '%')
+            //             ->orWhere('phone', 'like', '%' . $search_data . '%')
+            //             ->orWhere('student.name', 'like', '%' . $search_data . '%');
+            //     })
+            //     ->groupBy('id')
+            //     ->orderby('created_at', 'desc')
+            //     // ->take(500)
+            //     ->get();
+
+
+            // 改寫學員搜尋 -> 學員和資料來源分開搜尋(因為學員不一定都會報名銷講) Rocky (2020/07/07)
+
+            // 銷講(符合講師ID)
+            $sales_registration_data = SalesRegistration::join('course', 'sales_registration.id_course', '=', 'course.id')
                 ->where('course.id_teacher', $id_teacher)
-                ->where(function ($query) use ($search_data) {
-                    $query->Where('email', 'like', '%' . $search_data . '%')
-                        ->orWhere('phone', 'like', '%' . $search_data . '%')
-                        ->orWhere('student.name', 'like', '%' . $search_data . '%');
-                })
-                ->groupBy('id')
-                ->orderby('created_at', 'desc')
-                ->take(500)
+                ->select('sales_registration.id_student', 'sales_registration.id_course')
+                ->groupBy('sales_registration.id_student')
                 ->get();
+
+            // 正課(符合講師ID)
+            $registration_data = Registration::leftjoin('course', 'registration.id_course', '=', 'course.id')
+                ->where('course.id_teacher', $id_teacher)
+                ->select('registration.id_student', 'registration.id_course')
+                ->groupBy('registration.id_student')
+                ->get();
+
+            // 學員(符合條件)
+            $students_data = Student::where(function ($query) use ($search_data) {
+                $query->Where('email', 'like', '%' . $search_data . '%')
+                    ->orWhere('phone', 'like', '%' . $search_data . '%')
+                    ->orWhere('student.name', 'like', '%' . $search_data . '%');
+            })
+                ->select('student.*')
+                ->orderby('created_at', 'desc')
+                ->get();
+
+            // 學員資料加入資料來源    
+            foreach ($students_data as $key => $data) {
+                $sales_registration_datasource = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
+                    ->select('sales_registration.datasource')
+                    ->orderBy('sales_registration.created_at', 'asc')
+                    ->first();
+
+                $datasource = $sales_registration_datasource;
+
+                $students_data[$key] = [
+                    'id'                => $data['id'],
+                    'name'              => $data['name'],
+                    'phone'             => $data['phone'],
+                    'email'             => $data['email'],
+                    'datasource'        => $datasource,
+                ];
+            }
+            // 進行比較 -> 找出三個陣列都有的學員
+            $arr = array_column(
+                array_merge($array_search_deal, json_decode($students_data, true)),
+                'id'
+            );
+            foreach ($sales_registration_data as $value_sales_registration) {
+                $check_array_search = array_search($value_sales_registration['id_student'], $arr);
+                if ($check_array_search !== false) {
+                    // 找到重複的
+                    $key = array_search(
+                        $value_sales_registration['id_student'],
+                        // 9100,
+                        $arr,
+                        true
+                    );
+
+                    array_push($array_student, array(
+                        'id'                => $students_data[$key]['id'],
+                        'name'              => $students_data[$key]['name'],
+                        'phone'             => $students_data[$key]['phone'],
+                        'email'             => $students_data[$key]['email'],
+                        'datasource'             => $students_data[$key]['datasource']
+                    ));
+                }
+            }
+
+            foreach ($registration_data as $value_registration) {
+                $check_array_search = array_search($value_registration['id_student'], $arr);
+                if ($check_array_search !== false) {
+
+                    // 檢查array_student有沒有重複值
+                    $arr_student = array_column(
+                        $array_student,
+                        'id'
+                    );
+                    $check_array_search2 = array_search($value_registration['id_student'], $arr_student);
+                    // 沒有重複值才新增
+                    if ($check_array_search2 === false) {
+                        $key = array_search(
+                            $value_registration['id_student'],
+                            $arr,
+                            true
+                        );
+
+                        array_push($array_student, array(
+                            'id'                => $students_data[$key]['id'],
+                            'name'              => $students_data[$key]['name'],
+                            'phone'             => $students_data[$key]['phone'],
+                            'email'             => $students_data[$key]['email'],
+                            'datasource'             => $students_data[$key]['datasource']
+                        ));
+                    }
+                }
+            }
+
+            $students = $array_student;
         } else {
-            $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
-                ->join('course', 'sales_registration.id_course', '=', 'course.id')
-                ->select('student.*', 'sales_registration.datasource')
-                ->Where('email', 'like', '%' . $search_data . '%')
+
+            $students = Student::Where('email', 'like', '%' . $search_data . '%')
                 ->orWhere('phone', 'like', '%' . $search_data . '%')
                 ->orWhere('student.name', 'like', '%' . $search_data . '%')
-                ->groupBy('id')
+                ->select('student.*')
                 ->orderby('created_at', 'desc')
-                ->take(500)
                 ->get();
+
+            // 改寫學員搜尋 -> 學員和資料來源分開搜尋(因為學員不一定都會報名銷講) Rocky (2020/07/07)
+            foreach ($students as $key => $data) {
+                $sales_registration_data = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
+                    ->select('sales_registration.datasource')
+                    ->orderBy('sales_registration.created_at', 'asc')
+                    ->first();
+
+                $datasource = $sales_registration_data;
+
+                $students[$key] = [
+                    'id'                => $data['id'],
+                    'name'              => $data['name'],
+                    'phone'             => $data['phone'],
+                    'email'             => $data['email'],
+                    'datasource'        => $datasource,
+                ];
+            }
         }
 
         return $students;
