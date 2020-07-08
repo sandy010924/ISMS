@@ -179,23 +179,23 @@ class CourseReturnController extends Controller
                         //日期
                         $date = date('Y-m-d', strtotime($data_group['course_start_at']));
                         //星期
-                        $weekarray = array("日","一","二","三","四","五","六");
-                        $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
+                        $weekarray_group = array("日","一","二","三","四","五","六");
+                        $week_group = $weekarray_group[date('w', strtotime($data_group['course_start_at']))];
                         
                         if( ++$i === $numItems){
-                            $events_group .= $date . '(' . $week . ')';
+                            $events_group .= $date . '(' . $week_group . ')';
                             // $$events_id .= (string)$data_group['id'];
                         }else {
-                            $events_group .= $date . '(' . $week . ')' . '、';
+                            $events_group .= $date . '(' . $week_group . ')' . '、';
                             // $events_id .= (string)$data_group['id'];
                         }
 
                         // $events_name = $data_group['name'];
-        
-                        //時間
-                        $time_strat = date('H:i', strtotime($data_group['course_start_at']));
-                        $time_end = date('H:i', strtotime($data_group['course_end_at']));
                     }
+        
+                    //時間
+                    $time_strat = date('H:i', strtotime($data_events['course_start_at']));
+                    $time_end = date('H:i', strtotime($data_events['course_end_at']));
                         
                     // $events .= " " . $events_group . " " . $events_name;
 
