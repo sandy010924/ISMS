@@ -865,6 +865,7 @@
       });
     }
 
+    // console.log(array_search)
     $.ajax({
       type: 'POST',
       url: 'search_students',
@@ -1402,6 +1403,7 @@
         $('#condition_option2').append(new Option('包含', 'like'));
         $('#condition_option2').append(new Option('不包含', 'notlike'));
 
+        $('#condition_input3').val('');
         condition_input3.style.display = 'block';
 
       } else if (this.value == 'action') {
@@ -1427,6 +1429,7 @@
 
         // condition_option2.innerHTML='<option value="">請選擇</option><option value="present">報到</option><option value="cancel">取消</option><option value="absent">未到</option><option value="pay">交付</option><option value="participate">參與</option><option value="open-mail">打開郵件</option><option value="open-sms">打開簡訊</option>';
         // condition_option3.style.display='block';
+        $('#condition_input3').val('');
         condition_input3.style.display = 'none';
       } else if (this.value == 'tag') {
         // 選項一
@@ -1444,6 +1447,7 @@
         $('#condition_option2').append(new Option('不包含', 'notlike'));
 
         // condition_option2.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option><option>包含</option><option>不包含</option>';
+        $('#condition_input3').val('');
         condition_input3.style.display = 'block';
         // condition_option3.style.display='none';
       }
@@ -1463,6 +1467,13 @@
           $('#condition_option1').append(new Option('居住地址', 'address'));
           // $('#condition_option1').append(new Option('銷講後最新狀態', ''));
           $('#condition_option1').append(new Option('想了解的內容', 'course_content'));
+
+          // 選項二
+          $('#condition_option2').empty();
+          $('#condition_option2').append(new Option('是', 'yes'));
+          $('#condition_option2').append(new Option('未', 'no'));
+          $('#condition_option2').append(new Option('包含', 'like'));
+          $('#condition_option2').append(new Option('不包含', 'notlike'));
         }
       } else if (this.value == '2') {
         // 正課
@@ -1480,23 +1491,13 @@
           $('#condition_option1').append(new Option('目前職業', 'profession'));
           $('#condition_option1').append(new Option('居住地址', 'address'));
         }
-      } else if (this.value == '3') {
-        // 活動
-        // 選項一
-        $('#condition_option1').empty();
-        $('#condition_option1').append(new Option('請選擇', ''));
-        $('#condition_option1').append(new Option('原始來源', 'datasource_old'));
-        $('#condition_option1').append(new Option('最新來源', 'datasource_new'));
-        $('#condition_option1').append(new Option('報名場次', 'id_events'));
-        $('#condition_option1').append(new Option('目前職業', 'profession'));
-        $('#condition_option1').append(new Option('居住地址', 'address'));
-        // $('#condition_option1').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1').append(new Option('想了解的內容', 'course_content'));
       }
     }
 
     // 選項一 Rocky(2020/03/20)
     document.getElementById('condition_option1').onchange = function() {
+      $('#condition_input3').val('');
+      $('#condition_option2').val('');
       if (this.value == 'yes') {
         condition_option2.style.display = 'block';
       } else if (this.value == 'no') {

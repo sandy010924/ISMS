@@ -135,11 +135,12 @@ class StudentGroupController extends Controller
                     $opt1 = "datasource";
                     // 原始來源
                     $datas = Student::join(
-                        DB::raw("(SELECT * FROM sales_registration ORDER BY created_at asc LIMIT 9999) as b"),
+                        DB::raw("(SELECT * FROM sales_registration ORDER BY created_at asc) as b"),
                         function ($join) {
                             $join->on("student.id", "=", "b.id_student");
                         }
                     )
+                        ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
                         ->select('student.*', 'b.datasource', 'b.submissiondate')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereIn('b.id_course', $id_course);
@@ -161,7 +162,8 @@ class StudentGroupController extends Controller
                             }
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->groupby('student.id')
                         ->distinct()->get();
@@ -169,11 +171,12 @@ class StudentGroupController extends Controller
                     $opt1 = "datasource";
                     // 最新來源
                     $datas = Student::join(
-                        DB::raw("(SELECT * FROM sales_registration ORDER BY created_at desc LIMIT 9999) as b"),
+                        DB::raw("(SELECT * FROM sales_registration ORDER BY created_at desc) as b"),
                         function ($join) {
                             $join->on("student.id", "=", "b.id_student");
                         }
                     )
+                        ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
                         ->select('student.*', 'b.datasource', 'b.submissiondate')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereIn('b.id_course', $id_course);
@@ -195,7 +198,8 @@ class StudentGroupController extends Controller
                             }
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->groupby('student.id')
                         ->distinct()->get();
@@ -251,7 +255,7 @@ class StudentGroupController extends Controller
                         ->distinct()->get();
                 } else {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                        ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
                         ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereNotIn('b.id_course', $id_course);
@@ -267,12 +271,12 @@ class StudentGroupController extends Controller
                 if ($opt1 == "yes") {
                     // 已分配
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                        ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+                        // ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+                        ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
                         ->leftjoin('mark as d', 'd.id_student', '=', 'student.id', 'd.course_id', '=', 'c.id')
-                        ->select('student.*', 'b.datasource', 'c.name as name_events')
-                        ->where('c.type', '1')
+                        ->select('student.*', 'b.datasource', 'b.submissiondate')
                         ->where(function ($query2) use ($id_course) {
-                            $query2->whereIn('d.course_id', $id_course);
+                            $query2->whereIn('b.id_course', $id_course);
                         })
                         ->where(function ($query) use ($opt1, $opt2, $value) {
                             // 標籤
@@ -294,16 +298,17 @@ class StudentGroupController extends Controller
                             }
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->groupby('student.id')
                         ->get();
                 } else {
                     // 未分配
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                        ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
-                        ->select('student.*', 'b.datasource', 'c.name as name_events')
-                        ->where('c.type', '1')
+                        // ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+                        ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                        ->select('student.*', 'b.datasource', 'b.submissiondate')
                         ->whereNotExists(function ($query) {
                             $query->from('mark')
                                 ->whereRaw('id_student = student.id');
@@ -312,7 +317,8 @@ class StudentGroupController extends Controller
                             $query2->whereIn('b.id_course', $id_course);
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->groupby('student.id')
                         ->get();
@@ -395,13 +401,19 @@ class StudentGroupController extends Controller
                 if ($opt1 == "yes") {
                     // 已分配
                     $datas = Student::leftjoin('registration as b', 'student.id', '=', 'b.id_student')
-                        ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
-                        ->leftjoin('mark as d', 'd.id_student', '=', 'student.id', 'd.course_id', '=', 'c.id')
+                        // ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+                        // ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                        ->leftjoin(
+                            DB::raw("(SELECT * FROM events_course  WHERE course_start_at BETWEEN '" . $sdate . "' AND '" . $edate . "' ORDER BY created_at desc) as c "),
+                            function ($join) {
+                                $join->on("b.id_group", "=", "c.id_group");
+                            }
+                        )
+                        ->leftjoin('mark as d', 'd.id_student', '=', 'student.id')
                         ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id_student')
-                        ->select('student.*', 'e.datasource', 'c.name as name_events', 'e.submissiondate')
-                        ->where('c.type', '<>', '1')
+                        ->select('student.*', 'e.datasource', 'e.submissiondate', 'c.id')
                         ->where(function ($query2) use ($id_course) {
-                            $query2->whereIn('d.course_id', $id_course);
+                            $query2->whereIn('b.id_course', $id_course);
                         })
                         ->where(function ($query) use ($opt1, $opt2, $value) {
                             // 標籤
@@ -423,17 +435,26 @@ class StudentGroupController extends Controller
                             }
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->groupby('student.id')
                         ->get();
+
+                    // echo $edate;
                 } else {
                     // 未分配
                     $datas = Student::leftjoin('registration as b', 'student.id', '=', 'b.id_student')
-                        ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+                        // ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+                        // ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                        ->leftjoin(
+                            DB::raw("(SELECT * FROM events_course  WHERE course_start_at BETWEEN '" . $sdate . "' AND '" . $edate . "' ORDER BY created_at desc) as c "),
+                            function ($join) {
+                                $join->on("b.id_group", "=", "c.id_group");
+                            }
+                        )
                         ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id_student')
-                        ->select('student.*', 'e.datasource', 'c.name as name_events', 'e.submissiondate')
-                        ->where('c.type', '<>', '1')
+                        ->select('student.*', 'e.datasource', 'e.submissiondate')
                         ->whereNotExists(function ($query) {
                             $query->from('mark')
                                 ->whereRaw('id_student = student.id');
@@ -442,7 +463,8 @@ class StudentGroupController extends Controller
                             $query2->whereIn('b.id_course', $id_course);
                         })
                         ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->groupby('student.id')
                         ->get();

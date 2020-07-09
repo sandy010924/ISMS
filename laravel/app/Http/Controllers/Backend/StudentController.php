@@ -39,6 +39,7 @@ class StudentController extends Controller
             Refund::where('id_student', $id_student)->delete();
             Debt::where('id_student', $id_student)->delete();
             Blacklist::where('id_student', $id_student)->delete();
+            Mark::where('id_student', $id_student)->delete();
             $student = Student::where('id', $id_student)->delete();
 
             $status = "ok";

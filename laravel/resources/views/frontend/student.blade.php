@@ -1147,7 +1147,7 @@
       // 標記刪除
       elt.on('beforeItemRemove', function(event) {
         // 權限 Rocky (2020/05/11)
-        var role = $('#auth_role').val()
+        var role = JSON.parse($('#auth_role').val())['role']
         if (role == "admin" || role == "marketer" || role == "officestaff" || role == "msaleser" || role == "saleser") {
           var msg = "是否刪除標記資料?";
           if (confirm(msg) == true) {
@@ -1706,7 +1706,7 @@
                 $("#success_alert_text").html("刪除資料成功");
                 fade($("#success_alert"));
 
-                location.reload();
+                // location.reload();
               } else {
                 /** alert **/
                 $("#error_alert_text").html("刪除資料失敗");
