@@ -110,7 +110,11 @@ class CourseListApplyController extends Controller
             $apply_table = Registration::join('student', 'student.id', '=', 'registration.id_student')
                                         ->select('student.name as name','student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*')
                                         ->Where('registration.id_course', $id)
-                                        ->Where('registration.status_payment', 7)
+                                        // ->Where('registration.status_payment', 7)
+                                        ->where(function($q) { 
+                                            $q->orWhere('registration.status_payment', 7)
+                                              ->orWhere('registration.status_payment', 9);
+                                        })
                                         ->get();
 
             $id_group='';      

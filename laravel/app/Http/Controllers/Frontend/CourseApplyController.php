@@ -11,6 +11,7 @@ use App\Model\EventsCourse;
 // use App\Uer;
 use App\Model\Register;
 use App\Model\Teacher;
+use App\Model\Refund;
 
 class CourseApplyController extends Controller
 {
@@ -27,41 +28,8 @@ class CourseApplyController extends Controller
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($course->course_start_at))];
 
-
-        //未過場次 狀態預設改為已報名
-        // if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d"))){
-        //     if($course->type == 1){
-        //         SalesRegistration::Where('id_events', $id)
-        //                         ->where(function($q) { 
-        //                             $q->orWhere('id_status', 3)
-        //                             ->orWhere('id_status', 4);
-        //                         })
-        //                         ->update(['id_status' => 1]);
-        //     }elseif($course->type == 2 || $course->type == 3){
-        //         Register::Where('id_events', $id)
-        //                 ->where(function($q) { 
-        //                     $q->orWhere('id_status', 3)
-        //                     ->orWhere('id_status', 4);
-        //                 })
-        //                 ->update(['id_status' => 1]);
-        //     }
-        // }else{
-        //     //已過場次 狀態預設已報到改為未到
-        //     if($course->type == 1){
-        //         SalesRegistration::Where('id_events', $id)
-        //                         ->Where('id_status', 1)
-        //                         ->update(['id_status' => 3]);
-        //     }elseif($course->type == 2 || $course->type == 3){
-        //         Register::Where('id_events', $id)
-        //                 ->Where('id_status', 1)
-        //                 ->update(['id_status' => 3]);
-        //     }
-        // }
-        
-        //判斷是銷講or正課
-        // $type = "";
-
         if($course->type == 1){
+            //銷講
             // $type = "sales_registration";
             
             if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d"))){
@@ -101,6 +69,7 @@ class CourseApplyController extends Controller
                                                 ->get());
 
         }elseif($course->type == 2 || $course->type == 3){
+            //正課
 
             if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d"))){
                 //未過場次 狀態預設改為已報名
@@ -120,39 +89,84 @@ class CourseApplyController extends Controller
 
                                 
             //報名資訊
-            $courseapplys = Register::join('isms_status', 'isms_status.id', 'register.id_status')
-                                    ->join('student', 'student.id', 'register.id_student')
-                                    ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'register.*', 'isms_status.name as status_name')
-                                    ->Where('register.id_events', $id)
-                                    ->Where('register.id_status', '<>', 2)
-                                    ->get();
+            $list = Register::leftjoin('isms_status', 'isms_status.id', 'register.id_status')
+                            ->leftjoin('student', 'student.id', 'register.id_student')
+                            ->leftjoin('registration', 'registration.id', '=', 'register.id_registration')
+                            ->select('student.name as name', 
+                                    'student.phone as phone', 
+                                    'student.email as email', 
+                                    'student.profession as profession', 
+                                    'register.*', 
+                                    'isms_status.name as status_name',
+                                    'registration.submissiondate as submissiondate',
+                                    'registration.id as id_registration')
+                            ->Where('register.id_events', $id)
+                            ->Where('register.id_status', '<>', 2)
+                            ->where(function($q) { 
+                                $q->orWhere('registration.status_payment', 7)
+                                ->orWhere('registration.status_payment', 9);
+                            })
+                            ->get();
+                            
+            $courseapplys = array();
+
+            foreach ($list as $key => $data) {
+                //檢查是否通過退費
+                $check_refund = array();
+                $check_refund = Refund::where('id_registration', $data['id_registration'])
+                                      ->where('review', 1)
+                                      ->first();
+                if( !empty($check_refund) ){
+                    continue;
+                }
+
+                $courseapplys[count($courseapplys)] = [
+                    'id' => $data['id'],
+                    'submissiondate' => $data['submissiondate'],
+                    'datasource' => $data['datasource'],
+                    // 'created_at' => $data['created_at'],
+                    'name' => $data['name'],
+                    'phone' => $data['phone'],
+                    'email' => $data['email'],
+                    'profession' => $data['profession'],
+                    'course_content' => $data['course_content'],
+                    'id_status' => $data['id_status'],
+                    'status_name' => $data['status_name']
+                ];
+            }
             
                                     
             //報名筆數
             $count_apply = count($courseapplys);
 
-            //報名筆數
-            $count_check = count(Register::Where('id_events', $id)
-                                         ->Where('id_status', 4)
-                                         ->get());
+            //報到筆數
+            // $count_check = count(Register::Where('id_events', $id)
+            //                              ->Where('id_status', 4)
+            //                              ->get());
+            $count_check = 0;
+            foreach( $courseapplys as $data ){
+                //檢查狀態為報到
+                if( $data['id_status'] != 4){
+                    continue;
+                }else{
+                    $count_check++;
+                }
+            }
 
             //取消筆數
-            $count_cancel = count(Register::Where('id_events', $id)
-                                          ->Where('id_status', 5)
-                                          ->get());
+            // $count_cancel = count(Register::Where('id_events', $id)
+            //                               ->Where('id_status', 5)
+            //                               ->get());
+            $count_cancel = 0;
+            foreach( $courseapplys as $data ){
+                //檢查狀態為報到
+                if( $data['id_status'] != 5){
+                    continue;
+                }else{
+                    $count_cancel++;
+                }
+            }
         }
-        // //報名資訊
-        // $courseapplys = $db_type->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', $type.'.*', 'isms_status.name as status_name')
-        //                         // ->select('student.*', 'sales_registration.submissiondate as apply_submissiondate', 'sales_registration.id as apply_id', 'sales_registration.id_status as apply_status_val', 'isms_status.name as status_name')
-        //                         ->Where('register.id_events', $id)
-        //                         ->Where('id_status', '<>', 2)
-        //                         // ->where(function($q) { 
-        //                         //     $q->where('id_status', 1)
-        //                         //         ->orWhere('id_status', 5);
-        //                         // })
-        //                         // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
-        //                         // ->orderBy('created_at', 'DESC')
-        //                         ->get();
             
 
         return view('frontend.course_apply', compact('courseapplys', 'course', 'week', 'count_apply', 'count_check', 'count_cancel'));
