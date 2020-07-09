@@ -417,9 +417,45 @@
 
         // 銷講      
         $('input[name="new_datasource"]').val(data['datasource']);
-        if (data['course_sales_events'] != null) {
-          $('input[name="course_sales_events"]').val(data['course_sales'] + data['course_sales_events'] + '(' + data['sales_registration_course_start_at'] + ')');
+
+
+        // if (data['course_sales_events'] != null) {
+        //   $('input[name="course_sales_events"]').val(data['course_sales'] + data['course_sales_events'] + '(' + data['sales_registration_course_start_at'] + ')');
+        // }
+        if (data['course_sales'] != null) {
+          var course_sales = '',
+            course_sales_events = '',
+            sales_registration_course_start_at = ''
+          if (data['course_sales'] == null) {
+            course_sales = " "
+          } else {
+            course_sales = data['course_sales']
+          }
+
+          if (data['course_sales_events'] == null) {
+            course_sales_events = " "
+          } else {
+            course_sales_events = data['course_sales_events']
+          }
+
+          if (data['sales_registration_course_start_at'] == null) {
+            // 我很遺憾
+            if (data['id_events'] == '-99' || data['events'] != '') {
+              sales_registration_course_start_at = data['events']
+            } else {
+              sales_registration_course_start_at = "無"
+            }
+
+          } else {
+            sales_registration_course_start_at = data['sales_registration_course_start_at']
+          }
+
+          course_sales_events = course_sales + ' ' + course_sales_events + '(' + sales_registration_course_start_at + ' )'
         }
+        $('input[name="course_sales_events"]').val(course_sales_events)
+
+
+
         $('input[name="course_content"]').val(data['course_content']);
         $('input[name="status_payment"]').val('');
         if (typeof(data['status_registration']) != 'undefined') {

@@ -891,8 +891,6 @@
           },
           async: false,
           success: function(data) {
-            // console.log(data)
-
             // 宣告
             var datasource_old = ''
 
@@ -947,7 +945,13 @@
               }
 
               if (data['sales_registration_course_start_at'] == null) {
-                sales_registration_course_start_at = "無"
+                // 我很遺憾
+                if (data['id_events'] == '-99' || data['events'] != '') {
+                  sales_registration_course_start_at = data['events']
+                } else {
+                  sales_registration_course_start_at = "無"
+                }
+
               } else {
                 sales_registration_course_start_at = data['sales_registration_course_start_at']
               }
