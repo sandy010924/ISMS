@@ -107,30 +107,30 @@
               @foreach($courseapplys as $courseapply)
                 <tr>
                   @if( $course->type == 1 )
-                    <td>{{ $courseapply->submissiondate }}</td>
-                    <td>{{ $courseapply->datasource }}</td >
+                    <td>{{ $courseapply['submissiondate'] }}</td>
+                    <td>{{ $courseapply['datasource'] }}</td >
                   @else
-                    <td>{{ $courseapply->created_at }}</td>
+                    <td>{{ $courseapply['submissiondate'] }}</td>
                   @endif
 
-                  <td>{{ $courseapply->name }}</td>
-                  <td>{{ $courseapply->phone }}</td>
-                  <td>{{ $courseapply->email }}</td>
-                  <td>{{ $courseapply->profession }}</td>
+                  <td>{{ $courseapply['name'] }}</td>
+                  <td>{{ $courseapply['phone'] }}</td>
+                  <td>{{ $courseapply['email'] }}</td>
+                  <td>{{ $courseapply['profession'] }}</td>
                   
                   <!-- 如果是銷講多加我想在講座中了解的內容 -->
                   @if( $course->type == 1 )
-                    <td>{{ ($courseapply->course_content  == 'null')? '':$courseapply->course_content }}</td>
+                    <td>{{ ($courseapply['course_content']  == 'null')? '':$courseapply['course_content'] }}</td>
                   @endif
                   
                   @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
                   <!-- 未過場次 -->
                   <td>
-                    <button type="button" name="apply_btn" class="btn btn-sm text-white update_status" id="{{ $courseapply->id }}" value="{{ $courseapply->id_status }}">{{ $courseapply->status_name }}</button>
+                    <button type="button" name="apply_btn" class="btn btn-sm text-white update_status" id="{{ $courseapply['id'] }}" value="{{ $courseapply['id_status'] }}">{{ $courseapply['status_name'] }}</button>
                   </td>
                   @elseif( strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d")) )
                   <!-- 已過場次 -->
-                  <td>{{ $courseapply->status_name }}</td>
+                  <td>{{ $courseapply['status_name'] }}</td>
                   <td></td>
                   @endif
                 </tr>
@@ -139,22 +139,6 @@
           @endcomponent
         </div>
       </div>
-
-      <!-- alert Start-->
-      {{-- <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
-        <span id="success_alert_text"></span>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
-        <span id="error_alert_text"></span>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div> --}}
-      <!-- alert End -->
-
   <!-- Content End -->
   <style>
     div.dt-buttons {

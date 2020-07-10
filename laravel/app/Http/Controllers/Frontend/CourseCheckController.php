@@ -9,6 +9,7 @@ use App\Model\Registration;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Register;
+use App\Model\Refund;
 // use DB;
 
 class CourseCheckController extends Controller
@@ -139,26 +140,38 @@ class CourseCheckController extends Controller
             // DB::statement(DB::raw('set @row:=0'));
 
             //報名資訊
-            $list = Register::join('isms_status', 'isms_status.id', '=', 'register.id_status')
-                ->join('student', 'student.id', '=', 'register.id_student')
-                ->select('student.*', 'register.id as check_id' ,'register.id_status as check_status_val', 'register.memo as memo', 'isms_status.name as check_status_name')
-                // ->selectRaw('@row:=@row+1 as row')
-                ->Where('id_events','=', $id)
-                ->Where('id_status','<>', 2)
-                // ->where(function($q) { 
-                //     $q->where('id_status', 3)
-                //         ->orWhere('id_status', 4)
-                //         ->orWhere('id_status', 5);
-                // })
-                // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
-                ->orderBy('register.created_at')
-                ->get();
+            $list = Register::leftjoin('isms_status', 'isms_status.id', '=', 'register.id_status')
+                            ->leftjoin('student', 'student.id', '=', 'register.id_student')
+                            ->leftjoin('registration', 'registration.id', '=', 'register.id_registration')
+                            ->select('student.*', 
+                                    'register.id as check_id',
+                                    'register.id_status as check_status_val',
+                                    'register.memo as memo',
+                                    'isms_status.name as check_status_name',
+                                    'registration.id as id_registration')
+                            ->Where('register.id_events','=', $id)
+                            ->Where('register.id_status','<>', 2)
+                            ->where(function($q) { 
+                                $q->orWhere('registration.status_payment', 7)
+                                  ->orWhere('registration.status_payment', 9);
+                            })
+                            ->orderBy('register.created_at')
+                            ->get();
 
             $coursechecks = array();
 
             foreach ($list as $key => $data) {
-                $coursechecks[$key] = [
-                    'row' => $key+1,
+                //檢查是否通過退費
+                $check_refund = array();
+                $check_refund = Refund::where('id_registration', $data['id_registration'])
+                                      ->where('review', 1)
+                                      ->first();
+                if( !empty($check_refund) ){
+                    continue;
+                }
+
+                $coursechecks[count($coursechecks)] = [
+                    'row' => count($coursechecks)+1,
                     'id' => $data['check_id'],
                     'name' => $data['name'],
                     'phone' => $data['phone'],
@@ -169,21 +182,41 @@ class CourseCheckController extends Controller
                     'memo' => $data['memo']
                 ];
             }
-
+            
             if( count($coursechecks) != 0){
                 usort($coursechecks, array($this, "statusSort"));
             }
 
             //報名筆數
             $count_apply = count($coursechecks);
+
             //報到筆數
-            $count_check = count(Register::Where('id_events','=', $id)
-                ->Where('id_status','=', 4)
-                ->get());
-            //報到筆數
-            $count_cancel = count(Register::Where('id_events','=', $id)
-                ->Where('id_status','=', 5)
-                ->get());
+            // $count_check = count(Register::Where('id_events','=', $id)
+            //                             ->Where('id_status','=', 4)
+            //                             ->get());
+            $count_check = 0;
+            foreach( $coursechecks as $data ){
+                //檢查狀態為報到
+                if( $data['check_status_val'] != 4){
+                    continue;
+                }else{
+                    $count_check++;
+                }
+            }
+
+            //取消筆數
+            // $count_cancel = count(Register::Where('id_events','=', $id)
+            //                                 ->Where('id_status','=', 5)
+            //                                 ->get());
+            $count_cancel = 0;
+            foreach( $coursechecks as $data ){
+                //檢查狀態為取消
+                if( $data['check_status_val'] != 5){
+                    continue;
+                }else{
+                    $count_cancel++;
+                }
+            }
 
         }
         return view('frontend.course_check', compact('coursechecks', 'course', 'week', 'count_apply', 'count_check', 'count_cancel', 'nextLevel'));
