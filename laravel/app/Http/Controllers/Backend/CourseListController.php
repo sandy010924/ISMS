@@ -444,9 +444,9 @@ class CourseListController extends Controller
                                 $SalesRegistration->datasource       = $data[$int_form];                // 表單來源
                                 $SalesRegistration->id_student       = $id_student;                     // 學員ID
                                 // 增加備註欄位 Rocky(2020/07/02)
-                                 if ($int_memo != 0 && $data[$int_memo] != '') {
-                                     $SalesRegistration->memo2       =  $data[$int_memo];                    // 備註(填是否付費)
-                                 }
+                                if ($int_memo != 0 && $data[$int_memo] != '') {
+                                    $SalesRegistration->memo2       =  $data[$int_memo];                    // 備註(填是否付費)
+                                }
 
                                 if ($check == 1) {
                                     // 我很遺憾
@@ -547,10 +547,15 @@ class CourseListController extends Controller
                 $id_SalesRegistration = "0";
             }
 
-            if ($id_student != "" && $id_course != "" && $id_events != "" && $id_SalesRegistration != "") {
-                return redirect('course_list')->with('status', '匯入成功');
+            // if ($id_student != "" && $id_course != "" && $id_events != "" && $id_SalesRegistration != "") {
+            //     return redirect('course_list')->with('status', '匯入成功');
+            // } else {
+            //     return redirect('course_list')->with('status', '匯入失敗');
+            // }
+            if (($id_student != "" || $id_course != "") && $id_SalesRegistration != "") {
+                return redirect('course')->with('status', '匯入成功');
             } else {
-                return redirect('course_list')->with('status', '匯入失敗');
+                return redirect('course')->with('status', '匯入失敗');
             }
         } catch (\Exception $e) {
             return redirect('course_list')->with('status', '匯入失敗');
