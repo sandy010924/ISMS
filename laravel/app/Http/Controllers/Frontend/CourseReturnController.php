@@ -33,7 +33,10 @@ class CourseReturnController extends Controller
         $fill_table = Registration::join('student', 'student.id', '=', 'registration.id_student')
                             ->join('isms_status', 'isms_status.id', '=', 'registration.status_payment')
                             // ->join('payment', 'payment.id_registration', '=', 'registration.id')
-                            ->select('student.name as name', 'student.phone as phone', 'registration.*','isms_status.name as status_payment_name')
+                            ->select('student.name as name', 
+                                    'student.phone as phone', 
+                                    'registration.*',
+                                    'isms_status.name as status_payment_name')
                             ->Where('registration.source_events', $id )
                             // ->groupby('registration.id_student')
                             ->get();
@@ -77,8 +80,13 @@ class CourseReturnController extends Controller
             }
 
             //該場總金額
-            $cash += $payment_table->sum('cash');
-            $pay_date = '';
+            $check_cash = Registration::where('id', $data['id'])
+                                      ->where('status_payment', '<>', 9)
+                                      ->first();
+            if( !empty($check_cash) ){
+                $cash += $payment_table->sum('cash');
+                $pay_date = '';
+            }
 
             if(!empty($data['pay_date'])){
                 $pay_date = date('Y-m-d', strtotime($data['pay_date']));
