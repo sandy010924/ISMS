@@ -1009,7 +1009,7 @@
           if (data['sales_registration_course_start_at'] == null) {
             // 我很遺憾
             if (data['id_events'] == '-99' || data['events'] != '') {
-              sales_registration_course_start_at = data['events']
+              sales_registration_course_start_at = "我很遺憾 - " + data['events']
             } else {
               sales_registration_course_start_at = "無"
             }
