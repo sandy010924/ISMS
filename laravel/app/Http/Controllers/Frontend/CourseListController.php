@@ -10,6 +10,7 @@ use App\Model\Teacher;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\EventsCourse;
+use App\Model\Refund;
 use Illuminate\Support\Facades\Auth;
 // use App\User;
 use App\Model\Register;
@@ -67,43 +68,51 @@ class CourseListController extends Controller
             //判斷是銷講or正課
             if ($data['type'] == 1) {
                 //銷講
-                //累計名單            
+           
                 // $count_list = count(SalesRegistration::join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
                 //     ->Where('sales_registration.id_course', $data['id_course'])
                 //     // ->Where('sales_registration.id_status','<>', 2)
                 //     ->groupby('events_course.id_group', 'sales_registration.id_student')
                 //     ->get());
+                
+                //累計名單 
                 $count_list = count(SalesRegistration::Where('sales_registration.id_course', $data['id_course'])
-                    // ->Where('sales_registration.id_status','<>', 2)
-                    // ->groupby('events_course.id_group', 'sales_registration.id_student')
-                    ->get());
+                                                    ->get());
+
             } else if($data['type'] == 2 || $data['type'] == 3) {
                 //正課
-                //累計名單            
+                       
                 // $count_list = count(Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
                 //                                 ->Where('registration.id_course', $data['id_course'])
                 //                                 // ->Where('registration.id_status','<>', 2)
                 //                                 ->groupby('events_course.id_group', 'registration.id_student')
                 //                                 ->get());
-                $count_list = count(Registration::Where('id_course', $data['id_course'])
-                    // ->Where('registration.id_status','<>', 2)
-                    // ->groupby('id_group', 'id_student')
-                    ->get());
+
+                //累計名單     
+                $registration = Registration::Where('id_course', $data['id_course'])
+                                            ->where(function($q) { 
+                                                $q->orWhere('status_payment', 7)
+                                                ->orWhere('status_payment', 9);
+                                            })
+                                            ->get();
+                $count_list = 0;
+                foreach( $registration as $data_registration){
+                    //檢查是否通過退費
+                    $check_refund = array();
+                    $check_refund = Refund::where('id_registration', $data_registration['id'])
+                                        ->where('review', 1)
+                                        ->first();
+                    if( !empty($check_refund) ){
+                        continue;
+                    }else{
+                        $count_list++;
+                    }
+                }
+                // $count_list = count(Registration::Where('id_course', $data['id_course'])
+                //     // ->Where('id_status','<>', 2)
+                //     // ->groupby('id_group', 'id_student')
+                //     ->get());
             }
-
-
-            // $all_events = EventsCourse::select('id')
-            //                           ->Where('id_course', $data['id_course'])
-            //                           ->get();
-            // $count_list = 0;
-
-            // foreach ($all_courses as $key_course => $data_course) {
-            //     $count = count(SalesRegistration::Where('id_course', $data_course['id'])
-            //                                     ->Where('id_status','<>', 2)            
-            //                                     ->get());
-            //     $count_list += $count;
-            // }
-
 
             switch ($data['type']) {
                 case 1:

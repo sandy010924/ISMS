@@ -37,7 +37,13 @@ class CourseListApplyController extends Controller
             //銷講
             $apply_table = SalesRegistration::join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
                                       ->join('student', 'student.id', '=', 'sales_registration.id_student')
-                                      ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'sales_registration.*', 'events_course.name as event', 'events_course.course_start_at as course_start_at')
+                                      ->select('student.name as name', 
+                                                'student.phone as phone', 
+                                                'student.email as email', 
+                                                'student.profession as profession', 
+                                                'sales_registration.*', 
+                                                'events_course.name as event', 
+                                                'events_course.course_start_at as course_start_at')
                                       ->Where('sales_registration.id_course', $id)
                                       ->get();
                                       
