@@ -109,7 +109,7 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item1" data-select="itemPay" disabled>
-              <option value="0" selected>所有付款狀態</option>
+              <option value="0" selected>完款+付訂</option>
               <option value="7">完款</option>
               <option value="8">付訂</option>
               <option value="9">退費</option>
@@ -200,7 +200,7 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item2" data-select="itemPay" disabled>
-              <option value="0" selected>所有付款狀態</option>
+              <option value="0" selected>完款+付訂</option>
               <option value="7">完款</option>
               <option value="8">付訂</option>
               <option value="9">退費</option>
@@ -290,7 +290,7 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item3" data-select="itemPay" disabled>
-              <option value="0" selected>所有付款狀態</option>
+              <option value="0" selected>完款+付訂</option>
               <option value="7">完款</option>
               <option value="8">付訂</option>
               <option value="9">退費</option>
@@ -380,7 +380,7 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item4" data-select="itemPay" disabled>
-              <option value="0" selected>所有付款狀態</option>
+              <option value="0" selected>完款+付訂</option>
               <option value="7">完款</option>
               <option value="8">付訂</option>
               <option value="9">退費</option>
@@ -470,7 +470,7 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item5" data-select="itemPay" disabled>
-              <option value="0" selected>所有付款狀態</option>
+              <option value="0" selected>完款+付訂</option>
               <option value="7">完款</option>
               <option value="8">付訂</option>
               <option value="9">退費</option>
@@ -901,7 +901,7 @@
               };
               break;
             case 'income':
-              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 2000;
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 5000;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
@@ -910,7 +910,7 @@
               };
               break;
             case 'cost':
-              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 2000;
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 5000;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];

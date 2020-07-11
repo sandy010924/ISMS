@@ -352,6 +352,7 @@ class ReportController extends Controller
                             $pay = Registration::leftjoin('sales_registration', 'sales_registration.id_events', '=', 'registration.source_events')
                                                 ->leftjoin('payment', 'payment.id_registration', '=', 'registration.id')
                                                 ->where('source_events', $data_search['id'])
+                                                ->where('status_payment', '<>', 9)
                                                 ->whereIn('datasource', $data[2]);
                                                 // ->where('datasource', $data[2]);
                                                         
@@ -359,7 +360,8 @@ class ReportController extends Controller
                             if($data[6] != '0'){
                                 $pay->where('status_payment', $data[6]);
                             }else{
-                                $pay->where('status_payment', '<>', 6);
+                                // $pay->where('status_payment', '<>', 9);
+                                $pay->whereIn('status_payment', [7,8]);
                             }
 
                             $pay = $pay->get();
@@ -378,7 +380,8 @@ class ReportController extends Controller
                         if($data[6] != '0'){
                             $pay->where('status_payment', $data[6]);
                         }else{
-                            $pay->where('status_payment', '<>', 6);
+                            // $pay->where('status_payment', '<>', 9);
+                            $pay->whereIn('status_payment', [7,8]);
                         }
 
                         $pay = $pay->get();
