@@ -502,6 +502,17 @@
           </div>
         </div>
       </td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
+      <td class="d-none"></td>
     </tr>
     @endforeach
     @endslot
@@ -1234,6 +1245,20 @@
     // 權限判斷 Rocky(2020/05/10)
     check_auth();
 
+    //datatable
+    table = $('#table_list').DataTable({
+      "dom": '<Bl<t>p>',
+      "ordering": false,
+      buttons: [{
+          extend: 'excel',
+          text: '匯出Excel',
+          exportOptions: {
+              // columns: ':visible',
+              columns: [0,1,2,3,5,7]
+          }
+          // messageTop: $('#h3_title').text(),
+        }]
+    });
   });
 
 
@@ -1304,7 +1329,8 @@
           if (typeof($('[name="isex"]:checked').val()) == "undefined") {
             if (data.sex == '男') {
               $("#isex1").click();
-            } else {
+            }
+            if (data.sex == '女'){
               $("#isex2").click();
             }
           }
@@ -1372,7 +1398,8 @@
           $("#edit_name").val(data['data']['name']);
           if (data['data']['sex'] == '男') {
             $("#edit_sex1").click();
-          } else {
+          }
+          if (data['data']['sex'] == '女'){
             $("#edit_sex2").click();
           }
           $("#edit_identity").val(data['data']['id_identity']); //身分證

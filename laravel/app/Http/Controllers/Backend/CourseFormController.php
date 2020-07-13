@@ -220,7 +220,7 @@ class CourseFormController extends Controller
                             $registration->companytitle      = $companytitle;                 // 抬頭
                             $registration->source_events     = $source_events;          
                             // $registration->datasource        = $datasource;          
-                            $registration->submissiondate    = $submissiondate;                                    // 來源場次ID
+                            $registration->submissiondate    = $submissiondate;                // 來源場次ID
                             
                             $registration->save();
                             $id_registration = $registration->id;
@@ -275,7 +275,90 @@ class CourseFormController extends Controller
 
 
 
-                    if(strpos($array_group, 'other') === false){
+                    if(strpos($array_group, 'other') !== false){
+                        /* 選擇其他場次 */
+
+                        // $id_register = 0;
+                        // $id_payment = 0;
+                        // $id_debt = 0;
+
+                        /*繳款資料 - S*/
+
+                        if( $cash != 0 ){
+                            // 檢查是否報名過
+                            $check_payment = Payment::where('id_registration', $id_registration)
+                                                ->get();
+
+                            if ( count($check_payment) == 0 && $id_student != "" && $id_registration != "" && $id_registration != 0) {
+                                // 新增繳款資料
+                                $payment = new Payment;
+
+                                $payment->id_student     = $id_student;      // 學員ID
+                                $payment->cash           = $cash;            // 付款金額
+                                $payment->pay_model      = $pay_model;       // 付款方式
+                                $payment->number         = $number;          // 卡號後四碼
+                                $payment->id_registration     = $id_registration;      // 報名ID
+                                
+                                
+                                $payment->save();
+                                $id_payment = $payment->id;
+
+
+                            }else{
+                                foreach ($check_payment as $data) {
+                                    $id_payment = $data ->id;
+                                }
+
+                                // //更新付款資料
+                                // Payment::where('id_registration', $id_registration)
+                                //         ->update([
+                                //             'cash' => $cash,
+                                //             'pay_model' => $pay_model,
+                                //             'number' => $number,
+                                //         ]);
+                            }
+                        }
+                        
+                        /*繳款資料 - E*/
+
+
+                        /*追單資料 - S*/
+                        
+                        //檢查是否報名過
+                        $check_debt = Debt::where('id_registration', $id_registration)
+                                        ->get();
+
+                        if ( count($check_debt) == 0 && $id_student != "" && $id_registration != "" && $id_registration != 0) {
+                            // 新增追單資料
+                            $debt = new Debt;
+
+                            $name_course = Registration::join('course', 'course.id', '=', 'registration.id_course')
+                                                    ->select('course.name as name')
+                                                    ->where('registration.id', $id_registration)
+                                                    ->first();
+
+                            $debt->id_student       = $id_student;          // 學員ID
+                            $debt->id_status        = 1;                   // 最新狀態ID
+                            $debt->name_course      = $name_course->name;   // 追款課程
+                            $debt->status_payment   = '';                   // 付款狀態/日期
+                            $debt->contact          = '';                   // 聯絡內容
+                            $debt->person           = '';                   // 追單人員
+                            $debt->remind_at        = '';                   // 提醒
+                            $debt->id_registration  = $id_registration;     // 報名表ID
+                            // $debt->id_events        = $id_registration;     // 場次ID
+                            
+                            $debt->save();
+                            $id_debt = $debt->id;
+                        }else{
+                            foreach ($check_debt as $data) {
+                                $id_debt = $data ->id;
+                            }
+                        }
+                        /*追單資料 - E*/
+                        
+                    }else{
+                        /* 有選擇場次 */
+
                         // /*報到資料 - S*/
                         // // 檢查是否報名過
                         // $check_register = Register::where('id_registration', $id_registration)
@@ -311,37 +394,38 @@ class CourseFormController extends Controller
 
                         /*繳款資料 - S*/
 
-                        // 檢查是否報名過
-                        $check_payment = Payment::where('id_registration', $id_registration)
-                                                ->get();
+                        if( $cash != 0 ){
+                            // 檢查是否報名過
+                            $check_payment = Payment::where('id_registration', $id_registration)
+                                                    ->get();
 
-                        if ( count($check_payment) == 0 && $id_student != "" && $id_registration != "" && $id_registration != 0) {
-                            // 新增繳款資料
-                            $payment = new Payment;
+                            if ( count($check_payment) == 0 && $id_student != "" && $id_registration != "" && $id_registration != 0) {
+                                // 新增繳款資料
+                                $payment = new Payment;
 
-                            $payment->id_student     = $id_student;      // 學員ID
-                            $payment->cash           = $cash;            // 付款金額
-                            $payment->pay_model      = $pay_model;       // 付款方式
-                            $payment->number         = $number;          // 卡號後四碼
-                            $payment->id_registration     = $id_registration;      // 報名ID
-                            
-                            
-                            $payment->save();
-                            $id_payment = $payment->id;
-                        }else{
-                            foreach ($check_payment as $data) {
-                                $id_payment = $data ->id;
+                                $payment->id_student     = $id_student;      // 學員ID
+                                $payment->cash           = $cash;            // 付款金額
+                                $payment->pay_model      = $pay_model;       // 付款方式
+                                $payment->number         = $number;          // 卡號後四碼
+                                $payment->id_registration     = $id_registration;      // 報名ID
+                                
+                                
+                                $payment->save();
+                                $id_payment = $payment->id;
+                            }else{
+                                foreach ($check_payment as $data) {
+                                    $id_payment = $data ->id;
+                                }
+
+                                // //更新付款資料
+                                // Payment::where('id_registration', $id_registration)
+                                //         ->update([
+                                //             'cash' => $cash,
+                                //             'pay_model' => $pay_model,
+                                //             'number' => $number,
+                                //         ]);
                             }
-
-                            // //更新付款資料
-                            // Payment::where('id_registration', $id_registration)
-                            //         ->update([
-                            //             'cash' => $cash,
-                            //             'pay_model' => $pay_model,
-                            //             'number' => $number,
-                            //         ]);
                         }
-                        
                         
                         /*繳款資料 - E*/
 
@@ -377,10 +461,6 @@ class CourseFormController extends Controller
                                 $id_debt = $data ->id;
                             }
                         }
-                    }else{
-                        // $id_register = 0;
-                        $id_payment = 0;
-                        $id_debt = 0;
                     }
                     /*追單資料 - E*/
 
@@ -456,39 +536,42 @@ class CourseFormController extends Controller
                 }
                 /*正課報名資料 - E*/
 
+
+
                 /*繳款資料 - S*/
 
-                // 檢查是否報名過
-                $check_payment = Payment::where('id_registration', $id_registration)
-                                        ->get();
+                if( $cash != 0 ){
+                    // 檢查是否報名過
+                    $check_payment = Payment::where('id_registration', $id_registration)
+                                            ->get();
 
-                if ( count($check_payment) == 0 && $id_student != "" && $id_registration != "" && $id_registration != 0) {
-                    // 新增繳款資料
-                    $payment = new Payment;
+                    if ( count($check_payment) == 0 && $id_student != "" && $id_registration != "" && $id_registration != 0) {
+                        // 新增繳款資料
+                        $payment = new Payment;
 
-                    $payment->id_student     = $id_student;      // 學員ID
-                    $payment->cash           = $cash;            // 付款金額
-                    $payment->pay_model      = $pay_model;       // 付款方式
-                    $payment->number         = $number;          // 卡號後四碼
-                    $payment->id_registration     = $id_registration;      // 報名ID
-                    
-                    
-                    $payment->save();
-                    $id_payment = $payment->id;
-                }else{
-                    foreach ($check_payment as $data) {
-                        $id_payment = $data ->id;
+                        $payment->id_student     = $id_student;      // 學員ID
+                        $payment->cash           = $cash;            // 付款金額
+                        $payment->pay_model      = $pay_model;       // 付款方式
+                        $payment->number         = $number;          // 卡號後四碼
+                        $payment->id_registration     = $id_registration;      // 報名ID
+                        
+                        
+                        $payment->save();
+                        $id_payment = $payment->id;
+                    }else{
+                        foreach ($check_payment as $data) {
+                            $id_payment = $data ->id;
+                        }
+
+                        // //更新付款資料
+                        // Payment::where('id_registration', $id_registration)
+                        //         ->update([
+                        //             'cash' => $cash,
+                        //             'pay_model' => $pay_model,
+                        //             'number' => $number,
+                        //         ]);
                     }
-
-                    // //更新付款資料
-                    // Payment::where('id_registration', $id_registration)
-                    //         ->update([
-                    //             'cash' => $cash,
-                    //             'pay_model' => $pay_model,
-                    //             'number' => $number,
-                    //         ]);
                 }
-                
                 
                 /*繳款資料 - E*/
 
