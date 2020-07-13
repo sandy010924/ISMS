@@ -48,19 +48,19 @@
     @component('components.datatable')
     @slot('thead')
     <tr>
-      <th>報名日期</th>
+      <th class="colExcel">報名日期</th>
       <!-- 如果是銷講多加名單來源 -->
       @if( $course->type == 1 )
-      <th>名單來源</th>
+      <th class="colExcel">名單來源</th>
       @endif
-      <th>報名場次</th>
-      <th>姓名</th>
-      <th>聯絡電話</th>
-      <th>電子郵件</th>
-      <th>目前職業</th>
+      <th class="colExcel">報名場次</th>
+      <th class="colExcel">姓名</th>
+      <th class="colExcel">聯絡電話</th>
+      <th class="colExcel">電子郵件</th>
+      <th class="colExcel">目前職業</th>
       <!-- 如果是銷講多加我想在講座中了解的內容 -->
       @if( $course->type == 1 )
-      <th>我想在講座中了解的內容</th>
+      <th class="colExcel">我想在講座中了解的內容</th>
       @endif
       <th class="no-sort"></th>
     </tr>
@@ -139,10 +139,18 @@
 
     //DataTable
     table = $('#table_list').DataTable({
-      "dom": '<l<t>p>',
+      "dom": '<Bl<t>p>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
+      }],
+      buttons: [{
+          extend: 'excel',
+          text: '匯出Excel',
+          exportOptions: {
+              columns: '.colExcel'
+          }
+          // messageTop: $('#h3_title').text(),
       }]
     });
 

@@ -329,7 +329,7 @@
 
     // Rocky (2020/03/27)
     table = $('#table_list').DataTable({
-      "dom": '<l<td>Btp>',
+      "dom": '<Bl<td>tp>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,

@@ -95,6 +95,12 @@
     #table_list th, #table_list td{
       vertical-align: middle;
     }
+    
+    /* datatable excel button */
+    div.dt-buttons {
+      float: right;
+      margin-bottom: 10px;
+    }
   </style>
   <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
   <script src="{{ asset('js/jszip.min.js') }}"></script>

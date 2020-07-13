@@ -156,17 +156,17 @@
       @component('components.datatable')
         @slot('thead')
           <tr>
-            <th>當時報名日期</th>
-            <th>申請退費日期</th>
-            <th>姓名</th>
-            <th>聯絡電話</th>
-            <th>電子郵件</th>
-            <th>申請退款課程</th>
-            <th>退費原因</th>
-            <th>當時付款方式</th>
-            <th>帳號/卡號後五碼</th>
-            <th>當時付款金額</th>
-            <th width="10%">審核狀態</th>
+            <th class="colExcel">當時報名日期</th>
+            <th class="colExcel">申請退費日期</th>
+            <th class="colExcel">姓名</th>
+            <th class="colExcel">聯絡電話</th>
+            <th class="colExcel">電子郵件</th>
+            <th class="colExcel">申請退款課程</th>
+            <th class="colExcel">退費原因</th>
+            <th class="colExcel">當時付款方式</th>
+            <th class="colExcel">帳號/卡號後五碼</th>
+            <th class="colExcel">當時付款金額</th>
+            <th class="colExcel" width="10%">審核狀態</th>
             <th></th>
           </tr>
         @endslot
@@ -272,12 +272,21 @@
     function table_load(){
       //DataTable
       table=$('#table_list').DataTable({
-        "dom": '<l<t>p>',
+        "dom": '<Bl<t>p>',
         // columnDefs: [ {
         //   "targets": 'no-sort',
         //   "orderable": false,
         // } ],
         "ordering": false,
+        buttons: [{
+            extend: 'excel',
+            text: '匯出Excel',
+            exportOptions: {
+                // columns: ':visible',
+                columns: '.colExcel'
+            }
+            // messageTop: $('#h3_title').text(),
+        }]
       });
     }
 

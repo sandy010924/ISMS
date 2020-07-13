@@ -249,7 +249,7 @@
         </div>
       </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-responsive mt-3">
       <input type="hidden" id="id_group" value="{{$id}}">
       <input type="hidden" id="data_groupdetail" value="{{$datas}}">
       @component('components.datatable')
@@ -580,7 +580,7 @@
     table2 = $('#table_list_history').DataTable();
 
     table = $('#table_list').DataTable({
-      "dom": '<l<td>Btp>',
+      "dom": '<Bl<td>tp>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,

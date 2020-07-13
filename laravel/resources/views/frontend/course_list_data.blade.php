@@ -43,13 +43,13 @@
         @component('components.datatable')
           @slot('thead')
             <tr>
-              <th>日期</th>
-              <th>場次</th>
-              <th>報名筆數</th>
-              <th>實到人數</th>
-              <th>報到率</th>
-              <th>成交人數</th>
-              <th>成交率</th>
+              <th class="colExcel">日期</th>
+              <th class="colExcel">場次</th>
+              <th class="colExcel">報名筆數</th>
+              <th class="colExcel">實到人數</th>
+              <th class="colExcel">報到率</th>
+              <th class="colExcel">成交人數</th>
+              <th class="colExcel">成交率</th>
               <th></th>
             </tr>
           @endslot
@@ -121,11 +121,19 @@
       
       //DataTable
       table=$('#table_list').DataTable({
-        "dom": '<l<t>p>',
+        "dom": '<Bl<t>p>',
         "columnDefs": [ {
           "targets": 'no-sort',
           "orderable": false,
-        } ]
+        }],
+        buttons: [{
+          extend: 'excel',
+          text: '匯出Excel',
+          exportOptions: {
+              columns: '.colExcel'
+          }
+          // messageTop: $('#h3_title').text(),
+        }]
       });
     });
   </script>

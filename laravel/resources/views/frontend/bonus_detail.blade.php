@@ -253,7 +253,7 @@
     table2.destroy();
 
     table2 = $('#table_list_history').DataTable({
-      "dom": '<l<td>Bt>',
+      "dom": '<Bl<td>t>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,

@@ -62,14 +62,14 @@
                 @component('components.datatable')
                   @slot('thead')
                     <tr>
-                      <th>Submission Date</th>
-                      <th>報名日期</th>
-                      <th>姓名</th>
-                      <th>聯絡電話</th>
-                      <th>電子郵件</th>
-                      <th>我想參加課程</th>
-                      <th>報名場次</th>
-                      <th>付款狀態</th>
+                      <th class="colExcel">Submission Date</th>
+                      <th class="colExcel">報名日期</th>
+                      <th class="colExcel">姓名</th>
+                      <th class="colExcel">聯絡電話</th>
+                      <th class="colExcel">電子郵件</th>
+                      <th class="colExcel">我想參加課程</th>
+                      <th class="colExcel">報名場次</th>
+                      <th class="colExcel">付款狀態</th>
                       <th class=" no-sort"></th>
                     </tr>
                   @endslot
@@ -112,11 +112,19 @@
   $("document").ready(function(){
     // datatable Sandy (2020/03/09)
     table = $('#table_list').DataTable({
-        "dom": '<l<t>p>',
+        "dom": '<Bl<t>p>',
         "order": [[ 0, "desc" ]],
         "columnDefs": [ {
           "targets": 'no-sort',
           "orderable": false,
+        }],
+        buttons: [{
+            extend: 'excel',
+            text: '匯出Excel',
+            exportOptions: {
+                columns: '.colExcel'
+            }
+            // messageTop: $('#h3_title').text(),
         }]
     });
   });

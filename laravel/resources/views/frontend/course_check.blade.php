@@ -356,9 +356,6 @@
 
 
 <style>
-  div.dt-buttons {
-    float: right;
-  }
   table#table_list {
       width: 100% !important;
   }
