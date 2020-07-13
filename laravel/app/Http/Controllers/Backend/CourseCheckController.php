@@ -49,6 +49,13 @@ class CourseCheckController extends Controller
                 foreach ($check_student as $data_student) {
                     $id_student = $data_student ->id;
                 }
+
+                //更新學員資料
+                Student::where('phone', $new_phone)
+                        ->update(['name' => $new_name,
+                                  'email' => $new_email,
+                                //   'address' => $address,
+                                  'profession' => $new_profession]);
             } else{
                 // 新增學員資料
                 $student->name          = $new_name;         // 學員姓名
