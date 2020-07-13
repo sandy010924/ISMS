@@ -83,8 +83,8 @@ class RefundFormController extends Controller
                     }
 
                     if ($id_refund != "") {
-                        //更新付款狀態為退費
-                        Registration::where('id', $registration->id)->update(['status_payment' => 9]);
+                        // //更新付款狀態為退費
+                        // Registration::where('id', $registration->id)->update(['status_payment' => 9]);
 
                         return 'success';
                     } else {

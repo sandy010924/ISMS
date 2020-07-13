@@ -65,8 +65,8 @@ class CourseListRefundController extends Controller
 
 
             if ($id_refund != "") {
-                //更新付款狀態為退費
-                Registration::where('id', $registration->id)->update(['status_payment' => 9]);
+                // //更新付款狀態為退費
+                // Registration::where('id', $registration->id)->update(['status_payment' => 9]);
 
                 return redirect()->route('course_list_refund', ['id' => $id])->with('status', '新增退費成功');
             } else {
@@ -97,12 +97,51 @@ class CourseListRefundController extends Controller
                         ->update([
                             'review' => 1
                         ]);
+
+                    //更新付款狀態為退費
+                    Registration::leftjoin('refund', 'refund.id_registration', '=', 'registration.id')
+                                ->where('refund.id', $id)
+                                ->update(['registration.status_payment' => 9]);
+
                 }else if($val == '1'){
                     //更新退費資料
                     Refund::where('id',  $id)
                         ->update([
                             'review' => 0
                         ]);
+
+                        
+                    //更新付款狀態
+                    $refund = Refund::leftjoin('registration', 'registration.id', '=', 'refund.id_registration')
+                                    ->where('refund.id', $id)
+                                    ->first();
+                
+                    if(!empty($refund)){
+
+                        $payment = Payment::selectraw('sum(cash) as all_pay')
+                                        ->where('id_registration', $refund->id_registration)
+                                        ->groupBy('id_registration')
+                                        ->first();
+                        
+                        if( !empty($payment) ){
+                            if( $payment->all_pay != 0){
+                                if( $payment->all_pay == $refund->amount_payable){
+                                    //完款
+                                    Registration::where('id', $refund->id_registration)->update(['status_payment' => 7]);
+                                }else{
+                                    //付訂
+                                    Registration::where('id', $refund->id_registration)->update(['status_payment' => 8]);
+                                }
+                            }else{
+                                //留單
+                                Registration::where('id', $refund->id_registration)->update(['status_payment' => 6]);
+                            }
+                        }else{
+                            //留單
+                            Registration::where('id', $refund->id_registration)->update(['status_payment' => 6]);
+                        }
+                    }
+                        
                 }
             }
 
@@ -133,13 +172,18 @@ class CourseListRefundController extends Controller
                                 ->where('id_registration', $refund->id_registration)
                                 ->groupBy('id_registration')
                                 ->first();
-                                
-                if( $payment->all_pay == $registration->amount_paid){
-                    //完款
-                    Registration::where('id', $refund->id_registration)->update(['status_payment' => 7]);
+                
+                if( !empty($payment) || $payment->all_pay == 0){
+                    if( $payment->all_pay == $registration->amount_payable){
+                        //完款
+                        Registration::where('id', $refund->id_registration)->update(['status_payment' => 7]);
+                    }else{
+                        //付訂
+                        Registration::where('id', $refund->id_registration)->update(['status_payment' => 8]);
+                    }
                 }else{
-                    //付訂
-                    Registration::where('id', $refund->id_registration)->update(['status_payment' => 8]);
+                    //留單
+                    Registration::where('id', $refund->id_registration)->update(['status_payment' => 6]);
                 }
 
                 //刪除退費
