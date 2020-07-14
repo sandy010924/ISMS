@@ -577,6 +577,8 @@
     });
 
     // Datable.js Rocky (2020/04/30)
+    var today = new Date();
+    var title = today.getFullYear().toString() + (today.getMonth() + 1).toString() + today.getDate().toString() + '_名單列表_' + $('#name_group').val()
     table2 = $('#table_list_history').DataTable();
 
     table = $('#table_list').DataTable({
@@ -591,6 +593,7 @@
         extend: 'excel',
         text: '匯出Excel',
         messageTop: $('#name_group').val(),
+        title: title,
         exportOptions: {
           columns: [0, 1, 2, 3, 4]
         }

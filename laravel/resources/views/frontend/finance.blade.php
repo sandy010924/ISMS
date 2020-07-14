@@ -158,12 +158,24 @@
 
     /* Datatable.js Rocky(2020/04/24) - S */
     table = $('#table_list').DataTable({
-      "dom": '<l<t>p>',
+      // "dom": '<l<t>p>',
+      "dom": '<Bl<td>tp>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
       }],
-      "orderCellsTop": true
+      "destroy": true,
+      "retrieve": true,
+      "orderCellsTop": true,
+      buttons: [{
+        extend: 'excel',
+        text: '匯出Excel',
+        messageTop: 'dd',
+        title: 'dd',
+        exportOptions: {
+          columns: [0, 1, 2, 3, 4]
+        }
+      }],
     });
 
     table2 = $('#table_list_history').DataTable();
