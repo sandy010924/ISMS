@@ -206,9 +206,10 @@
         }],
     });
     
+    //分頁
     table
       .columns( '.search_teacher' )
-      .search( '"' + $('a.active[name="teacher_tab"]').eq( 0 ).data('id') + '"')
+      .search("(^"+ $('a.active[name="teacher_tab"]').eq( 0 ).data('id') +"$)",true,false)
       .draw();
 
 
@@ -236,7 +237,7 @@
 
     table
       .columns( '.search_teacher' )
-      .search( '"' + $(this).data('id') + '"' )
+      .search("(^"+ $(this).data('id') +"$)",true,false)
       .draw();
   });
 </script>
