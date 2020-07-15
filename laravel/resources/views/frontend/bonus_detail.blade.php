@@ -11,7 +11,7 @@
   <input type="hidden" id="auth_role" value="{{ Auth::user()}}" />
   <div class="card-body">
     <div class="row mb-3">
-      <div class="col-2">
+      <div class="col-3">
         <h3 id="h3_title">獎金名單：{{$datas_rule[0]['bonus_name']}}</h3>
         <input type="hidden" id="id_bonus" value="{{$id_bonus}}">
       </div>
@@ -265,6 +265,7 @@
       buttons: [{
         extend: 'excel',
         text: '匯出Excel',
+        title: '',
         messageTop: $('#h3_title').text(),
       }],
       "ajax": {

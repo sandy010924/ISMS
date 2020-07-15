@@ -53,7 +53,7 @@
           {{ $event['course'] }}
         </td>
         <td>{{ $event['event'] }}</td>
-        <td><a href="javascript:void(0)" onclick="show_invoice({{ $event['id'] }})">{{ (empty($event['count_invoice'])) ? '0' : $event['count_invoice']  }}/{{ $event['total'] }}</a> </td>
+        <td><a href="javascript:void(0)" onclick="show_invoice({{ $event['id'] }},'{{ $event['course_start_at'] }}','{{ $event['course'] }}','{{ $event['event'] }}')">{{ (empty($event['count_invoice'])) ? '0' : $event['count_invoice']  }}/{{ $event['total'] }}</a> </td>
         <td>
           <div class="col-sm-8">
             <input type="number" class="form-control form-control-sm auth_readonly" name="advertise_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,0);" value="{{ $event['cost_ad'] }}" />
@@ -157,6 +157,52 @@
 
 
     /* Datatable.js Rocky(2020/04/24) - S */
+    var today = new Date();
+    var title = today.getFullYear().toString() + (today.getMonth() + 1).toString() + today.getDate().toString() + '_財務管理'
+
+    var buttonCommon = {
+      exportOptions: {
+        format: {
+          body: function(data, row, column, node) {
+            if (column == 1) {
+              if ($(data).is("button")) {
+                var arr = data.trim().split('</button>');
+                return arr[1].trim()
+              } else {
+                return data
+              }
+            } else if (column == 4) {
+              if ($(data).children().is("input")) {
+                var val_input = $(data).children().val()
+                if (val_input == '') {
+                  return '0'
+                } else {
+                  return val_input
+                }
+              }
+            } else if (column == 6) {
+              if ($(data).children().is("input")) {
+                var val_input = $(data).children().val()
+                if (val_input == '') {
+                  return '0'
+                } else {
+                  return val_input
+                }
+              }
+            } else if (column == 5) {
+              if ($(data).children().is("span")) {
+                return $(data).children().text()
+              }
+            } else if ($(data).is("a")) {
+              return $(data).text()
+            } else {
+              return data
+            }
+          }
+        }
+      }
+    };
+
     table = $('#table_list').DataTable({
       // "dom": '<l<t>p>',
       "dom": '<Bl<td>tp>',
@@ -167,15 +213,11 @@
       "destroy": true,
       "retrieve": true,
       "orderCellsTop": true,
-      buttons: [{
+      buttons: [$.extend(true, {}, buttonCommon, {
         extend: 'excel',
         text: '匯出Excel',
-        messageTop: 'dd',
-        title: 'dd',
-        exportOptions: {
-          columns: [0, 1, 2, 3, 4]
-        }
-      }],
+        title: title,
+      })],
     });
 
     table2 = $('#table_list_history').DataTable();
@@ -223,7 +265,7 @@
   }
 
   /* 顯示學員資料 - S Rocky(2020/04/25) */
-  function show_invoice(id_events) {
+  function show_invoice(id_events, course_start_at, course, event) {
     var updatetime = ''
     $("#invoice").modal('show');
     $("#invoice_search_date").val('');
@@ -232,8 +274,41 @@
     table2.clear().draw();
     table2.destroy();
 
+    var buttonCommon = {
+      exportOptions: {
+        format: {
+          body: function(data, row, column, node) {
+            if (column == 3) {
+              if ($(data).children().is("input")) {
+                var val_input = $(data).children().val()
+                if (val_input == 'null') {
+                  return '無'
+                } else {
+                  return val_input
+                }
+              }
+            } else if (column == 4) {
+              if ($(data).is("input")) {
+                var val_input = $(data).val()
+                if (val_input == '') {
+                  return '無'
+                } else {
+                  return val_input
+                }
+              }
+            } else {
+              return data
+            }
+          }
+        }
+      }
+    };
+    var today = new Date();
+    var filename = today.getFullYear().toString() + (today.getMonth() + 1).toString() + today.getDate().toString() + '_發票資訊'
+    var messageTop = course_start_at + ' ' + course + ' ' + event
     table2 = $('#table_list_history').DataTable({
-      "dom": '<l<t>p>',
+      // "dom": '<l<t>p>',
+      "dom": '<Bl<td>tp>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
@@ -241,6 +316,13 @@
       "orderCellsTop": true,
       "destroy": true,
       "retrieve": true,
+      buttons: [$.extend(true, {}, buttonCommon, {
+        extend: 'excel',
+        text: '匯出Excel',
+        messageTop: messageTop,
+        filename: filename,
+        title: '',
+      })],
       "ajax": {
         "url": "show_student",
         "type": "POST",
@@ -249,7 +331,7 @@
         },
         async: false,
         "dataSrc": function(json) {
-          console.log(json)
+          // console.log(json)
           for (var i = 0, ien = json.length; i < ien; i++) {
             var type_invoice = ''
 
