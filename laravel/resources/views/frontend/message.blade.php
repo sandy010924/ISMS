@@ -418,14 +418,21 @@ $(document).ready(function () {
       return false;
     }
 
-    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>立即傳送');
-    $(this).prop('disabled', 'disabled');
-    
     var form = getData();
-
     var phoneAddr = $('#receiverPhone').val();
     var emailAddr = $('#receiverEmail').val();
 
+    //判斷簡訊發送人數超過500 (API上限為500筆)
+    if($('#messageCheckBox').prop('checked')){
+      if( phoneAddr.split(",").length > 500 ){
+        alert('發送人數超過500筆，簡訊寄送一次以500筆為上限。');
+        return false;
+      }
+    }
+
+    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>立即傳送');
+    $(this).prop('disabled', 'disabled');
+    
     $.ajax({
         type:'POST',
         url:'message_insert',
@@ -439,7 +446,7 @@ $(document).ready(function () {
           
           if( res['status'] == 'success' && res['AccountPoint'] != null){
             /** alert **/
-            $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
+            $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "，發送人數為" + res['count'] + "人。");
             fade($("#success_alert"));
 
             $('button').prop('disabled', 'disabled');
@@ -613,7 +620,7 @@ $(document).ready(function () {
             $('#scheduleModal').modal('hide');
 
             /** alert **/
-            $("#success_alert_text").html("訊息預約成功，簡訊餘額尚有" + res['AccountPoint'] + "。");
+            $("#success_alert_text").html("訊息預約成功，簡訊餘額尚有" + res['AccountPoint'] + "，預約發送人數為" + res['count'] + "人。");
             fade($("#success_alert"));
 
             $('button').prop('disabled', 'disabled');
