@@ -82,7 +82,27 @@ class MessageListController extends Controller
         }
       }
 
-      return view('frontend.message_list', compact('scheduleMsg', 'draftMsg', 'sentMsg'));
+      //開始時間
+      $start_array = Message::orderBy('send_at','asc')
+                            ->whereNotNull('send_at')
+                            ->where('send_at', '<>', '0000-00-00 00:00:00')
+                            // ->orderBy('created_at', 'asc')
+                            ->first();
+
+      //結束時間
+      $end_array = Message::orderBy('send_at','desc')
+                          ->whereNotNull('send_at')
+                          ->where('send_at', '<>', '0000-00-00 00:00:00')
+                          // ->orderBy('created_at', 'desc')
+                          ->first();
+
+      
+      if( $start_array!="" && $end_array!="" ){
+          $start = date('Y-m-d', strtotime($start_array->send_at));
+          $end = date('Y-m-d', strtotime($end_array->send_at));
+      }
+
+      return view('frontend.message_list', compact('scheduleMsg', 'draftMsg', 'sentMsg', 'start', 'end'));
     }
 
     // // 登入

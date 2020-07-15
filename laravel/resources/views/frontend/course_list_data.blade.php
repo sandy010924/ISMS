@@ -36,7 +36,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">日期區間</span>
               </div>
-              <input type="text" class="form-control px-3" name="daterange" id="daterange" autocomplete="off"> 
+              <input type="search" class="form-control px-3" name="daterange" id="daterange" autocomplete="off"> 
             </div>
           </div>
         </div>
@@ -78,47 +78,9 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
   <script>
     var table;
-    var daterange = $('#daterange').val();
 
     $(function() {
-      
-      //日期區間
-      if( '<?php echo $start?>'=='' && '<?php echo $end?>'=='' ){
-        $('input[name="daterange"]').daterangepicker({
-          autoUpdateInput: false,
-          locale: {
-            format: 'YYYY-MM-DD',
-            separator: ' ~ '
-          }
-        });
-      }else{
-        $('input[name="daterange"]').daterangepicker({
-          startDate: '<?php echo $start?>',
-          endDate: '<?php echo $end?>',
-          locale: {
-            format: 'YYYY-MM-DD',
-            separator: ' ~ '
-          }
-        });
-      }
 
-      //日期區間搜尋
-      $('#daterange').on('apply.daterangepicker', function(ev, picker) {
-        $.fn.dataTable.ext.search.push(
-        function (settings, data, dataIndex) {
-
-            var min = picker.startDate.format('YYYY-MM-DD');
-            var max = picker.endDate.format('YYYY-MM-DD');
-            
-            var startDate = data[0].substring(0,10);
-            
-            if (startDate <= max && startDate >= min) { return true; }
-            return false;
-        });
-
-        table.draw();
-      });
-      
       //DataTable
       table=$('#table_list').DataTable({
         "dom": '<Bl<t>p>',
@@ -135,6 +97,67 @@
           // messageTop: $('#h3_title').text(),
         }]
       });
+
+ 
+      /* 日期區間 */
+      if ('<?php echo $start ?>' == '' && '<?php echo $end ?>' == '') {
+        //沒有資料則關閉區間搜尋
+        $('#daterange').prop('disabled', true);;
+      } else {
+        //有資料設定日期區間
+        $('input[name="daterange"]').daterangepicker({
+          startDate: '<?php echo $start ?>',
+          endDate: '<?php echo $end ?>',
+          locale: {
+            format: 'YYYY-MM-DD',
+            separator: ' ~ ',
+            applyLabel: '搜尋',
+            cancelLabel: '取消',
+          }
+        });
+      }
+
+      /* 日期區間搜尋 */
+      $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+        $.fn.dataTable.ext.search.push(
+          function(settings, data, dataIndex) {
+
+            var min = picker.startDate.format('YYYY-MM-DD');
+            var max = picker.endDate.format('YYYY-MM-DD');
+
+            var startDate = data[0];
+            if (startDate <= max && startDate >= min) {
+              return true;
+            }
+            return false;
+          });
+
+        table.draw();
+      });
+
+      /* 取消日期區間搜尋 */
+      $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+        //重設定日期區間(回到預設)
+        $('#daterange').data('daterangepicker').setStartDate('<?php echo $start ?>');
+        $('#daterange').data('daterangepicker').setEndDate('<?php echo $end ?>');
+        
+        //搜尋
+        $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+
+          var min = picker.startDate.format('YYYY-MM-DD');
+          var max = picker.endDate.format('YYYY-MM-DD');
+
+          var startDate = data[0];
+          if (startDate <= max && startDate >= min) {
+            return true;
+          }
+          return false;
+        });
+
+        table.draw();
+      });
+      
     });
   </script>
 @endsection

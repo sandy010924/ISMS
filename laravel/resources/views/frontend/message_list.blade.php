@@ -10,26 +10,11 @@
       {{-- <div class="container"> --}}
       <div class="row mb-5">
         <div class="col-5">
-          {{-- <div class="input-group date" data-target-input="nearest"> --}}
-            {{-- <div class="input-group-prepend">
-              <span class="input-group-text">日期區間</span>
-            </div> --}}
-            {{-- <input type="text" class="form-control px-3" name="daterange" id="daterange"  placeholder="搜尋日期區間"> 
-            <div class="input-group-append" data-target="#daterange">
-              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-            </div> --}}
-          {{-- </div> --}}
-          {{-- <div class="input-group">
+          <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">搜尋日期區間</span>
+              <span class="input-group-text">日期區間</span>
             </div>
-            <input type="search" class="form-control px-3" name="daterange" id="daterange"> 
-          </div>   --}}
-          <div class="input-group date" data-target-input="nearest">
-            <input type="search" class="form-control px-3" name="daterange" id="daterange" placeholder="搜尋日期區間" autocomplete="off"> 
-            {{-- <div class="input-group-append" data-target="#daterange" data-toggle="datetimepicker">
-              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-            </div>   --}}
+            <input type="search" class="form-control px-3" name="daterange" id="daterange" autocomplete="off"> 
           </div>
         </div>
         <div class="col text-right">
@@ -43,131 +28,105 @@
           <a class="nav-item nav-link" role="tab" data-toggle="tab" id="nav-sent-tab" href="#nav-sent" aria-controls="sent" aria-selected="false">已傳送</a>
         </div>
       </nav>
-      {{-- <div class="tab-content" id="myTabContent">
-        @component('components.datatable')
-            @slot('thead')
-              <tr>
-                <th>訊息名稱</th>
-                <th>內容</th>
-                <th>媒介</th>
-                <th id="th_count"></th>
-                <th id="th_time" name="col_time"></th>
-                <th name="col_btn"></th>
-                <th class="d-none"></th>
-              </tr>
-            @endslot
-            @slot('tbody')
-              @foreach($msg as $data )
-              <tr href="{{ route('message_data', ['id' => $data['id']]) }}">
-                <td>{{ $data['name'] }}</td>
-                <td class="ellipsis">{{ $data['content'] }}</td>
-                <td>{{ $data['type'] }}</td>
-                <td>{{ $data['count_receiver'] }}</td>
-                <td name="col_time">{{ $data['send_at'] }}</td>
-                <td name="col_btn">
-                  <a name="btn_edit" role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
-                  <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
-                </td>
-                <td class="d-none"> {{ $data['id_status'] }}</td>
-              </tr>
-              @endforeach
-            @endslot
-          @endcomponent
-      </div> --}}
-      <div class="tab-content" id="myTabContent">
+      <div class="tab-content">
         <div class="tab-pane show active" id="nav-schedule" role="tabpanel" aria-labelledby="nav-schedule-tab">
           <!-- 已預約 -->
-          @component('components.datatable')
-            @slot('thead')
-              <tr>
-                <th class="d-none"></th>
-                <th>訊息名稱</th>
-                <th>內容</th>
-                <th>媒介</th>
-                <th>預計傳送人數</th>
-                <th>預約時間</th>
-                <th></th>
-              </tr>
-            @endslot
-            @slot('tbody')
-              @foreach($scheduleMsg as $data )
-              <tr>
-                <td class="d-none">{{ $data['created_at'] }}</td>
-                <td>{{ $data['name'] }}</td>
-                <td class="ellipsis">{{ $data['content'] }}</td>
-                <td>{{ $data['type'] }}</td>
-                <td>{{ $data['count'] }}</td>
-                <td>{{ $data['send_at'] }}</td>
-                <td>
-                  @if( date('Y-m-d', strtotime($data['send_at'])) <= date('Y-m-d', strtotime('now')) )
-                    <a role="button" class="btn btn-danger btn-sm mx-1 text-white disable" onclick="alert('當日預約訊息無法取消');">取消預約</a>
-                  @else
-                    <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_cancel({{ $data['id'] }});">取消預約</a>
-                  @endif
-                </td>
-              </tr>
-              @endforeach
-            @endslot
-          @endcomponent
+          <div class="table-responsive">
+            <table id="schedule" class="table table-striped table-sm text-center border rounded-lg datatable">
+              <thead>
+                <tr>
+                  <th class="d-none"></th>
+                  <th>訊息名稱</th>
+                  <th>內容</th>
+                  <th>媒介</th>
+                  <th>預計傳送人數</th>
+                  <th>預約時間</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($scheduleMsg as $data )
+                <tr>
+                  <td class="d-none">{{ $data['created_at'] }}</td>
+                  <td>{{ $data['name'] }}</td>
+                  <td class="ellipsis">{{ $data['content'] }}</td>
+                  <td>{{ $data['type'] }}</td>
+                  <td>{{ $data['count'] }}</td>
+                  <td>{{ $data['send_at'] }}</td>
+                  <td>
+                    @if( date('Y-m-d', strtotime($data['send_at'])) <= date('Y-m-d', strtotime('now')) )
+                      <a role="button" class="btn btn-danger btn-sm mx-1 text-white disable" onclick="alert('當日預約訊息無法取消');">取消預約</a>
+                    @else
+                      <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_cancel({{ $data['id'] }});">取消預約</a>
+                    @endif
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
         </div>
         <div class="tab-pane" id="nav-draft" role="tabpanel" aria-labelledby="nav-draft-tab">
           <!-- 草稿 -->
-          @component('components.datatable')
-            @slot('thead')
-              <tr>
-                <th class="d-none"></th>
-                <th>訊息名稱</th>
-                <th>內容</th>
-                <th>媒介</th>
-                <th>預計傳送人數</th>
-                <th></th>
-              </tr>
-            @endslot
-            @slot('tbody')
-              @foreach($draftMsg as $data )
-              <tr>
-                <td class="d-none">{{ $data['created_at'] }}</td>
-                <td>{{ $data['name'] }}</td>
-                <td class="ellipsis">{{ $data['content'] }}</td>
-                <td>{{ $data['type'] }}</td>
-                <td>{{ $data['count'] }}</td>
-                <td>
-                  <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
-                  <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
-                </td>
-              </tr>
-              @endforeach
-            @endslot
-          @endcomponent
+          <div class="table-responsive">
+            <table id="draft" class="table table-striped table-sm text-center border rounded-lg datatable">
+              <thead>
+                <tr>
+                  <th class="d-none"></th>
+                  <th>訊息名稱</th>
+                  <th>內容</th>
+                  <th>媒介</th>
+                  <th>預計傳送人數</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($draftMsg as $data )
+                <tr>
+                  <td class="d-none">{{ $data['created_at'] }}</td>
+                  <td>{{ $data['name'] }}</td>
+                  <td class="ellipsis">{{ $data['content'] }}</td>
+                  <td>{{ $data['type'] }}</td>
+                  <td>{{ $data['count'] }}</td>
+                  <td>
+                    <a role="button" class="btn btn-secondary btn-sm mx-1 text-white" href="{{ route('message',['id'=> $data['id']]) }}">編輯</a>
+                    <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
         </div>
         <div class="tab-pane" id="nav-sent" role="tabpanel" aria-labelledby="nav-sent-tab">
           <!-- 已傳送 -->
-          @component('components.datatable')
-            @slot('thead')
-              <tr>
-                <th class="d-none"></th>
-                <th>訊息名稱</th>
-                <th>內容</th>
-                <th>媒介</th>
-                <th>傳送人數</th>
-                <th>傳送時間</th>
-              </tr>
-            @endslot
-            @slot('tbody')
-              @foreach($sentMsg as $data )
-              <tr href="{{ route('message_data', ['id' => $data['id']]) }}" style="cursor: pointer;">
-                <td class="d-none">{{ $data['created_at'] }}</td>
-                <td>{{ $data['name'] }}</td>
-                <td class="ellipsis">{{ $data['content'] }}</td>
-                <td>{{ $data['type'] }}</td>
-                <td>{{ $data['count'] }}</td>
-                <td>{{ $data['send_at'] }}</td>
-              </tr>
-              @endforeach
-            @endslot
-          @endcomponent
+          <div class="table-responsive">
+            <table id="sent" class="table table-striped table-sm text-center border rounded-lg datatable">
+              <thead>
+                <tr>
+                  <th class="d-none"></th>
+                  <th>訊息名稱</th>
+                  <th>內容</th>
+                  <th>媒介</th>
+                  <th>傳送人數</th>
+                  <th>傳送時間</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($sentMsg as $data )
+                <tr href="{{ route('message_data', ['id' => $data['id']]) }}" style="cursor: pointer;">
+                  <td class="d-none">{{ $data['created_at'] }}</td>
+                  <td>{{ $data['name'] }}</td>
+                  <td class="ellipsis">{{ $data['content'] }}</td>
+                  <td>{{ $data['type'] }}</td>
+                  <td>{{ $data['count'] }}</td>
+                  <td>{{ $data['send_at'] }}</td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
         </div>
-        
       </div>
     </div>
   </div>
@@ -222,52 +181,95 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
+  .dataTables_paginate {
+    text-align: center !important;
+    margin-top: 1rem !important;
+  }
+  .dataTables_paginate ul{
+    justify-content: center !important;
+  }
 </style>
 
 <script>
-  // $('tbody').addClass('tab-content');
   var table;
-  var daterange = $('#daterange').val();
 
   $("document").ready(function() {
 
-    // $('input[name="daterange"]').daterangepicker({
-    //   opens: 'left'
-    // }, function(start, end, label) {
-    //   console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-    // });
-
-    //日期區間
-    $('input[name="daterange"]').daterangepicker({
-      autoUpdateInput: false,
-      locale: {
-        format: 'YYYY-MM-DD',
-        separator: ' ~ '
-      },
+    //草稿datatable
+    $('#draft').DataTable({
+        "dom": '<l<t>p>',
+        "autoWidth": false,
+        "order": [[ 0, 'desc' ]]
+    });
+    //預約、已傳送datatable
+    table = $('#schedule, #sent').DataTable({
+        "dom": '<l<t>p>',
+        "autoWidth": false,
+        "order": [[ 0, 'desc' ]]
     });
 
-    //日期區間搜尋
+    /* 日期區間 */
+    if ('<?php echo $start ?>' == '' && '<?php echo $end ?>' == '') {
+      //沒有資料則關閉區間搜尋
+      $('#daterange').prop('disabled', true);;
+    } else {
+      //有資料設定日期區間
+      $('input[name="daterange"]').daterangepicker({
+        startDate: '<?php echo $start ?>',
+        endDate: '<?php echo $end ?>',
+        locale: {
+          format: 'YYYY-MM-DD',
+          separator: ' ~ ',
+          applyLabel: '搜尋',
+          cancelLabel: '取消',
+        }
+      });
+    }
+
+    /* 日期區間搜尋 */
     $('#daterange').on('apply.daterangepicker', function(ev, picker) {
       $.fn.dataTable.ext.search.push(
-      function (settings, data, dataIndex) {
+        function(settings, data, dataIndex) {
 
-          var min = picker.startDate.format('YYYY-MM-DD');
-          var max = picker.endDate.format('YYYY-MM-DD');
+          var min = picker.startDate.format('YYYY-MM-DD 00:00:00');
+          var max = picker.endDate.format('YYYY-MM-DD 24:00:00');
+
+          var startDate = data[5];
           
-          var startDate = data[4];
-          if (startDate <= max && startDate >= min) { return true; }
+          if (startDate <= max && startDate >= min) {
+            return true;
+          }
           return false;
+        });
+
+      table.draw();
+    });
+
+    /* 取消日期區間搜尋 */
+    $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+      //重設定日期區間(回到預設)
+      $('#daterange').data('daterangepicker').setStartDate('<?php echo $start ?>');
+      $('#daterange').data('daterangepicker').setEndDate('<?php echo $end ?>');
+      
+      //搜尋
+      $.fn.dataTable.ext.search.push(
+      function(settings, data, dataIndex) {
+
+        var min = picker.startDate.format('YYYY-MM-DD 00:00:00');
+        var max = picker.endDate.format('YYYY-MM-DD 24:00:00');
+
+        var startDate = data[5];
+
+        if (startDate <= max && startDate >= min) {
+          return true;
+        }
+        return false;
       });
 
       table.draw();
     });
 
-
-    table = $('table[name="table_list"]').DataTable({
-        "dom": '<l<t>p>',
-        "autoWidth": false,
-        "order": [[ 0, 'desc' ]]
-    });
 
     // $('.nav-item').on('click', function() {
     //   var target = $(this).attr('data-target');

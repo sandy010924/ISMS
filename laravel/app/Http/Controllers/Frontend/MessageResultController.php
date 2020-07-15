@@ -21,19 +21,19 @@ class MessageResultController extends Controller
 
         foreach ($msg_all as $key => $data) {
             switch ($data['type']) {
-          case 0:
-            $type = '簡訊';
-            break;
-          case 1:
-            $type = 'E-mail';
-            break;
-          case 2:
-            $type = '簡訊、E-mail';
-            break;
-          default:
-            $type = '';
-            break;
-        }
+              case 0:
+                $type = '簡訊';
+                break;
+              case 1:
+                $type = 'E-mail';
+                break;
+              case 2:
+                $type = '簡訊、E-mail';
+                break;
+              default:
+                $type = '';
+                break;
+            }
 
             //寄件人數
             $count_receiver = count(Receiver::where('id_message', $data['id'])->get());
@@ -77,23 +77,45 @@ class MessageResultController extends Controller
             }
 
             $msg[$key] = [
-          'id' => $data['id'],
-          'send_at' => $data['send_at'],
-          'name' => $data['name'],
-          'content' => strip_tags($data['content']),
-          'type' => $type,
-          'id_teacher' => $data['id_teacher'],
-          'count_receiver' => $count_receiver,
-          'cost_sms' => $cost_sms,
-          'count_apply' => $count_apply,
-          'cost_apply' => $cost_apply,
-          'rate_apply' => $rate_apply,
-        ];
+              'id' => $data['id'],
+              'send_at' => $data['send_at'],
+              'name' => $data['name'],
+              'content' => strip_tags($data['content']),
+              'type' => $type,
+              'id_teacher' => $data['id_teacher'],
+              'count_receiver' => $count_receiver,
+              'cost_sms' => $cost_sms,
+              'count_apply' => $count_apply,
+              'cost_apply' => $cost_apply,
+              'rate_apply' => $rate_apply,
+            ];
         }
       
+
         $teachers = Teacher::all();
 
-        return view('frontend.message_result', compact('msg', 'teachers'));
+
+        //開始時間
+        $start_array = Message::orderBy('send_at','asc')
+                              ->whereNotNull('send_at')
+                              ->where('send_at', '<>', '0000-00-00 00:00:00')
+                              // ->orderBy('created_at', 'asc')
+                              ->first();
+
+        //結束時間
+        $end_array = Message::orderBy('send_at','desc')
+                            ->whereNotNull('send_at')
+                            ->where('send_at', '<>', '0000-00-00 00:00:00')
+                            // ->orderBy('created_at', 'desc')
+                            ->first();
+
+        
+        if( $start_array!="" && $end_array!="" ){
+            $start = date('Y-m-d', strtotime($start_array->send_at));
+            $end = date('Y-m-d', strtotime($end_array->send_at));
+        }
+
+        return view('frontend.message_result', compact('msg', 'teachers', 'start', 'end'));
     }
 
     // // 登入
