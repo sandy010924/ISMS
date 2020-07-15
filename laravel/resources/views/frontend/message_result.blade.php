@@ -53,7 +53,7 @@
                 <th>報名人數</th>
                 <th>報名成本</th>
                 <th>報名率</th>
-                <th class="d-none"></th>
+                <th class="d-none search_teacher"></th>
               </tr>
             @endslot
             @slot('tbody')
@@ -207,8 +207,8 @@
     });
     
     table
-      .columns( 9 )
-      .search( $('a.active[name="teacher_tab"]').eq( 0 ).data('id') )
+      .columns( '.search_teacher' )
+      .search( '"' + $('a.active[name="teacher_tab"]').eq( 0 ).data('id') + '"')
       .draw();
 
 
@@ -235,8 +235,8 @@
     $(this).addClass('active');
 
     table
-      .columns( 9 )
-      .search( $(this).data('id') )
+      .columns( '.search_teacher' )
+      .search( '"' + $(this).data('id') + '"' )
       .draw();
   });
 </script>
