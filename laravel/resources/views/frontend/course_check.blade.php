@@ -101,7 +101,7 @@
       </div>
       <div class="col-3 text-right">
         @if( $course->type == 1 )
-        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'msaleser'|| Auth::user()->role == 'saleser' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff'))
+        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'msaleser'|| Auth::user()->role == 'saleser' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'teacher'))
         <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#presentApply">現場報名</button>
         @endif
         @endif
