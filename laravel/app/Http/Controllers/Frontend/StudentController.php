@@ -465,62 +465,35 @@ class StudentController extends Controller
                 ->get();
 
             // 學員資料加入資料來源    
-            foreach ($students_data as $key => $data) {
-                $sales_registration_datasource = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
-                    ->select('sales_registration.datasource')
-                    ->orderBy('sales_registration.created_at', 'asc')
-                    ->first();
+            if (count($students_data) != 0) {
+                foreach ($students_data as $key => $data) {
+                    $sales_registration_datasource = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
+                        ->select('sales_registration.datasource')
+                        ->orderBy('sales_registration.created_at', 'asc')
+                        ->first();
 
-                $datasource = $sales_registration_datasource;
+                    $datasource = $sales_registration_datasource;
 
-                $students_data[$key] = [
-                    'id'                => $data['id'],
-                    'name'              => $data['name'],
-                    'phone'             => $data['phone'],
-                    'email'             => $data['email'],
-                    'datasource'        => $datasource,
-                ];
-            }
-            // 進行比較 -> 找出三個陣列都有的學員
-            $arr = array_column(
-                array_merge($array_search_deal, json_decode($students_data, true)),
-                'id'
-            );
-            foreach ($sales_registration_data as $value_sales_registration) {
-                $check_array_search = array_search($value_sales_registration['id_student'], $arr);
-                if ($check_array_search !== false) {
-                    // 找到重複的
-                    $key = array_search(
-                        $value_sales_registration['id_student'],
-                        // 9100,
-                        $arr,
-                        true
-                    );
-
-                    array_push($array_student, array(
-                        'id'                => $students_data[$key]['id'],
-                        'name'              => $students_data[$key]['name'],
-                        'phone'             => $students_data[$key]['phone'],
-                        'email'             => $students_data[$key]['email'],
-                        'datasource'             => $students_data[$key]['datasource']
-                    ));
+                    $students_data[$key] = [
+                        'id'                => $data['id'],
+                        'name'              => $data['name'],
+                        'phone'             => $data['phone'],
+                        'email'             => $data['email'],
+                        'datasource'        => $datasource,
+                    ];
                 }
-            }
-
-            foreach ($registration_data as $value_registration) {
-                $check_array_search = array_search($value_registration['id_student'], $arr);
-                if ($check_array_search !== false) {
-
-                    // 檢查array_student有沒有重複值
-                    $arr_student = array_column(
-                        $array_student,
-                        'id'
-                    );
-                    $check_array_search2 = array_search($value_registration['id_student'], $arr_student);
-                    // 沒有重複值才新增
-                    if ($check_array_search2 === false) {
+                // 進行比較 -> 找出三個陣列都有的學員
+                $arr = array_column(
+                    array_merge($array_search_deal, json_decode($students_data, true)),
+                    'id'
+                );
+                foreach ($sales_registration_data as $value_sales_registration) {
+                    $check_array_search = array_search($value_sales_registration['id_student'], $arr);
+                    if ($check_array_search !== false) {
+                        // 找到重複的
                         $key = array_search(
-                            $value_registration['id_student'],
+                            $value_sales_registration['id_student'],
+                            // 9100,
                             $arr,
                             true
                         );
@@ -534,11 +507,38 @@ class StudentController extends Controller
                         ));
                     }
                 }
-            }
 
+                foreach ($registration_data as $value_registration) {
+                    $check_array_search = array_search($value_registration['id_student'], $arr);
+                    if ($check_array_search !== false) {
+
+                        // 檢查array_student有沒有重複值
+                        $arr_student = array_column(
+                            $array_student,
+                            'id'
+                        );
+                        $check_array_search2 = array_search($value_registration['id_student'], $arr_student);
+                        // 沒有重複值才新增
+                        if ($check_array_search2 === false) {
+                            $key = array_search(
+                                $value_registration['id_student'],
+                                $arr,
+                                true
+                            );
+
+                            array_push($array_student, array(
+                                'id'                => $students_data[$key]['id'],
+                                'name'              => $students_data[$key]['name'],
+                                'phone'             => $students_data[$key]['phone'],
+                                'email'             => $students_data[$key]['email'],
+                                'datasource'             => $students_data[$key]['datasource']
+                            ));
+                        }
+                    }
+                }
+            }
             $students = $array_student;
         } else {
-
             $students = Student::Where('email', 'like', '%' . $search_data . '%')
                 ->orWhere('phone', 'like', '%' . $search_data . '%')
                 ->orWhere('student.name', 'like', '%' . $search_data . '%')
@@ -547,21 +547,23 @@ class StudentController extends Controller
                 ->get();
 
             // 改寫學員搜尋 -> 學員和資料來源分開搜尋(因為學員不一定都會報名銷講) Rocky (2020/07/07)
-            foreach ($students as $key => $data) {
-                $sales_registration_data = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
-                    ->select('sales_registration.datasource')
-                    ->orderBy('sales_registration.created_at', 'asc')
-                    ->first();
+            if (count($students) != 0) {
+                foreach ($students as $key => $data) {
+                    $sales_registration_data = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
+                        ->select('sales_registration.datasource')
+                        ->orderBy('sales_registration.created_at', 'asc')
+                        ->first();
 
-                $datasource = $sales_registration_data;
+                    $datasource = $sales_registration_data;
 
-                $students[$key] = [
-                    'id'                => $data['id'],
-                    'name'              => $data['name'],
-                    'phone'             => $data['phone'],
-                    'email'             => $data['email'],
-                    'datasource'        => $datasource,
-                ];
+                    $students[$key] = [
+                        'id'                => $data['id'],
+                        'name'              => $data['name'],
+                        'phone'             => $data['phone'],
+                        'email'             => $data['email'],
+                        'datasource'        => $datasource,
+                    ];
+                }
             }
         }
 
