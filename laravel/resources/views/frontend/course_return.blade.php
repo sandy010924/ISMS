@@ -44,6 +44,10 @@
   .btn_tableName {
     cursor: pointer;
   }
+
+  div.dt-buttons {
+    margin-bottom: 10px;
+  }
 </style>
 
 <!-- Content Start -->
@@ -360,17 +364,17 @@
     @slot('thead')
     <tr>
       <th class="text-nowrap"></th>
-      <th class="text-nowrap">學員姓名</th>
-      <th class="text-nowrap">連絡電話</th>
-      <th class="text-nowrap">原始付款狀態</th>
-      <th class="text-nowrap">付款狀態</th>
-      <th class="text-nowrap">應付</th>
-      <th class="text-nowrap">已付</th>
-      <th class="text-nowrap">待付</th>
+      <th class="text-nowrap colExcel">學員姓名</th>
+      <th class="text-nowrap colExcel">連絡電話</th>
+      <th class="text-nowrap colExcel">原始付款狀態</th>
+      <th class="text-nowrap colExcel">付款狀態</th>
+      <th class="text-nowrap colExcel">應付</th>
+      <th class="text-nowrap colExcel">已付</th>
+      <th class="text-nowrap colExcel">待付</th>
       {{-- <th class="text-nowrap">付款方式</th> --}}
-      <th class="text-nowrap">付款日期</th>
-      <th class="text-nowrap">服務人員</th>
-      <th class="text-nowrap">備註</th>
+      <th class="text-nowrap colExcel">付款日期</th>
+      <th class="text-nowrap colExcel">服務人員</th>
+      <th class="text-nowrap colExcel">備註</th>
       <th class="text-nowrap"></th>
     </tr>
     @endslot
@@ -451,7 +455,7 @@
         <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete_data({{ $data['id'] }});">刪除</a>
       </td>
     </tr>
-    <tr>
+    <tr class="trPayment">
       <td colspan="12">
         <div class="collapse multi-collapse" id="payment{{ $data['id'] }}">
           <div class="card card-body p-1">
@@ -636,35 +640,6 @@
                 </div>
                 @endforeach
               </div>
-              {{-- <div class="form-group">
-                    <label for="edit_pay_model" class="col-form-label"><strong>付款方式</strong></label>
-                    <div class="d-block my-2">
-                      <div class="custom-control custom-radio my-1">
-                        <input type="radio" id="edit_pay_model1" name="edit_pay_model" class="custom-control-input" value="0">
-                        <label class="custom-control-label" for="epay_model1">現金</label>
-                      </div>
-                      <div class="custom-control custom-radio my-1">
-                        <input type="radio" id="edit_pay_model2" name="epay_model" class="custom-control-input" value="1">
-                        <label class="custom-control-label" for="epay_model2">匯款</label>
-                      </div>
-                      <div class="custom-control custom-radio my-1">
-                        <input type="radio" id="edit_pay_model3" name="edit_pay_model" class="custom-control-input" value="2">
-                        <label class="custom-control-label" for="edit_pay_model3">刷卡：輕鬆付</label>
-                      </div>
-                      <div class="custom-control custom-radio my-1">
-                        <input type="radio" id="edit_pay_model4" name="edit_pay_model" class="custom-control-input" value="3">
-                        <label class="custom-control-label" for="edit_pay_model4">刷卡：一次付</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="edit_cash" class="col-form-label"><strong>付款金額</strong></label>
-                    <input type="number" class="form-control" name="edit_cash" id="edit_cash">
-                  </div>
-                  <div class="form-group">
-                    <label for="edit_number" class="col-form-label"><strong>匯款帳號/卡號後五碼</strong></label>
-                    <input type="number" class="form-control" name="edit_number" id="edit_number">
-                  </div> --}}
               <div class="form-group">
                 <label for="edit_invoice" class="col-form-label"><strong>統一發票</strong></label>
                 <div class="d-block my-2">
@@ -1242,24 +1217,68 @@
 
     $(".demo2").tooltip();
 
+    //datatable onload
+    table_onload();
+
     // 權限判斷 Rocky(2020/05/10)
     check_auth();
+    
+    
+  });
 
-    //datatable
+  //datatable onload
+  function table_onload() {
+    
+    var buttonCommon = { 
+      exportOptions: { 
+        format: { 
+          body: function(data, column, row, node) {
+            if (column.cla) { 
+              return $(data).find("option:selected").text();
+            } else {
+                return $(data).text();
+            } 
+          }
+        } 
+      }
+    };
+
     table = $('#table_list').DataTable({
-      "dom": '<Bl<t>p>',
-      "ordering": false,
+      dom: '<<t>>',
+      paging: false,
+      ordering: false,
       buttons: [{
           extend: 'excel',
           text: '匯出Excel',
-          exportOptions: {
-              // columns: ':visible',
-              columns: [0,1,2,3,5,7]
+          exportOptions: { 
+            columns: '.colExcel',
+            format: { 
+              body: function(data, column, row, node) {
+                console.log(column + $(data).text());
+
+                // if( row % 2 === 1 ){
+                // console.log(column + $(data).text());
+                //   if ( column == 1 || column == 2 || column == 3 || column == 6 || column == 7 ) {
+                //     return $(data).text();
+                // console.log($(data).text());
+                //   }else if( column == 5 || column == 8 || column == 9 || column == 10 ){
+                //     return $(data).val();
+                // console.log($(data).val());
+                //   }else if( column == 4 ){
+                //     return $(data).find("option:selected").text();
+                //   }
+                // }
+              }
+            } 
           }
+          // exportOptions: {
+          //     columns: '.colExcel'
+          // }
           // messageTop: $('#h3_title').text(),
-        }]
+        }],
+        // buttons: [ $.extend(true, {}, buttonCommon, { extend: "excel" })]
     });
-  });
+  }
 
 
   // 權限判斷
@@ -1785,16 +1804,6 @@
     var data_id = ($(this).attr('id')).substr(6);
     var data_type = 'number';
     save_data($(this), data_type, data_id);
-    // if( data_val == "" ){
-    //   /** alert **/ 
-    //   $("#error_alert_text").html("帳戶/卡號後四碼不可空白，請輸入帳戶/卡號後四碼");
-    //   fade($("#error_alert")); 
-    //   $(this).focus();
-    // }else{
-    //   var data_id = ($(this).attr('id')).substr(6);
-    //   var data_type = 'number';
-    //   save_data($(this), data_type, data_id);
-    // }
   });
   $('body').on('keyup', 'input[name="number"]', function(e) {
     if (e.keyCode === 13) {
@@ -1802,16 +1811,6 @@
       var data_id = ($(this).attr('id')).substr(6);
       var data_type = 'number';
       save_data($(this), data_type, data_id);
-      // if( data_val == "" ){
-      //   /** alert **/ 
-      //   $("#error_alert_text").html("卡號後四碼不可空白");
-      //   fade($("#error_alert")); 
-      //   $(this).focus();
-      // }else{
-      //   var data_id = ($(this).attr('id')).substr(6);
-      //   var data_type = 'number';
-      //   save_data($(this), data_type, data_id);
-      // }
     }
   });
 
@@ -1834,6 +1833,11 @@
 
         if (data == 'success') {
           status = 'success';
+
+          $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
+            table_onload();
+          });
+
 
           /** alert **/
           $("#success_alert_text").html("資料儲存成功");
