@@ -226,8 +226,8 @@
       <th width="20%">報到備註</th>
       <th class="d-none">報到備註</th>
       @if( $course->type == 1 )
-        <th>付費備註</th>
-        <th></th>
+      <th>付費備註</th>
+      <th></th>
       @endif
     </tr>
     @endslot
@@ -239,7 +239,7 @@
       <td class="align-middle" name="search_phone">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
       <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
       <td class="align-middle">
-        <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck['check_id'] }}" value="{{ $coursecheck['check_status_val'] }}">{{ $coursecheck['check_status_name'] }}</button>             
+        <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck['check_id'] }}" value="{{ $coursecheck['check_status_val'] }}">{{ $coursecheck['check_status_name'] }}</button>
         <div class="btn-group">
           <button class="btn btn-sm" type="button" data-toggle="dropdown">
             •••
@@ -258,11 +258,13 @@
       </td>
       <td class="align-middle d-none" id="checkmemo{{ $coursecheck['check_id'] }}">{{ ($coursecheck['memo'] == 'null')? '':$coursecheck['memo'] }}</td>
       @if( $course->type == 1 )
-        <td class="align-middle">{{ ($coursecheck['memo2'] == 'null')? '':$coursecheck['memo2'] }}</td>
-        <td class="align-middle">
-          <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $coursecheck['check_id'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
-          <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete({{ $coursecheck['check_id'] }});">刪除</a>
-        </td>
+      <td class="align-middle">{{ ($coursecheck['memo2'] == 'null')? '':$coursecheck['memo2'] }}</td>
+      <td class="align-middle">
+        <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $coursecheck['check_id'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
+        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser'))
+        <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete({{ $coursecheck['check_id'] }});">刪除</a>
+        @endif
+      </td>
       @endif
     </tr>
     @endforeach
@@ -357,7 +359,7 @@
 
 <style>
   table#table_list {
-      width: 100% !important;
+    width: 100% !important;
   }
 </style>
 <script>
@@ -385,17 +387,17 @@
     });
     check_auth();
 
-    
+
     // Restore state
     var state = table.state.loaded();
-    if ( state ) {
+    if (state) {
       //     console.log(state);
       // table.columns().eq( 0 ).each( function ( colIdx ) {
       //   var colSearch = state.columns[colIdx].search;
       //   if ( colSearch.search ) {
       //   }
       // } );
-      $( '#search_keyword' ).val( state.search.search );
+      $('#search_keyword').val(state.search.search);
       // table.draw();
     }
   });
@@ -404,14 +406,13 @@
   function check_auth() {
     var role = ''
     role = JSON.parse($('#auth_role').val())['role']
-    if (role == "accountant" || role == "teacher" ||
-      role == "staff") {
+    if (role == "accountant" || role == "staff") {
       $('.auth_readonly').attr('readonly', 'readonly')
     }
   }
 
   //datatable onload
-  function table_onload(){
+  function table_onload() {
     // Sandy (2020/02/26)
     table = $('#table_list').DataTable({
       "dom": '<Bl<t>p>',
@@ -430,14 +431,14 @@
         });
       },
       buttons: [{
-          extend: 'excel',
-          text: '匯出Excel',
-          exportOptions: {
-              // columns: ':visible',
-              columns: [0,1,2,3,5,7]
-          }
-          // messageTop: $('#h3_title').text(),
-        }]
+        extend: 'excel',
+        text: '匯出Excel',
+        exportOptions: {
+          // columns: ':visible',
+          columns: [0, 1, 2, 3, 5, 7]
+        }
+        // messageTop: $('#h3_title').text(),
+      }]
     });
 
   }
@@ -499,7 +500,7 @@
         // console.log(data);  
 
         //重整datatable區塊
-        $("#datatableDiv").load(window.location.href + " #datatableDiv" , function() {
+        $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
           status_onload();
           table_onload();
         });
@@ -514,7 +515,7 @@
 
         // //更新隱藏報到狀態欄位(export用)
         // $("#check"+data["list"].check_id).html(data["list"].check_status_name);
-        
+
 
         /** alert **/
         $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
@@ -613,7 +614,7 @@
         // console.log(JSON.stringify(data));
 
 
-        $("#datatableDiv").load(window.location.href + " #datatableDiv" , function() {
+        $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
           status_onload();
           table_onload();
         });
@@ -640,28 +641,28 @@
 
 
   /* 編輯資料 S Sandy(2020/06/28) */
-  $('.edit_data').on('click', function (e) {
+  $('.edit_data').on('click', function(e) {
     var id = $(this).data('id');
     $.ajax({
-      type:'GET',
-      url:'course_check_fill',
-      data:{
-        id:id
+      type: 'GET',
+      url: 'course_check_fill',
+      data: {
+        id: id
       },
-      success:function(data){
-        console.log(data);  
-        
+      success: function(data) {
+        console.log(data);
+
         // $('.edit_input').val('');
         // $('.edit_input').prop('checked',false);
 
-        if( data != "nodata" ){    
-          $("#edit_idevents").val($('#event_id').val());   //場次ID
-          $("#edit_id").val(id);  //報名ID
+        if (data != "nodata") {
+          $("#edit_idevents").val($('#event_id').val()); //場次ID
+          $("#edit_id").val(id); //報名ID
           $("#edit_name").val(data['name']);
-          $("#edit_phone").val(data['phone']);  //電話
-          $("#edit_email").val(data['email']);  //信箱
-          $("#edit_address").val(data['address']);  //居住地區
-          $("#edit_profession").val(data['profession']);  //職業
+          $("#edit_phone").val(data['phone']); //電話
+          $("#edit_email").val(data['email']); //信箱
+          $("#edit_address").val(data['address']); //居住地區
+          $("#edit_profession").val(data['profession']); //職業
           //付款方式
           switch (data['pay_model']) {
             case "刷卡":
@@ -673,13 +674,13 @@
             default:
               break;
           }
-          $("#edit_account").val(data['account']);   //帳號/卡號後五碼
+          $("#edit_account").val(data['account']); //帳號/卡號後五碼
         }
 
 
       },
-      error: function(jqXHR, textStatus, errorMessage){
-          console.log(jqXHR);    
+      error: function(jqXHR, textStatus, errorMessage) {
+        console.log(jqXHR);
       }
     });
   });
