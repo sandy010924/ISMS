@@ -441,7 +441,7 @@
       <td class="align-middle">
         {{-- <input type="date" id="pay_date{{ $data['id'] }}" name="pay_date" class="form-control form-control-sm" value="{{ $data['pay_date'] }}"/> --}}
         {{-- <div class="input-group date" data-target-input="nearest"> --}}
-        <input type="text" id="pay_date{{ $data['id'] }}" name="pay_date{{ $data['id'] }}" class="form-control form-control-sm pay_date" data-target="#pay_date{{ $data['id'] }}" data-toggle="datetimepicker" autocomplete="off" value="{{ $data['pay_date'] }}" />
+        <input type="text" id="pay_date{{ $data['id'] }}" name="pay_date{{ $data['id'] }}" class="form-control form-control-sm pay_date" data-target="#pay_date{{ $data['id'] }}" data-toggle="datetimepicker" autocomplete="off" value="{{ $data['pay_date'] }}"/>
         {{-- </div> --}}
       </td>
       <td class="align-middle">
@@ -625,14 +625,14 @@
                   @foreach( $data['events'] as $data_events )
                   <div class="d-block my-2">
                     <div class="custom-control custom-radio my-3">
-                      <input type="radio" id="edit_events{{ $data_events['id_group'] }}" value="edit_events{{ $data_events['id_group'] }}" name="edit_events" class="custom-control-input">
+                      <input type="radio" id="edit_events{{ $data_events['id_group'] }}" value="edit_events{{ $data_events['id_group'] }}" name="edit_events" class="custom-control-input edit_input">
                       <label class="custom-control-label" for="edit_events{{ $data_events['id_group'] }}">{{ $data_events['events'] }}</label>
                     </div>
                   </div>
                   @endforeach
                   <div class="d-block my-2">
                     <div class="custom-control custom-radio my-3">
-                      <input type="radio" id="edit_other{{ $data['id_course'] }}" value="edit_other{{ $data['id_course'] }}" name="edit_events" class="custom-control-input">
+                      <input type="radio" id="edit_other{{ $data['id_course'] }}" value="edit_other{{ $data['id_course'] }}" name="edit_events" class="custom-control-input edit_input">
                       {{-- <input type="hidden" id="other_val{{ $key }}" name="other_val{{ $key }}" value="{{ $data['id_course'] }}"> --}}
                       <label class="custom-control-label" for="edit_other{{ $data['id_course'] }}">我要選擇其他場次</label>
                     </div>
@@ -1160,20 +1160,22 @@
     }
 
     $('.pay_date').datetimepicker({
-      languate: 'zh-TW',
+      // languate: 'zh-TW',
       format: 'YYYY-MM-DD',
       icons: iconlist
     });
 
+    $(".pay_date").keypress(function(event) {event.preventDefault();});
+
     $('#idate').datetimepicker({
       defaultDate: new Date(),
-      languate: 'zh-TW',
+      // languate: 'zh-TW',
       format: 'YYYY-MM-DD',
       icons: iconlist
     });
 
     $('#ipaydate').datetimepicker({
-      languate: 'zh-TW',
+      // languate: 'zh-TW',
       format: 'YYYY-MM-DD',
       icons: iconlist
     });
@@ -1192,8 +1194,8 @@
     // });
 
     $('#edit_date').datetimepicker({
-      defaultDate: new Date(),
-      languate: 'zh-TW',
+      // defaultDate: new Date(),
+      // languate: 'zh-TW',
       format: 'YYYY-MM-DD',
       icons: iconlist,
     });
@@ -1406,8 +1408,8 @@
       success: function(data) {
         // console.log(data);  
 
-        // $('.edit_input').val('');
-        // $('.edit_input').prop('checked',false);
+        $('input[type="text"].edit_input').val('');
+        $('.edit_input').prop('checked',false);
 
         if (data != "nodata") {
           $("#edit_id").val(id); //報名ID
@@ -1443,7 +1445,7 @@
           }
           $("#edit_events").text(data['events']); //報名場次
           if (data['id_events'] != "") {
-            $("#" + data['id_events']).attr("checked", true); //選擇場次
+            $("#" + data['id_events']).click(); //選擇場次
           }
           switch (data['data']['type_invoice']) { //統一發票
             case "0":
@@ -1834,9 +1836,9 @@
         if (data == 'success') {
           status = 'success';
 
-          $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
-            table_onload();
-          });
+          // $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
+          //   table_onload();
+          // });
 
 
           /** alert **/

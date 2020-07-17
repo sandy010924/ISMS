@@ -269,7 +269,7 @@ class CourseReturnController extends Controller
         $id = $request->input('id');
         $phone = $request->input('phone');
         $data = Student::join('registration','id_student','=','student.id')
-                        // ->join('payment','id_registration','=','registration.id')
+                        ->selectRaw('student.*, registration.*, DATE_FORMAT(registration.submissiondate, "%Y-%m-%d") as submissiondate')
                         ->Where('registration.id', $id)
                         ->Where('student.phone', $phone)
                         ->first();
