@@ -69,16 +69,16 @@
     @foreach($apply as $data)
     <tr>
       @if( $course->type == 1 )
-        <td>{{ $data['date'] }}</td>
-        <td>{{ $data['source'] }}</td>
+      <td>{{ $data['date'] }}</td>
+      <td>{{ $data['source'] }}</td>
       @else
-        <td>{{ $data['date'] }}</td>
+      <td>{{ $data['date'] }}</td>
       @endif
 
       @if( $data['refund_status'] == 1 )
-        <td><span class="text-danger border border-danger">退費</span> {{ $data['event'] }}</td>
+      <td><span class="text-danger border border-danger">退費</span> {{ $data['event'] }}</td>
       @else
-        <td>{{ $data['event'] }}</td>
+      <td>{{ $data['event'] }}</td>
       @endif
 
       <td>{{ $data['name'] }}</td>
@@ -93,7 +93,7 @@
       <td>{{ ($data['content']  == 'null')? '':$data['content'] }}</td>
       @endif
       <td>
-        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer'  || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff'))
+        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'teacher'))
         <button id="{{ $data['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $data['id'] }});">刪除</button>
         @endif
       </td>
@@ -104,7 +104,7 @@
   </div>
 </div>
 <style>
-  table td{
+  table td {
     vertical-align: middle !important;
   }
 </style>
@@ -121,12 +121,12 @@
         "orderable": false,
       }],
       buttons: [{
-          extend: 'excel',
-          text: '匯出Excel',
-          exportOptions: {
-              columns: '.colExcel'
-          }
-          // messageTop: $('#h3_title').text(),
+        extend: 'excel',
+        text: '匯出Excel',
+        exportOptions: {
+          columns: '.colExcel'
+        }
+        // messageTop: $('#h3_title').text(),
       }]
     });
 
@@ -172,24 +172,24 @@
       //重設定日期區間(回到預設)
       $('#daterange').data('daterangepicker').setStartDate('<?php echo $start ?>');
       $('#daterange').data('daterangepicker').setEndDate('<?php echo $end ?>');
-      
+
       //搜尋
       $.fn.dataTable.ext.search.push(
-      function(settings, data, dataIndex) {
+        function(settings, data, dataIndex) {
 
-        var min = picker.startDate.format('YYYY-MM-DD');
-        var max = picker.endDate.format('YYYY-MM-DD');
+          var min = picker.startDate.format('YYYY-MM-DD');
+          var max = picker.endDate.format('YYYY-MM-DD');
 
-        var startDate = data[0];
-        if (startDate <= max && startDate >= min) {
-          return true;
-        }
-        return false;
-      });
+          var startDate = data[0];
+          if (startDate <= max && startDate >= min) {
+            return true;
+          }
+          return false;
+        });
 
       table.draw();
     });
-      
+
 
   });
 

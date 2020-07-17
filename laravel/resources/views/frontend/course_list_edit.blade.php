@@ -122,7 +122,7 @@
       </td>
       <td>
         <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $data['id_group'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
-        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser'))
+        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'teacher'))
         <a role="button" class="btn btn-danger btn-sm text-white mx-1 btn_delete" data-idgroup="{{ $data['id_group'] }}">刪除</a>
         @endif
       </td>

@@ -129,7 +129,7 @@
           @endif
           @endif
           @endif
-          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' ))
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'teacher'))
           <button id="{{ $event['id'] }}" name="{{ $event['id_group'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $event['id'] }});" value="{{ $event['id'] }}">刪除</button>
           @endif
       </td>

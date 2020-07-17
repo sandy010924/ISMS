@@ -375,7 +375,9 @@
       <th class="text-nowrap colExcel">付款日期</th>
       <th class="text-nowrap colExcel">服務人員</th>
       <th class="text-nowrap colExcel">備註</th>
+      @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'teacher'))
       <th class="text-nowrap"></th>
+      @endif
     </tr>
     @endslot
     @slot('tbody')
@@ -441,7 +443,7 @@
       <td class="align-middle">
         {{-- <input type="date" id="pay_date{{ $data['id'] }}" name="pay_date" class="form-control form-control-sm" value="{{ $data['pay_date'] }}"/> --}}
         {{-- <div class="input-group date" data-target-input="nearest"> --}}
-        <input type="text" id="pay_date{{ $data['id'] }}" name="pay_date{{ $data['id'] }}" class="form-control form-control-sm pay_date" data-target="#pay_date{{ $data['id'] }}" data-toggle="datetimepicker" autocomplete="off" value="{{ $data['pay_date'] }}"/>
+        <input type="text" id="pay_date{{ $data['id'] }}" name="pay_date{{ $data['id'] }}" class="form-control form-control-sm pay_date" data-target="#pay_date{{ $data['id'] }}" data-toggle="datetimepicker" autocomplete="off" value="{{ $data['pay_date'] }}" />
         {{-- </div> --}}
       </td>
       <td class="align-middle">
@@ -450,10 +452,12 @@
       <td class="align-middle">
         <input type="text" class="form-control form-control-sm" id="pay_memo{{ $data['id'] }}" name="pay_memo" value="{{ $data['pay_memo'] }}">
       </td>
+      @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'teacher'))
       <td class="align-middle">
         <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $data['id'] }}" data-phone="{{ $data['phone'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
         <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete_data({{ $data['id'] }});">刪除</a>
       </td>
+      @endif
     </tr>
     <tr class="trPayment">
       <td colspan="12">
@@ -1165,7 +1169,9 @@
       icons: iconlist
     });
 
-    $(".pay_date").keypress(function(event) {event.preventDefault();});
+    $(".pay_date").keypress(function(event) {
+      event.preventDefault();
+    });
 
     $('#idate').datetimepicker({
       defaultDate: new Date(),
@@ -1224,24 +1230,24 @@
 
     // 權限判斷 Rocky(2020/05/10)
     check_auth();
-    
-    
+
+
   });
 
   //datatable onload
   function table_onload() {
-    
-    var buttonCommon = { 
-      exportOptions: { 
-        format: { 
+
+    var buttonCommon = {
+      exportOptions: {
+        format: {
           body: function(data, column, row, node) {
-            if (column.cla) { 
+            if (column.cla) {
               return $(data).find("option:selected").text();
             } else {
-                return $(data).text();
-            } 
+              return $(data).text();
+            }
           }
-        } 
+        }
       }
     };
 
@@ -1250,35 +1256,35 @@
       paging: false,
       ordering: false,
       buttons: [{
-          extend: 'excel',
-          text: '匯出Excel',
-          exportOptions: { 
-            columns: '.colExcel',
-            format: { 
-              body: function(data, column, row, node) {
-                console.log(column + $(data).text());
+        extend: 'excel',
+        text: '匯出Excel',
+        exportOptions: {
+          columns: '.colExcel',
+          format: {
+            body: function(data, column, row, node) {
+              console.log(column + $(data).text());
 
-                // if( row % 2 === 1 ){
-                // console.log(column + $(data).text());
-                //   if ( column == 1 || column == 2 || column == 3 || column == 6 || column == 7 ) {
-                //     return $(data).text();
-                // console.log($(data).text());
-                //   }else if( column == 5 || column == 8 || column == 9 || column == 10 ){
-                //     return $(data).val();
-                // console.log($(data).val());
-                //   }else if( column == 4 ){
-                //     return $(data).find("option:selected").text();
-                //   }
-                // }
-              }
-            } 
+              // if( row % 2 === 1 ){
+              // console.log(column + $(data).text());
+              //   if ( column == 1 || column == 2 || column == 3 || column == 6 || column == 7 ) {
+              //     return $(data).text();
+              // console.log($(data).text());
+              //   }else if( column == 5 || column == 8 || column == 9 || column == 10 ){
+              //     return $(data).val();
+              // console.log($(data).val());
+              //   }else if( column == 4 ){
+              //     return $(data).find("option:selected").text();
+              //   }
+              // }
+            }
           }
-          // exportOptions: {
-          //     columns: '.colExcel'
-          // }
-          // messageTop: $('#h3_title').text(),
-        }],
-        // buttons: [ $.extend(true, {}, buttonCommon, { extend: "excel" })]
+        }
+        // exportOptions: {
+        //     columns: '.colExcel'
+        // }
+        // messageTop: $('#h3_title').text(),
+      }],
+      // buttons: [ $.extend(true, {}, buttonCommon, { extend: "excel" })]
     });
   }
 
@@ -1351,7 +1357,7 @@
             if (data.sex == '男') {
               $("#isex1").click();
             }
-            if (data.sex == '女'){
+            if (data.sex == '女') {
               $("#isex2").click();
             }
           }
@@ -1409,7 +1415,7 @@
         // console.log(data);  
 
         $('input[type="text"].edit_input').val('');
-        $('.edit_input').prop('checked',false);
+        $('.edit_input').prop('checked', false);
 
         if (data != "nodata") {
           $("#edit_id").val(id); //報名ID
@@ -1420,7 +1426,7 @@
           if (data['data']['sex'] == '男') {
             $("#edit_sex1").click();
           }
-          if (data['data']['sex'] == '女'){
+          if (data['data']['sex'] == '女') {
             $("#edit_sex2").click();
           }
           $("#edit_identity").val(data['data']['id_identity']); //身分證
