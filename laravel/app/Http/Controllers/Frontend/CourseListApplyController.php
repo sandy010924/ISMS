@@ -179,7 +179,7 @@ class CourseListApplyController extends Controller
                 
                 $apply[$key] = array(
                     'id' => $data['id'],
-                    'date' => date('Y-m-d', strtotime($data['created_at'])),
+                    'date' => date('Y-m-d', strtotime($data['submissiondate'])),
                     'event' => $events,
                     'name' => $data['name'],
                     'phone' => $data['phone'],
@@ -196,13 +196,13 @@ class CourseListApplyController extends Controller
             }
 
             //開始時間
-            $start_array = Registration::select('created_at as date')
+            $start_array = Registration::select('submissiondate as date')
                             ->where('id_course', $id)
                             ->orderBy('date','asc')
                             ->first();
 
             //結束時間
-            $end_array = Registration::select('created_at as date')
+            $end_array = Registration::select('submissiondate as date')
                             ->where('id_course', $id)
                             ->orderBy('date','desc')
                             ->first();
