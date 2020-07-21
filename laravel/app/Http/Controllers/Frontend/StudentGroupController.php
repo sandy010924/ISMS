@@ -234,6 +234,7 @@ class StudentGroupController extends Controller
                             // $query3->whereBetween('b.created_at', [$sdate, $edate]);
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('b.id_status', '<>', '5')
                         ->distinct()->get();
                 }
             } elseif ($type_condition == "action") {
@@ -441,7 +442,7 @@ class StudentGroupController extends Controller
                         ->groupby('student.id')
                         ->get();
 
-                    // echo $edate;
+                // echo $edate;
                 } else {
                     // 未分配
                     $datas = Student::leftjoin('registration as b', 'student.id', '=', 'b.id_student')
