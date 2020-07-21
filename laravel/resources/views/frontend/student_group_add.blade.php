@@ -167,7 +167,7 @@
           <button class="btn btn-primary" type="button" onclick="condition3();" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
             <i class="fa fa-plus" aria-hidden="true">添加條件</i>
           </button>
-          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
+          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2" onclick="close_condition2();">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -232,7 +232,7 @@
       </form>
       <div class="row">
         <div class="col-2  mt-2">
-          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
+          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3" onclick="close_condition3();">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -608,6 +608,14 @@
 
   // 篩選條件關閉 Rocky(2020/05/19)
 
+  /*關閉條件 Rocky (2020/07/21)*/
+  function close_condition2() {
+    check_condition2--;
+  }
+
+  function close_condition3() {
+    check_condition3--;
+  }
   /*增加條件*/
   function condition2() {
     check_condition2++;
