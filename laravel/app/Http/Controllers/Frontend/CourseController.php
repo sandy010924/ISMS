@@ -116,8 +116,14 @@ class CourseController extends Controller
                 //                                  ->get());
 
                 //抓出場次所有報名表
-                $register = Register::join('events_course', 'events_course.id', '=', 'register.id_events')
+                $register = Register::leftjoin('registration', 'registration.id', '=', 'register.id_registration')
+                                    ->leftjoin('events_course', 'events_course.id', '=', 'register.id_events')
                                     ->Where('events_course.id', $data['id'])
+                                    ->where(function($q) { 
+                                        $q->orWhere('registration.status_payment', 7)
+                                        ->orWhere('registration.status_payment', 9);
+                                    })
+                                    ->Where('register.id_status','<>', 2)
                                     ->get();
 
                 //報名筆數
@@ -128,10 +134,10 @@ class CourseController extends Controller
                 //     ->get());
                 $count_apply = 0;
                 foreach( $register as $data_register ){
-                    //檢查狀態不是我很遺憾
-                    if( $data_register['id_status'] == 2){
-                        continue;
-                    }
+                    // //檢查狀態不是我很遺憾
+                    // if( $data_register['id_status'] == 2){
+                    //     continue;
+                    // }
 
                     //檢查是否通過退費
                     $check_refund = Refund::where('id_registration', $data_register['id_registration'])
