@@ -218,10 +218,10 @@ class ReportController extends Controller
                             // $index = array_search($data_search['x'], $data_result);
                             if(count($check)!=0 && count($apply)!=0){
                                 // $result[$key][$key_result]['y'] += count($check) / count($apply)*100;
-                                $result[$key][$key_result]['y'] = round(($result[$key][$key_result]['y'] + (count($check) / count($apply)*100)) / 2, 2);
+                                $result[$key][$key_result]['y'] = round(($result[$key][$key_result]['y'] + (count($check) / count($apply)*100)) / 2, 1);
                             }else if($result[$key][$key_result]['y'] != 0){
                                 // $result[$key][$key_result]['y'] /= 2;
-                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 2);
+                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 1);
                             }
                             $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
                             // $events['title'] .= "、".$data_search['course'];
@@ -231,7 +231,7 @@ class ReportController extends Controller
                     }
                     if( $out == 0 ){
                         if(count($check)!=0 && count($apply)!=0){
-                            $events['y'] = round(count($check) / count($apply) * 100 ,2);
+                            $events['y'] = round(count($check) / count($apply) * 100 ,1);
                         }else{
                             $events['y'] = 0;
                         }
@@ -284,10 +284,10 @@ class ReportController extends Controller
                             // $index = array_search($data_search['x'], $data_result);
                             if(count($deal)!=0 && count($check)!=0){
                                 // $result[$key][$key_result]['y'] += count($deal) / count($check)*100;
-                                $result[$key][$key_result]['y'] = round(($result[$key][$key_result]['y'] + (count($deal) / count($check)*100))/ 2, 2);
+                                $result[$key][$key_result]['y'] = round(($result[$key][$key_result]['y'] + (count($deal) / count($check)*100))/ 2, 1);
                             }else if($result[$key][$key_result]['y'] != 0){
                                 // $result[$key][$key_result]['y'] /= 2;
-                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 2);
+                                $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 1);
 
                             }
                             $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
@@ -298,8 +298,8 @@ class ReportController extends Controller
                     }
                     if( $out == 0 ){
                         if(count($deal)!=0 && count($check)!=0){
-                            // $events['y'] = round(count($deal) / count($check) *100 / 2,2);
-                            $events['y'] = round(count($deal) / count($check) *100, 2);
+                            // $events['y'] = round(count($deal) / count($check) *100 / 2,1);
+                            $events['y'] = round(count($deal) / count($check) *100, 1);
                         }else{
                             $events['y'] = 0;
                         }
