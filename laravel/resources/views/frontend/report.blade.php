@@ -882,6 +882,15 @@
 
           //y軸距差、tooltips內容
           switch ($("ul#reportTab a.active").data('nav')) {
+            case 'list':
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 20;
+              lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const currentValue = dataset.data[tooltipItem.index];
+                const { y, x, course } = currentValue
+                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+              };
+              break;
             case 'check':
               lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
@@ -919,7 +928,13 @@
               };
               break;
             default:
-              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 20;
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
+              lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const currentValue = dataset.data[tooltipItem.index];
+                const { y, x, course } = currentValue
+                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+              };
               break;
           }
 

@@ -207,7 +207,9 @@ class ReportController extends Controller
                     }
 
 
-                    $apply = $apply->where('id_status', '<>', 2)->get();
+                    $apply = $apply->Where('id_status', '<>', 2)
+                                    ->Where('id_status', '<>', 5)
+                                    ->get();
                     $check = $check->where('id_status', 4)->get();
                     
                     $out = 0;
@@ -229,7 +231,7 @@ class ReportController extends Controller
                     }
                     if( $out == 0 ){
                         if(count($check)!=0 && count($apply)!=0){
-                            $events['y'] = round(count($check) / count($apply) * 100 /2 ,2);
+                            $events['y'] = round(count($check) / count($apply) * 100 ,2);
                         }else{
                             $events['y'] = 0;
                         }
