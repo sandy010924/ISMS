@@ -187,7 +187,6 @@ class CourseReturnController extends Controller
                                 $registration->id_course         = $events_group->id_course;      // 課程ID
                             }
                             // $registration->id_status         = 1;                             // 報名狀態ID
-                            // $registration->id_payment        = $id_payment;                   // 繳款明細ID
                             $registration->amount_payable    = $amount_payable;                            // 應付金額
                             #// $registration->amount_paid       = '';                            // 已付金額
                             // $registration->memo              = '';                            // 備註
@@ -315,6 +314,8 @@ class CourseReturnController extends Controller
                                 //             'number' => $number,
                                 //         ]);
                             }
+                        }else{
+                            $id_payment = 0;
                         }
                         
                         /*繳款資料 - E*/
@@ -447,6 +448,8 @@ class CourseReturnController extends Controller
                                 //             'number' => $number,
                                 //         ]);
                             }
+                        }else{
+                            $id_payment = 0;
                         }
                         
                         /*繳款資料 - E*/
@@ -598,6 +601,8 @@ class CourseReturnController extends Controller
                             $id_payment = $data ->id;
                         }
                     }
+                }else{
+                    $id_payment = 0;
                 }
                 /*繳款資料 - E*/
 

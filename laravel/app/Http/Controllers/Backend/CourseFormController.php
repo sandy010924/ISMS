@@ -317,6 +317,8 @@ class CourseFormController extends Controller
                                 //             'number' => $number,
                                 //         ]);
                             }
+                        }else{
+                            $id_payment = 0;
                         }
                         
                         /*繳款資料 - E*/
@@ -425,6 +427,8 @@ class CourseFormController extends Controller
                                 //             'number' => $number,
                                 //         ]);
                             }
+                        }else{
+                            $id_payment = 0;
                         }
                         
                         /*繳款資料 - E*/
@@ -571,6 +575,8 @@ class CourseFormController extends Controller
                         //             'number' => $number,
                         //         ]);
                     }
+                }else{
+                    $id_payment = 0;
                 }
                 
                 /*繳款資料 - E*/
