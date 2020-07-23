@@ -73,8 +73,8 @@ class CourseListDataController extends Controller
                 /* 報到率 */
                 $rate_check = 0;
 
-                if( ($count_apply-$count_cancel) > 0 || $count_check > 0 ){
-                    $rate_check = @(round($count_check/($count_apply-$count_cancel), 1))*100;
+                if( ($count_apply-$count_cancel) > 0 && $count_check > 0 ){
+                    $rate_check = round($count_check/($count_apply-$count_cancel) * 100, 1);
                 }
                 
                 
@@ -87,7 +87,7 @@ class CourseListDataController extends Controller
                                         ->get()); 
 
                 if( $deal > 0 && $count_check > 0 ){
-                    $rate_deal = @(round($deal / $count_check ,1))*100;
+                    $rate_deal = round($deal / $count_check * 100, 1);
                 }
 
             }else{
@@ -112,7 +112,7 @@ class CourseListDataController extends Controller
                 $rate_check = 0;
                 
                 if( ($count_apply-$count_cancel) > 0 || $count_check > 0 ){
-                    $rate_check = @(round($count_check/($count_apply-$count_cancel), 1))*100;
+                    $rate_check = round($count_check/($count_apply-$count_cancel) * 100, 1);
                 }
                 
                 /* 成交數 */
@@ -124,7 +124,7 @@ class CourseListDataController extends Controller
                                         ->get());    
 
                 if( $deal > 0 && $count_check > 0 ){
-                    $rate_deal = @(round($deal / $count_check ,1))*100;
+                    $rate_deal = round($deal / $count_check * 100, 1);
                 }
             }
 
