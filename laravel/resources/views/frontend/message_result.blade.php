@@ -172,21 +172,9 @@
       $('#daterange').data('daterangepicker').setStartDate('<?php echo $start ?>');
       $('#daterange').data('daterangepicker').setEndDate('<?php echo $end ?>');
       
-      //搜尋
-      $.fn.dataTable.ext.search.push(
-      function(settings, data, dataIndex) {
-
-        var min = picker.startDate.format('YYYY-MM-DD 00:00:00');
-        var max = picker.endDate.format('YYYY-MM-DD 24:00:00');
-
-        var startDate = data[0];
-
-        if (startDate <= max && startDate >= min) {
-          return true;
-        }
-        return false;
-      });
-
+      
+      //取消搜尋
+      $.fn.dataTable.ext.search.pop();
       table.draw();
     });
 

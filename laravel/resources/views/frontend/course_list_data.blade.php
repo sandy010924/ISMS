@@ -125,7 +125,8 @@
             var min = picker.startDate.format('YYYY-MM-DD');
             var max = picker.endDate.format('YYYY-MM-DD');
 
-            var startDate = data[0];
+            //取日期，因為有星期所以取字串的前10文字 YYYY-MM-DD
+            var startDate = data[0].substring(0, 10);
             if (startDate <= max && startDate >= min) {
               return true;
             }
@@ -141,20 +142,8 @@
         $('#daterange').data('daterangepicker').setStartDate('<?php echo $start ?>');
         $('#daterange').data('daterangepicker').setEndDate('<?php echo $end ?>');
         
-        //搜尋
-        $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-
-          var min = picker.startDate.format('YYYY-MM-DD');
-          var max = picker.endDate.format('YYYY-MM-DD');
-
-          var startDate = data[0];
-          if (startDate <= max && startDate >= min) {
-            return true;
-          }
-          return false;
-        });
-
+        //取消搜尋
+        $.fn.dataTable.ext.search.pop();
         table.draw();
       });
       

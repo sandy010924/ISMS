@@ -9,7 +9,7 @@
 <div class="card m-3">
   <div class="card-body">
     <div class="row mb-3">
-      <div class="col-3 mx-3">
+      <div class="col-3">
         @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff'))
         <button type="button" class="btn btn-outline-secondary btn_date float-left mx-1" data-toggle="modal" data-target="#form_import">匯入表單</button>
         @endif
@@ -66,20 +66,18 @@
           </div>
         </div>
       </div>
-      <div class="col"></div>
-      <div class="col-3">
-        {{-- <input type="date" class="form-control" id="search_date" name="search_date"> --}}
-        <div class="input-group date" data-target-input="nearest">
-          <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="搜尋日期" data-toggle="datetimepicker" autocomplete="off" />
-          <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
-            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+      <div class="col-5">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">日期區間</span>
           </div>
+          <input type="search" class="form-control px-3" name="daterange" id="daterange" autocomplete="off"> 
         </div>
       </div>
       <div class="col-3">
         <input type="search" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name">
       </div>
-      <div class="col-2">
+      <div class="col">
         <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
       </div>
     </div>
@@ -164,12 +162,12 @@
   //針對日期與課程搜尋 Sandy(2020/02/26)
   $.fn.dataTable.ext.search.push(
     function(settings, data, dataIndex) {
-      var date = $('#search_date').val();
       var name = $('#search_name').val();
-      var tdate = data[0];
+      // var tdate = data[0];
       var tname = data[1];
 
-      if ((isNaN(date) && isNaN(name)) || (tdate.includes(date) && isNaN(name)) || (tname.includes(name) && isNaN(date)) || (tname.includes(name) && tname.includes(name))) {
+      // if ((isNaN(date) && isNaN(name)) || (tdate.includes(date) && isNaN(name)) || (tname.includes(name) && isNaN(date)) || (tname.includes(name) && tname.includes(name))) {
+      if ( isNaN(name) || (tname.includes(name) && tname.includes(name)) ) {
         return true;
       }
       return false;
@@ -197,9 +195,48 @@
       // "ordering": false
     });
 
-    //日期選擇器
-    $('#search_date').datetimepicker({
-      format: 'YYYY-MM-DD',
+    /* 日期區間 */
+    
+      //有資料設定日期區間
+      $('input[name="daterange"]').daterangepicker({
+        autoUpdateInput: false,
+        locale: {
+          format: 'YYYY-MM-DD',
+          separator: ' ~ ',
+          applyLabel: '搜尋',
+          cancelLabel: '取消',
+        }
+      });
+
+    /* 日期區間搜尋 */
+    $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+      //輸入框key入選取的日期
+      $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
+
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+
+          var min = picker.startDate.format('YYYY-MM-DD');
+          var max = picker.endDate.format('YYYY-MM-DD');
+
+          var startDate = data[0];
+          if (startDate <= max && startDate >= min) {
+            return true;
+          }
+          return false;
+        });
+
+      table.draw();
+    });
+
+    /* 取消日期區間搜尋 */
+    $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+      //輸入框清空
+      $(this).val('');
+      
+      //取消搜尋
+      $.fn.dataTable.ext.search.pop();
+      table.draw();
     });
 
 
@@ -211,17 +248,12 @@
       $('#btn_search').click();
     }
   });
-  $('#search_date').on('keyup', function(e) {
-    if (e.keyCode === 13) {
-      $('#btn_search').click();
-    }
-  });
-  $('#search_date').on('change.datetimepicker', function(e) {
-    $('#btn_search').click();
-  });
 
   $("#btn_search").click(function() {
-    table.columns(0).search($('#search_date').val()).columns(1).search($("#search_name").val()).draw();
+    table
+      .columns(1)
+      .search($("#search_name").val())
+      .draw();
   });
   // Sandy(2020/02/26) dt列表搜尋 E
 
