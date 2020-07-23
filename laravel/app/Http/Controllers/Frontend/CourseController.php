@@ -20,6 +20,7 @@ class CourseController extends Controller
     // Sandy (2020/01/14)
     public function show()
     {
+        $events_all = array();
         $events = array();
         $course = array();
         $teachers = array();
@@ -29,13 +30,13 @@ class CourseController extends Controller
         } elseif (isset(Auth::user()->role) != '' && Auth::user()->role == "teacher") {
             // 講師ID Rocky(2020/05/11)
             $id_teacher = Auth::user()->id_teacher;
-            $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+            $events_all = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
                 ->select('events_course.*', 'course.name as course', 'course.type as type')
                 ->where('course.id_teacher', $id_teacher)
                 ->orderBy('events_course.course_start_at', 'desc')
                 ->get();
         } else {
-            $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+            $events_all = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
                 ->select('events_course.*', 'course.name as course', 'course.type as type')
                 ->orderBy('events_course.course_start_at', 'desc')
                 ->get();
@@ -46,12 +47,18 @@ class CourseController extends Controller
         $course = Course::all();
         $teachers = Teacher::all();
 
-        foreach ($events as $key => $data) {
+        foreach ($events_all as $data) {
             $type = "";
 
             //判斷是銷講or正課
             if ($data['type'] == 1) {
                 //銷講
+
+                //判斷場次是否下架
+                if( $data['unpublish'] == 1){
+                    //是則取消顯示
+                    continue;
+                }
 
                 //判斷是否有下一階
                 $nextLevel = count(Course::where('id_type', $data['id_course'])
@@ -80,7 +87,7 @@ class CourseController extends Controller
                     ->Where('id_status', 4)
                     ->get());
 
-                $events[$key] = [
+                $events[count($events)] = [
                     'date' => date('Y-m-d', strtotime($data['course_start_at'])),
                     'name' => $data['course'],
                     'event' => $data['name'],
@@ -187,7 +194,7 @@ class CourseController extends Controller
                 }
 
 
-                $events[$key] = [
+                $events[count($events)] = [
                     'date' => date('Y-m-d', strtotime($data['course_start_at'])),
                     'name' => $data['course'],
                     'event' => $data['name'],
