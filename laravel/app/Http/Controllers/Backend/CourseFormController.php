@@ -21,7 +21,7 @@ class CourseFormController extends Controller
         $id_group = array();
 
         //讀取data
-        $submissiondate = date('Y-m-d H:i:s', strtotime($request->get('idate')));
+        $submissiondate = date('Y-m-d H:i:s', strtotime('now'));
         $name = $request->get('iname');
         $sex = $request->get('isex');
         $id_identity = $request->get('iid');
