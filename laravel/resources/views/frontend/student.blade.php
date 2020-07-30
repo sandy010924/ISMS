@@ -71,7 +71,7 @@
           @endif
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
           @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff'))
-          <button id="{{ $student['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student['id'] }});" value="{{ $student['id'] }}">刪除</button>
+          <button id="{{ $student['id'] }}" class="btn btn-danger btn-sm mx-1" onclick="btn_delete({{ $student['id'] }},0,this);" value="{{ $student['id'] }}">刪除</button>
           @endif
         </td>
       </tr>
@@ -144,7 +144,7 @@
             </div>
             <div class="col-4 py-3">
               <h7 id="title_old_datasource"></h7><br>
-              <h7 id="student_date"></h7><br>
+              <h7 id="submissiondate"></h7><br>
               <h7 id="student_datasource"></h7>
             </div>
           </div>
@@ -162,7 +162,7 @@
             </div>
             <div class="col-4 align-right">
               @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'saleser'))
-              <button type="button" class="btn btn-primary float-right" onclick="btn_delete('','1');">刪除聯絡人</button>
+              <button type="button" class="btn btn-primary float-right" onclick="btn_delete('','1',this);">刪除聯絡人</button>
               @endif
             </div>
           </div>
@@ -576,7 +576,7 @@
                 if (role == "admin" || role == "marketer" || role == "officestaff" || role == "msaleser" || role == "saleser") {
                   btn_blacklist = '<button type="button" id="' + json[i]['id'] + '" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist(' + json[i]['id'] + ');" value="' + json[i]['id'] + '"><i class="fa fa-bug"></i>列入黑名單</button> '
 
-                  btn_delete = '<button id="' + json[i]['id'] + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + json[i]['id'] + ');" value="' + json[i]['id'] + '">刪除</button> '
+                  btn_delete = '<button id="' + json[i]['id'] + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + json[i]['id'] + ',0,this);" value="' + json[i]['id'] + '">刪除</button> '
                 }
 
                 if (json[i]['datasource'] != null) {
@@ -695,18 +695,19 @@
             id_student: id_student
           },
           success: function(data) {
+            // console.log(data)
             var course = '';
             $.each(data, function(index, val) {
               if (typeof(val['status_payment']) != 'undefined') {
                 // 正課資料
-                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
+                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',' + val['id_course'] + ',' + val['id_events'] + ',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
               } else {
                 // 銷講資料
                 var status = ''
                 if (val['status'] == '我很遺憾') {
                   status = '（' + val['status'] + '）'
                 }
-                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + status + '</a>';
+                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',' + val['id_course'] + ',' + val['id_events'] + ',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + status + '</a>';
               }
             });
             $('#v-pills-tab').html(course);
@@ -719,17 +720,17 @@
       }
 
       // 課程詳細資料
-      function view_form_detail(id, type) {
+      function view_form_detail(id, id_course, id_events, type) {
         $.ajax({
           type: 'POST',
           url: 'view_form_detail',
           dataType: 'json',
           data: {
             id: id,
+            id_course: id_course,
             type: type
           },
           success: function(data) {
-
             var detail = '',
               student = '',
               payment = '',
@@ -742,7 +743,7 @@
             $.each(data['datas'], function(index, val) {
               // 學員資料
               var id_identity, sex, phone, email, birthday, company, profession, address, events, events_start
-              id_student = val['id_student'];
+              id_student = val['r_sid'];
               if (val['id_identity'] != null) {
                 id_identity = val['id_identity'];
               } else {
@@ -892,148 +893,176 @@
           async: false,
           success: function(data) {
             // 宣告
-            var datasource_old = ''
+            var datasource_old = '',
+              submissiondate = '',
+              sales_registration_id = ''
+
 
             // 銷講報到率
             var sales_successful_rate = '0',
               course_cancel_rate = '0';
             var course_sales_status = '',
               course_sales_events = '';
-            if (data['count_sales_ok'] != 0) {
-              sales_successful_rate = (data['count_sales_ok'] / (data['count_sales'] - data['count_sales_no']) * 100).toFixed(0)
+            if (data['datas_salesregistration'] != null && data['datas_salesregistration']['count_sales_ok'] != 0) {
+              sales_successful_rate = (data['datas_salesregistration']['count_sales_ok'] / (data['datas_salesregistration']['count_sales'] - data['datas_salesregistration']['count_sales_no']) * 100).toFixed(0)
             }
 
             // 銷講取消率
-            if (data['count_sales_no'] != 0) {
-              course_cancel_rate = (data['count_sales_no'] / data['count_sales'] * 100).toFixed(0)
+            if (data['datas_salesregistration'] != null && data['count_sales_no'] != 0) {
+              course_cancel_rate = (data['datas_salesregistration']['count_sales_no'] / data['datas_salesregistration']['count_sales'] * 100).toFixed(0)
             }
 
-            if (data[0]['datasource_old'] != null) {
-              datasource_old = data[0]['datasource_old']
+            // 來源
+            if (data['datas_datasource_old'] != null) {
+              // 原始來源
+              if (data['datas_datasource_old']['datasource'] != null) {
+                datasource_old = data['datas_datasource_old']['datasource']
+              } else {
+                datasource_old = "無"
+              }
+
+              // submissiondate
+              submissiondate = data['datas_datasource_old']['sales_registration_old_submissiondate']
+
+              // 銷講ID
+              sales_registration_id = data['datas_datasource_old']['sales_registration_old']
             } else {
               datasource_old = "無"
+              submissiondate = "無"
             }
+
 
             // 學員資料
-            $('#student_name').val(data[0]['name']);
-            $('#student_email').val(data[0]['email']);
-            $('#title_student_phone').val(data[0]['phone']);
+            $('#student_name').val(data['datas_student'][0]['name']);
+            $('#student_email').val(data['datas_student'][0]['email']);
+            $('#title_student_phone').val(data['datas_student'][0]['phone']);
             $('#title_old_datasource').text('原始來源:' + datasource_old);
-            $('#student_date').text('加入日期 :' + data['submissiondate']);
-            $('#student_profession').val(data[0]['profession']);
-            $('#student_address').val(data[0]['address']);
-            $('#sales_registration_old').val(data[0]['sales_registration_old']);
+            $('#submissiondate').text('加入日期 :' + submissiondate);
+            $('#student_profession').val(data['datas_student'][0]['profession']);
+            $('#student_address').val(data['datas_student'][0]['address']);
+            $('#sales_registration_old').val(sales_registration_id);
             $('#old_datasource').val(datasource_old);
-            $('#student_phone').val(data[0]['phone']);
+            $('#student_phone').val(data['datas_student'][0]['phone']);
 
-            // 銷講      
-            $('input[name="new_datasource"]').val(data['datasource']);
-            if (data['course_sales'] != null) {
-              var course_sales = '',
-                course_sales_events = '',
-                sales_registration_course_start_at = ''
-              if (data['course_sales'] == null) {
-                course_sales = " "
-              } else {
-                course_sales = data['course_sales']
-              }
 
-              if (data['course_sales_events'] == null) {
-                course_sales_events = " "
-              } else {
-                course_sales_events = data['course_sales_events']
-              }
 
-              if (data['sales_registration_course_start_at'] == null) {
-                // 我很遺憾
-                if (data['id_events'] == '-99' || data['events'] != '') {
-                  sales_registration_course_start_at = "我很遺憾 - " + data['events']
+            // 最新來源
+            var new_datasource = '無'
+
+            if (data['datas_datasource_new'] != null && data['datas_datasource_new']['datasource'] != null) {
+              new_datasource = data['datas_datasource_new']['datasource']
+            }
+            $('input[name="new_datasource"]').val(new_datasource);
+
+            // 銷講
+            if (data['datas_salesregistration'] != null) {
+
+              if (data['datas_salesregistration']['course_sales'] != null) {
+                var course_sales = '',
+                  course_sales_events = '',
+                  sales_registration_course_start_at = ''
+                if (data['datas_salesregistration']['course_sales'] == null) {
+                  course_sales = " "
                 } else {
-                  sales_registration_course_start_at = "無"
+                  course_sales = data['datas_salesregistration']['course_sales']
                 }
 
+                if (data['datas_salesregistration']['course_sales_events'] == null) {
+                  course_sales_events = " "
+                } else {
+                  course_sales_events = data['datas_salesregistration']['course_sales_events']
+                }
+
+                if (data['datas_salesregistration']['sales_registration_course_start_at'] == null) {
+                  // 我很遺憾
+                  if (data['datas_salesregistration']['id_events'] == '-99' || data['datas_salesregistration']['events'] != '') {
+                    sales_registration_course_start_at = "我很遺憾 - " + data['datas_salesregistration']['events']
+                  } else {
+                    sales_registration_course_start_at = "無"
+                  }
+
+                } else {
+                  sales_registration_course_start_at = data['datas_salesregistration']['sales_registration_course_start_at']
+                }
+
+                course_sales_events = course_sales + ' ' + course_sales_events + '(' + sales_registration_course_start_at + ' )'
+              }
+              $('input[name="course_sales_events"]').val(course_sales_events);
+
+              $('input[name="course_content"]').val(data['datas_salesregistration']['course_content']);
+              $('input[name="status_payment"]').val('');
+              if (data['datas_registration'] != null && typeof(data['datas_registration']['status_registration']) != 'undefined') {
+                var course_events = '',
+                  course_registration = '',
+                  status_registration = ''
+                if (data['datas_registration']['course_events'] == null) {
+                  course_events = "無"
+                } else {
+                  course_events = data['datas_registration']['course_events']
+                }
+
+                if (data['datas_registration']['course_registration'] == null) {
+                  course_registration = " "
+                } else {
+                  course_registration = data['datas_registration']['course_registration']
+                }
+
+                if (data['datas_registration']['status_registration'] == null) {
+                  status_registration = " "
+                } else {
+                  status_registration = data['datas_registration']['status_registration']
+                }
+
+                course_sales_status = status_registration + '(' + course_registration + ' ' + course_events + ' )'
+              }
+              // 銷講後報名狀況
+              $('input[name="course_sales_status"]').val(course_sales_status);
+
+              if (data['datas_salesregistration']['count_sales_si'] == null) {
+                $('h7[name="count_sales_ok"]').text('銷講報名次數 :0');
               } else {
-                sales_registration_course_start_at = data['sales_registration_course_start_at']
+                $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['datas_salesregistration']['count_sales_si']);
+              }
+              if (data['datas_salesregistration']['count_sales_ok'] == null) {
+                $('h7[name="sales_successful_rate"]').text('銷講報到率 :0%');
+              } else {
+                $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
+              }
+              if (data['datas_salesregistration']['count_sales_no'] == null) {
+                $('h7[name="count_sales_no"]').text('銷講取消次數 :0');
+              } else {
+                $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['datas_salesregistration']['count_sales_no']);
               }
 
-              course_sales_events = course_sales + ' ' + course_sales_events + '(' + sales_registration_course_start_at + ' )'
-            }
-            $('input[name="course_sales_events"]').val(course_sales_events);
-
-            $('input[name="course_content"]').val(data['course_content']);
-            $('input[name="status_payment"]').val('');
-            if (typeof(data['status_registration']) != 'undefined') {
-              var course_events = '',
-                course_registration = '',
-                status_registration = ''
-              if (data['course_events'] == null) {
-                course_events = "無"
+              if (data['datas_salesregistration']['count_sales_ok'] == null) {
+                $('h7[name="sales_cancel_rate"]').text('銷講取消率 :0%');
               } else {
-                course_events = data['course_events']
+                $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
               }
-
-              if (data['course_registration'] == null) {
-                course_registration = " "
-              } else {
-                course_registration = data['course_registration']
-              }
-
-              if (data['status_registration'] == null) {
-                status_registration = " "
-              } else {
-                status_registration = data['status_registration']
-              }
-
-              course_sales_status = status_registration + '(' + course_registration + ' ' + course_events + ' )'
             }
-            $('input[name="course_sales_status"]').val(course_sales_status);
-            if (data['count_sales_ok'] == null) {
-              $('h7[name="count_sales_ok"]').text('銷講報名次數 :0');
-            } else {
-              $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['count_sales_ok']);
-            }
-            if (data['count_sales_ok'] == null) {
-              $('h7[name="sales_successful_rate"]').text('銷講報到率 :0%');
-            } else {
-              $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
-            }
-            if (data['count_sales_no'] == null) {
-              $('h7[name="count_sales_no"]').text('銷講取消次數 :0');
-            } else {
-              $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['count_sales_no']);
-            }
-
-            if (data['count_sales_ok'] == null) {
-              $('h7[name="sales_cancel_rate"]').text('銷講取消率 :0%');
-            } else {
-              $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
-            }
-
-
-
             // 正課
             $('input[name="course_events"]').val('');
-            if (typeof(data['course_registration']) != 'undefined') {
+            if (data['datas_registration'] != null && typeof(data['datas_registration']['course_registration']) != 'undefined') {
               var course_events = '',
                 course_registration = '',
                 registration_course_start_at = '',
                 course_registration_events = ''
-              if (data['course_events'] == null) {
+              if (data['datas_registration']['course_events'] == null) {
                 course_events = " "
               } else {
-                course_events = data['course_events']
+                course_events = data['datas_registration']['course_events']
               }
 
-              if (data['course_registration'] == null) {
+              if (data['datas_registration']['course_registration'] == null) {
                 course_registration = " "
               } else {
-                course_registration = data['course_registration']
+                course_registration = data['datas_registration']['course_registration']
               }
 
-              if (data['registration_course_start_at'] == null) {
+              if (data['datas_registration']['registration_course_start_at'] == null) {
                 registration_course_start_at = "無"
               } else {
-                registration_course_start_at = data['registration_course_start_at']
+                registration_course_start_at = data['datas_registration']['registration_course_start_at']
               }
 
               course_registration_events = course_registration + ' ' + course_events + '(' + registration_course_start_at + ' )'
@@ -1045,18 +1074,22 @@
             $('input[name="course_refund"]').val('');
 
             var refund_reason = ''
-            if (data['refund_reason'] != null) {
-              refund_reason = data['refund_reason']
-            } else {
-              refund_reason = "無"
-            }
+            if (data['datas_refund'] != null) {
+              if (data['datas_refund']['refund_reason'] != null) {
+                refund_reason = data['datas_refund']['refund_reason']
+              } else {
+                refund_reason = "無"
+              }
 
-            if (typeof(data['refund_course']) != 'undefined') {
-              $('input[name="course_refund"]').val(data['refund_course'] + '(' + refund_reason + ')');
+              if (typeof(data['datas_refund']['refund_course']) != 'undefined') {
+                $('input[name="course_refund"]').val(data['datas_refund']['refund_course'] + '(' + refund_reason + ')');
+              } else {
+                $('#dev_refund').hide();
+              }
             } else {
               $('#dev_refund').hide();
-
             }
+
 
             $("#student_information").modal('show');
           },
@@ -1199,9 +1232,14 @@
         table2 = $('#table_list_history').DataTable({
           "dom": '<l<t>p>',
           "columnDefs": [{
-            "targets": 'no-sort',
-            "orderable": false,
-          }],
+              "targets": 'no-sort',
+              "orderable": false,
+            },
+            {
+              "targets": 2,
+              "className": "text-left",
+            }
+          ],
           "deferRender": true,
           "orderCellsTop": true,
           "destroy": true,
@@ -1214,7 +1252,7 @@
             },
             async: false,
             "dataSrc": function(json) {
-              for (var i = 0, ien = json.length; i < ien; i++) {
+              for (var i = 0; i < json.length; i++) {
 
                 var status = '',
                   course_sales = '';
@@ -1691,8 +1729,10 @@
 
 
       /*刪除 Rocky(2020/02/23)*/
-      function btn_delete(id_student, type) {
+      function btn_delete(id_student, type, elem) {
         var msg = "是否刪除此筆資料?";
+        var parent = $(elem).parent(); // 找到該筆資料節點
+
         if (confirm(msg) == true) {
           if (id_student == '' && type == '1') {
             id_student = id_student_old;
@@ -1710,7 +1750,13 @@
                 $("#success_alert_text").html("刪除資料成功");
                 fade($("#success_alert"));
 
-                // location.reload();
+                if (type == '1') {
+                  location.reload();
+                } else if (type == '0') {
+                  // 刪掉整筆<tr>
+                  parent.parent().remove();
+                }
+
               } else {
                 /** alert **/
                 $("#error_alert_text").html("刪除資料失敗");

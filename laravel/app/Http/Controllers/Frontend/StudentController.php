@@ -60,13 +60,39 @@ class StudentController extends Controller
             ->where('sales_registration.id_student', $id_student)
             ->get();
         // 正課
-        $data_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
-            ->leftjoin('isms_status', 'isms_status.id', '=', 'register.id_status')
-            // leftjoin('isms_status', 'isms_status.id', '=', 'registration.id_status')
-            ->leftjoin('course', 'course.id', '=', 'registration.id_course')
-            ->select('registration.*', 'isms_status.name as status', 'course.name as course')
-            ->where('registration.id_student', $id_student)
+
+        /*
+        SELECT a.id,a.id_course,a.id_events FROM 
+            (SELECT * FROM registration ORDER BY created_at desc LIMIT 9999)as a
+            LEFT JOIN course b ON a.id_course = b.id
+            WHERE a.id_student = '9104'
+        GROUP BY a.id_course,a.id_events
+        ORDER BY a.created_at DESC
+        */
+
+
+        $data_registration = DB::table(
+            DB::raw(" (SELECT * FROM registration ORDER BY created_at desc LIMIT 9999) as a")
+        )
+            ->leftjoin('course', 'course.id', '=', 'a.id_course')
+            ->select('a.*', 'course.name as course')
+            ->where('a.id_student', $id_student)
+            ->groupby('a.id_course', 'a.id_events')
+            ->orderby('a.created_at', 'desc')
             ->get();
+
+        // $data_registration = Registration::leftjoin('course', 'course.id', '=', 'registration.id_course')
+        //     ->select('registration.*', 'course.name as course')
+        //     ->where('registration.id_student', $id_student)
+        //     ->get();
+
+        // $data_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
+        //     ->leftjoin('isms_status', 'isms_status.id', '=', 'register.id_status')
+        //     // leftjoin('isms_status', 'isms_status.id', '=', 'registration.id_status')
+        //     ->leftjoin('course', 'course.id', '=', 'registration.id_course')
+        //     ->select('registration.*', 'isms_status.name as status', 'course.name as course')
+        //     ->where('registration.id_student', $id_student)
+        //     ->get();
 
         $result = array_merge(json_decode($datas), json_decode($data_registration));
         return $result;
@@ -77,6 +103,8 @@ class StudentController extends Controller
     {
         $type = $request->get('type');
         $id = $request->get('id');
+        $id_course = $request->get('id_course');
+
         $datas_events = array();
         if ($type == "0") {
             // 銷售講座
@@ -145,11 +173,31 @@ class StudentController extends Controller
             }
         } elseif ($type == "1") {
             // 正課
+
+            if ($id_course == "-99") {
+                // 先抓來源場次
+                $datas_source_events = Registration::select('registration.source_events')
+                    ->where('registration.id', $id)
+                    ->get();
+
+                // SELECT a.id,a.name,b.id FROM	events_course a
+                // 	LEFT JOIN course b ON a.id_course = b.id_type
+                // WHERE a.id = '715'
+                $datas_course_id = EventsCourse::leftjoin('course as b', 'b.id_type', '=', 'events_course.id_course')
+                    ->select('b.id')
+                    ->where('events_course.id', $datas_source_events[0]["source_events"])
+                    ->get();
+
+                // 更新資料
+                Registration::where('id', $id)
+                    ->update(['id_course' => $datas_course_id[0]['id'], 'id_events' => '0']);
+            }
+
             $datas = Registration::leftjoin('course', 'course.id', '=', 'registration.id_course')
                 ->leftjoin('student', 'student.id', '=', 'registration.id_student')
                 ->leftjoin('payment', 'payment.id_student', '=', 'registration.id_student')
                 ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
-                ->select('registration.*', 'student.*', 'payment.*', 'course.name as course', 'events_course.course_start_at as events_start')
+                ->select('registration.id as r_id', 'registration.id_student as r_sid', 'registration.*', 'student.*', 'payment.*', 'course.name as course', 'events_course.course_start_at as events_start')
                 ->where('registration.id', $id)
                 ->get();
 
@@ -220,43 +268,72 @@ class StudentController extends Controller
     {
         $id_student = $request->get('id_student');
 
-        // 學員資料
-
-        $datas_student = Student::leftjoin('sales_registration', 'sales_registration.id_student', '=', 'student.id')
-            ->select('student.*', 'sales_registration.datasource as datasource_old', 'sales_registration.id as sales_registration_old')
-            ->groupBy('student.id')
-            ->orderBy('sales_registration.created_at', 'ASC')
+        // 學員資料 Rocky(2020/07/23)
+        $datas_student = Student::select('student.name', 'student.email', 'student.phone', 'student.profession', 'student.address')
             ->where('student.id', $id_student)
             ->get();
+
+        // 原始來源
+
+        //         SELECT b.id,b.name,a.submissiondate,a.created_at,a.id,DATE_SUB(now(),INTERVAL 60 DAY) as tt
+        // FROM sales_registration a 
+        // 	LEFT JOIN student b on a.id_student = b.id
+        // WHERE b.id = '2656' AND a.submissiondate BETWEEN DATE_SUB(now(),INTERVAL 60 DAY) AND DATE_ADD(now(), INTERVAL 60 DAY)
+        // ORDER BY a.submissiondate
+
+        $from = date('Y-m-d H:m:s', strtotime("-90 days"));
+        $to = date('Y-m-d H:m:s', strtotime("+90 days"));
+
+        // 搜尋現在日期90天以內的銷講資料 Rocky(2020/07/24)
+        $datas_datasource_old = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+            ->select('sales_registration.datasource', 'sales_registration.id as sales_registration_old', 'sales_registration.submissiondate as sales_registration_old_submissiondate')
+            ->orderBy('sales_registration.submissiondate', 'ASC')
+            ->where('b.id', $id_student)
+            ->whereBetween('sales_registration.submissiondate', [$from, $to])
+            ->first();
+        // 如果90天內沒有銷講資料 -> 抓submissiondate最早的資料 Rocky(2020/07/24)
+        if ($datas_datasource_old == null) {
+            $datas_datasource_old = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+                ->select('sales_registration.datasource', 'sales_registration.id as sales_registration_old', 'sales_registration.submissiondate as sales_registration_old_submissiondate')
+                ->orderBy('sales_registration.submissiondate', 'ASC')
+                ->where('b.id', $id_student)
+                ->first();
+        }
+
+        // 最新來源 Rocky(2020/07/24)
+        $datas_datasource_new = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+            ->select('sales_registration.datasource')
+            ->orderBy('sales_registration.submissiondate', 'desc')
+            ->where('b.id', $id_student)
+            ->distinct()->first();
+
+
         // 銷售講座
-        $datas = SalesRegistration::leftjoin('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
+        $datas_salesregistration = SalesRegistration::leftjoin('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
             ->leftjoin('course', 'course.id', '=', 'sales_registration.id_course')
             ->leftjoin('events_course', 'events_course.id', '=', 'sales_registration.id_events')
             ->select('sales_registration.id as sales_registration_id', 'sales_registration.*', 'isms_status.name as status_sales', 'course.name as course_sales', 'events_course.name as  course_sales_events', 'events_course.course_start_at as  sales_registration_course_start_at')
-            // ->selectRaw('sales_registration.*, COUNT(sales_registration.id) as count_sales')
             ->selectRaw('(SELECT COUNT(b.id) FROM sales_registration b where b.id_student = ' . $id_student . ' ) as count_sales')
+            //報名
+            ->selectRaw("(SELECT SUM(CASE WHEN  c.id_student = " . $id_student . " THEN 1 ELSE 0 END)  FROM sales_registration c) as count_sales_si")
             ->selectRaw("(SELECT SUM(CASE WHEN c.id_status = '4' and c.id_student = " . $id_student . " THEN 1 ELSE 0 END)  FROM sales_registration c) as count_sales_ok")
             ->selectRaw(" (SELECT SUM(CASE WHEN b.id_status = '5' and b.id_student = " . $id_student . " THEN 1 ELSE 0 END)  FROM sales_registration b) as count_sales_no")
-            // ->selectRaw("SUM(CASE WHEN sales_registration.id_status = '4' THEN 1 ELSE 0 END) AS count_sales_ok")
-            // ->selectRaw("SUM(CASE WHEN sales_registration.id_status = '5' THEN 1 ELSE 0 END) AS count_sales_no")
             ->where('sales_registration.id_student', $id_student)
-            // ->groupBy('sales_registration.id_student', 'course.id')
-            ->orderBy('sales_registration.created_at', 'desc')
+            ->orderBy('sales_registration.submissiondate', 'desc')
             ->first();
 
         // 正課
-        $data_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
+        $datas_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
             ->leftjoin('isms_status', 'isms_status.id', '=', 'registration.status_payment')
             ->leftjoin('course', 'course.id', '=', 'registration.id_course')
             ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
-            // ->leftjoin('isms_status as t1', 't1.id', '=', 'registration.status_payment')
-            // ->select('registration.*', 'register.id_status', 't1.name as status_payment', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events')
             ->select('registration.*', 'register.id_status', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events', 'events_course.course_start_at as registration_course_start_at')
             ->where('registration.id_student', $id_student)
             ->orderBy('registration.created_at', 'desc')
             ->first();
+
         // 退費
-        $data_refund = Refund::where('refund.id_student', $id_student)
+        $datas_refund = Refund::where('refund.id_student', $id_student)
             ->leftjoin('registration as r1', 'r1.id', '=', 'refund.id_registration')
             ->leftjoin('events_course as r2', 'r2.id', '=', 'r1.id_events')
             ->leftjoin('course as r3', 'r3.id', '=', 'r1.id_course')
@@ -265,30 +342,14 @@ class StudentController extends Controller
             ->orderBy('refund.created_at', 'desc')
             ->first();
 
-        if ($datas != "") {
-            $datas = $datas->toArray();
-        } else {
-            $datas = array();
-        }
-
-        if ($datas_student != "") {
-            $datas_student = $datas_student->toArray();
-        }
-
-
-        if ($data_registration != "") {
-            $data_registration = $data_registration->toArray();
-            $result = array_merge($datas_student, $datas, $data_registration);
-            if ($data_refund != "") {
-                $data_refund = $data_refund->toArray();
-                $result = array_merge($result, $data_refund);
-            }
-        } else {
-            $result = array_merge($datas_student, $datas);
-        }
-
-
-        return $result;
+        return response::json([
+            'datas_student' => $datas_student,
+            'datas_datasource_old' => $datas_datasource_old,
+            'datas_datasource_new' => $datas_datasource_new,
+            'datas_salesregistration' => $datas_salesregistration,
+            'datas_registration' => $datas_registration,
+            'datas_refund' => $datas_refund,
+        ]);
     }
 
 
@@ -469,7 +530,7 @@ class StudentController extends Controller
                 foreach ($students_data as $key => $data) {
                     $sales_registration_datasource = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
                         ->select('sales_registration.datasource')
-                        ->orderBy('sales_registration.created_at', 'asc')
+                        ->orderBy('sales_registration.submissiondate', 'desc')
                         ->first();
 
                     $datasource = $sales_registration_datasource;
@@ -499,11 +560,11 @@ class StudentController extends Controller
                         );
 
                         array_push($array_student, array(
-                            'id'                => $students_data[$key]['id'],
-                            'name'              => $students_data[$key]['name'],
-                            'phone'             => $students_data[$key]['phone'],
-                            'email'             => $students_data[$key]['email'],
-                            'datasource'             => $students_data[$key]['datasource']
+                            'id'                    => $students_data[$key]['id'],
+                            'name'                  => $students_data[$key]['name'],
+                            'phone'                 => $students_data[$key]['phone'],
+                            'email'                 => $students_data[$key]['email'],
+                            'datasource'            => $students_data[$key]['datasource']
                         ));
                     }
                 }
@@ -527,11 +588,11 @@ class StudentController extends Controller
                             );
 
                             array_push($array_student, array(
-                                'id'                => $students_data[$key]['id'],
-                                'name'              => $students_data[$key]['name'],
-                                'phone'             => $students_data[$key]['phone'],
-                                'email'             => $students_data[$key]['email'],
-                                'datasource'             => $students_data[$key]['datasource']
+                                'id'                    => $students_data[$key]['id'],
+                                'name'                  => $students_data[$key]['name'],
+                                'phone'                 => $students_data[$key]['phone'],
+                                'email'                 => $students_data[$key]['email'],
+                                'datasource'            => $students_data[$key]['datasource']
                             ));
                         }
                     }
@@ -551,7 +612,7 @@ class StudentController extends Controller
                 foreach ($students as $key => $data) {
                     $sales_registration_data = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
                         ->select('sales_registration.datasource')
-                        ->orderBy('sales_registration.created_at', 'asc')
+                        ->orderBy('sales_registration.submissiondate', 'desc')
                         ->first();
 
                     $datasource = $sales_registration_data;

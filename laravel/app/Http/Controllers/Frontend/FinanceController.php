@@ -200,12 +200,18 @@ class FinanceController extends Controller
 
         // 學員資料
         if ($type == "0") {
+            $array_student = array();
+            $array_search_deal = array();
+            $from = date('Y-m-d H:m:s', strtotime("-90 days"));
+            $to = date('Y-m-d H:m:s', strtotime("+90 days"));
             foreach ($datas_rule as $key => $data) {
                 switch ($data['name_id']) {
                     case "0":
-                        // 名單來源包含 
+                        // 名單來源包含 更改寫法以90天內為主，否則以其他資料為主 Rocky(2020/07/25)
 
-                        $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
+
+                        // 先找符合條件、90天內資料
+                        $datas_stuent_90 = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
                             ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
                             ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
                             ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
@@ -220,13 +226,79 @@ class FinanceController extends Controller
                                             for ($i = 0; $i < count($array_datasource); $i++) {
                                                 $query->orwhere('c.datasource', 'like', '%' . $array_datasource[$i] . '%');
                                             }
-                                            // $query->wherein('c.datasource', explode(',', $data['value']));
+                                            break;
+                                    }
+                                }
+                            })
+                            ->whereBetween('c.submissiondate', [$from, $to])
+                            ->groupby('b.id')
+                            ->get();
+
+                        // 將90天內資料新增到array
+                        foreach ($datas_stuent_90 as $key => $value_datas_stuent_90) {
+                            array_push($array_student, array(
+                                'id'                    => $datas_stuent_90[$key]['id'],
+                                'memo'                  => $datas_stuent_90[$key]['memo'],
+                                'course_start_at'       => $datas_stuent_90[$key]['course_start_at'],
+                                'course_name'           => $datas_stuent_90[$key]['course_name'],
+                                'events_name'           => $datas_stuent_90[$key]['events_name'],
+                                'student_name'          => $datas_stuent_90[$key]['student_name'],
+                                'email'                 => $datas_stuent_90[$key]['email'],
+                                'phone'                 => $datas_stuent_90[$key]['phone'],
+                                'status_name'           => $datas_stuent_90[$key]['status_name'],
+                                'datasource'            => $datas_stuent_90[$key]['datasource'],
+                            ));
+                        }
+
+                        // 找全部資料(沒有90天內限制)
+                        $datas_stuent = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
+                            ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
+                            ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
+                            ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
+                            ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
+                            ->select('b.id', 'b.memo', 'events_course.course_start_at', 'e.name as course_name', 'events_course.name as events_name', 'd.name as student_name', 'd.email', 'd.phone', 'f.name as status_name', 'c.datasource')
+                            ->where(function ($query) use ($datas_rule) {
+                                foreach ($datas_rule as $key => $data) {
+                                    switch ($data['name_id']) {
+                                        case "0":
+                                            // 名單來源包含
+                                            $array_datasource = explode(',', $data['value']);
+                                            for ($i = 0; $i < count($array_datasource); $i++) {
+                                                $query->orwhere('c.datasource', 'like', '%' . $array_datasource[$i] . '%');
+                                            }
                                             break;
                                     }
                                 }
                             })
                             ->groupby('b.id')
                             ->get();
+
+                        $arr = array_column(
+                            array_merge($array_search_deal, json_decode($datas_stuent_90, true)),
+                            'id'
+                        );
+
+                        // 比較90天內和沒有90天內，如果同樣學員90天內有資料以90天內為主，否則新增沒有90天內的資料
+                        foreach ($datas_stuent as $key => $value_datas_stuent) {
+                            $check_array_search = array_search($value_datas_stuent['id'], $arr);
+                            // 沒有重複值才新增
+                            if ($check_array_search === false) {
+                                array_push($array_student, array(
+                                    'id'                    => $datas_stuent[$key]['id'],
+                                    'memo'                  => $datas_stuent[$key]['memo'],
+                                    'course_start_at'       => $datas_stuent[$key]['course_start_at'],
+                                    'course_name'           => $datas_stuent[$key]['course_name'],
+                                    'events_name'           => $datas_stuent[$key]['events_name'],
+                                    'student_name'          => $datas_stuent[$key]['student_name'],
+                                    'email'                 => $datas_stuent[$key]['email'],
+                                    'phone'                 => $datas_stuent[$key]['phone'],
+                                    'status_name'           => $datas_stuent[$key]['status_name'],
+                                    'datasource'            => $datas_stuent[$key]['datasource'],
+                                ));
+                            }
+                        }
+
+                        $datas = $array_student;
                 }
             }
         } else {

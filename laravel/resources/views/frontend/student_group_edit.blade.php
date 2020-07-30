@@ -615,7 +615,7 @@
   function close_condition3() {
     check_condition3--;
   }
-  
+
   /*增加條件*/
   function condition2() {
     check_condition2++;
@@ -960,7 +960,6 @@
 
   // 基本訊息
   function course_data(id_student) {
-    // console.log(id_student)
     id_student_old = id_student
     history_data();
     contact_data();
@@ -972,127 +971,179 @@
       data: {
         id_student: id_student
       },
+      async: false,
       success: function(data) {
-        // console.log(data)
+        // 宣告
+        var datasource_old = '',
+          submissiondate = '',
+          sales_registration_id = ''
+
+
         // 銷講報到率
         var sales_successful_rate = '0',
           course_cancel_rate = '0';
-        var course_sales_status = '';
-        if (data['count_sales_ok'] != 0) {
-          sales_successful_rate = (data['count_sales_ok'] / (data['count_sales'] - data['count_sales_no']) * 100).toFixed(0)
+        var course_sales_status = '',
+          course_sales_events = '';
+        if (data['datas_salesregistration'] != null && data['datas_salesregistration']['count_sales_ok'] != 0) {
+          sales_successful_rate = (data['datas_salesregistration']['count_sales_ok'] / (data['datas_salesregistration']['count_sales'] - data['datas_salesregistration']['count_sales_no']) * 100).toFixed(0)
         }
 
         // 銷講取消率
-        if (data['count_sales_no'] != 0) {
-          course_cancel_rate = (data['count_sales_no'] / data['count_sales'] * 100).toFixed(0)
+        if (data['datas_salesregistration'] != null && data['count_sales_no'] != 0) {
+          course_cancel_rate = (data['datas_salesregistration']['count_sales_no'] / data['datas_salesregistration']['count_sales'] * 100).toFixed(0)
         }
+
+        // 來源
+        if (data['datas_datasource_old'] != null) {
+          // 原始來源
+          if (data['datas_datasource_old']['datasource'] != null) {
+            datasource_old = data['datas_datasource_old']['datasource']
+          } else {
+            datasource_old = "無"
+          }
+
+          // submissiondate
+          submissiondate = data['datas_datasource_old']['sales_registration_old_submissiondate']
+
+          // 銷講ID
+          sales_registration_id = data['datas_datasource_old']['sales_registration_old']
+        } else {
+          datasource_old = "無"
+          submissiondate = "無"
+        }
+
+
         // 學員資料
-        $('#student_name').text(data[0]['name']);
-        $('#student_email').text(data[0]['email']);
-        $('#title_student_phone').text(data[0]['phone']);
-        $('#title_old_datasource').text('原始來源:' +
-          data[0]['datasource_old']);
-        $('#student_date').text('加入日期 :' + data['submissiondate']);
-        $('#student_profession').val(data[0]['profession']);
-        $('#student_address').val(data[0]['address']);
-        $('#sales_registration_old').val(data[0]['sales_registration_old']);
-        $('#old_datasource').val(data[0]['datasource_old']);
-        $('#student_phone').val(data[0]['phone']);
-
-        // 銷講      
-        $('input[name="new_datasource"]').val(data['datasource']);
+        $('#student_name').val(data['datas_student'][0]['name']);
+        $('#student_email').val(data['datas_student'][0]['email']);
+        $('#title_student_phone').val(data['datas_student'][0]['phone']);
+        $('#title_old_datasource').text('原始來源:' + datasource_old);
+        $('#submissiondate').text('加入日期 :' + submissiondate);
+        $('#student_profession').val(data['datas_student'][0]['profession']);
+        $('#student_address').val(data['datas_student'][0]['address']);
+        $('#sales_registration_old').val(sales_registration_id);
+        $('#old_datasource').val(datasource_old);
+        $('#student_phone').val(data['datas_student'][0]['phone']);
 
 
-        // if (data['course_sales_events'] != null) {
-        //   $('input[name="course_sales_events"]').val(data['course_sales'] + data['course_sales_events'] + '(' + data['sales_registration_course_start_at'] + ')');
-        // }
-        if (data['course_sales'] != null) {
-          var course_sales = '',
-            course_sales_events = '',
-            sales_registration_course_start_at = ''
-          if (data['course_sales'] == null) {
-            course_sales = " "
-          } else {
-            course_sales = data['course_sales']
-          }
 
-          if (data['course_sales_events'] == null) {
-            course_sales_events = " "
-          } else {
-            course_sales_events = data['course_sales_events']
-          }
+        // 最新來源
+        var new_datasource = '無'
 
-          if (data['sales_registration_course_start_at'] == null) {
-            // 我很遺憾
-            if (data['id_events'] == '-99' || data['events'] != '') {
-              sales_registration_course_start_at = "我很遺憾 - " + data['events']
+        if (data['datas_datasource_new'] != null && data['datas_datasource_new']['datasource'] != null) {
+          new_datasource = data['datas_datasource_new']['datasource']
+        }
+        $('input[name="new_datasource"]').val(new_datasource);
+
+        // 銷講
+        if (data['datas_salesregistration'] != null) {
+
+          if (data['datas_salesregistration']['course_sales'] != null) {
+            var course_sales = '',
+              course_sales_events = '',
+              sales_registration_course_start_at = ''
+            if (data['datas_salesregistration']['course_sales'] == null) {
+              course_sales = " "
             } else {
-              sales_registration_course_start_at = "無"
+              course_sales = data['datas_salesregistration']['course_sales']
             }
 
+            if (data['datas_salesregistration']['course_sales_events'] == null) {
+              course_sales_events = " "
+            } else {
+              course_sales_events = data['datas_salesregistration']['course_sales_events']
+            }
+
+            if (data['datas_salesregistration']['sales_registration_course_start_at'] == null) {
+              // 我很遺憾
+              if (data['datas_salesregistration']['id_events'] == '-99' || data['datas_salesregistration']['events'] != '') {
+                sales_registration_course_start_at = "我很遺憾 - " + data['datas_salesregistration']['events']
+              } else {
+                sales_registration_course_start_at = "無"
+              }
+
+            } else {
+              sales_registration_course_start_at = data['datas_salesregistration']['sales_registration_course_start_at']
+            }
+
+            course_sales_events = course_sales + ' ' + course_sales_events + '(' + sales_registration_course_start_at + ' )'
+          }
+          $('input[name="course_sales_events"]').val(course_sales_events);
+
+          $('input[name="course_content"]').val(data['datas_salesregistration']['course_content']);
+          $('input[name="status_payment"]').val('');
+          if (data['datas_registration'] != null && typeof(data['datas_registration']['status_registration']) != 'undefined') {
+            var course_events = '',
+              course_registration = '',
+              status_registration = ''
+            if (data['datas_registration']['course_events'] == null) {
+              course_events = "無"
+            } else {
+              course_events = data['datas_registration']['course_events']
+            }
+
+            if (data['datas_registration']['course_registration'] == null) {
+              course_registration = " "
+            } else {
+              course_registration = data['datas_registration']['course_registration']
+            }
+
+            if (data['datas_registration']['status_registration'] == null) {
+              status_registration = " "
+            } else {
+              status_registration = data['datas_registration']['status_registration']
+            }
+
+            course_sales_status = status_registration + '(' + course_registration + ' ' + course_events + ' )'
+          }
+          // 銷講後報名狀況
+          $('input[name="course_sales_status"]').val(course_sales_status);
+
+          if (data['datas_salesregistration']['count_sales_si'] == null) {
+            $('h7[name="count_sales_ok"]').text('銷講報名次數 :0');
           } else {
-            sales_registration_course_start_at = data['sales_registration_course_start_at']
+            $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['datas_salesregistration']['count_sales_si']);
+          }
+          if (data['datas_salesregistration']['count_sales_ok'] == null) {
+            $('h7[name="sales_successful_rate"]').text('銷講報到率 :0%');
+          } else {
+            $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
+          }
+          if (data['datas_salesregistration']['count_sales_no'] == null) {
+            $('h7[name="count_sales_no"]').text('銷講取消次數 :0');
+          } else {
+            $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['datas_salesregistration']['count_sales_no']);
           }
 
-          course_sales_events = course_sales + ' ' + course_sales_events + '(' + sales_registration_course_start_at + ' )'
+          if (data['datas_salesregistration']['count_sales_ok'] == null) {
+            $('h7[name="sales_cancel_rate"]').text('銷講取消率 :0%');
+          } else {
+            $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
+          }
         }
-        $('input[name="course_sales_events"]').val(course_sales_events)
-
-
-
-        $('input[name="course_content"]').val(data['course_content']);
-        $('input[name="status_payment"]').val('');
-        if (typeof(data['status_registration']) != 'undefined') {
-          course_sales_status = data['status_registration'] + '(' + data['course_registration'] + data['course_events'] + ')'
-        }
-        $('input[name="course_sales_status"]').val(course_sales_status);
-        if (data['count_sales_ok'] == null) {
-          $('h7[name="count_sales_ok"]').text('銷講報名次數 :0');
-        } else {
-          $('h7[name="count_sales_ok"]').text('銷講報名次數 :' + data['count_sales_ok']);
-        }
-        if (data['count_sales_ok'] == null) {
-          $('h7[name="sales_successful_rate"]').text('銷講報到率 :0%');
-        } else {
-          $('h7[name="sales_successful_rate"]').text('銷講報到率 :' + sales_successful_rate + '%');
-        }
-        if (data['count_sales_no'] == null) {
-          $('h7[name="count_sales_no"]').text('銷講取消次數 :0');
-        } else {
-          $('h7[name="count_sales_no"]').text('銷講取消次數 :' + data['count_sales_no']);
-        }
-
-        if (data['count_sales_ok'] == null) {
-          $('h7[name="sales_cancel_rate"]').text('銷講取消率 :0%');
-        } else {
-          $('h7[name="sales_cancel_rate"]').text('銷講取消率 :' + course_cancel_rate + '%');
-        }
-
-
-
         // 正課
         $('input[name="course_events"]').val('');
-        if (typeof(data['course_registration']) != 'undefined') {
+        if (data['datas_registration'] != null && typeof(data['datas_registration']['course_registration']) != 'undefined') {
           var course_events = '',
             course_registration = '',
             registration_course_start_at = '',
             course_registration_events = ''
-          if (data['course_events'] == null) {
+          if (data['datas_registration']['course_events'] == null) {
             course_events = " "
           } else {
-            course_events = data['course_events']
+            course_events = data['datas_registration']['course_events']
           }
 
-          if (data['course_registration'] == null) {
+          if (data['datas_registration']['course_registration'] == null) {
             course_registration = " "
           } else {
-            course_registration = data['course_registration']
+            course_registration = data['datas_registration']['course_registration']
           }
 
-          if (data['registration_course_start_at'] == null) {
+          if (data['datas_registration']['registration_course_start_at'] == null) {
             registration_course_start_at = "無"
           } else {
-            registration_course_start_at = data['registration_course_start_at']
+            registration_course_start_at = data['datas_registration']['registration_course_start_at']
           }
 
           course_registration_events = course_registration + ' ' + course_events + '(' + registration_course_start_at + ' )'
@@ -1102,12 +1153,24 @@
 
         // 退款
         $('input[name="course_refund"]').val('');
-        if (typeof(data['refund_course']) != 'undefined') {
-          $('input[name="course_refund"]').val(data['refund_course'] + '(' + data['refund_reason'] + ')');
+
+        var refund_reason = ''
+        if (data['datas_refund'] != null) {
+          if (data['datas_refund']['refund_reason'] != null) {
+            refund_reason = data['datas_refund']['refund_reason']
+          } else {
+            refund_reason = "無"
+          }
+
+          if (typeof(data['datas_refund']['refund_course']) != 'undefined') {
+            $('input[name="course_refund"]').val(data['datas_refund']['refund_course'] + '(' + refund_reason + ')');
+          } else {
+            $('#dev_refund').hide();
+          }
         } else {
           $('#dev_refund').hide();
-
         }
+
 
         $("#student_information").modal('show');
       },
@@ -1181,9 +1244,15 @@
     table2 = $('#table_list_history').DataTable({
       "dom": '<l<t>p>',
       "columnDefs": [{
-        "targets": 'no-sort',
-        "orderable": false,
-      }],
+          "targets": 'no-sort',
+          "orderable": false,
+        },
+        {
+          "targets": 2,
+          "className": "text-left",
+        }
+      ],
+      "deferRender": true,
       "orderCellsTop": true,
       "destroy": true,
       "retrieve": true,
@@ -1194,8 +1263,8 @@
           id_student: id_student_old
         },
         async: false,
-        " ": function(json) {
-          for (var i = 0, ien = json.length; i < ien; i++) {
+        "dataSrc": function(json) {
+          for (var i = 0; i < json.length; i++) {
 
             var status = '',
               course_sales = '';
@@ -1227,6 +1296,7 @@
     $("#table_list_history").css({
       "width": "100%"
     });
+
     // $.ajax({
     //   type: 'POST',
     //   url: 'history_data',
@@ -1260,13 +1330,108 @@
     //         '<td>' + course_sales + '</td>' +
     //         '</tr>'
     //     });
+
     //     $('#history_data_detail').html(data);
+
     //   },
     //   error: function(error) {
     //     console.log(JSON.stringify(error));
     //   }
     // });
   }
+  // function history_data() {
+  //   table2.clear().draw();
+  //   table2.destroy();
+
+  //   table2 = $('#table_list_history').DataTable({
+  //     "dom": '<l<t>p>',
+  //     "columnDefs": [{
+  //       "targets": 'no-sort',
+  //       "orderable": false,
+  //     }],
+  //     "orderCellsTop": true,
+  //     "destroy": true,
+  //     "retrieve": true,
+  //     "ajax": {
+  //       "url": "history_data",
+  //       "type": "POST",
+  //       "data": {
+  //         id_student: id_student_old
+  //       },
+  //       async: false,
+  //       " ": function(json) {
+  //         for (var i = 0, ien = json.length; i < ien; i++) {
+
+  //           var status = '',
+  //             course_sales = '';
+  //           if (json[i]['status_sales'] == null) {
+  //             status = '無'
+  //           } else {
+  //             status = json[i]['status_sales']
+  //           }
+
+  //           if (json[i]['course_sales'] == null) {
+  //             course_sales = '無'
+  //           } else {
+  //             course_sales = json[i]['course_sales']
+  //           }
+
+  //           // id_student = json[i]['id_student'];
+  //           json[i][0] = json[i]['created_at'];
+  //           json[i][1] = status;
+  //           json[i][2] = course_sales;
+  //         }
+  //         return json;
+
+  //       }
+  //     }
+  //   });
+
+
+  //   // 調整Datable.js寬度
+  //   $("#table_list_history").css({
+  //     "width": "100%"
+  //   });
+  //   // $.ajax({
+  //   //   type: 'POST',
+  //   //   url: 'history_data',
+  //   //   dataType: 'json',
+  //   //   data: {
+  //   //     id_student: id_student_old
+  //   //   },
+  //   //   success: function(data) {
+  //   //     var id_student = '';
+  //   //     $('#history_data_detail').html('');
+  //   //     $.each(data, function(index, val) {
+  //   //       var status = '',
+  //   //         course_sales = '';
+  //   //       if (val['status_sales'] == null) {
+  //   //         status = '無'
+  //   //       } else {
+  //   //         status = val['status_sales']
+  //   //       }
+
+  //   //       if (val['course_sales'] == null) {
+  //   //         course_sales = '無'
+  //   //       } else {
+  //   //         course_sales = val['course_sales']
+  //   //       }
+
+  //   //       id_student = val['id_student'];
+  //   //       data +=
+  //   //         '<tr>' +
+  //   //         '<td>' + val['created_at'] + '</td>' +
+  //   //         '<td>' + status + '</td>' +
+  //   //         '<td>' + course_sales + '</td>' +
+  //   //         '</tr>'
+  //   //     });
+  //   //     $('#history_data_detail').html(data);
+  //   //   },
+  //   //   error: function(error) {
+  //   //     console.log(JSON.stringify(error));
+  //   //   }
+  //   // });
+  // }
 
   // 聯絡狀況
   function contact_data() {
@@ -1330,14 +1495,14 @@
             '<td><i class="fa fa-address-card " aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 40%;"></i></td>' +
             '<td>' +
             '<div class="input-group date show_datetime" id="new_starttime' + id + '" data-target-input="nearest"> ' +
-            ' <input type="text" readonly onblur="save_data($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
+            ' <input type="text" readonly  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
             '</div> ' +
             '</div>' +
             '</td>' +
-            '<td>' + '<input type="text" readonly  class="form-control auth_readonly" onblur="save_data($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td>' + '<input type="text"   readonly class="auth_readonly form-control" onblur="save_data($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td>' + '<input type="text"  readonly class=" auth_readonly form-control" onblur="save_data($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_debt_status_payment_name + '" onblur="save_data($(this),' + id + ',7);" disabled class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+            '<td>' + '<input type="text" readonly  class="form-control auth_readonly"  id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td>' + '<input type="text"   readonly class="auth_readonly form-control"  id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td>' + '<input type="text"  readonly class=" auth_readonly form-control"  id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_debt_status_payment_name + '" disabled class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
             '<option selected disabled value=""></option>' +
             '<option value="留單">留單</option>' +
             '<option value="完款">完款</option>' +
@@ -1345,7 +1510,7 @@
             '<option value="退費">退費</option>' +
             '</select>' +
             '</div> </td>' +
-            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_status + '" disabled  onblur="save_data($(this),' + id + ',3);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_status + '" disabled  class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
             '<option selected disabled value=""></option>' +
             '<option value="12">待追</option>' +
             '<option value="15">無意願</option>' +
@@ -1353,10 +1518,10 @@
             '<option value="22">通知下一梯次</option>' +
             '</select>' +
             '</div> </td>' +
-            '<td>' + '<input type="text"  readonly class="auth_readonly form-control" onblur="save_data($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td>' + '<input type="text"  readonly class="auth_readonly form-control"  id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
             '<td>' +
             '<div class="input-group date show_datetime" id="remind' + id + '" data-target-input="nearest"> ' +
-            ' <input type="text" readonly onblur="save_data($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
+            ' <input type="text" readonly  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
             ' <div class="input-group-append" data-target="#remind' + id + '" data-toggle="datetimepicker"> ' +
             '</div> ' +
             '</div>' +
@@ -1411,9 +1576,6 @@
 
         /*付款狀態、最新狀態 - E*/
 
-
-        // 權限判斷 Rocky(2020/05/10)
-        check_auth();
       },
       error: function(error) {
         console.log(JSON.stringify(error));
@@ -1531,13 +1693,13 @@
         $('#condition_option2').append(new Option('報到', '4'));
         $('#condition_option2').append(new Option('取消', '5'));
         $('#condition_option2').append(new Option('未到', '3'));
-        $('#condition_option2').append(new Option('交付', ''));
         $('#condition_option2').append(new Option('留單', '6'));
         $('#condition_option2').append(new Option('完款', '7'));
         $('#condition_option2').append(new Option('付訂', '8'));
+        $('#condition_option2').append(new Option('退款', '9'));
         $('#condition_option2').append(new Option('參與', ''));
-        $('#condition_option2').append(new Option('打開郵件', ''));
-        $('#condition_option2').append(new Option('打開簡訊', ''));
+        // $('#condition_option2').append(new Option('打開郵件', ''));
+        // $('#condition_option2').append(new Option('打開簡訊', ''));
 
         // condition_option2.innerHTML='<option value="">請選擇</option><option value="present">報到</option><option value="cancel">取消</option><option value="absent">未到</option><option value="pay">交付</option><option value="participate">參與</option><option value="open-mail">打開郵件</option><option value="open-sms">打開簡訊</option>';
         // condition_option3.style.display='block';
@@ -1678,12 +1840,12 @@
         $('#condition_option2_2').append(new Option('報到', '4'));
         $('#condition_option2_2').append(new Option('取消', '5'));
         $('#condition_option2_2').append(new Option('未到', '3'));
-        $('#condition_option2_2').append(new Option('交付', ''));
         $('#condition_option2_2').append(new Option('完款', '7'));
         $('#condition_option2_2').append(new Option('付訂', '8'));
+        $('#condition_option2_2').append(new Option('退款', '9'));
         $('#condition_option2_2').append(new Option('參與', ''));
-        $('#condition_option2_2').append(new Option('打開郵件', ''));
-        $('#condition_option2_2').append(new Option('打開簡訊', ''));
+        // $('#condition_option2_2').append(new Option('打開郵件', ''));
+        // $('#condition_option2_2').append(new Option('打開簡訊', ''));
 
         condition_input3_2.style.display = 'none';
       } else if (this.value == 'tag') {
@@ -1819,12 +1981,12 @@
         $('#condition_option2_3').append(new Option('報到', '4'));
         $('#condition_option2_3').append(new Option('取消', '5'));
         $('#condition_option2_3').append(new Option('未到', '3'));
-        $('#condition_option2_3').append(new Option('交付', ''));
         $('#condition_option2_3').append(new Option('完款', '7'));
         $('#condition_option2_3').append(new Option('付訂', '8'));
+        $('#condition_option2_3').append(new Option('退款', '9'));
         $('#condition_option2_3').append(new Option('參與', ''));
-        $('#condition_option2_3').append(new Option('打開郵件', ''));
-        $('#condition_option2_3').append(new Option('打開簡訊', ''));
+        // $('#condition_option2_3').append(new Option('打開郵件', ''));
+        // $('#condition_option2_3').append(new Option('打開簡訊', ''));
 
         condition_input3_3.style.display = 'none';
       } else if (this.value == 'tag') {

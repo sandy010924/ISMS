@@ -303,6 +303,8 @@ class StudentController extends Controller
                 if (count($array_id_group) != 0) {
                     $id_group = $array_id_group[0]['id_group'];
                 }
+
+
                 // 修改報名資料
                 Registration::where('id', $id)
                     ->update(['id_events' => $data, 'id_group' => $id_group]);
@@ -318,15 +320,34 @@ class StudentController extends Controller
                     Register::where('id_registration', $id)->delete();
                 }
 
-                // 新增報到資料
-                $register = new Register;
+                // 同場是否多天
+                $array_id_events = EventsCourse::where('id_group', $id_group)
+                    ->select('events_course.id')
+                    ->get();
 
-                $register->memo                = $memo;
-                $register->id_status           = '3';
-                $register->id_events           = $data;
-                $register->id_student          = $id_student;
-                $register->id_registration      = $id;
-                $register->save();
+                if (count($array_id_events) > 1) {
+                    foreach ($array_id_events as $key => $data_events) {
+                        // 新增報到資料
+                        $register = new Register;
+
+                        $register->memo                = $memo;
+                        $register->id_status           = '3';
+                        $register->id_events           = $array_id_events[$key]["id"];
+                        $register->id_student          = $id_student;
+                        $register->id_registration      = $id;
+                        $register->save();
+                    }
+                } else {
+                    // 新增報到資料
+                    $register = new Register;
+
+                    $register->memo                = $memo;
+                    $register->id_status           = '3';
+                    $register->id_events           = $data;
+                    $register->id_student          = $id_student;
+                    $register->id_registration      = $id;
+                    $register->save();
+                }
                 break;
             default:
                 return 'error';

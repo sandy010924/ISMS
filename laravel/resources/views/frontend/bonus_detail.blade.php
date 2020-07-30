@@ -248,12 +248,19 @@
   /* 顯示學員資料 - S Rocky(2020/04/25) */
   function show_student(type) {
 
+    // Excel file name
+    var today = new Date()
+    var date = today.getFullYear().toString() + (today.getMonth() + 1).toString() + today.getDate().toString()
+    var title = $('#h3_title').text().split("：")
+    var filename = date + '獎金名單_' + title[1] + '_' + $('#cars :selected').text()
+
 
     table2.clear().draw();
     table2.destroy();
 
     table2 = $('#table_list_history').DataTable({
-      "dom": '<Bl<td>t>',
+      // "dom": '<Bl<td>t>',
+      "dom": '<Bl<t>p>',
       "columnDefs": [{
         "targets": 'no-sort',
         "orderable": false,
@@ -266,6 +273,7 @@
         extend: 'excel',
         text: '匯出Excel',
         title: '',
+        filename: filename,
         messageTop: $('#h3_title').text(),
       }],
       "ajax": {
@@ -277,6 +285,16 @@
         },
         async: false,
         "dataSrc": function(json) {
+
+          // console.log(json)
+
+          // 名單來源 -> title -> 包含
+          if (type == 0) {
+            $(table2.column(0).header()).text('包含');
+          } else {
+            $(table2.column(0).header()).text('符合');
+          }
+
           if (json['datas'].length > 0) {
             for (var i = 0; i < json['datas'].length; i++) {
               var memo = '',
@@ -292,7 +310,13 @@
                 phone = json['datas'][i]['phone']
               }
 
-              json['datas'][i][0] = json['datas_rule_vlue'];
+              // 名單來源 -> 第一個欄位顯示資料來源
+              if (type == 0) {
+                json['datas'][i][0] = json['datas'][i]['datasource'];
+              } else {
+                json['datas'][i][0] = json['datas_rule_vlue'];
+              }
+
               json['datas'][i][1] = json['datas'][i]['course_start_at'];
               json['datas'][i][2] = json['datas'][i]['course_name'];
               json['datas'][i][3] = json['datas'][i]['events_name'];

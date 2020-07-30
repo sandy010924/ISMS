@@ -8,6 +8,7 @@ use App\Model\Student;
 use App\Model\Course;
 use App\Model\StudentGroup;
 use App\Model\Registration;
+use App\Model\SalesRegistration;
 use Symfony\Component\HttpFoundation\Request;
 
 class StudentGroupController extends Controller
@@ -132,19 +133,40 @@ class StudentGroupController extends Controller
             if ($type_condition == "information") {
                 // 名單資料
                 if ($opt1 == "datasource_old") {
-                    $opt1 = "datasource";
                     // 原始來源
-                    $datas = Student::join(
-                        DB::raw("(SELECT * FROM sales_registration ORDER BY created_at asc) as b"),
-                        function ($join) {
-                            $join->on("student.id", "=", "b.id_student");
-                        }
-                    )
+                    $opt1 = "sales_registration.datasource";
+                    $array_student_id = array();
+                    $array_student = array();
+                    $array_search_deal = array();
+                    $from = date('Y-m-d H:m:s', strtotime("-90 days"));
+                    $to = date('Y-m-d H:m:s', strtotime("+90 days"));
+
+                    // 更改寫法 Rocky (2020/07/24)
+
+                    // 1. 先找符合條件的學員ID
+                    $datas_student_id = Student::join('sales_registration as b', 'b.id_student', '=', 'student.id')
                         ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
-                        ->select('student.*', 'b.datasource', 'b.submissiondate')
+                        ->select('student.id')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereIn('b.id_course', $id_course);
                         })
+                        ->where(function ($query3) use ($sdate, $edate) {
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                        })
+                        ->groupby('student.id')
+                        ->orderby('b.submissiondate')
+                        ->get();
+
+
+                    foreach ($datas_student_id as $value_student_id) {
+                        array_push($array_student_id, $value_student_id['id']);
+                    }
+
+                    // 2. 再找現在時間90天內的來源資料 -> 再找所有來源資料 -> 若90天內有資料以90天為主否則以其他資料為主
+
+                    // 搜尋現在日期90天以內的銷講資料 Rocky(2020/07/24)
+                    $datas_stuent_90 = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+                        ->select('b.*', 'sales_registration.datasource', 'sales_registration.submissiondate')
                         ->where(function ($query) use ($opt1, $opt2, $value) {
                             switch ($opt2) {
                                 case "yes":
@@ -161,17 +183,112 @@ class StudentGroupController extends Controller
                                     break;
                             }
                         })
-                        ->where(function ($query3) use ($sdate, $edate) {
-                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
-                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                        ->whereIn('sales_registration.id_student', array_merge($array_student_id))
+                        ->whereBetween('sales_registration.submissiondate', [$from, $to])
+                        ->groupBy('b.id')
+                        ->orderBy('sales_registration.submissiondate', 'ASC')
+                        ->get();
+
+                    // 如果90天內沒有銷講資料 -> 抓submissiondate最早的資料 Rocky(2020/07/24)
+
+                    // 將90天內資料新增到array
+                    foreach ($datas_stuent_90 as $key => $value_datas_stuent_90) {
+                        array_push($array_student, array(
+                            'id'                    => $datas_stuent_90[$key]['id'],
+                            'name'                  => $datas_stuent_90[$key]['name'],
+                            'phone'                 => $datas_stuent_90[$key]['phone'],
+                            'email'                 => $datas_stuent_90[$key]['email'],
+                            'datasource'            => $datas_stuent_90[$key]['datasource'],
+                            'submissiondate'        => $datas_stuent_90[$key]['submissiondate'],
+                        ));
+                    }
+
+                    // 找全部資料(沒有90天內限制)
+                    $datas_stuent = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+                        ->select('b.*', 'sales_registration.datasource', 'sales_registration.submissiondate')
+                        ->where(function ($query) use ($opt1, $opt2, $value) {
+                            switch ($opt2) {
+                                case "yes":
+                                    $query->where($opt1, '=', $value);
+                                    break;
+                                case "no":
+                                    $query->where($opt1, '<>', $value);
+                                    break;
+                                case "like":
+                                    $query->where($opt1, 'like', '%' . $value . '%');
+                                    break;
+                                case "notlike":
+                                    $query->where($opt1, 'not like', '%' . $value . '%');
+                                    break;
+                            }
                         })
-                        ->groupby('student.id')
-                        ->distinct()->get();
+                        ->whereIn('sales_registration.id_student', array_merge($array_student_id))
+                        ->groupBy('b.id')
+                        ->orderBy('sales_registration.submissiondate', 'ASC')
+                        ->get();
+
+                   
+
+                    $arr = array_column(
+                        array_merge($array_search_deal, json_decode($datas_stuent_90, true)),
+                        'id'
+                    );
+
+                    // 比較90天內和沒有90天內，如果同樣學員90天內有資料以90天內為主，否則新增沒有90天內的資料
+                    foreach ($datas_stuent as $key => $value_datas_stuent) {
+                        $check_array_search = array_search($value_datas_stuent['id'], $arr);
+                        // 沒有重複值才新增
+                        if ($check_array_search === false) {
+                            array_push($array_student, array(
+                                'id'                    => $datas_stuent[$key]['id'],
+                                'name'                  => $datas_stuent[$key]['name'],
+                                'phone'                 => $datas_stuent[$key]['phone'],
+                                'email'                 => $datas_stuent[$key]['email'],
+                                'datasource'            => $datas_stuent[$key]['datasource'],
+                                'submissiondate'        => $datas_stuent[$key]['submissiondate'],
+                            ));
+                        }
+                    }
+                    $datas = json_encode($array_student);
+
+                    // $datas = Student::join(
+                    //     DB::raw("(SELECT * FROM sales_registration ORDER BY submissiondate asc) as b"),
+                    //     function ($join) {
+                    //         $join->on("student.id", "=", "b.id_student");
+                    //     }
+                    // )
+                    //     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                    //     ->select('student.*', 'b.datasource', 'b.submissiondate')
+                    //     ->where(function ($query2) use ($id_course) {
+                    //         $query2->whereIn('b.id_course', $id_course);
+                    //     })
+                    //     ->where(function ($query) use ($opt1, $opt2, $value) {
+                    //         switch ($opt2) {
+                    //             case "yes":
+                    //                 $query->where($opt1, '=', $value);
+                    //                 break;
+                    //             case "no":
+                    //                 $query->where($opt1, '<>', $value);
+                    //                 break;
+                    //             case "like":
+                    //                 $query->where($opt1, 'like', '%' . $value . '%');
+                    //                 break;
+                    //             case "notlike":
+                    //                 $query->where($opt1, 'not like', '%' . $value . '%');
+                    //                 break;
+                    //         }
+                    //     })
+                    //     ->where(function ($query3) use ($sdate, $edate) {
+                    //         // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                    //         $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                    //     })
+                    //     ->groupby('student.id')
+                    //     ->distinct()->get();
                 } elseif ($opt1 == "datasource_new") {
                     $opt1 = "datasource";
                     // 最新來源
                     $datas = Student::join(
-                        DB::raw("(SELECT * FROM sales_registration ORDER BY created_at desc) as b"),
+                        DB::raw("(SELECT * FROM sales_registration ORDER BY submissiondate desc) as b"),
                         function ($join) {
                             $join->on("student.id", "=", "b.id_student");
                         }
@@ -240,20 +357,47 @@ class StudentGroupController extends Controller
             } elseif ($type_condition == "action") {
                 // 名單動作
                 if ($opt1 == "yes") {
-                    $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                        ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
-                        ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
-                        ->where(function ($query2) use ($id_course) {
-                            $query2->whereIn('b.id_course', $id_course);
-                        })
-                        ->where(function ($query) use ($opt2) {
-                            $query->where('b.id_status', '=', $opt2);
-                        })
-                        ->where(function ($query3) use ($sdate, $edate) {
-                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
-                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
-                        })
-                        ->distinct()->get();
+                    if ($opt2 != '3' && $opt2 != '4' && $opt2 != '5') {
+                        //留單 or 完款 or 付訂
+
+                        //                         'SELECT c.name,a.id_course,a.id_events,b.id_course FROM `registration` a 
+                        // 	LEFT JOIN events_course b on a.source_events = b.id
+                        //     LEFT JOIN student c on a.id_student = c.id
+                        // WHERE b.id_course = '31' AND a.status_payment = '6' AND c.name = '張益裕'
+
+                        $datas = Registration::leftjoin('events_course as b', 'registration.source_events', '=', 'b.id')
+                            ->leftjoin('student as c', 'registration.id_student', '=', 'c.id')
+                            ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
+                            ->select('c.*', 'd.datasource', 'd.submissiondate', 'd.id_status')
+                            ->where(function ($query2) use ($id_course) {
+                                $query2->whereIn('b.id_course', $id_course);
+                            })
+                            ->where(function ($query) use ($opt2) {
+                                $query->where('registration.status_payment', '=', $opt2);
+                            })
+                            ->where(function ($query3) use ($sdate, $edate) {
+                                $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
+                            })
+                            // 抓最新來源
+                            ->orderby('d.submissiondate', 'desc')
+                            ->distinct()->get();
+                    } else {
+                        $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                            ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                            ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                            ->where(function ($query2) use ($id_course) {
+                                $query2->whereIn('b.id_course', $id_course);
+                            })
+                            ->where(function ($query) use ($opt2) {
+                                $query->where('b.id_status', '=', $opt2);
+                            })
+                            ->where(function ($query3) use ($sdate, $edate) {
+                                $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                            })
+                            // 抓最新來源
+                            ->orderby('b.submissiondate', 'desc')
+                            ->distinct()->get();
+                    }
                 } else {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
                         ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
@@ -365,23 +509,73 @@ class StudentGroupController extends Controller
             } elseif ($type_condition == "action") {
                 // 名單動作
                 if ($opt1 == "yes") {
-                    $datas = Registration::leftjoin('student as b', 'b.id', '=', 'registration.id_student')
-                        ->leftjoin('register as c', 'c.id_registration', '=', 'registration.id')
-                        ->leftjoin('events_course as d', 'c.id_events', '=', 'd.id')
-                        ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id')
-                        ->select('b.*', 'd.name as name_events', 'e.datasource', 'e.submissiondate')
-                        ->where(function ($query2) use ($id_course) {
-                            $query2->whereIn('registration.id_course', $id_course);
-                        })
-                        ->where(function ($query) use ($opt2) {
-                            $query->where('c.id_status', '=', $opt2)
-                                ->orwhere('registration.status_payment', '=', $opt2);
-                        })
-                        ->where(function ($query3) use ($sdate, $edate) {
-                            $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
-                        })
-                        ->groupby('registration.id')
-                        ->distinct()->get();
+                    if ($opt2 != '3' && $opt2 != '4' && $opt2 != '5') {
+                        //留單 or 完款 or 付訂
+                        /*
+                        SELECT c.id,c.name,d.datasource,d.submissiondate,d.id_status,a.status_payment,e.id_status FROM registration a
+                            LEFT JOIN events_course b on a.source_events = b.id
+                            LEFT JOIN student c ON a.id_student  = c.id
+                            LEFT JOIN sales_registration d on d.id_student = c.id
+                            LEFT JOIN register e on e.id_registration = a.id
+                            WHERE b.id_course = '73'
+                        ORDER BY d.submissiondate DESC
+                        */
+
+                        $datas = Registration::leftjoin('events_course as b', 'registration.source_events', '=', 'b.id')
+                            ->leftjoin('student as c', 'registration.id_student', '=', 'c.id')
+                            ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
+                            ->select('c.*', 'd.datasource', 'd.submissiondate', 'd.id_status')
+                            ->where(function ($query2) use ($id_course) {
+                                $query2->whereIn('b.id_course', $id_course);
+                            })
+                            ->where(function ($query) use ($opt2) {
+                                $query->where('registration.status_payment', '=', $opt2);
+                            })
+                            ->where(function ($query3) use ($sdate, $edate) {
+                                $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
+                            })
+                            // 抓最新來源
+                            ->orderby('d.submissiondate', 'desc')
+                            ->distinct()->get();
+                    } else {
+                        $datas = Registration::leftjoin('student as b', 'b.id', '=', 'registration.id_student')
+                            ->leftjoin('register as c', 'c.id_registration', '=', 'registration.id')
+                            ->leftjoin('events_course as d', 'c.id_events', '=', 'd.id')
+                            ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id')
+                            ->select('b.*', 'd.name as name_events', 'e.datasource', 'e.submissiondate')
+                            ->where(function ($query2) use ($id_course) {
+                                $query2->whereIn('registration.id_course', $id_course);
+                            })
+                            ->where(function ($query) use ($opt2) {
+                                $query->where('c.id_status', '=', $opt2);
+                            })
+                            ->where(function ($query3) use ($sdate, $edate) {
+                                $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
+                            })
+                            // ->groupby('registration.id')
+                            // 抓最新來源
+                            ->orderby('e.submissiondate', 'desc')
+                            // ->distinct()
+                            ->get();
+                    }
+
+                    // $datas = Registration::leftjoin('student as b', 'b.id', '=', 'registration.id_student')
+                    //     ->leftjoin('register as c', 'c.id_registration', '=', 'registration.id')
+                    //     ->leftjoin('events_course as d', 'c.id_events', '=', 'd.id')
+                    //     ->leftjoin('sales_registration as e', 'e.id_student', '=', 'b.id')
+                    //     ->select('b.*', 'd.name as name_events', 'e.datasource', 'e.submissiondate')
+                    //     ->where(function ($query2) use ($id_course) {
+                    //         $query2->whereIn('registration.id_course', $id_course);
+                    //     })
+                    //     ->where(function ($query) use ($opt2) {
+                    //         $query->where('c.id_status', '=', $opt2)
+                    //             ->orwhere('registration.status_payment', '=', $opt2);
+                    //     })
+                    //     ->where(function ($query3) use ($sdate, $edate) {
+                    //         $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
+                    //     })
+                    //     ->groupby('registration.id')
+                    //     ->distinct()->get();
                 } else {
                     $datas = Registration::leftjoin('student as b', 'b.id', '=', 'registration.id_student')
                         ->leftjoin('register as c', 'c.id_registration', '=', 'registration.id')
@@ -442,7 +636,7 @@ class StudentGroupController extends Controller
                         ->groupby('student.id')
                         ->get();
 
-                // echo $edate;
+                    // echo $edate;
                 } else {
                     // 未分配
                     $datas = Student::leftjoin('registration as b', 'student.id', '=', 'b.id_student')
