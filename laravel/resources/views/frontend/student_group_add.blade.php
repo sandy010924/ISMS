@@ -10,6 +10,12 @@
     background-color: #e0e0e0 !important;
   }
 
+  .show_datetime .bootstrap-datetimepicker-widget {
+    position: relative;
+    z-index: 1000;
+    top: 0 !important;
+  }
+
   .bootstrap-tagsinput .tag [data-role="remove"] {
     display: none;
   }
@@ -47,7 +53,7 @@
           </select>
         </div>
         <div class="col-3">
-          <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course" ></select>
+          <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course"></select>
         </div>
         <div class="col-3">
           <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date">
@@ -289,20 +295,6 @@
           </tr>
         </thead>
         <tbody id="data_student">
-          <!-- <tr>
-              <td class="align-middle">王小名</td>
-              <td class="align-middle">0912345678</td>
-              <td class="align-middle">a123@gmail.com</td>
-              <td class="align-middle">ad</td>
-              <td class="align-middle">2019年12月31日</td>
-            </tr>
-            <tr>
-              <td class="align-middle">陳小美</td>
-              <td class="align-middle">0987654321</td>
-              <td class="align-middle">fd546@gmail.com</td>
-              <td class="align-middle">ellen</td>
-              <td class="align-middle">2019年08月17日</td>
-            </tr> -->
         </tbody>
       </table>
     </div>
@@ -313,24 +305,77 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content p-3">
       <div class="row">
-        <div class="col-5 py-2">
-          <h5 id="student_name"></h5>
-          <h5 id="student_email"></h5>
-          <h5 id="title_student_phone"></h5>
+        <div class="pt-2 pl-3">
+          <h3>完整內容</h3>
         </div>
-        <div class="col-4">
+        <div class="col-12 pt-5">
+          <div class="row">
+            <div class="col-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">學員姓名</span>
+                </div>
+                <input type="text" id="student_name" class="form-control bg-white basic-inf col-sm-10 auth_readonly">
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">E-mail</span>
+                </div>
+                <input type="text" id="student_email" class="form-control bg-white basic-inf col-sm-8 auth_readonly">
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">電話</span>
+                </div>
+                <input id="student_phone" type="text" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-4 py-3">
           <h7 id="title_old_datasource"></h7><br>
-          <h7 id="student_date"></h7><br>
+          <h7 id="submissiondate"></h7><br>
           <h7 id="student_datasource"></h7>
         </div>
       </div>
       <!-- 標記 -S  -->
       <div class="row">
         <div class="col-12 py-2">
-          <h6>標記 :</h6>
+          <h6>標記 :
+            @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'saleser'))
+            <i class="fa fa-plus" aria-hidden="true" style="cursor:pointer;" id="new_tag" data-toggle="modal" data-target="#save_tag"></i>
+            @endif
+          </h6>
           <input type="text" id="isms_tags" />
+        </div>
+        <div class="col-5">
+        </div>
+        <div class="col-4 align-right">
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'saleser'))
+          <button type="button" class="btn btn-primary float-right" onclick="btn_delete('','1',this);">刪除聯絡人</button>
+          @endif
+        </div>
+      </div>
+      <div class="modal fade" id="save_tag" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">標記名稱</h5>
+              <button type="button" class="close" id="tag_close" aria-label="Close" data-number="1">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <input type="text" id="tag_name" class="input_width">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="tags_add();">儲存</button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- 標記 -E -->
@@ -352,7 +397,7 @@
           <div class="row">
             <div class="col-6">
               <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">最新來源</span>
@@ -360,33 +405,34 @@
                     <input type="text" name="new_datasource" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">職業</span>
                     </div>
-                    <input id="student_profession" type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                    <input id="student_profession" type="text" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">原始來源</span>
+                    </div>
+                    <input type="text" id="old_datasource" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
+                    <input type="hidden" id="sales_registration_old">
                   </div>
                 </div>
               </div>
 
               <div class="row">
-                <div class="col-6">
+                <div class="col-12">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">原始來源</span>
+                      <span class="input-group-text">正課報名場次</span>
                     </div>
-                    <input type="text" id="old_datasource" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
-                    <input type="hidden" id="sales_registration_old">
+                    <input type="text" name="course_events" class="form-control bg-white basic-inf demo2" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="" readonly>
                   </div>
-                </div>
-                <div class="col-6">
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">電話</span>
-                    </div>
-                    <input id="student_phone" type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
-                  </div>
+
                 </div>
               </div>
               <div class="input-group mb-3">
@@ -411,16 +457,10 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">居住地址</span>
                 </div>
-                <input type="text" id="student_address" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
+                <input type="text" id="student_address" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#">
               </div>
             </div>
             <div class="col-6">
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">正課報名場次</span>
-                </div>
-                <input type="text" name="course_events" class="form-control bg-white basic-inf demo2" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="" readonly>
-              </div>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text">參與活動</span>
@@ -433,6 +473,10 @@
                 </div>
                 <input type="text" name="course_refund" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" readonly>
               </div>
+              @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'saleser'))
+              <button type="button" class="btn btn-primary float-right" id="save-inf" style="display:block;" onclick="student_save();">儲存</button>
+              @endif
+              <!-- <button type="button" class="btn btn-primary float-right" id="update-inf" style="display:block;">修改資料</button> -->
             </div>
           </div>
           <div class="row">
@@ -475,6 +519,9 @@
             <table class="table table-striped table-sm text-center">
               <thead>
                 <tr>
+                  <th class="text-nowrap">
+                    <button type="button" class="btn btn-secondary btn-sm mx-1 auth_hidden" data-toggle="modal" data-target="#save_contact"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                  </th>
                   <th class="text-nowrap"></th>
                   <th class="text-nowrap">日期</th>
                   <th class="text-nowrap">追單課程</th>
@@ -487,9 +534,82 @@
                 </tr>
               </thead>
               <tbody id="contact_data_detail">
-
               </tbody>
             </table>
+          </div>
+        </div>
+        <div class="modal fade" id="save_contact" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">新增聯絡狀況</h5>
+                <button type="button" class="close" id="contact_close" aria-label="Close" data-number="1">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="form_debt">
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">日期:</label>
+                    <div class="input-group date" data-target-input="nearest">
+                      <input type="text" id="debt_date" name="debt_date" class="form-control datetimepicker-input" data-target="#debt_date" placeholder="日期" data-toggle="datetimepicker" autocomplete="off">
+                      <div class="input-group-append" data-target="#debt_date" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">追單課程:</label>
+                    <input type="text" id="debt_course" class="form-control" placeholder="請輸入追單課程" value="" class="border-0 bg-transparent input_width" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">付款狀態 / 日期:</label>
+                    <input type="text" id="debt_status_date" class="form-control" placeholder="請輸入付款狀態 / 日期" value="" class="border-0 bg-transparent input_width">
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">聯絡內容:</label>
+                    <input type="text" id="debt_contact" class="form-control" value="" placeholder="請輸入聯絡內容" class="border-0 bg-transparent input_width">
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">付款狀態:</label>
+                    <select id="debt_status_payment_name" class="form-control custom-select border-0 bg-transparent input_width">
+                      <option selected="" disabled="" value=""></option>
+                      <option value="留單">留單</option>
+                      <option value="完款">完款</option>
+                      <option value="付訂">付訂</option>
+                      <option value="退費">退費</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">最新狀態:</label>
+                    <select id="debt_status" class="form-control custom-select border-0 bg-transparent input_width">
+                      <option selected="" disabled="" value=""></option>
+                      <option value="12">待追</option>
+                      <option value="15">無意願</option>
+                      <option value="16">推薦其他講師</option>
+                      <option value="22">通知下一梯次</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">追單人員:</label>
+                    <input type="text" id="debt_person" class="form-control" placeholder="請輸入追單人員" value="" class="border-0 bg-transparent input_width" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">設提醒:</label>
+                    <div class="input-group date" data-target-input="nearest">
+                      <input type="text" id="debt_remind" name="debt_remind" class="form-control datetimepicker-input datepicker" data-target="#debt_remind" data-toggle="datetimepicker" autocomplete="off">
+                      <div class="input-group-append" data-target="#debt_remind" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" id="btnSubmit" class="btn btn-primary" onclick="debt_add();">儲存</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal fade" id="show_contact" tabindex="-1" role="dialog" aria-labelledby="save_tagTitle" aria-hidden="true" data-backdrop="static">
@@ -533,11 +653,21 @@
                 <div class="form-group">
                   <label for="recipient-name" class="col-form-label">設提醒:</label>
                   <label id="lbl_debt_remind"></label>
+                  <!-- <div class="input-group date" data-target-input="nearest">
+                        <input type="text" id="debt_remind" name="debt_remind" class="form-control datetimepicker-input datepicker" data-target="#debt_remind">
+                        <div class="input-group-append" data-target="#debt_remind" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i>
+                          </div>
+                        </div>
+                      </div> -->
                 </div>
               </div>
             </div>
           </div>
+          <!-- 聯絡狀況 -->
+          <!-- 完整內容 - E -->
         </div>
+
         <!-- 聯絡狀況 -->
 
         <!-- 完整內容 - E -->
@@ -572,7 +702,6 @@
 
 
 <script>
- 
   // 宣告
   var elt = $('#isms_tags');
   var array_studentid = new Array();
@@ -584,6 +713,15 @@
   var check_condition2 = 0,
     check_condition3 = 0;
   $("document").ready(function() {
+    //日期選擇器
+    $('#debt_date').datetimepicker({
+      format: 'YYYY-MM-DD'
+    });
+
+    $('#debt_remind').datetimepicker({
+      format: 'YYYY-MM-DD'
+    });
+
     // 查看條件 - 預設顯示 Rocky(2020/04/21)
     $('#model_show_log').collapse({
       show: true
@@ -601,10 +739,18 @@
     });
   });
 
-
   // 追單資料關閉
+  $("#contact_close").click(function() {
+    $('#save_contact').modal('hide');
+  });
+
   $("#show_contact_close").click(function() {
     $('#show_contact').modal('hide');
+  });
+
+  // 標記關閉
+  $("#tag_close").click(function() {
+    $('#save_tag').modal('hide');
   });
 
   // 篩選條件關閉 Rocky(2020/05/19)
@@ -950,7 +1096,6 @@
   }
 
   /* 完整內容 -S Rocky(2020/02/29) */
-
   // 基本訊息
   function course_data(id_student) {
     id_student_old = id_student
@@ -1173,7 +1318,6 @@
     });
   }
 
-
   /* 標記 -S Rocky(2020/03/12) */
 
   // 標記顯示
@@ -1227,6 +1371,75 @@
       }
     });
   }
+
+  // 標記新增
+  function tags_add() {
+    name = $("#tag_name").val();
+
+    $.ajax({
+      type: 'POST',
+      url: 'tag_save',
+      data: {
+        id_student: id_student_old,
+        name: name,
+      },
+      success: function(data) {
+        if (data = "儲存成功") {
+          tags_show(id_student_old)
+          $("#tag_name").val('')
+          $("#success_alert_text").html("儲存成功");
+          fade($("#success_alert"));
+        } else {
+          $("#error_alert_text").html("儲存失敗");
+          fade($("#error_alert"));
+        }
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    });
+  }
+
+  // 標記刪除
+  elt.on('beforeItemRemove', function(event) {
+    // 權限 Rocky (2020/05/11)
+    var role = JSON.parse($('#auth_role').val())['role']
+    if (role == "admin" || role == "marketer" || role == "officestaff" || role == "msaleser" || role == "saleser") {
+      var msg = "是否刪除標記資料?";
+      if (confirm(msg) == true) {
+        $.ajax({
+          type: 'POST',
+          url: 'tag_delete',
+          dataType: 'json',
+          data: {
+            id: event.item['value']
+          },
+          success: function(data) {
+            if (data['data'] == "ok") {
+              /** alert **/
+              $("#success_alert_text").html("刪除資料成功");
+              fade($("#success_alert"));
+
+              // location.reload();
+            } else {
+              /** alert **/
+              $("#error_alert_text").html("刪除資料失敗");
+              fade($("#error_alert"));
+            }
+          },
+          error: function(error) {
+            console.log(JSON.stringify(error));
+          }
+        });
+      } else {
+        tags_show(id_student_old)
+        return false;
+      }
+    } else {
+      tags_show(id_student_old)
+      return false;
+    }
+  });
 
   /* 標記 -E Rocky(2020/03/12) */
 
@@ -1285,7 +1498,7 @@
       },
       // async: false,
       success: function(data) {
-        updatetime = '', remindtime = '', id_debt_status_payment_name = '', id_status = '', val_status = '', val_status_payment_name = ''
+        updatetime = '', remindtime = '', id_debt_status_payment_name = '', id_status = '', val_status = '', val_status_payment_name = '', id_debt_status_payment_name2 = '';
         var array_id_status = [],
           array_id_debt_status_payment_name = [],
           array_val_status_payment_name = [],
@@ -1329,20 +1542,22 @@
           if (val['person'] != null) {
             person = val['person']
           }
-
           data +=
             '<tr>' +
-            '<td><i class="fa fa-address-card " aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 40%;"></i></td>' +
+            '<td><i class="fa fa-address-card " aria-hidden="true" onclick="debt_show(' + id + ');" style="cursor:pointer;padding-top: 20%;"></i></td>' +
+            '<td><i class="fa fa-trash auth_hidden" aria-hidden="true" onclick="debt_delete(' + id + ');" style="cursor:pointer;padding-top: 40%; color:#eb6060"></i></td>' +
             '<td>' +
             '<div class="input-group date show_datetime" id="new_starttime' + id + '" data-target-input="nearest"> ' +
-            ' <input type="text" readonly onblur="save_data($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
+            ' <input type="text" onblur="save_data($(this),' + id + ',0);"  value="' + val['updated_at'] + '"   name="new_starttime' + id + '" class="form-control datetimepicker-input datepicker auth_readonly" data-target="#new_starttime' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
+            // ' <div class="input-group-append" data-target="#new_starttime' + id + '" data-toggle="datetimepicker"> ' +
+            // ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
             '</div> ' +
             '</div>' +
             '</td>' +
-            '<td>' + '<input type="text" readonly  class="form-control auth_readonly" onblur="save_data($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td>' + '<input type="text"   readonly class="auth_readonly form-control" onblur="save_data($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td>' + '<input type="text"  readonly class=" auth_readonly form-control" onblur="save_data($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
-            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_debt_status_payment_name + '" onblur="save_data($(this),' + id + ',7);" disabled class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+            '<td>' + '<input type="text"  class="form-control auth_readonly" onblur="save_data($(this),' + id + ',6);" id="' + id + '_name_course" value="' + val['name_course'] + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="save_data($(this),' + id + ',1);" id="' + id + '_status_payment" value="' + status_payment + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td>' + '<input type="text"  class=" auth_readonly form-control" onblur="save_data($(this),' + id + ',2);" id="' + id + '_contact" value="' + contact + '"  class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_debt_status_payment_name + '" onblur="save_data($(this),' + id + ',7);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
             '<option selected disabled value=""></option>' +
             '<option value="留單">留單</option>' +
             '<option value="完款">完款</option>' +
@@ -1350,7 +1565,7 @@
             '<option value="退費">退費</option>' +
             '</select>' +
             '</div> </td>' +
-            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_status + '" disabled  onblur="save_data($(this),' + id + ',3);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
+            '<td style="width:15%;">' + '<div class="form-group show_select m-0"> <select id="' + id_status + '" onblur="save_data($(this),' + id + ',3);" class="auth_readonly custom-select border-0 bg-transparent input_width"> ' +
             '<option selected disabled value=""></option>' +
             '<option value="12">待追</option>' +
             '<option value="15">無意願</option>' +
@@ -1358,11 +1573,12 @@
             '<option value="22">通知下一梯次</option>' +
             '</select>' +
             '</div> </td>' +
-            '<td>' + '<input type="text"  readonly class="auth_readonly form-control" onblur="save_data($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
+            '<td>' + '<input type="text"  class="auth_readonly form-control" onblur="save_data($(this),' + id + ',5);" id="' + id + '_person" value="' + person + '" class="border-0 bg-transparent input_width">' + '</td>' +
             '<td>' +
             '<div class="input-group date show_datetime" id="remind' + id + '" data-target-input="nearest"> ' +
-            ' <input type="text" readonly onblur="save_data($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
+            ' <input type="text" onblur="save_data($(this),' + id + ',4);"  value="' + val['remind_at'] + '"   name="remind' + id + '" class="auth_readonly form-control datetimepicker-input datepicker" data-target="#remind' + id + '" data-toggle="datetimepicker" autocomplete="off" required/> ' +
             ' <div class="input-group-append" data-target="#remind' + id + '" data-toggle="datetimepicker"> ' +
+            // ' <div class="input-group-text"><i class="fa fa-calendar"></i></div> ' +
             '</div> ' +
             '</div>' +
             '</td>' +
@@ -1415,12 +1631,97 @@
         })
 
         /*付款狀態、最新狀態 - E*/
+
       },
       error: function(error) {
         console.log(JSON.stringify(error));
       }
     });
   }
+
+  /*聯絡狀況 - 新增 - S Rocky(2020/04/02)*/
+  function debt_add() {
+    var isValidForm = document.forms['form_debt'].checkValidity();
+    if ($("#debt_course").val() == "" || $("#debt_person").val() == "") {
+      alert('請填寫追單課程 / 追單人員');
+      return false;
+    } else {
+      if (isValidForm) {
+        debt_date = $("#debt_date").val();
+        debt_course = $("#debt_course").val();
+        debt_status_date = $("#debt_status_date").val();
+        debt_contact = $("#debt_contact").val();
+        debt_status = $("#debt_status").val();
+        debt_status_payment_name = $("#debt_status_payment_name").val();
+        debt_person = $("#debt_person").val();
+        debt_remind = $("#debt_remind").val();
+        id_student = id_student_old;
+
+        $.ajax({
+          type: 'POST',
+          url: 'debt_save',
+          data: {
+            id_student: id_student,
+            debt_date: debt_date,
+            debt_course: debt_course,
+            debt_status_date: debt_status_date,
+            debt_contact: debt_contact,
+            debt_status: debt_status,
+            debt_status_payment_name: debt_status_payment_name,
+            debt_person: debt_person,
+            debt_remind: debt_remind
+          },
+          success: function(data) {
+            if (data = "儲存成功") {
+              contact_data();
+              $("#success_alert_text").html("儲存成功");
+              fade($("#success_alert"));
+              $("#save_contact").modal('hide');
+            } else {
+              $("#error_alert_text").html("儲存失敗");
+              fade($("#error_alert"));
+            }
+          },
+          error: function(error) {
+            console.log(JSON.stringify(error));
+          }
+        });
+      } else {
+        return false;
+      }
+    }
+  }
+  /*聯絡狀況 - 新增 - E*/
+
+  /*聯絡狀況 - 刪除 - S Rocky(2020/04/02)*/
+  function debt_delete(id) {
+    var msg = "是否刪除此筆資料?";
+    if (confirm(msg) == true) {
+      $.ajax({
+        type: 'POST',
+        url: 'debt_delete',
+        data: {
+          id: id
+        },
+        success: function(data) {
+          if (data = "刪除成功") {
+            contact_data();
+            $("#success_alert_text").html("刪除成功");
+            fade($("#success_alert"));
+          } else {
+            $("#error_alert_text").html("刪除失敗");
+            fade($("#error_alert"));
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error));
+        }
+      });
+    } else {
+      return false;
+    }
+  }
+  /*聯絡狀況 - 刪除 - E*/
 
   /*聯絡狀況 - 顯示 - S Rocky(2020/04/21)*/
   function debt_show(id) {
@@ -1451,6 +1752,8 @@
   /* 完整內容 -E Rocky(2020/02/29 */
 
   // 儲存資料 Rocky(2020/03/19)
+
+  // 細分組
   function save() {
     var title = $('#group_title').val()
     var log = search_orlog + search_log
@@ -1479,6 +1782,72 @@
     })
   }
 
+  // 完整內容
+  function student_save() {
+    student_name = $("#student_name").val();
+    student_email = $("#student_email").val();
+    student_profession = $("#student_profession").val();
+    student_address = $("#student_address").val();
+    sales_registration_old = $("#sales_registration_old").val();
+    old_datasource = $("#old_datasource").val();
+    student_phone = $("#student_phone").val();
+
+
+    $.ajax({
+      type: 'POST',
+      url: 'student_save',
+      data: {
+        id_student: id_student_old,
+        profession: student_profession,
+        address: student_address,
+        sales_registration_old: sales_registration_old,
+        old_datasource: old_datasource,
+        student_phone: student_phone,
+        student_name: student_name,
+        student_email: student_email
+      },
+      success: function(data) {
+        if (data = "更新成功") {
+          $("#success_alert_text").html("儲存成功");
+          fade($("#success_alert"));
+        } else {
+          $("#error_alert_text").html("儲存失敗");
+          fade($("#error_alert"));
+
+        }
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    });
+  }
+
+  // 自動儲存
+  function save_data(data, id, type) {
+    $.ajax({
+      type: 'POST',
+      url: 'contact_data_save',
+      data: {
+        id: id,
+        type: type,
+        data: data.val()
+      },
+      success: function(data) {
+        // console.log(data);
+
+        /** alert **/
+        $("#success_alert_text").html("資料儲存成功");
+        fade($("#success_alert"));
+      },
+      error: function(jqXHR) {
+        console.log(JSON.stringify(jqXHR));
+
+        /** alert **/
+        $("#error_alert_text").html("資料儲存失敗");
+        fade($("#error_alert"));
+      }
+    });
+  }
 
   function show_condition1() {
     //條件類別判斷
