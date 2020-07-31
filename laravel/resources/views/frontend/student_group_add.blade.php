@@ -16,32 +16,16 @@
     top: 0 !important;
   }
 
-  .bootstrap-tagsinput .tag [data-role="remove"] {
+  /* .bootstrap-tagsinput .tag [data-role="remove"] {
     display: none;
-  }
+  } */
 </style>
 <!-- Content Start -->
 <!--學員細分組內容-->
 <div class="card m-3">
+  <!-- 權限 Rocky(2020/05/10) -->
+  <input type="hidden" id="auth_role" value="{{ Auth::user()}}" />
   <div class="card-body">
-    <!-- <div class="row">
-        <div class="col form-inline">
-          <span class="p-1 border border-secondary rounded-pill ">
-            <small class="text-secondary">篩選器1</small>
-          </span>
-          <h5 class="mx-2 mb-0">符合下列</h5>
-          <div class="form-group m-0">
-            <select class="custom-select border-0 bg-transparent" name="filter">
-              <option value="1">全部</option>
-              <option value="2">姓名</option>
-              <option value="3">聯絡電話</option>
-              <option value="4">電子郵件</option>
-              <option value="5">來源</option>
-              <option value="6">加入日期</option>
-            </select>
-            </div>                
-        </div>
-      </div> -->
     <form id="form_condition1">
       <div class="row">
         <div class="col-3">

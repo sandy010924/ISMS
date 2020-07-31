@@ -16,14 +16,16 @@
     top: 0 !important;
   }
 
-  .bootstrap-tagsinput .tag [data-role="remove"] {
+  /* .bootstrap-tagsinput .tag [data-role="remove"] {
     display: none;
-  }
+  } */
 </style>
 <!-- Content Start -->
 <!--學員細分組內容-->
 <div class="card m-3">
   <div class="card-body">
+    <!-- 權限 Rocky(2020/05/10) -->
+    <input type="hidden" id="auth_role" value="{{ Auth::user()}}" />
     <form id="form_condition1">
       <div class="row">
         <div class="col-3">
