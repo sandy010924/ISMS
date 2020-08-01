@@ -37,7 +37,8 @@
           </select>
         </div>
         <div class="col-3">
-          <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course"></select>
+          {{-- <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course"></select> --}}
+          <select class="form-control js-example-basic-multiple bootstrap_multipleSelect" multiple="multiple" id="select_course"></select>
         </div>
         <div class="col-3">
           <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date">
@@ -85,12 +86,12 @@
     <div class="row">
       <div class="col-2 mt-2">
         <button class="btn btn-primary" type="button" id="btn_condition2" onclick="condition2();" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
-          <i class="fa fa-plus" aria-hidden="true">添加條件</i>
+          <i class="fa fa-plus" aria-hidden="true"></i> 添加條件
         </button>
       </div>
       <div class="col-2 mt-2">
         <button class="btn btn-success" type="button" onclick="search();">
-          <i class="fa fa-search" aria-hidden="true">搜尋</i>
+          <i class="fa fa-search" aria-hidden="true"></i> 搜尋
         </button>
       </div>
     </div>
@@ -111,7 +112,8 @@
             </select>
           </div>
           <div class="col-3">
-            <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course2"></select>
+            {{-- <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course2"></select> --}}
+            <select class="form-control js-example-basic-multiple bootstrap_multipleSelect" multiple="multiple" id="select_course2"></select>
           </div>
           <div class="col-3">
             <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date2">
@@ -155,7 +157,7 @@
       <div class="row">
         <div class="col-2  mt-2">
           <button class="btn btn-primary" type="button" onclick="condition3();" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
-            <i class="fa fa-plus" aria-hidden="true">添加條件</i>
+            <i class="fa fa-plus" aria-hidden="true"></i> 添加條件
           </button>
           <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-number="1" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2" onclick="close_condition2();">
             <span aria-hidden="true">&times;</span>
@@ -180,7 +182,8 @@
             </select>
           </div>
           <div class="col-3">
-            <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course3"></select>
+            {{-- <select multiple class="selectpicker form-control" data-actions-box="true" id="select_course3"></select> --}}
+            <select class="form-control js-example-basic-multiple bootstrap_multipleSelect" multiple="multiple" id="select_course3"></select>
           </div>
           <div class="col-3">
             <input type="text" class="w-100 form-control p-0" name="daterange" id="input_date3">
@@ -711,16 +714,24 @@
       show: true
     })
 
-    // 課程多選 Rocky(2020/03/14)
-    $("#select_course").selectpicker({
-      noneSelectedText: '請選擇' //預設顯示內容
+    // // 課程多選 Rocky(2020/03/14)
+    // $("#select_course").selectpicker({
+    //   noneSelectedText: '請選擇' //預設顯示內容
+    // });
+    // $("#select_course2").selectpicker({
+    //   noneSelectedText: '請選擇' //預設顯示內容
+    // });
+    // $("#select_course3").selectpicker({
+    //   noneSelectedText: '請選擇' //預設顯示內容
+    // });
+
+    //課程多選樣式改 Sandy(2020/08/02)
+    $(".bootstrap_multipleSelect").select2({
+        width: 'resolve', // need to override the changed default
+        theme: 'bootstrap',
+        placeholder: "請選擇",
     });
-    $("#select_course2").selectpicker({
-      noneSelectedText: '請選擇' //預設顯示內容
-    });
-    $("#select_course3").selectpicker({
-      noneSelectedText: '請選擇' //預設顯示內容
-    });
+    $.fn.select2.defaults.set( "theme", "bootstrap" );
   });
 
   // 追單資料關閉
