@@ -73,7 +73,7 @@ class ReportController extends Controller
                                     b.type as type,
                                     b.name as course,
                                     DATE_FORMAT(course_start_at,'%Y-%m-%d') as x")
-                                ->orderby('course_start_at')
+                                ->orderby('events_course.course_start_at')
                                 ->whereBetween('events_course.course_start_at', [$startDate, $endDate]);
 
             //老師
@@ -131,44 +131,44 @@ class ReportController extends Controller
 
                     }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                         //正課
-                        $count = Register::where('id_events', $data_search['id_events']);
-
-                        // //來源
-                        // if($data[2] != '0'){
-                        //     $count->where('datasource', $data[2]);
-                        // }
+                        $count = Register::where('id_events', $data_search['id']);
 
                         //動作
                         if($data[3] != '0'){
                             $count->where('id_status', $data[3]);
                         }
 
-                        //付款狀態(營業額)
-                        if($data[6] != '0' && $nav == "pay"){
-                            $count->where('status_payment', $data[6]);
-                        }
-
                         // $events[$key_events]['y'] = count($count->get());
                     }
+
+                    $count = $count->get();
 
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
                         if( $data_search['x'] == $data_result['x'] ){
                             // $index = array_search($data_search['x'], $data_result);
-                            $result[$key][$key_result]['y'] += count($count->get());
-                            $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
+                            $result[$key][$key_result]['y'] += count($count);
+                            // $result[$key][$key_result]['course'][$key+1] .= "、" .$data_search['course'] . " " . $data_search['events'] . count($count);
+                            $event = $data_search['course'] . " " . $data_search['events'] . "：" . count($count);
+                            array_push($result[$key][$key_result]['course'], $event);
                             // $events['title'] .= "、".$data_search['course'];
                             $out++;
                             break;
                         }
                     }
                     if( $out == 0 ){
-                        $events['y'] = count($count->get());
+                        $events['course'] = array();
+                        $events['y'] = count($count);
                         $events['x'] = $data_search['x'];
-                        $events['course'] = $data_search['course'] . " " . $data_search['events'];
-                        // $events['title'] = $data_search['course'];
 
+                        // $events['course'] = $data_search['course'] . " " . $data_search['events'] . count($count);
+                        $event = $data_search['course'] . " " . $data_search['events'] . "：" . count($count);
+
+                        // $events['title'] = $data_search['course'];
+                        
+                        array_push($events['course'], $event);
                         array_push($result[$key], $events);
+
                     }
                     
                     //記錄每一條件的每一場次資訊
@@ -211,34 +211,53 @@ class ReportController extends Controller
                                     ->Where('id_status', '<>', 5)
                                     ->get();
                     $check = $check->where('id_status', 4)->get();
-                    
+                
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
                         if( $data_search['x'] == $data_result['x'] ){
                             // $index = array_search($data_search['x'], $data_result);
+                            // $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
+
                             if(count($check)!=0 && count($apply)!=0){
                                 // $result[$key][$key_result]['y'] += count($check) / count($apply)*100;
                                 $result[$key][$key_result]['y'] = round(($result[$key][$key_result]['y'] + (count($check) / count($apply)*100)) / 2, 1);
-                            }else if($result[$key][$key_result]['y'] != 0){
+
+                                $event = $data_search['course'] . " " . $data_search['events'] . '：' . round(count($check) / count($apply) * 100 , 1) . '%';
+                            }else{
                                 // $result[$key][$key_result]['y'] /= 2;
                                 $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 1);
+
+                                $event = $data_search['course'] . " " . $data_search['events'] . '：0%';
                             }
-                            $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
                             // $events['title'] .= "、".$data_search['course'];
+                            array_push($result[$key][$key_result]['course'], $event);
+
+                            //平均報到
+                            // if( $key_result === count($result[$key])-1 ){
+                            //     array_push($result[$key][$key_result]['course'], '平均報到率：' . $result[$key][$key_result]['y'] . '%');
+                            // }
+
                             $out++;
                             break;
                         }
                     }
                     if( $out == 0 ){
+                        $events['course'] = array();
+                        $events['x'] = $data_search['x'];
+
                         if(count($check)!=0 && count($apply)!=0){
                             $events['y'] = round(count($check) / count($apply) * 100 ,1);
+
+                            $event = $data_search['course'] . " " . $data_search['events'] . '：' . round(count($check) / count($apply) * 100 , 1) . '%';
                         }else{
                             $events['y'] = 0;
-                        }
-                        $events['x'] = $data_search['x'];
-                        $events['course'] = $data_search['course'] . " " . $data_search['events'];
-                        // $events['title'] = $data_search['course'];
 
+                            $event = $data_search['course'] . " " . $data_search['events'] . '：0%';
+                        }
+
+                        // $events['course'] = $data_search['course'] . " " . $data_search['events'];
+
+                        array_push($events['course'], $event);
                         array_push($result[$key], $events);
                     }
                     
@@ -281,32 +300,48 @@ class ReportController extends Controller
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
                         if( $data_search['x'] == $data_result['x'] ){
-                            // $index = array_search($data_search['x'], $data_result);
-                            if(count($deal)!=0 && count($check)!=0){
+
+                            if(count($check)!=0 && count($deal)!=0){
                                 // $result[$key][$key_result]['y'] += count($deal) / count($check)*100;
                                 $result[$key][$key_result]['y'] = round(($result[$key][$key_result]['y'] + (count($deal) / count($check)*100))/ 2, 1);
-                            }else if($result[$key][$key_result]['y'] != 0){
+
+                                $event = $data_search['course'] . " " . $data_search['events'] . '：' . round(count($deal) / count($check) * 100 , 1) . '%';
+                            }else{
                                 // $result[$key][$key_result]['y'] /= 2;
                                 $result[$key][$key_result]['y'] = round($result[$key][$key_result]['y'] / 2, 1);
 
+                                $event = $data_search['course'] . " " . $data_search['events'] . '：0%';
                             }
-                            $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
-                            // $events['title'] .= "、".$data_search['course'];
+                            // $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
+                            array_push($result[$key][$key_result]['course'], $event);
+
+                            //平均成交
+                            // if( $key_result === count($result[$key])-1 ){
+                            //     array_push($result[$key][$key_result]['course'], '平均成交率：' . $result[$key][$key_result]['y'] . '%');
+                            // }
+                            
                             $out++;
                             break;
                         }
                     }
                     if( $out == 0 ){
+                        $events['x'] = $data_search['x'];
+                        $events['course'] = array();
+                        
                         if(count($deal)!=0 && count($check)!=0){
-                            // $events['y'] = round(count($deal) / count($check) *100 / 2,1);
+                            
                             $events['y'] = round(count($deal) / count($check) *100, 1);
+
+                            $event = $data_search['course'] . " " . $data_search['events'] . '：' . round(count($deal) / count($check) * 100 , 1) . '%';
                         }else{
                             $events['y'] = 0;
-                        }
-                        $events['x'] = $data_search['x'];
-                        $events['course'] = $data_search['course'] . " " . $data_search['events'];
-                        // $events['title'] = $data_search['course'];
 
+                            $event = $data_search['course'] . " " . $data_search['events'] . '：0%';
+                        }
+                        
+                        // $events['course'] = $data_search['course'] . " " . $data_search['events'];
+
+                        array_push($events['course'], $event);
                         array_push($result[$key], $events);
                     }
                     
@@ -410,18 +445,36 @@ class ReportController extends Controller
                         if( $data_search['x'] == $data_result['x'] ){
                             // $index = array_search($data_search['x'], $data_result);
                             $result[$key][$key_result]['y'] += $income;
-                            $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
-                            // $events['title'] .= "、".$data_search['course'];
+                            // $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
+
+                            $event = $data_search['course'] . " " . $data_search['events'] . '：$' . $income;
+                            
+                            array_push($result[$key][$key_result]['course'], $event);
+                            
                             $out++;
                             break;
                         }
                     }
                     if( $out == 0 ){
-                        $events['y'] = $income;
-                        $events['x'] = $data_search['x'];
-                        $events['course'] = $data_search['course'] . " " . $data_search['events'];
-                        // $events['title'] = $data_search['course'];
+                        // $events['y'] = $income;
+                        // $events['x'] = $data_search['x'];
+                        // // $events['course'] = array();
+                        // // $events['course'] = $data_search['course'] . " " . $data_search['events'];
+                        // // $events['title'] = $data_search['course'];
 
+                        // array_push($result[$key], $events);
+
+                        
+                        $events['course'] = array();
+                        $events['x'] = $data_search['x'];
+                        $events['y'] = $income;
+                        
+                        $event = $data_search['course'] . " " . $data_search['events'] . '：$' . $events['y'];
+                        
+                        
+                        // $events['course'] = $data_search['course'] . " " . $data_search['events'];
+
+                        array_push($events['course'], $event);
                         array_push($result[$key], $events);
                     }
                     
@@ -454,6 +507,12 @@ class ReportController extends Controller
                                 break;
                             case 'cost_message':
                                 $cost = $cost_all->cost_message;
+
+                                //若該場為銷講，訊息成本加上銷講報名來源為SMS的名單數量
+                                if( $data_search['type'] == 1 ){
+                                    $cost += count(SalesRegistration::where('id_events', $data_search['id'])
+                                                                    ->where('datasource', 'sms')->get());
+                                }
                                 break;
                             case 'cost_events':
                                 $cost = $cost_all->cost_events;
@@ -466,6 +525,12 @@ class ReportController extends Controller
                         // $cost = $cost_all->$data[7];
                     }else{
                         $cost = $cost_all->cost_ad + $cost_all->cost_message + $cost_all->cost_events;
+
+                        //若該場為銷講，訊息成本加上銷講報名來源為SMS的名單數量
+                        if( $data_search['type'] == 1 ){
+                            $cost += count(SalesRegistration::where('id_events', $data_search['id'])
+                                                            ->where('datasource', 'sms')->get());
+                        }
                     }
                                         
                     $out = 0;
@@ -473,18 +538,28 @@ class ReportController extends Controller
                         if( $data_search['x'] == $data_result['x'] ){
                             // $index = array_search($data_search['x'], $data_result);
                             $result[$key][$key_result]['y'] += $cost;
-                            $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
+                            // $result[$key][$key_result]['course'] .= "、" .$data_search['course'] . " " . $data_search['events'];
                             // $events['title'] .= "、".$data_search['course'];
+
+                            $event = $data_search['course'] . " " . $data_search['events'] . '：$' . $cost;
+                            
+                            array_push($result[$key][$key_result]['course'], $event);
+
                             $out++;
                             break;
                         }
                     }
                     if( $out == 0 ){
-                        $events['y'] = $cost;
+                        $events['course'] = array();
                         $events['x'] = $data_search['x'];
-                        $events['course'] = $data_search['course'] . " " . $data_search['events'];
-                        // $events['title'] = $data_search['course'];
+                        $events['y'] = $cost;
+                        // $events['y'] = $cost;
+                        // $events['x'] = $data_search['x'];
+                        // $events['course'] = $data_search['course'] . " " . $data_search['events'];
 
+                        $event = $data_search['course'] . " " . $data_search['events'] . '：$' . $events['y'];
+
+                        array_push($events['course'], $event);
                         array_push($result[$key], $events);
                     }
                     

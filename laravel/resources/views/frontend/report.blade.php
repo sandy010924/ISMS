@@ -74,7 +74,7 @@
               @endforeach
             </select> --}}
             {{-- <select multiple class="selectpicker form-control itemSource" data-actions-box="true" name="item1" id="select_source" data-select="itemSource" value="0"> --}}
-            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item1" data-select="itemSource">
+            <select class="form-control js-example-basic-multiple itemSource bootstrap_multipleSelect" multiple="multiple" name="item1" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -125,7 +125,7 @@
           </div>
           <div class="col">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
-              <i id="firstCondition" class="fa fa-toggle-on" aria-hidden="true">增加比較</i>
+              <i id="firstCondition" class="fa fa-plus" aria-hidden="true"></i> 增加比較
             </button>
             <button id="searchBtn" type="button" class="btn btn-outline-secondary float-right">搜尋</button>
           </div>
@@ -165,7 +165,7 @@
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
             </select> --}}
-            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item2" data-select="itemSource">
+            <select class="form-control js-example-basic-multiple itemSource bootstrap_multipleSelect" multiple="multiple" name="item2" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -216,7 +216,10 @@
           </div>
           <div class="col">
           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
-            <i class="fa fa-toggle-on" aria-hidden="true">增加比較</i>
+            <i class="fa fa-plus" aria-hidden="true"></i> 增加比較
+          </button>
+          <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-toggle="collapse" data-target="#dev_condition2" aria-expanded="false" aria-controls="dev_condition2">
+            <span aria-hidden="true">&times;</span>
           </button>
           </div>
         </div>
@@ -255,7 +258,7 @@
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
             </select> --}}
-            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item3" data-select="itemSource">
+            <select class="form-control js-example-basic-multiple itemSource bootstrap_multipleSelect" multiple="multiple" name="item3" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -305,9 +308,12 @@
             </select>
           </div>
           <div class="col">
-          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition4" aria-expanded="false" aria-controls="dev_condition4">
-            <i class="fa fa-toggle-on" aria-hidden="true">增加比較</i>
-          </button>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition4" aria-expanded="false" aria-controls="dev_condition4">
+              <i class="fa fa-plus" aria-hidden="true"></i> 增加比較
+            </button>
+            <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-toggle="collapse" data-target="#dev_condition3" aria-expanded="false" aria-controls="dev_condition3">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
         </div>
       </div>
@@ -345,7 +351,7 @@
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
             </select> --}}
-            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item4" data-select="itemSource">
+            <select class="form-control js-example-basic-multiple itemSource bootstrap_multipleSelect" multiple="multiple" name="item4" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -395,9 +401,12 @@
             </select>
           </div>
           <div class="col">
-          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition5" aria-expanded="false" aria-controls="dev_condition5">
-            <i class="fa fa-toggle-on" aria-hidden="true">增加比較</i>
-          </button>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#dev_condition5" aria-expanded="false" aria-controls="dev_condition5">
+              <i class="fa fa-plus" aria-hidden="true"></i> 增加比較
+            </button>
+            <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-toggle="collapse" data-target="#dev_condition4" aria-expanded="false" aria-controls="dev_condition4">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
         </div>
       </div>
@@ -435,7 +444,7 @@
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
             </select> --}}
-            <select class="form-control itemSource js-example-basic-multiple itemSource" multiple="multiple" name="item5" data-select="itemSource">
+            <select class="form-control js-example-basic-multiple itemSource bootstrap_multipleSelect" multiple="multiple" name="item5" data-select="itemSource">
               @foreach($source as $data)
                 <option value="{{ $data['datasource'] }}">{{ $data['datasource'] }}</option>
               @endforeach
@@ -484,7 +493,11 @@
               <option value="cost_message">訊息費</option>
             </select>
           </div>
-          <div class="col"></div>
+          <div class="col">
+            <button type="button" class="close" style="font-size:30px;color:red" aria-label="Close" data-toggle="collapse" data-target="#dev_condition5" aria-expanded="false" aria-controls="dev_condition5">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -515,28 +528,18 @@
   <!-- 表格 -->
   <div id="reportTable" class="card m-3" style="display: none">
     <div class="card-body">
-       @component('components.datatable')
+       {{-- @component('components.datatable')
           @slot('thead')
             <tr>
-              <th>test</th>
+              <th></th>
             </tr>
           @endslot
           @slot('tbody')
             <tr>
-              <td>test</td>
+              <td></td>
             </tr>
           @endslot
-        @endcomponent
-      {{-- <div class="table-responsive">
-        <table class="table table-striped table-sm text-center">
-          <thead id="tableHead">
-            <tr></tr>
-          </thead>
-          <tbody id="tableBody">
-            
-          </tbody>
-        </table>
-      </div> --}}
+        @endcomponent --}}
     </div>
   </div>
 
@@ -547,8 +550,12 @@
     } */
       
     div.dt-buttons {
-      float: right;
+      float: left;
     }
+
+    #reportTable table tr{
+      white-space: nowrap; 
+   }
   </style>
 
   <!-- Content End -->
@@ -557,9 +564,13 @@
   <script>
     var startDate = moment(new Date()).format("YYYY-MM-DD")
     var endDate = moment(new Date()).format("YYYY-MM-DD")
-    var lineChart;
     var chartLineColor = ['#3e95cd','#e83131','#0dd168', '#f70fe0', '#f58300'];
-    var table;
+    var table, lineChart;
+    
+    /* Datatable.js file name Sandy(2020/08/02) - S */
+    var today = moment(new Date()).format("YYYYMMDD");
+    var title = today + '_數據報表';
+    /* Datatable.js file name Sandy(2020/08/02) - E */
 
     $(document).ready(function () {
 
@@ -601,7 +612,7 @@
       });
 
       //select2 講師及來源、地區下拉式搜尋 Sandy(2020/04/14)
-      $("select").select2({
+      $(".bootstrap_multipleSelect").select2({
           width: 'resolve', // need to override the changed default
           theme: 'bootstrap',
           placeholder: "所有來源",
@@ -621,37 +632,7 @@
       type: 'line',
       data: {
         labels: [],
-    //     datasets: [{
-    // label: '1',
-    //   data: [
-    //         {
-    //          x: '2018-03-28',
-    //          y: 1
-    //         }, {
-    //          x: '2018-03-29',
-    //          y: 2
-    //         },
-    //         {
-    //          x: '2018-04-01',
-    //          y: 6
-    //         }]
-    //   },{
-    // label: '2',
-    //   data: [
-    //         {
-    //          x: '2018-03-28',
-    //          y: 1
-    //         }, {
-    //          x: '2018-03-30',
-    //          y: 2
-    //         },
-    //         {
-    //          x: '2018-04-01',
-    //          y: 6
-    //         }]
-    //   }]
     },
-      // options:chartOptions
       options: {
         scales: {
             yAxes: [{
@@ -709,24 +690,24 @@
             bodyFontFamily: "Microsoft JhengHei",
             hover: { mode: 'point' },
             callbacks: {
-                label: function (tooltipItem, data) {
-                    const dataset = data.datasets[tooltipItem.datasetIndex];
-                    // console.log(dataset)
-                    // 計算總和
-                    // const sum = dataset.data.reduce(function (previousValue, currentValue, currentIndex, array) {
-                    //   return previousValue + currentValue;
-                    // });
-                    const currentValue = dataset.data[tooltipItem.index];
-                    const { y, x, course } = currentValue
-                    // console.log(currentValue)
-                    // return " " + data.labels[tooltipItem.index] + ":" + currentValue  + "%";
-                    // return " " + data.labels[tooltipItem.index] + ":" + currentValue  + "%";
-                    // return [x, position, '', `${position}: ${y}`];
-                    return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
-                },
-                title: function (tooltipItem, data) {
-                    return;
-                }
+                // label: function (tooltipItem, data) {
+                //     const dataset = data.datasets[tooltipItem.datasetIndex];
+                //     // console.log(dataset)
+                //     // 計算總和
+                //     // const sum = dataset.data.reduce(function (previousValue, currentValue, currentIndex, array) {
+                //     //   return previousValue + currentValue;
+                //     // });
+                //     const currentValue = dataset.data[tooltipItem.index];
+                //     const { y, x, course } = currentValue
+                //     // console.log(currentValue)
+                //     // return " " + data.labels[tooltipItem.index] + ":" + currentValue  + "%";
+                //     // return " " + data.labels[tooltipItem.index] + ":" + currentValue  + "%";
+                //     // return [x, position, '', `${position}: ${y}`];
+                //     return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                // },
+                // title: function (tooltipItem, data) {
+                //     return;
+                // }
             }
         },
         legend: {
@@ -765,17 +746,6 @@
       };
       */
 
-    table = $('#table_list').DataTable({
-          "dom": '<<t>>',
-          "ordering": false,
-          // "order": [ 0 , 'desc'],      
-          buttons: [{
-            extend: 'excel',
-            text: '匯出Excel',
-            padding: 3
-            // messageTop: $('#h3_title').text(),
-          }],
-      });
 
   });
 
@@ -838,7 +808,7 @@
       if( i != 0 ){
         str += "<br>";
       }
-      str += "第"+ chNum[i] + "組：" + log[i];
+      str += "第"+ chNum[collapse[i]-1] + "組：" + log[i];
     }
 
     $('#show_log').html(str);
@@ -883,48 +853,57 @@
           //y軸距差、tooltips內容
           switch ($("ul#reportTab a.active").data('nav')) {
             case 'list':
+              //名單數據
               lineChart.config.options.scales.yAxes[0].ticks.stepSize = 20;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
                 const { y, x, course } = currentValue
-                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                // return [x, course, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                return course;
               };
-              break;
             case 'check':
+              //報到率
               lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
                 const { y, x, course } = currentValue
-                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}%`];
+                // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}%`];
+                return course;
               };
               break;
             case 'deal':
+              //成交率
               lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
                 const { y, x, course } = currentValue
-                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}%`];
+                // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}%`];
+                return course;
               };
               break;
             case 'income':
+              //營業額
               lineChart.config.options.scales.yAxes[0].ticks.stepSize = 5000;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
                 const { y, x, course } = currentValue
-                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                return course;
               };
               break;
             case 'cost':
+              //單場成本
               lineChart.config.options.scales.yAxes[0].ticks.stepSize = 5000;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
                 const { y, x, course } = currentValue
-                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                return course;
               };
               break;
             default:
@@ -933,10 +912,29 @@
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
                 const { y, x, course } = currentValue
-                return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+                return course;
               };
               break;
           }
+
+
+          //datatable Layout
+          var tableLayout = `<div id="datatableDiv">
+            <div class="table-responsive">
+              <table id="table_list" name="table_list" class="table table-striped table-sm text-center border rounded-lg datatable">
+                <thead id="tableHead">
+                  <tr></tr>
+                </thead>
+                <tbody id="tableBody">
+                  <tr></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>`;
+
+          $('#reportTable .card-body').html(tableLayout);
+
 
           //表格標頭
           var tableHead = "<th></th>";
@@ -944,20 +942,18 @@
           for( var i = 0 ; i < res['labelDate'].length ; i++ ){
             tableHead += "<th>" + res['labelDate'][i] + "</th>";
           }
+          //完全無資料
+          if(res['labelDate'].length == 0){
+            tableHead += "<th></th>";
+          }
           $('#reportTable #tableHead tr').html(tableHead);
 
-
-          // console.log(table);
-          // $('#table_list').DataTable().ajax.reload();
-          // table.ajax.reload( function ( json ) {
-          //     $('#reportTable #tableHead tr').html( tableHead );
-          // } );
           
           //圖表資料
           for( var i = 0 ; i < res['result'].length ; i++ ){
 
               lineChart.data.datasets[i] = [];
-              lineChart.data.datasets[i].label = "第"+ chNum[i] + "組";
+              lineChart.data.datasets[i].label = "第"+ chNum[collapse[i]-1] + "組";
               lineChart.data.datasets[i].data = res['result'][i];
 
               lineChart.data.datasets[i].borderColor = chartLineColor[i];
@@ -973,15 +969,16 @@
 
 
             if( res['result'][i].length > 0){
-              tableBody += "<tr><th>" + "第"+ chNum[i] + "組" + "</th>";
+              tableBody += "<tr><th>" + "第"+ chNum[collapse[i]-1] + "組" + "</th>";
                 
               for( var k = 0 ; k < res['labelDate'].length ; k++ ){
                 for( var j = 0 ; j < res['result'][i].length ; j++ ){
                   if( res['labelDate'][k] == res['result'][i][j]['x'] ){
-                    tableBody += "<td>" + res['result'][i][j]['y'] + "</td>";
+                    // tableBody += "<td>" + res['result'][i][j]['y'] + "</td>";
+                    tableBody += "<td>" + res['result'][i][j]['course'].join("<br/>") + "</td>";
                     break;
                   }else if( j == res['result'][i].length-1){
-                    tableBody += "<td></td>";
+                    tableBody += "<td>無</td>";
                   }
                 }
                 tableHead += "<th>" + res['labelDate'][i] + "</th>";
@@ -989,7 +986,17 @@
               
               tableBody += "</tr>";
             }else{
-              tableBody += "<tr><th>查無資料</th></tr>";
+              
+              // tableBody += "<tr><th>查無資料</th></tr>";
+              tableBody += "<tr><th>" + "第"+ chNum[collapse[i]-1] + "組" + "</th>";
+              for( var k = 0 ; k < res['labelDate'].length ; k++ ){
+                tableBody += "<td>無</td>";
+              }
+              //完全無資料
+              if(res['labelDate'].length == 0){
+                tableBody += "<td>查無資料</td>";
+              }
+              tableBody += "</tr>";
             }
           }
 
@@ -997,13 +1004,32 @@
 
           lineChart.update();
 
+          //datatable
+          var fixNewLine = {
+            format: {
+                body: function ( data, column, row ) {
+                  return data.replace( /<br\s*\/?>/ig, "\r\n" );
+                }
+            }
+          };
+          table = $('#table_list').DataTable({
+                "dom": '<B<t>>',
+                "ordering": false,
+                // "order": [ 0 , 'desc'],      
+                buttons: [{
+                  extend: 'excel',
+                  text: '匯出Excel',
+                  padding: 3,
+                  exportOptions: fixNewLine,
+                  title: title,
+                  // messageTop: $('#h3_title').text(),
+                }]
+            });
+
           $('#reportChart').show();
           $('#reportTable').show();
-
-// $('#table_list').dataTable().fnClearTable();
-// $('#table_list').dataTable().fnAddData( [
-//         1,2,3,4,5] );
-
+      
+      
           // /** alert **/
           // $("#success_alert_text").html(data["list"].check_name + "報名狀態修改成功");
           // fade($("#success_alert"));
