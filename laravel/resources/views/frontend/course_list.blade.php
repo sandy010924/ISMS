@@ -19,7 +19,9 @@
         <div class="modal fade" id="listform_new" tabindex="-1" role="dialog" aria-labelledby="listform_newLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
-              <form class="form" action="{{ url('course_list_insert') }}" method="POST" enctype="multipart/form-data">
+              <!-- <form class="form" action="{{ url('course_list_insert') }}" method="POST" enctype="multipart/form-data"> -->
+              <input type="hidden" id="reload_upload" name="reload_upload" value="0">
+              <form class="form" id="form_excel_upload" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                   <h5 class="modal-title">新增課程</h5>
@@ -69,7 +71,7 @@
                     <div class="form-group required">
                       <label for="new_flie" class="col-form-label">上傳檔案</label>
                       <div class="custom-file">
-                        <label class="custom-file-label" for="new_flie">瀏覽檔案</label>
+                        <label class="custom-file-label" for="new_flie" id="import_flie_name">瀏覽檔案</label>
                         <input type="file" class="custom-file-input" id="new_flie" name="new_flie" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
                       </div>
                     </div>
@@ -196,23 +198,31 @@
 </div>
 <!-- Content End -->
 
-<!-- Rocky(2020/01/11) -->
-@if (session('status') == "匯入成功")
-<div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" style="display:block;" role="alert">
-  {{ session('status') }}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
+<!-- 重複資料 Rocky(2020/08/02) -->
+<div class="modal bd-example-modal-xl" tabindex="-1" role="dialog" id="check_excel_upload">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fa fa-bell"></i>
+          重複資料提醒
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 內容 -->
+        <div id="dev_repeat"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="cancle_reload_excel();">取消上傳</button>
+        <button type="button" class="btn btn-success" onclick="reload_excel_upload();">繼續上傳</button>
+      </div>
+    </div>
+  </div>
 </div>
-@elseif (session('status') == "匯入失敗" || session('status') == "請選檔案/填講師姓名")
-<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" style="display:block;" role="alert">
-  {{ session('status') }}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-@endif
-<!-- Content End -->
+<!-- 重複資料 Rocky(2020/08/02) -->
 <script>
   //DataTable
   var table;
@@ -276,6 +286,162 @@
       }]
     });
   });
+
+
+  // 新增課程 Rocky(2020/08/01)
+  $('#form_excel_upload').on('submit', function(event) {
+    // 關閉表單自動送出
+    event.preventDefault();
+
+    var formData = new FormData(this);
+
+    // 增加欄位
+    formData.append('reload_upload', $('#reload_upload').val())
+
+    $.ajax({
+      url: 'course_list_insert',
+      method: "POST",
+      data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function(data) {
+        // console.log(data)
+        if ($("#new_type").val() == '1') {
+
+          // 判斷有沒有重複資料(銷講)
+          if (data['status'] == 'repeat') {
+            var data_repeat = ''
+
+            // 顯示重複資料Modal
+            $('#check_excel_upload').modal('show');
+
+            // 顯示資料
+            $.each(data['datas'], function(index, val) {
+              var type = ''
+              if (val['type'] == '1') {
+                type = '<b style="color:red;padding-right: 1.6%;">有同樣姓名、email</b>'
+              } else if (val['type'] == '2') {
+                type = '<b style="color:#50a71a;padding-right: 2.5%;">有同樣姓名、電話</b>'
+              } else if (val['type'] == '3') {
+                type = '<b style="color:#2959b2;padding-right: 0.5%;">有同樣email、電話</b>'
+              } else if (val['type'] == '4') {
+                type = '<b style="color:#ac7e17;padding-right: 0.5%;">有同樣電話</b>'
+              }
+
+              data_repeat += type + '匯入檔案第' + val['key'] + '筆資料 - ' + val['sname'] + '學生與系統  ' +
+                val['name'] + ' / ' + val['phone'] + ' / ' + val['email'] + '<br>'
+            });
+
+            $('#dev_repeat').html(data_repeat)
+
+            // 關閉匯入Modal
+            $('#listform_new').modal('hide');
+
+          } else if (data['status'] == 'successful') {
+            // 關閉匯入Modal
+            $('#listform_new').modal('hide');
+
+            // Alert
+            $("#success_alert_text").html("匯入成功");
+            fade($("#success_alert"));
+
+            // 清空Form資料
+            $('#import_flie_name').text('');
+            $("#form_excel_upload")[0].reset();
+
+            window.location.href = "./course";
+          } else {
+            // Alert
+            $("#error_alert_text").html("匯入失敗");
+            fade($("#error_alert"));
+
+            // 清空Form資料
+            $('#import_flie_name').text('');
+            $("#form_excel_upload")[0].reset();
+          }
+        } else {
+          if (data['status'] == 'successful') {
+            // 關閉匯入Modal
+            $('#listform_new').modal('hide');
+
+            // Alert
+            $("#success_alert_text").html("新增成功");
+            fade($("#success_alert"));
+
+            // location.reload();
+            window.location.href = "./course";
+          } else {
+            // Alert
+            $("#error_alert_text").html("新增失敗");
+            fade($("#error_alert"));
+          }
+        }
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    })
+  });
+
+  // 繼續匯入 Rocky(2020/08/01)
+  function reload_excel_upload() {
+    var formData = new FormData($('#form_excel_upload')[0]);
+
+    // 重新匯入
+    $('#reload_upload').val('1');
+
+    // 增加欄位
+    formData.append('reload_upload', $('#reload_upload').val())
+
+    $.ajax({
+      url: 'course_list_insert',
+      method: "POST",
+      data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function(data) {
+        // 判斷有沒有重複資料
+        if (data['status'] == 'successful') {
+          // 關閉匯入Modal
+          $('#check_excel_upload').modal('hide');
+
+          // Alert
+          $("#success_alert_text").html("匯入成功");
+          fade($("#success_alert"));
+
+          // 清空Form資料
+          $('#import_flie_name').text('');
+          $("#form_excel_upload")[0].reset();
+
+          window.location.href = "./course";
+        } else {
+          // Alert
+          $("#error_alert_text").html("匯入失敗");
+          fade($("#error_alert"));
+
+          // 清空Form資料
+          $('#import_flie_name').text('');
+          $("#form_excel_upload")[0].reset();
+        }
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    })
+  }
+
+  // 取消上傳 Rocky(2020/08/02)
+  function cancle_reload_excel() {
+    // 關閉匯入Modal
+    $('#check_excel_upload').modal('hide');
+
+    // 清空Form資料
+    $('#import_flie_name').text('');
+    $("#form_excel_upload")[0].reset();
+
+  }
 
   // Sandy(2020/02/26) dt列表搜尋 S
   $('#search_name').on('keyup', function(e) {

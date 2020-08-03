@@ -24,7 +24,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form class="form" action="{{url('course')}}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="reload_upload" name="reload_upload" value="0">
+                <form class="form" id="form_excel_upload" enctype="multipart/form-data">
                   @csrf
                   <div class="form-group required">
                     <label for="import_name" class="col-form-label">課程名稱</label>
@@ -51,14 +52,15 @@
                     <label for="import_flie" class="col-form-label">上傳檔案</label>
                     {{-- <textarea class="form-control" id="message-text"></textarea> --}}
                     <div class="custom-file">
-                      <label class="custom-file-label" for="import_flie">瀏覽檔案</label>
+                      <label class="custom-file-label" for="import_flie" id="import_flie_name">瀏覽檔案</label>
                       <input type="file" class="custom-file-input" id="import_flie" name="import_flie" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <!-- <button type="button" id="import_check" class="btn btn-primary">確認</button> -->
+                    <!-- <button type="button" class="btn btn-primary" onclick="course_import();">確認</button> -->
                     <button type="submit" class="btn btn-primary">確認</button>
+
                   </div>
                 </form>
               </div>
@@ -71,7 +73,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">日期區間</span>
           </div>
-          <input type="search" class="form-control px-3" name="daterange" id="daterange" autocomplete="off"> 
+          <input type="search" class="form-control px-3" name="daterange" id="daterange" autocomplete="off">
         </div>
       </div>
       <div class="col-3">
@@ -138,23 +140,34 @@
   </div>
 </div>
 
-<!-- Rocky(2020/01/11) -->
-@if (session('status') == "匯入成功")
-<div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" style="display:block;" role="alert">
-  {{ session('status') }}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-@elseif (session('status') == "匯入失敗" || session('status') == "請選檔案/填講師姓名")
-<div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" style="display:block;" role="alert">
-  {{ session('status') }}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-@endif
 <!-- Content End -->
+
+<!-- 重複資料 Rocky(2020/08/02) -->
+<div class="modal bd-example-modal-xl" tabindex="-1" role="dialog" id="check_excel_upload">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fa fa-bell"></i>
+          重複資料提醒
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 內容 -->
+        <div id="dev_repeat"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" onclick="cancle_reload_excel();">取消上傳</button>
+        <button type="button" class="btn btn-success" onclick="reload_excel_upload();">繼續上傳</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 重複資料 Rocky(2020/08/02) -->
+
 
 <script>
   // Sandy(2020/02/26) dt列表搜尋 S
@@ -167,7 +180,7 @@
       var tname = data[1];
 
       // if ((isNaN(date) && isNaN(name)) || (tdate.includes(date) && isNaN(name)) || (tname.includes(name) && isNaN(date)) || (tname.includes(name) && tname.includes(name))) {
-      if ( isNaN(name) || (tname.includes(name) && tname.includes(name)) ) {
+      if (isNaN(name) || (tname.includes(name) && tname.includes(name))) {
         return true;
       }
       return false;
@@ -196,17 +209,17 @@
     });
 
     /* 日期區間 */
-    
-      //有資料設定日期區間
-      $('input[name="daterange"]').daterangepicker({
-        autoUpdateInput: false,
-        locale: {
-          format: 'YYYY-MM-DD',
-          separator: ' ~ ',
-          applyLabel: '搜尋',
-          cancelLabel: '取消',
-        }
-      });
+
+    //有資料設定日期區間
+    $('input[name="daterange"]').daterangepicker({
+      autoUpdateInput: false,
+      locale: {
+        format: 'YYYY-MM-DD',
+        separator: ' ~ ',
+        applyLabel: '搜尋',
+        cancelLabel: '取消',
+      }
+    });
 
     /* 日期區間搜尋 */
     $('#daterange').on('apply.daterangepicker', function(ev, picker) {
@@ -233,7 +246,7 @@
     $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
       //輸入框清空
       $(this).val('');
-      
+
       //取消搜尋
       $.fn.dataTable.ext.search.pop();
       table.draw();
@@ -241,6 +254,140 @@
 
 
   });
+
+
+  // Excel 匯入 Rocky(2020/08/01)
+  $('#form_excel_upload').on('submit', function(event) {
+    // 關閉表單自動送出
+    event.preventDefault();
+
+    var formData = new FormData(this);
+
+    // 增加欄位
+    formData.append('reload_upload', $('#reload_upload').val())
+
+    $.ajax({
+      url: 'course',
+      method: "POST",
+      data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function(data) {
+        // console.log(data)
+        // 判斷有沒有重複資料
+        if (data['status'] == 'repeat') {
+          var data_repeat = ''
+
+          // 顯示重複資料Modal
+          $('#check_excel_upload').modal('show');
+
+          // 顯示資料
+          $.each(data['datas'], function(index, val) {
+            var type = ''
+            if (val['type'] == '1') {
+              type = '<b style="color:red;padding-right: 1.6%;">有同樣姓名、email</b>'
+            } else if (val['type'] == '2') {
+              type = '<b style="color:#50a71a;padding-right: 2.5%;">有同樣姓名、電話</b>'
+            } else if (val['type'] == '3') {
+              type = '<b style="color:#2959b2;padding-right: 0.5%;">有同樣email、電話</b>'
+            } else if (val['type'] == '4') {
+              type = '<b style="color:#ac7e17;padding-right: 0.5%;">有同樣電話</b>'
+            }
+
+            data_repeat += type + '匯入檔案第' + val['key'] + '筆資料 - ' + val['sname'] + '學生與系統  ' +
+              val['name'] + ' / ' + val['phone'] + ' / ' + val['email'] + '<br>'
+          });
+
+          $('#dev_repeat').html(data_repeat)
+
+          // 關閉匯入Modal
+          $('#form_import').modal('hide');
+
+        } else if (data['status'] == 'successful') {
+          // 關閉匯入Modal
+          $('#form_import').modal('hide');
+
+          // Alert
+          $("#success_alert_text").html("匯入成功");
+          fade($("#success_alert"));
+
+          // 清空Form資料
+          $('#import_flie_name').text('');
+          $("#form_excel_upload")[0].reset();
+        } else {
+          // Alert
+          $("#error_alert_text").html("匯入失敗");
+          fade($("#error_alert"));
+
+          // 清空Form資料
+          $('#import_flie_name').text('');
+          $("#form_excel_upload")[0].reset();
+        }
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    })
+  });
+
+  // 繼續匯入 Rocky(2020/08/01)
+  function reload_excel_upload() {
+    var formData = new FormData($('#form_excel_upload')[0]);
+
+    // 重新匯入
+    $('#reload_upload').val('1');
+
+    // 增加欄位
+    formData.append('reload_upload', $('#reload_upload').val())
+
+    $.ajax({
+      url: 'course',
+      method: "POST",
+      data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function(data) {
+        // 判斷有沒有重複資料
+        if (data['status'] == 'successful') {
+          // 關閉匯入Modal
+          $('#check_excel_upload').modal('hide');
+
+          // Alert
+          $("#success_alert_text").html("匯入成功");
+          fade($("#success_alert"));
+
+          // 清空Form資料
+          $('#import_flie_name').text('');
+          $("#form_excel_upload")[0].reset();
+
+        } else {
+          // Alert
+          $("#error_alert_text").html("匯入失敗");
+          fade($("#error_alert"));
+
+          // 清空Form資料
+          $('#import_flie_name').text('');
+          $("#form_excel_upload")[0].reset();
+        }
+      },
+      error: function(error) {
+        console.log(JSON.stringify(error));
+      }
+    })
+  }
+
+  // 取消上傳 Rocky(2020/08/02)
+  function cancle_reload_excel() {
+    // 關閉匯入Modal
+    $('#check_excel_upload').modal('hide');
+
+    // 清空Form資料
+    $('#import_flie_name').text('');
+    $("#form_excel_upload")[0].reset();
+
+  }
 
   // 輸入框 Sandy(2020/02/25)
   $('#search_name').on('keyup', function(e) {
