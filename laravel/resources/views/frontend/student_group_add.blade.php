@@ -727,11 +727,11 @@
 
     //課程多選樣式改 Sandy(2020/08/02)
     $(".bootstrap_multipleSelect").select2({
-        width: 'resolve', // need to override the changed default
-        theme: 'bootstrap',
-        placeholder: "請選擇",
+      width: 'resolve', // need to override the changed default
+      theme: 'bootstrap',
+      placeholder: "請選擇",
     });
-    $.fn.select2.defaults.set( "theme", "bootstrap" );
+    $.fn.select2.defaults.set("theme", "bootstrap");
   });
 
   // 追單資料關閉

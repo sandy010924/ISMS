@@ -66,36 +66,59 @@ class StudentGroupController extends Controller
             if ($i == 0) {
                 if (!empty($this->search($array_search[$i]))) {
                     $array_search1 = $this->search($array_search[$i]);
-                    $array_search_deal = array_merge($array_search_deal, json_decode($array_search1, true));
+                    // $array_search_deal = array_merge($array_search_deal, json_decode($array_search1, true));
                 }
             } elseif ($i == 1) {
                 if (!empty($this->search($array_search[$i]))) {
                     $array_search2 = $this->search($array_search[$i]);
-                    $array_search_deal = array_merge($array_search_deal, json_decode($array_search2, true));
+                    // $array_search_deal = array_merge($array_search_deal, json_decode($array_search2, true));
                 }
             } elseif ($i == 2) {
                 if (!empty($this->search($array_search[$i]))) {
                     $array_search3 = $this->search($array_search[$i]);
-                    $array_search_deal = array_merge($array_search_deal, json_decode($array_search3, true));
+                    // $array_search_deal = array_merge($array_search_deal, json_decode($array_search3, true));
                 }
             }
         }
 
         // 找到相同資料
-        foreach ($array_search_deal as $current_key => $current_array) {
-            $search_key = array_search($current_array, $array_search_deal);
-            if ($current_key != $search_key) {
-                array_push($array_search_successful, $array_search_deal[$search_key]);
-            }
+        if (count($array_search1) != 0 && count($array_search2) != 0 && count($array_search3) != 0) {
+            $array_temp = [];
+            $array_temp = array_uintersect(json_decode($array_search1, true), json_decode($array_search2, true), 'self::arrayvalue');
+            $array_search_successful = array_uintersect($array_temp, json_decode($array_search3, true), 'self::arrayvalue');
+        } else if (count($array_search1) != 0 && count($array_search2) != 0) {
+            $array_search_successful = array_uintersect(json_decode($array_search1, true), json_decode($array_search2, true), 'self::arrayvalue');
+        } else if (count($array_search1) != 0 && count($array_search3) != 0) {
+            $array_search_successful = array_uintersect(json_decode($array_search1, true), json_decode($array_search3, true), 'self::arrayvalue');
+        } else if (count($array_search2) != 0 && count($array_search3) != 0) {
+            $array_search_successful = array_uintersect(json_decode($array_search2, true), json_decode($array_search3, true), 'self::arrayvalue');
+        } else if (count($array_search1) != 0) {
+            $array_search_successful = json_decode($array_search1, true);
+        } else if (count($array_search2) != 0) {
+            $array_search_successful = json_decode($array_search2, true);
+        } else if (count($array_search3) != 0) {
+            $array_search_successful = json_decode($array_search3, true);
         }
-        if (count($array_search_successful) == 0) {
-            $array_search_successful = $array_search_deal;
-        }
+
+        return $array_search_successful;
+
+        // foreach ($array_search_deal as $current_key => $current_array) {
+        //     $search_key = array_search($current_array, $array_search_deal);
+        //     if ($current_key != $search_key) {
+        //         array_push($array_search_successful, $array_search_deal[$search_key]);
+        //     }
+        // }
+        // if (count($array_search_successful) == 0) {
+        //     $array_search_successful = $array_search_deal;
+        // }
 
         return $array_search_successful;
     }
 
-
+    public function arrayvalue($val1, $val2)
+    {
+        return strcmp($val1['id'], $val2['id']);
+    }
 
     public function search($array_search)
     {
@@ -120,14 +143,22 @@ class StudentGroupController extends Controller
         // 看日期有沒有'-'，變成陣列
         $date = str_replace(" ", "", explode("-", $date));
         $sdate = $date[0];
-        $edate = $date[1];
+        // $edate = $date[1];
+        $edate = date_create($date[1]);
+        date_time_set($edate, 23, 59, 59);
+        $edate =  date_format($edate, "Y/m/d H:i:s");
         //  如果開始日期 = 結束日期 -> 結束日期+1
-        if ($sdate == $edate) {
-            $edate = date_create($date[1]);
-            date_add($edate, date_interval_create_from_date_string("1 days"));
-            $edate =  date_format($edate, "Y/m/d");
-        }
-
+        // if ($sdate == $edate) {
+        //     $edate = date_create($date[1]);
+        //     // date_add($edate, date_interval_create_from_date_string("1 days"));
+        //     date_time_set($edate, 23, 59, 59);
+        //     $edate =  date_format($edate, "Y/m/d H:i:s");
+        // } else {
+        //     $edate = date_create($date[1]);
+        //     date_time_set($edate, 23, 59, 59);
+        //     $edate =  date_format($edate, "Y/m/d H:i:s");
+        // }
+        // echo $sdate . "<br>" . $edate . "<br>";
         if ($type_course == "1") {
             // 銷講
             if ($type_condition == "information") {
@@ -227,7 +258,7 @@ class StudentGroupController extends Controller
                         ->orderBy('sales_registration.submissiondate', 'ASC')
                         ->get();
 
-                   
+
 
                     $arr = array_column(
                         array_merge($array_search_deal, json_decode($datas_stuent_90, true)),
@@ -285,19 +316,35 @@ class StudentGroupController extends Controller
                     //     ->groupby('student.id')
                     //     ->distinct()->get();
                 } elseif ($opt1 == "datasource_new") {
-                    $opt1 = "datasource";
+                    $opt1 = "sales_registration.datasource";
                     // 最新來源
-                    $datas = Student::join(
-                        DB::raw("(SELECT * FROM sales_registration ORDER BY submissiondate desc) as b"),
-                        function ($join) {
-                            $join->on("student.id", "=", "b.id_student");
-                        }
-                    )
+                    $array_student_id = array();
+
+                    // 更改寫法 Rocky (2020/08/04)
+
+                    // 1. 先找符合條件的學員ID
+                    $datas_student_id = Student::join('sales_registration as b', 'b.id_student', '=', 'student.id')
                         ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
-                        ->select('student.*', 'b.datasource', 'b.submissiondate')
+                        ->select('student.id')
                         ->where(function ($query2) use ($id_course) {
                             $query2->whereIn('b.id_course', $id_course);
                         })
+                        ->where(function ($query3) use ($sdate, $edate) {
+                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                        })
+                        ->groupby('student.id')
+                        ->orderby('b.submissiondate')
+                        ->get();
+
+                    foreach ($datas_student_id as $value_student_id) {
+                        array_push($array_student_id, $value_student_id['id']);
+                    }
+
+                    // 2. 再找最新來源
+
+                    // 搜尋最新資料 Rocky(2020/07/24)
+                    $datas = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+                        ->select('b.*', 'sales_registration.datasource', 'sales_registration.submissiondate')
                         ->where(function ($query) use ($opt1, $opt2, $value) {
                             switch ($opt2) {
                                 case "yes":
@@ -314,12 +361,45 @@ class StudentGroupController extends Controller
                                     break;
                             }
                         })
-                        ->where(function ($query3) use ($sdate, $edate) {
-                            // $query3->whereBetween('b.created_at', [$sdate, $edate]);
-                            $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
-                        })
-                        ->groupby('student.id')
-                        ->distinct()->get();
+                        ->whereIn('sales_registration.id_student', array_merge($array_student_id))
+                        // ->whereBetween('sales_registration.submissiondate', [$from, $to])
+                        ->groupBy('b.id')
+                        ->orderBy('sales_registration.submissiondate', 'DESC')
+                        ->get();
+
+                    // $datas = Student::join(
+                    //     DB::raw("(SELECT * FROM sales_registration ORDER BY submissiondate desc) as b"),
+                    //     function ($join) {
+                    //         $join->on("student.id", "=", "b.id_student");
+                    //     }
+                    // )
+                    //     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                    //     ->select('student.*', 'b.datasource', 'b.submissiondate')
+                    //     ->where(function ($query2) use ($id_course) {
+                    //         $query2->whereIn('b.id_course', $id_course);
+                    //     })
+                    //     ->where(function ($query) use ($opt1, $opt2, $value) {
+                    //         switch ($opt2) {
+                    //             case "yes":
+                    //                 $query->where($opt1, '=', $value);
+                    //                 break;
+                    //             case "no":
+                    //                 $query->where($opt1, '<>', $value);
+                    //                 break;
+                    //             case "like":
+                    //                 $query->where($opt1, 'like', '%' . $value . '%');
+                    //                 break;
+                    //             case "notlike":
+                    //                 $query->where($opt1, 'not like', '%' . $value . '%');
+                    //                 break;
+                    //         }
+                    //     })
+                    //     ->where(function ($query3) use ($sdate, $edate) {
+                    //         // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                    //         $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                    //     })
+                    //     ->groupby('student.id')
+                    //     ->distinct()->get();
                 } else {
                     $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
                         ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
