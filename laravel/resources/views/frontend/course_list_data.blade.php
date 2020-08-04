@@ -22,7 +22,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">課程名稱</span>
               </div>
-              <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->name }}" disabled readonly>
+              <input type="text" class="form-control bg-white" aria-label="Course name" id="course_name" value="{{ $course->name }}" disabled readonly>
             </div>
           </div>
         </div>
@@ -78,6 +78,8 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
   <script>
     var table;
+    var today = moment(new Date()).format("YYYYMMDD");
+    var title = today + '_場次數據' + '_' + $('#course_name').val();
 
     $(function() {
 
@@ -93,7 +95,8 @@
           text: '匯出Excel',
           exportOptions: {
               columns: '.colExcel'
-          }
+          },
+          title: title,
           // messageTop: $('#h3_title').text(),
         }]
       });

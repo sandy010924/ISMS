@@ -16,10 +16,10 @@
     <div class="row mb-3 mt-1 align-items-center">
       <div class="col-6">
         <h6 class="mb-0">
-          {{ $course->course }}&nbsp;&nbsp;
-          {{ date('Y-m-d', strtotime($course->course_start_at)) }}
+          <label id="course_name">{{ $course->course }}</label>&nbsp;&nbsp;
+          <label id="course_date">{{ date('Y-m-d', strtotime($course->course_start_at)) }}</label>
           ( {{ $week }} )&nbsp;&nbsp;
-          {{ $course->name }}
+          <label id="course_event">{{ $course->name }}</label>
         </h6>
       </div>
       <div class="col text-right">
@@ -217,16 +217,16 @@
     @component('components.datatable')
     @slot('thead')
     <tr>
-      <th>編號</th>
-      <th>姓名</th>
-      <th>聯絡電話</th>
-      <th>電子郵件</th>
+      <th class="colExcel">編號</th>
+      <th class="colExcel">姓名</th>
+      <th class="colExcel">聯絡電話</th>
+      <th class="colExcel">電子郵件</th>
       <th>報到</th>
-      <th class="d-none">報到</th>
+      <th class="d-none colExcel">報到</th>
       <th width="20%">報到備註</th>
-      <th class="d-none">報到備註</th>
+      <th class="d-none colExcel">報到備註</th>
       @if( $course->type == 1 )
-      <th>付費備註</th>
+      <th class="colExcel">付費備註</th>
       <th></th>
       @endif
     </tr>
@@ -364,6 +364,9 @@
 </style>
 <script>
   var table;
+  var today = moment(new Date()).format("YYYYMMDD");
+  var title = today + '_簽到表' + '_' + $('#course_name').text() + '(' + $('#course_date').text() + ' ' + $('#course_event').text() + ')';
+
   //針對姓名與電話末三碼搜尋 Sandy(2020/02/26)
   $.fn.dataTable.ext.search.push(
     function(settings, data, dataIndex) {
@@ -434,9 +437,9 @@
         extend: 'excel',
         text: '匯出Excel',
         exportOptions: {
-          // columns: ':visible',
-          columns: [0, 1, 2, 3, 5, 7]
-        }
+          columns: '.colExcel'
+        },
+        title: title,
         // messageTop: $('#h3_title').text(),
       }]
     });

@@ -25,7 +25,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">課程名稱</span>
             </div>
-            <input type="text" class="form-control bg-white" aria-label="Course name" value="{{ $course->course }}" disabled readonly>
+            <input type="text" class="form-control bg-white" aria-label="Course name" id="course_name" value="{{ $course->course }}" disabled readonly>
           </div>
         </div>
         <hr/>
@@ -37,9 +37,9 @@
           <div class="row mb-3 align-self-center">
               <div class="col-3 align-self-center">
                   <h6 class="mb-0">
-                    {{ date('Y-m-d', strtotime($course->course_start_at)) }}
+                    <label id="course_date">{{ date('Y-m-d', strtotime($course->course_start_at)) }}</label>
                     ( {{ $week }} )&nbsp;
-                    {{ $course->name }}&nbsp;&nbsp;
+                    <label id="course_event">{{ $course->name }}</label>&nbsp;&nbsp;
                     {{-- 報名筆數 : {{ $count_apply }}&nbsp;&nbsp;
                     取消筆數 : {{ $count_cancel }} --}}
                   </h6>
@@ -149,6 +149,9 @@
   <script>
     // Sandy(2020/02/26) dt列表搜尋 S
     var table;
+    var today = moment(new Date()).format("YYYYMMDD");
+    var title = today + '_查詢名單' + '_' + $('#course_name').val() + '(' + $('#course_date').text() + ' ' + $('#course_event').text() + ')';
+
     $("document").ready(function(){
       table_onload();
       status_onload();
@@ -188,6 +191,10 @@
           buttons: [{
             extend: 'excel',
             text: '匯出Excel',
+            // exportOptions: {
+            //   columns: '.colExcel'
+            // },
+            title: title,
           }]
       });
     }
