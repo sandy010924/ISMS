@@ -34,10 +34,10 @@
     <div class="row mb-3">
       <div class="col-6 p-2 ml-2">
         <h6 class="mb-0">
-          {{ date('Y-m-d', strtotime($course->course_start_at)) }}
+          <label id="course_date">{{ date('Y-m-d', strtotime($course->course_start_at)) }}</label>
           ( {{ $week }} )&nbsp;
-          {{ $course->name }}&nbsp;&nbsp;
-          {{ $course->course }}&nbsp;&nbsp;
+          <label id="course_event">{{ $course->name }}</label>&nbsp;&nbsp;
+          <label id="course_name">{{ $course->course }}</label>&nbsp;&nbsp;
           填單筆數：{{ count($fill) }}
         </h6>
         {{-- <h6 class="mb-0">2019/12/31(五)&nbsp;&nbsp;台北下午場&nbsp;&nbsp;零秒成交數&nbsp;&nbsp;填單筆數:5</h6> --}}
@@ -113,6 +113,9 @@
 <!-- Content End -->
 <script>
   var table;
+  var today = moment(new Date()).format("YYYYMMDD");
+  var title = today + '_進階填單名單' + '_' + $('#course_name').text() + '(' + $('#course_date').text() + ' ' + $('#course_event').text() + ')';
+
   $("document").ready(function() {
     // datatable Sandy (2020/03/09)
     table = $('#table_list').DataTable({
@@ -129,7 +132,8 @@
         text: '匯出Excel',
         exportOptions: {
           columns: '.colExcel'
-        }
+        },
+        title: title,
         // messageTop: $('#h3_title').text(),
       }]
     });
