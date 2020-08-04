@@ -740,3 +740,19 @@ ALTER TABLE `course` ADD COLUMN pay_url INT NULL COMMENT '刷卡連結';
 
 -- 付款資料表 - 更改欄位註解(2020/07/09)
 ALTER TABLE `payment` CHANGE COLUMN pay_model pay_model VARCHAR(20) NOT NULL COMMENT '付款方式(0:現金,1:匯款,2:刷卡:輕鬆付,3:刷卡:一次付,4:現金分期)';
+
+
+-- 新增活動資料表 Rocky(2020/08/04)
+CREATE TABLE `activity` (
+   `id` INT  AUTO_INCREMENT COMMENT 'id',
+   `submissiondate` varchar(150) DEFAULT NULL COMMENT 'Submission Date',
+  `id_student` int(11) DEFAULT NULL COMMENT '學員ID',
+  `id_course` int(11) DEFAULT NULL COMMENT '課程ID',
+   `id_events` int(11) NOT NULL COMMENT '場次ID',
+  `id_status` int(11) DEFAULT NULL COMMENT '報名狀態ID',
+  `course_content` mediumtext,
+  `memo` mediumtext COMMENT '備註',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '創建日期',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日期',
+  PRIMARY KEY ( `id` )
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

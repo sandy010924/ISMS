@@ -64,7 +64,7 @@
                       <option value="1">銷講</option>
                       <option value="2">二階課程</option>
                       <option value="3">三階課程</option>
-                      {{-- <option value="4">活動</option> --}}
+                      <option value="4">活動</option>
                     </select>
                   </div>
                   <div id="sales" style="display:none">
@@ -237,7 +237,7 @@
 
     //新增課程 選擇銷講/正課 Sandy (2020/02/26)
     $("select#new_type").change(function() {
-      if ($("#new_type").val() == 1) {
+      if ($("#new_type").val() == 1 || $("#new_type").val() == 4) {
         $('#sales').show();
         $('#formal').hide();
         $("#sales").find("input").prop('required', true);
@@ -306,10 +306,10 @@
       cache: false,
       processData: false,
       success: function(data) {
-        // console.log(data)
-        if ($("#new_type").val() == '1') {
+        console.log(data)
+        if ($("#new_type").val() == '1' || $("#new_type").val() == '4') {
 
-          // 判斷有沒有重複資料(銷講)
+          // 判斷有沒有重複資料(銷講 / 活動)
           if (data['status'] == 'repeat') {
             var data_repeat = ''
 
