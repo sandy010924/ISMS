@@ -100,7 +100,7 @@ class StudentGroupController extends Controller
             $array_search_successful = json_decode($array_search3, true);
         }
 
-        return $array_search_successful;
+        return array_values($array_search_successful);
 
         // foreach ($array_search_deal as $current_key => $current_array) {
         //     $search_key = array_search($current_array, $array_search_deal);
@@ -112,7 +112,7 @@ class StudentGroupController extends Controller
         //     $array_search_successful = $array_search_deal;
         // }
 
-        return $array_search_successful;
+        // return $array_search_successful;
     }
 
     public function arrayvalue($val1, $val2)
