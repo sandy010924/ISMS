@@ -31,6 +31,12 @@ class BlacklistController extends Controller
         // 刪除資料 -> 黑名單資料表
         if ($student != 0 && !empty($blacklist)) {
             Blacklist::where('id', $id_blacklist)->delete();
+
+            // 刪掉標記資料
+            Mark::where('id_student', $blacklist[0]['id_student'])
+                ->where('name_mark', '黑名單')
+                ->delete();
+
             $status = "ok";
         } else {
             $status = "error";
