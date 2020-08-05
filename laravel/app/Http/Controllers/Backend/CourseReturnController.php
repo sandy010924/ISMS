@@ -798,7 +798,7 @@ class CourseReturnController extends Controller
                             if( !empty($events_group) ){
                                 $update_course = EventsCourse::where('id_group', $update_group)->orderby('course_start_at','desc')->first()->id_course;
                                 
-                                $update_events = EventsCourse::where('id_group', $update_group)->orderby('course_start_at','desc')->first()->id_events;
+                                $update_events = EventsCourse::where('id_group', $update_group)->orderby('course_start_at','desc')->first()->id;
                                 
                                 Registration::where('id', $id)->update([
                                     'id_course' => $update_course,
