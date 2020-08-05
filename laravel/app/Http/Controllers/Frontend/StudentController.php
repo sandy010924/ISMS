@@ -505,6 +505,7 @@ class StudentController extends Controller
             ->where('registration.id_student', $id_student)
             // ->where('register.id_status', '7')
             ->orderBy('registration.created_at', 'desc')
+            ->groupby('registration.id')
             ->get();
 
 

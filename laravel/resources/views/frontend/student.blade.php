@@ -1369,7 +1369,7 @@
 
             // 場次
             id_select_events = "#" + id_select_events
-            $(id_select_events).append("<option value=''>請選擇</option>");
+            $(id_select_events).append("<option value='-99'>請選擇</option>");
             $.each(data['events'], function(index, val) {
               $(id_select_events).append("<option value='" + val['id'] + "'>" + val['events'] + "</option>");
             })
