@@ -417,7 +417,7 @@ class StudentController extends Controller
             ->leftjoin('events_course', 'events_course.id', '=', 'activity.id_events')
             ->select('activity.*', 'isms_status.name as status_activity', 'course.name as course_activity', 'events_course.name as  events_activity', 'events_course.course_start_at as  course_start_at_activity')
             ->where('activity.id_student', $id_student)
-            ->orderBy('activity.submissiondate', 'desc')
+            ->orderBy('activity.created_at', 'desc')
             ->first();
         return response::json([
             'datas_student' => $datas_student,

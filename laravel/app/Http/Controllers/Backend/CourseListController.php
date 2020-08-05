@@ -726,7 +726,7 @@ class CourseListController extends Controller
                     ]);
                 }
             } else if ($type == 4) {
-                // /* 銷講 */
+                // 活動
 
                 // 宣告欄位順序變數 Rocky(2020/02/05)
                 $int_submissiondate = 0;    // Submission Date
@@ -1159,30 +1159,33 @@ class CourseListController extends Controller
 
                             // 取代無意義字元
                             $new_coursedata = str_replace('我要參加', '', $data[$int_coursedata]);
-                            $stime = str_replace(" ", "", explode("-", $new_coursedata));
-                            $etime = strchr($new_coursedata, "-");
+                            // 活動沒有開始時間 Rocky (2020/08/05)
+                            // $stime = str_replace(" ", "", explode("-", $new_coursedata));
+                            // $etime = strchr($new_coursedata, "-");
 
                             // 課程日期
-                            $date = mb_substr($stime[0], 0, 10, 'utf8');
+                            $date = mb_substr($new_coursedata, 0, 9, 'utf8');
 
                             // 判斷課程日期要抓到哪個位置
                             if (strpos($date, '（') != false || strpos($date, '(') != false) {
                                 // 包含(
-                                $date = mb_substr($stime[0], 0, 9, 'utf8');
+                                // $date = mb_substr($stime[0], 0, 9, 'utf8');
+                                $date = mb_substr($new_coursedata, 0, 8, 'utf8');
                             }
 
+                            // 活動沒有開始時間 Rocky (2020/08/05)
                             // 課程開始時間
-                            $time_start = date('Y-m-d H:i:s', strtotime($date . mb_substr($stime[0], -4, 4, 'utf8'))) . PHP_EOL;
+                            // $time_start = date('Y-m-d H:i:s', strtotime($date . mb_substr($stime[0], -4, 4, 'utf8'))) . PHP_EOL;
 
-                            // 課程結束時間
-                            $str_time_end = $date . mb_substr(trim($etime), 1, 4, 'utf8');
-                            $time_end = date('Y-m-d H:i:s', strtotime($str_time_end)) . PHP_EOL;
+                            // // 課程結束時間
+                            // $str_time_end = $date . mb_substr(trim($etime), 1, 4, 'utf8');
+                            // $time_end = date('Y-m-d H:i:s', strtotime($str_time_end)) . PHP_EOL;
 
 
-                            if (strpos($str_time_end, '（') != false || strpos($str_time_end, '(') != false) {
-                                // 包含(
-                                $time_end = date('Y-m-d H:i:s', strtotime($date . mb_substr($etime, 1, 4, 'utf8'))) . PHP_EOL;
-                            }
+                            // if (strpos($str_time_end, '（') != false || strpos($str_time_end, '(') != false) {
+                            //     // 包含(
+                            //     $time_end = date('Y-m-d H:i:s', strtotime($date . mb_substr($etime, 1, 4, 'utf8'))) . PHP_EOL;
+                            // }
                             // }
 
                             /*課程資料 - S*/
@@ -1213,8 +1216,9 @@ class CourseListController extends Controller
                             $check_events = $events_course::where('name', $events)
                                 ->where('id_course', $id_course)
                                 // ->where('location', $address) 場次判斷不要判斷地址 Rocky (2020/07/01)
-                                ->where('course_start_at', $time_start)
-                                ->where('course_end_at', $time_end)
+                                // 活動沒有開始時間 Rocky (2020/08/05)
+                                // ->where('course_start_at', $time_start)
+                                // ->where('course_end_at', $time_end)
                                 ->get();
                             if (count($check_events) != 0) {
                                 $id_events = $check_events[0]["id"];
@@ -1222,8 +1226,12 @@ class CourseListController extends Controller
                                 $events_course->id_course        = $id_course;           // 課程ID
                                 $events_course->name             = $events;              // 場次名稱
                                 $events_course->location         = '無';                 // 課程地點
-                                $events_course->course_start_at  = $time_start;          // 課程開始時間
-                                $events_course->course_end_at    = $time_end;            // 課程結束時間
+
+                                // 活動沒有開始時間 Rocky (2020/08/05)
+                                // $events_course->course_start_at  = $time_start;          // 課程開始時間
+                                // $events_course->course_end_at    = $time_end;            // 課程結束時間
+                                $events_course->course_start_at  = $date;          // 課程開始時間
+                                $events_course->course_end_at    = $date;            // 課程結束時間
                                 $events_course->memo             = '';                   // 課程備註
                                 $events_course->id_group         = strtotime($time_start) . $id_course;     // 群組ID
                                 $events_course->unpublish        = 0;                    // 不公開
