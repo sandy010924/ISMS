@@ -64,16 +64,40 @@
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content p-3">
           <div class="row">
-            <div class="col-5 py-2">
-              <h5 id="student_name"></h5>
-              <h5 id="student_email"></h5>
-              <h5 id="title_student_phone"></h5>
+            <div class="pt-2 pl-3">
+              <h3>完整內容</h3>
             </div>
-            <div class="col-4">
+            <div class="col-12 pt-5">
+              <div class="row">
+                <div class="col-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">學員姓名</span>
+                    </div>
+                    <input type="text" id="student_name" class="form-control bg-white basic-inf col-sm-10 auth_readonly" readonly>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">E-mail</span>
+                    </div>
+                    <input type="text" id="student_email" class="form-control bg-white basic-inf col-sm-8 auth_readonly" readonly>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">電話</span>
+                    </div>
+                    <input id="title_student_phone" type="text" class="form-control bg-white basic-inf auth_readonly" aria-label="# input" aria-describedby="#" readonly>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-4 py-3">
               <h7 id="title_old_datasource"></h7><br>
-              <h7 id="student_date"></h7><br>
+              <h7 id="submissiondate"></h7><br>
               <h7 id="student_datasource"></h7>
             </div>
           </div>
@@ -177,7 +201,8 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">參與活動</span>
                     </div>
-                    <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="參與活動 : 參與次數 : 參與度 : " readonly>
+                    <input type="text" id="activity_data" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" readonly>
+                    <!-- <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="參與活動 : 參與次數 : 參與度 : " readonly> -->
                   </div>
                   <div class="input-group mb-3" id="dev_refund">
                     <div class="input-group-prepend">
@@ -586,6 +611,22 @@
           $('#dev_refund').hide();
         }
 
+        // 活動 Rocky(2020/08/05)
+        $('#activity_data').val('');
+        if (data['datas_activity'] != null) {
+          var activity_data = '',
+            data_activity = ''
+          if (data['datas_activity']['course_start_at_activity'] != null) {
+            data_activity =
+              data['datas_activity']['course_start_at_activity']
+          } else {
+            data_activity = '無'
+          }
+
+          activity_data = data['datas_activity']['course_activity'] + data['datas_activity']['events_activity'] + '(' + data_activity + ')'
+
+          $('#activity_data').val(activity_data);
+        }
 
         $("#student_information").modal('show');
       },

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Model\Rule;
+use App\Model\Mark;
 use App\Model\Student;
 use App\Model\Blacklist;
 use App\Model\SalesRegistration;
-use App\Model\Rule;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,19 +18,25 @@ class BlacklistController extends Controller
     {
         $status = "";
         $id_blacklist = $request->get('id_blacklist');
-        
+
         // 是否有該筆資料
-        $blacklist = Blacklist::where('id', $id_blacklist)->first();
+        $blacklist = Blacklist::where('id', $id_blacklist)->get();
 
         // 更新資料 -> 學員資料
         if (!empty($blacklist)) {
-            $student = Student::where('id', $blacklist->id_student)
-                    ->update(['check_blacklist' => '0']);
+            $student = Student::where('id', $blacklist[0]['id_student'])
+                ->update(['check_blacklist' => '0']);
         }
 
-         // 刪除資料 -> 黑名單資料表
+        // 刪除資料 -> 黑名單資料表
         if ($student != 0 && !empty($blacklist)) {
             Blacklist::where('id', $id_blacklist)->delete();
+
+            // 刪掉標記資料
+            Mark::where('id_student', $blacklist[0]['id_student'])
+                ->where('name_mark', '黑名單')
+                ->delete();
+
             $status = "ok";
         } else {
             $status = "error";
@@ -46,56 +53,56 @@ class BlacklistController extends Controller
 
         // 累積未到、取消
         $acc_student = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                            ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
-                            ->where('student.check_blacklist', '0')
-                            ->where(function ($query) {
-                                $query->where(function ($query) {
-                                    $query->where('b.id_status', '3')->orwhere('b.id_status', '5');
-                                });
-                            })
-                            ->select('student.id', 'student.name as name_student', 'b.id_status', 'c.name as name_course')
-                            ->selectRaw("SUM(CASE WHEN b.id_status ='3' THEN 1 ELSE 0 END) AS count_no")
-                            ->selectRaw("SUM(CASE WHEN b.id_status ='5' THEN 1 ELSE 0 END) AS count_cancel")
-                            ->groupby('student.id')
-                            ->get();
-                            
+            ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+            ->where('student.check_blacklist', '0')
+            ->where(function ($query) {
+                $query->where(function ($query) {
+                    $query->where('b.id_status', '3')->orwhere('b.id_status', '5');
+                });
+            })
+            ->select('student.id', 'student.name as name_student', 'b.id_status', 'c.name as name_course')
+            ->selectRaw("SUM(CASE WHEN b.id_status ='3' THEN 1 ELSE 0 END) AS count_no")
+            ->selectRaw("SUM(CASE WHEN b.id_status ='5' THEN 1 ELSE 0 END) AS count_cancel")
+            ->groupby('student.id')
+            ->get();
+
         // 一個學員對一個課程的 取消、未到總計
         $sin_student = Student::leftjoin('sales_registration as b', 'b.id_student', '=', 'student.id')
-                                ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
-                                ->where('student.check_blacklist', '0')
-                                ->where(function ($query) {
-                                    $query->where(function ($query) {
-                                        $query->where('b.id_status', '3')->orwhere('b.id_status', '5');
-                                    });
-                                })
-                                ->groupby('student.id', 'b.id_course')
-                                ->select('student.id', 'student.name as name_student', 'b.id_status', 'c.name as name_course')
-                                ->selectRaw("SUM(CASE WHEN b.id_status ='3' THEN 1 ELSE 0 END) AS count_no")
-                                ->selectRaw("SUM(CASE WHEN b.id_status ='5' THEN 1 ELSE 0 END) AS count_cancel")
-                                ->get();
+            ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+            ->where('student.check_blacklist', '0')
+            ->where(function ($query) {
+                $query->where(function ($query) {
+                    $query->where('b.id_status', '3')->orwhere('b.id_status', '5');
+                });
+            })
+            ->groupby('student.id', 'b.id_course')
+            ->select('student.id', 'student.name as name_student', 'b.id_status', 'c.name as name_course')
+            ->selectRaw("SUM(CASE WHEN b.id_status ='3' THEN 1 ELSE 0 END) AS count_no")
+            ->selectRaw("SUM(CASE WHEN b.id_status ='5' THEN 1 ELSE 0 END) AS count_cancel")
+            ->get();
         // 出席幾次但未留單
         $att_student = SalesRegistration::leftjoin('course as c', 'c.id_type', '=', 'sales_registration.id_course')
-                                    ->leftjoin('student as d', 'd.id', '=', 'sales_registration.id_student')
-                                    ->where('d.check_blacklist', '0')
-                                    ->where('sales_registration.id_status', '4')
-                                    ->whereNotNull('c.id_type')
-                                    ->whereNotExists(function ($query) {
-                                        $query->from('registration')
-                                            ->whereRaw('registration.id_student = sales_registration.id_student');
-                                    })
-                                    ->groupby('sales_registration.id_student')
-                                    ->select('sales_registration.id_student as id', 'sales_registration.id_status', 'c.name')
-                                    ->selectRaw("SUM(CASE WHEN sales_registration.id_status = 4 THEN 1 ELSE 0 END) AS count_att")
-                                    ->get();
+            ->leftjoin('student as d', 'd.id', '=', 'sales_registration.id_student')
+            ->where('d.check_blacklist', '0')
+            ->where('sales_registration.id_status', '4')
+            ->whereNotNull('c.id_type')
+            ->whereNotExists(function ($query) {
+                $query->from('registration')
+                    ->whereRaw('registration.id_student = sales_registration.id_student');
+            })
+            ->groupby('sales_registration.id_student')
+            ->select('sales_registration.id_student as id', 'sales_registration.id_status', 'c.name')
+            ->selectRaw("SUM(CASE WHEN sales_registration.id_status = 4 THEN 1 ELSE 0 END) AS count_att")
+            ->get();
         // 規則
         $rule = Rule::where('type', '0')
-                        ->where('rule_status', '1')
-                        ->select('rule_value', 'name', 'regulation')
-                        ->get();
+            ->where('rule_status', '1')
+            ->select('rule_value', 'name', 'regulation')
+            ->get();
 
-        
+
         // 單一課程
-        
+
         foreach ($sin_student as $key_student => $value_student) {
             foreach ($rule as $key_rule => $value_rule) {
                 // 單一課程累積_未到幾次
@@ -104,7 +111,7 @@ class BlacklistController extends Controller
                         // 判斷陣列是否有重複資料                    
                         if (array_search($value_student['id'], array_column($array_blacklist, 'id_student')) === false) {
                             array_push($array_blacklist, array(
-                                'id_student' => $value_student['id'],'reason' => '單一課程累積未到'.$value_student['count_no'].'次'
+                                'id_student' => $value_student['id'], 'reason' => '單一課程累積未到' . $value_student['count_no'] . '次'
                             ));
                             // 新增符合黑名單的ID
                             array_push($array_id, $value_student['id']);
@@ -117,7 +124,7 @@ class BlacklistController extends Controller
                         // 判斷陣列是否有重複資料
                         if (array_search($value_student['id'], array_column($array_blacklist, 'id_student')) === false) {
                             array_push($array_blacklist, array(
-                                'id_student' => $value_student['id'],'reason' => '單一課程累積取消'.$value_student['count_cancel'].'次'
+                                'id_student' => $value_student['id'], 'reason' => '單一課程累積取消' . $value_student['count_cancel'] . '次'
                             ));
                             // 新增符合黑名單的ID
                             array_push($array_id, $value_student['id']);
@@ -133,7 +140,7 @@ class BlacklistController extends Controller
                         if (array_search($value_student['id'], array_column($array_blacklist, 'id_student')) === false) {
                             array_push($array_blacklist, array(
                                 'id_student' => $value_student['id'],
-                                'reason' => '單一課程累積未到+取消'.$total.'幾次'
+                                'reason' => '單一課程累積未到+取消' . $total . '幾次'
                             ));
                             // 新增符合黑名單的ID
                             array_push($array_id, $value_student['id']);
@@ -153,7 +160,7 @@ class BlacklistController extends Controller
                         if (array_search($value_student['id'], array_column($array_blacklist, 'id_student')) === false) {
                             array_push($array_blacklist, array(
                                 'id_student' => $value_student['id'],
-                                'reason' => '出席'.$value_student['count_att'] .'次但未留單'
+                                'reason' => '出席' . $value_student['count_att'] . '次但未留單'
                             ));
                             // 新增符合黑名單的ID
                             array_push($array_id, $value_student['id']);
@@ -173,7 +180,7 @@ class BlacklistController extends Controller
                         if (array_search($value_student['id'], array_column($array_blacklist, 'id_student')) === false) {
                             array_push($array_blacklist, array(
                                 'id_student' => $value_student['id'],
-                                'reason' => '所有課程累積未到'.$value_student['count_no'].'次'
+                                'reason' => '所有課程累積未到' . $value_student['count_no'] . '次'
                             ));
                             // 新增符合黑名單的ID
                             array_push($array_id, $value_student['id']);
@@ -187,7 +194,7 @@ class BlacklistController extends Controller
                         if (array_search($value_student['id'], array_column($array_blacklist, 'id_student')) === false) {
                             array_push($array_blacklist, array(
                                 'id_student' => $value_student['id'],
-                                'reason' => '所有課程累積取消'.$value_student['count_cancel'].'次'
+                                'reason' => '所有課程累積取消' . $value_student['count_cancel'] . '次'
                             ));
                             // 新增符合黑名單的ID
                             array_push($array_id, $value_student['id']);
@@ -203,7 +210,7 @@ class BlacklistController extends Controller
                         if (array_search($value_student['id'], array_column($array_blacklist, 'id_student')) === false) {
                             array_push($array_blacklist, array(
                                 'id_student' => $value_student['id'],
-                                'reason' => '所有課程累積未到+取消'.$total.'次'
+                                'reason' => '所有課程累積未到+取消' . $total . '次'
                             ));
                             // 新增符合黑名單的ID
                             array_push($array_id, $value_student['id']);
@@ -213,15 +220,28 @@ class BlacklistController extends Controller
             }
         }
 
+
+
         if (!empty($array_blacklist)) {
             // 新增黑名單資料
             Blacklist::insert($array_blacklist);
 
             // 更新學員資料
             Student::whereIn('id', $array_id)
-            ->update([
-                'check_blacklist' => '1'
-            ]);
+                ->update([
+                    'check_blacklist' => '1'
+                ]);
+
+            // 新增標記資料 Rocky(2020/08/05)
+            foreach ($array_id as $key_id => $value_id) {
+
+                $mark = new Mark;
+
+                $mark->id_student       = $array_id[$key_id];         // 學員ID
+                $mark->name_mark        = '黑名單';            // 標記名稱
+
+                $mark->save();
+            }
         }
         return json_encode($array_blacklist);
     }

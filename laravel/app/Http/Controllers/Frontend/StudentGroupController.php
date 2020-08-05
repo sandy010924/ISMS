@@ -184,6 +184,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->orderby('b.submissiondate')
                         ->get();
@@ -253,6 +254,7 @@ class StudentGroupController extends Controller
                                     break;
                             }
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->whereIn('sales_registration.id_student', array_merge($array_student_id))
                         ->groupBy('b.id')
                         ->orderBy('sales_registration.submissiondate', 'ASC')
@@ -332,6 +334,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->orderby('b.submissiondate')
                         ->get();
@@ -432,6 +435,7 @@ class StudentGroupController extends Controller
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->where('b.id_status', '<>', '5')
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->distinct()->get();
                 }
             } elseif ($type_condition == "action") {
@@ -458,6 +462,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
                             })
+                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('d.submissiondate', 'desc')
                             ->distinct()->get();
@@ -474,6 +479,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
+                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('b.submissiondate', 'desc')
                             ->distinct()->get();
@@ -489,6 +495,7 @@ class StudentGroupController extends Controller
                             // $query3->whereBetween('b.created_at', [$sdate, $edate]);
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->distinct()->get();
                 }
             } elseif ($type_condition == "tag") {
@@ -526,6 +533,7 @@ class StudentGroupController extends Controller
                             // $query3->whereBetween('b.created_at', [$sdate, $edate]);
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->get();
                 } else {
@@ -545,6 +553,7 @@ class StudentGroupController extends Controller
                             // $query3->whereBetween('b.created_at', [$sdate, $edate]);
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->get();
                 }
@@ -584,6 +593,7 @@ class StudentGroupController extends Controller
                     ->where(function ($query3) use ($sdate, $edate) {
                         $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                     })
+                    ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                     ->groupby('registration.id')
                     ->distinct()->get();
             } elseif ($type_condition == "action") {
@@ -614,6 +624,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
                             })
+                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('d.submissiondate', 'desc')
                             ->distinct()->get();
@@ -632,6 +643,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                             })
+                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // ->groupby('registration.id')
                             // 抓最新來源
                             ->orderby('e.submissiondate', 'desc')
@@ -668,6 +680,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('registration.id')
                         ->distinct()->get();
                 }
@@ -713,6 +726,7 @@ class StudentGroupController extends Controller
                             // $query3->whereBetween('b.created_at', [$sdate, $edate]);
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->get();
 
@@ -741,6 +755,7 @@ class StudentGroupController extends Controller
                             // $query3->whereBetween('b.created_at', [$sdate, $edate]);
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
+                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->get();
                 }

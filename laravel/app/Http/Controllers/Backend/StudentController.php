@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Model\Mark;
-use App\Model\Student;
-use App\Model\Blacklist;
-use App\Model\SalesRegistration;
-use App\Model\Payment;
-use App\Model\Registration;
-use App\Model\EventsCourse;
 use App\Model\Debt;
 use App\Model\Refund;
+use App\Model\Student;
+use App\Model\Payment;
+use App\Model\Activity;
 use App\Model\Register;
+use App\Model\Blacklist;
+use App\Model\Registration;
+use App\Model\EventsCourse;
+use App\Model\SalesRegistration;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -75,9 +76,18 @@ class StudentController extends Controller
 
                 $blacklist->save();
                 $id_blacklist = $blacklist->id;
+
+                // 新增標記資料 Rocky(2020/08/05)
+                $mark = new Mark;
+                
+                $mark->id_student       = $id_student;         // 學員ID
+                $mark->name_mark        = '黑名單';            // 標記名稱
+
+                $mark->save();
+                $id_mark = $mark->id;
             }
 
-            if (!empty($id_blacklist)) {
+            if (!empty($id_blacklist) && !empty($id_mark)) {
                 $status = "ok";
             } else {
                 $status = "error";
@@ -348,6 +358,17 @@ class StudentController extends Controller
                     $register->id_registration      = $id;
                     $register->save();
                 }
+                break;
+            case '2':
+                // 活動
+                if ($data != "") {
+                    Activity::where('id', $id)
+                        ->update(['id_events' => $data, 'id_status' => '1']);
+                } else {
+                    Activity::where('id', $id)
+                        ->update(['id_events' => $data]);
+                }
+
                 break;
             default:
                 return 'error';

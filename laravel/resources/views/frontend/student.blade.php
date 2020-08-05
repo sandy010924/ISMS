@@ -312,7 +312,8 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">參與活動</span>
                     </div>
-                    <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="參與活動 : 參與次數 : 參與度 : " readonly>
+                    <input type="text" id="activity_data" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" readonly>
+                    <!-- <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="參與活動 : 參與次數 : 參與度 : " readonly> -->
                   </div>
                   <div class="input-group mb-3" id="dev_refund">
                     <div class="input-group-prepend">
@@ -928,6 +929,20 @@
                 }
               }
 
+              // 活動 Rocky(2020/08/05)
+              var activity_data = ''
+              if (data['datas_activity'] != null) {
+                var data_activity = ''
+                if (data['datas_activity']['course_start_at_activity'] != null) {
+                  data_activity =
+                    data['datas_activity']['course_start_at_activity']
+                } else {
+                  data_activity = '無'
+                }
+
+                activity_data = data['datas_activity']['course_activity'] + data['datas_activity']['events_activity'] + '(' + data_activity + ')'
+              }
+
               data_student_detail +=
                 // 姓名
                 '<tr>' +
@@ -992,7 +1007,7 @@
 
                 // 參與活動
                 '<td>' +
-                '無' +
+                activity_data +
                 '</td>' +
 
                 // 退款
@@ -1170,19 +1185,31 @@
           success: function(data) {
             // console.log(data)
             var course = '';
-            $.each(data, function(index, val) {
-              if (typeof(val['status_payment']) != 'undefined') {
-                // 正課資料
-                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',' + val['id_course'] + ',' + val['id_events'] + ',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '</a>';
-              } else {
-                // 銷講資料
-                var status = ''
-                if (val['status'] == '我很遺憾') {
-                  status = '（' + val['status'] + '）'
+
+            // 銷講、正課
+            if (data['datas'].length > 0) {
+              $.each(data['datas'], function(index, val) {
+                if (typeof(val['status_payment']) != 'undefined') {
+                  // 正課資料
+                  course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',' + val['id_course'] + ',' + val['id_events'] + ',1)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '（正課）</a>';
+                } else {
+                  // 銷講資料
+                  var status = ''
+                  if (val['status'] == '我很遺憾') {
+                    status = '（' + val['status'] + '）'
+                  }
+                  course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',' + val['id_course'] + ',' + val['id_events'] + ',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + status + '（銷講）</a>';
                 }
-                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',' + val['id_course'] + ',' + val['id_events'] + ',0)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + status + '</a>';
-              }
-            });
+              });
+            }
+
+            // 活動資料
+            if (data['activity'].length > 0) {
+              $.each(data['activity'], function(index, val) {
+                course += '<a class="nav-link " id="form_finished1" data-toggle="pill" onclick="view_form_detail(' + val['id'] + ',' + val['id_course'] + ',' + val['id_events'] + ',2)" role="tab" aria-controls="form_finished_content1" aria-selected="true">' + val['course'] + '（活動）</a>';
+              });
+            }
+
             $('#v-pills-tab').html(course);
             $("#form_finished").modal('show');
           },
@@ -1313,12 +1340,24 @@
               select_events = '<select class="custom-select form-control col-sm-8" id="' + id_select_events + '" name="select_teacher"  onblur="update_events($(this),' + id + ',' + type + ',' + id_student + ');" > </select >'
               /*場次 - E*/
 
-              course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
-                '課程開始時間:' + events_start + '<br>' +
-                '<div class="form-group row">' +
-                '<label class="col-sm-2" >場次: </label>' + select_events +
-                '</div>' +
-                '</div>'
+              if (type == 0) {
+                // 銷講
+                course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
+                  '課程開始時間:' + events_start + '<br>' +
+                  '<div class="form-group row">' +
+                  '<label class="col-sm-2" >場次: </label>' + select_events +
+                  '</div>' +
+                  '</div>'
+              } else if (type == 2) {
+                // 活動
+                course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>活動內容</b>' + '<br>' + '活動名稱:' + val['course'] + '<br>' +
+                  '活動開始時間:' + events_start + '<br>' +
+                  '<div class="form-group row">' +
+                  '<label class="col-sm-2" >場次: </label>' + select_events +
+                  '</div>' +
+                  '</div>'
+              }
+
 
 
               detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + course + sign + payment + '</div>'
@@ -1365,6 +1404,7 @@
           },
           async: false,
           success: function(data) {
+            // console.log(data)
             // 宣告
             var datasource_old = '',
               submissiondate = '',
@@ -1563,6 +1603,23 @@
               $('#dev_refund').hide();
             }
 
+
+            // 活動 Rocky(2020/08/05)
+            $('#activity_data').val('');
+            if (data['datas_activity'] != null) {
+              var activity_data = '',
+                data_activity = ''
+              if (data['datas_activity']['course_start_at_activity'] != null) {
+                data_activity =
+                  data['datas_activity']['course_start_at_activity']
+              } else {
+                data_activity = '無'
+              }
+
+              activity_data = data['datas_activity']['course_activity'] + data['datas_activity']['events_activity'] + '(' + data_activity + ')'
+
+              $('#activity_data').val(activity_data);
+            }
 
             $("#student_information").modal('show');
           },
