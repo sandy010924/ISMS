@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use Response;
 use DB;
-use App\Http\Controllers\Controller;
-use App\Model\Student;
-use App\Model\SalesRegistration;
-use App\Model\Registration;
-use App\Model\Refund;
+use Response;
 use App\Model\Debt;
 use App\Model\Mark;
+use App\Model\Refund;
+use App\Model\Student;
+use App\Model\Activity;
 use App\Model\EventsCourse;
-use Symfony\Component\HttpFoundation\Request;
+use App\Model\Registration;
+use App\Model\SalesRegistration;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class StudentController extends Controller
 {
@@ -60,7 +62,6 @@ class StudentController extends Controller
             ->where('sales_registration.id_student', $id_student)
             ->get();
         // 正課
-
         /*
         SELECT a.id,a.id_course,a.id_events FROM 
             (SELECT * FROM registration ORDER BY created_at desc LIMIT 9999)as a
@@ -69,8 +70,6 @@ class StudentController extends Controller
         GROUP BY a.id_course,a.id_events
         ORDER BY a.created_at DESC
         */
-
-
         $data_registration = DB::table(
             DB::raw(" (SELECT * FROM registration ORDER BY created_at desc LIMIT 9999) as a")
         )
@@ -95,7 +94,19 @@ class StudentController extends Controller
         //     ->get();
 
         $result = array_merge(json_decode($datas), json_decode($data_registration));
-        return $result;
+
+        // 活動 Rocky(2020/08/04)
+        $datas_activity = Activity::leftjoin('isms_status', 'isms_status.id', '=', 'activity.id_status')
+            ->leftjoin('course', 'course.id', '=', 'activity.id_course')
+            ->select('activity.*', 'isms_status.name as status', 'course.name as course')
+            ->where('activity.id_student', $id_student)
+            ->get();
+
+        return response::json([
+            'datas' => $result,
+            'activity' => $datas_activity
+        ]);
+        // return $result;
     }
 
     // 已填表單 - 詳細資料
@@ -254,6 +265,64 @@ class StudentController extends Controller
 
                 $id_group = $data_events['id_group'];
             }
+        } else if ($type == "2") {
+            // 活動
+            $datas = Activity::leftjoin('course', 'course.id', '=', 'activity.id_course')
+                ->leftjoin('student', 'student.id', '=', 'activity.id_student')
+                ->leftjoin('events_course', 'events_course.id', '=', 'activity.id_events')
+                ->select('activity.*', 'student.*', 'course.name as course', 'events_course.course_start_at as events_start')
+                ->where('activity.id', $id)
+                ->get();
+
+            $events_table = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
+                ->select('events_course.*')
+                ->where('events_course.id_course', function ($query) use ($id) {
+                    $query->select(DB::raw("(SELECT id_course FROM activity WHERE id='" . $id . "')"));
+                })
+                ->orderby('events_course.course_start_at', 'asc')
+                ->get();
+
+            $id_group = '';
+            $events_list = array();
+
+            foreach ($events_table as $key_events => $data_events) {
+                if ($id_group == $data_events['id_group']) {
+                    continue;
+                }
+
+                $course_group = EventsCourse::Where('id_group', $data_events['id_group'])
+                    ->get();
+
+                $numItems = count($course_group);
+                $i = 0;
+
+                $events_group = '';
+
+                foreach ($course_group as $key_group => $data_group) {
+                    //日期
+                    $date = date('Y-m-d', strtotime($data_group['course_start_at']));
+                    //星期
+                    $weekarray = array("日", "一", "二", "三", "四", "五", "六");
+                    $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
+
+                    if (++$i === $numItems) {
+                        $events_group .= $date . '(' . $week . ')';
+                    } else {
+                        $events_group .= $date . '(' . $week . ')' . '、';
+                    }
+                }
+                //時間
+                $time_strat = date('H:i', strtotime($data_group['course_start_at']));
+                $time_end = date('H:i', strtotime($data_group['course_end_at']));
+
+                $datas_events[$key_events] = [
+                    'events' => $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data_events['name'] . '-' . $data_events['location'],
+                    'id' => $data_events['id'],
+                    'id_group' => $data_events['id_group']
+                ];
+
+                $id_group = $data_events['id_group'];
+            }
         }
 
         return response::json([
@@ -342,6 +411,14 @@ class StudentController extends Controller
             ->orderBy('refund.created_at', 'desc')
             ->first();
 
+        // 活動
+        $datas_activity = Activity::leftjoin('isms_status', 'isms_status.id', '=', 'activity.id_status')
+            ->leftjoin('course', 'course.id', '=', 'activity.id_course')
+            ->leftjoin('events_course', 'events_course.id', '=', 'activity.id_events')
+            ->select('activity.*', 'isms_status.name as status_activity', 'course.name as course_activity', 'events_course.name as  events_activity', 'events_course.course_start_at as  course_start_at_activity')
+            ->where('activity.id_student', $id_student)
+            ->orderBy('activity.submissiondate', 'desc')
+            ->first();
         return response::json([
             'datas_student' => $datas_student,
             'datas_datasource_old' => $datas_datasource_old,
@@ -349,6 +426,7 @@ class StudentController extends Controller
             'datas_salesregistration' => $datas_salesregistration,
             'datas_registration' => $datas_registration,
             'datas_refund' => $datas_refund,
+            'datas_activity' => $datas_activity,
         ]);
     }
 
@@ -428,18 +506,42 @@ class StudentController extends Controller
             // ->where('register.id_status', '7')
             ->orderBy('registration.created_at', 'desc')
             ->get();
-        // 活動資料
 
-        if ($datas_registration != "") {
-            $datas_registration = $datas_registration->toArray();
-            $datas_SalesRegistration = $datas_SalesRegistration->toArray();
-            $result = array_merge($datas_SalesRegistration, $datas_registration);
-            usort($result, array($this, "dateSort"));
-        } else {
-            $result = $datas_SalesRegistration;
-        }
+
+        // 活動資料
+        $datas_Activity = Activity::leftjoin('isms_status as a', 'a.id', '=', 'activity.id_status')
+            ->leftjoin('course as b', 'b.id', '=', 'activity.id_course')
+            ->leftjoin('events_course as c', 'c.id', '=', 'activity.id_events')
+            ->select('activity.created_at', 'activity.id_student')
+            ->selectRaw(' CASE
+                                        WHEN activity.id_status = 1 THEN "活動已報名"
+                                        WHEN activity.id_status = 3 THEN "活動未到"
+                                        WHEN activity.id_status = 4 THEN "活動報到"
+                                        WHEN activity.id_status = 5 THEN "活動取消"
+                                    END as status_sales')
+            ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
+            ->where('activity.id_student', $id_student)
+            ->orderBy('activity.created_at', 'desc')
+            ->get();
+
+        // if ($datas_registration != "") {
+        //     $datas_registration = $datas_registration->toArray();
+        //     $datas_SalesRegistration = $datas_SalesRegistration->toArray();
+        //     $result = array_merge($datas_SalesRegistration, $datas_registration);
+
+        // } else {
+        //     $result = $datas_SalesRegistration;
+        // }        
         // $result = $datas_SalesRegistration;
-        return $result;
+
+        // 將三個Array結合
+        $result = array_merge(json_decode($datas_SalesRegistration, true), json_decode($datas_registration, true));
+        $result = array_merge($result, json_decode($datas_Activity, true));
+
+        // 排序
+        usort($result, array($this, "dateSort"));
+
+        return  $result;
     }
 
     //日期排序

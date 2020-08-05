@@ -914,7 +914,8 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">參與活動</span>
                     </div>
-                    <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="參與活動 : 參與次數 : 參與度 : " readonly>
+                    <input type="text" id="activity_data" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" readonly>
+                    <!-- <input type="text" class="form-control bg-white basic-inf" aria-label="# input" aria-describedby="#" data-placement="bottom" data-html="true" title="參與活動 : 參與次數 : 參與度 : " readonly> -->
                   </div>
                   <div class="input-group mb-3" id="dev_refund">
                     <div class="input-group-prepend">
@@ -2239,7 +2240,22 @@
         } else {
           $('#dev_refund').hide();
         }
+        // 活動 Rocky(2020/08/05)
+        $('#activity_data').val('');
+        if (data['datas_activity'] != null) {
+          var activity_data = '',
+            data_activity = ''
+          if (data['datas_activity']['course_start_at_activity'] != null) {
+            data_activity =
+              data['datas_activity']['course_start_at_activity']
+          } else {
+            data_activity = '無'
+          }
 
+          activity_data = data['datas_activity']['course_activity'] + data['datas_activity']['events_activity'] + '(' + data_activity + ')'
+
+          $('#activity_data').val(activity_data);
+        }
 
         $("#student_information").modal('show');
       },
