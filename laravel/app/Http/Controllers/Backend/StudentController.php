@@ -76,9 +76,18 @@ class StudentController extends Controller
 
                 $blacklist->save();
                 $id_blacklist = $blacklist->id;
+
+                // 新增標記資料 Rocky(2020/08/05)
+                $mark = new Mark;
+                
+                $mark->id_student       = $id_student;         // 學員ID
+                $mark->name_mark        = '黑名單';            // 標記名稱
+
+                $mark->save();
+                $id_mark = $mark->id;
             }
 
-            if (!empty($id_blacklist)) {
+            if (!empty($id_blacklist) && !empty($id_mark)) {
                 $status = "ok";
             } else {
                 $status = "error";
