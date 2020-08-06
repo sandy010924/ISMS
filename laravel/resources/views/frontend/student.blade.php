@@ -609,6 +609,7 @@
           "orderCellsTop": true,
           "destroy": true,
           "retrieve": true,
+          "autoWidth": false,
           "ajax": {
             "url": "student_search",
             "type": "POST",
@@ -677,6 +678,7 @@
           ],
           "destroy": true,
           "retrieve": true,
+          "autoWidth": false
           // "ordering": false,
         });
 
@@ -1782,7 +1784,7 @@
             },
             async: false,
             "dataSrc": function(json) {
-              // console.log(json)
+              console.log(json)
               for (var i = 0; i < json.length; i++) {
 
                 var status = '',
