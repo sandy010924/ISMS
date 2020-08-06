@@ -9,13 +9,13 @@ use App\Model\Mark;
 use App\Model\Refund;
 use App\Model\Student;
 use App\Model\Activity;
+use App\Model\Register;
 use App\Model\EventsCourse;
 use App\Model\Registration;
 use App\Model\SalesRegistration;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Request;
-
 
 class StudentController extends Controller
 {
@@ -33,7 +33,7 @@ class StudentController extends Controller
                 ->where('course.id_teacher', $id_teacher)
                 ->groupBy('id')
                 ->orderby('created_at', 'desc')
-                ->take(500)
+                // ->take(500) // 取消 500 筆限制 Rocky(2020/08/06)
                 ->get();
         } else {
             $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
@@ -41,7 +41,7 @@ class StudentController extends Controller
                 ->select('student.*', 'sales_registration.datasource')
                 ->groupBy('id')
                 ->orderby('created_at', 'desc')
-                ->take(500)
+                // ->take(500) // 取消 500 筆限制 Rocky(2020/08/06)
                 ->get();
         }
 
@@ -63,7 +63,7 @@ class StudentController extends Controller
             ->get();
         // 正課
         /*
-        SELECT a.id,a.id_course,a.id_events FROM 
+        SELECT a.id,a.id_course,a.id_events FROM
             (SELECT * FROM registration ORDER BY created_at desc LIMIT 9999)as a
             LEFT JOIN course b ON a.id_course = b.id
             WHERE a.id_student = '9104'
@@ -265,7 +265,7 @@ class StudentController extends Controller
 
                 $id_group = $data_events['id_group'];
             }
-        } else if ($type == "2") {
+        } elseif ($type == "2") {
             // 活動
             $datas = Activity::leftjoin('course', 'course.id', '=', 'activity.id_course')
                 ->leftjoin('student', 'student.id', '=', 'activity.id_student')
@@ -345,7 +345,7 @@ class StudentController extends Controller
         // 原始來源
 
         //         SELECT b.id,b.name,a.submissiondate,a.created_at,a.id,DATE_SUB(now(),INTERVAL 60 DAY) as tt
-        // FROM sales_registration a 
+        // FROM sales_registration a
         // 	LEFT JOIN student b on a.id_student = b.id
         // WHERE b.id = '2656' AND a.submissiondate BETWEEN DATE_SUB(now(),INTERVAL 60 DAY) AND DATE_ADD(now(), INTERVAL 60 DAY)
         // ORDER BY a.submissiondate
@@ -486,16 +486,34 @@ class StudentController extends Controller
             ->get();
 
         // 正課資料
-        $datas_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
-            ->leftjoin('isms_status as a', 'a.id', '=', 'register.id_status')
+        // $datas_registration = Registration::leftjoin('register', 'register.id_student', '=', 'registration.id_student')
+        //     ->leftjoin('isms_status as a', 'a.id', '=', 'register.id_status')
+        //     ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
+        //     ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
+        //     ->select('registration.created_at', 'registration.id_student')
+        //     ->selectRaw(' CASE
+        //                                 WHEN register.id_status = 1 and registration.status_payment is null THEN "正課已報名"
+        //                                 WHEN register.id_status = 3 and registration.status_payment is null THEN "正課未到"
+        //                                 WHEN register.id_status = 4 and registration.status_payment is null THEN "正課報到"
+        //                                 WHEN register.id_status = 5 and registration.status_payment is null THEN "正課取消"
+        //                                 WHEN registration.status_payment = 6 THEN "正課留單"
+        //                                 WHEN registration.status_payment = 7 THEN "正課完款"
+        //                                 WHEN registration.status_payment = 8 THEN "正課付訂"
+        //                                 WHEN registration.status_payment = 9 THEN "正課退費"
+        //                             END as status_sales')
+        //     ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
+        //     ->where('registration.id_student', $id_student)
+        //     // ->where('register.id_status', '7')
+        //     ->orderBy('registration.created_at', 'desc')
+        //     // ->groupby('register.id_registration') // 一場次多天只會出現一筆
+        //     ->get();
+
+        // 正課報名
+        $datas_registration = Registration::leftjoin('isms_status as a', 'a.id', '=', 'registration.status_payment')
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
             ->select('registration.created_at', 'registration.id_student')
             ->selectRaw(' CASE
-                                        WHEN register.id_status = 1 and registration.status_payment is null THEN "正課已報名"
-                                        WHEN register.id_status = 3 and registration.status_payment is null THEN "正課未到"
-                                        WHEN register.id_status = 4 and registration.status_payment is null THEN "正課報到"
-                                        WHEN register.id_status = 5 and registration.status_payment is null THEN "正課取消"
                                         WHEN registration.status_payment = 6 THEN "正課留單"
                                         WHEN registration.status_payment = 7 THEN "正課完款"
                                         WHEN registration.status_payment = 8 THEN "正課付訂"
@@ -503,9 +521,24 @@ class StudentController extends Controller
                                     END as status_sales')
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
-            // ->where('register.id_status', '7')
             ->orderBy('registration.created_at', 'desc')
-            ->groupby('registration.id')
+            ->get();
+
+        // 正課報到
+        $datas_register = Register::leftjoin('registration', 'register.id_registration', '=', 'registration.id')
+            ->leftjoin('isms_status as a', 'a.id', '=', 'register.id_status')
+            ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
+            ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
+            ->select('registration.id', 'registration.created_at', 'registration.id_student')
+            ->selectRaw(' CASE
+                                        WHEN register.id_status = 1  THEN "正課已報名"
+                                        WHEN register.id_status = 3  THEN "正課未到"
+                                        WHEN register.id_status = 4  THEN "正課報到"
+                                        WHEN register.id_status = 5  THEN "正課取消"
+                                    END as status_sales')
+            ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
+            ->where('registration.id_student', $id_student)
+            ->orderBy('registration.created_at', 'desc')
             ->get();
 
 
@@ -532,11 +565,15 @@ class StudentController extends Controller
 
         // } else {
         //     $result = $datas_SalesRegistration;
-        // }        
+        // }
         // $result = $datas_SalesRegistration;
 
-        // 將三個Array結合
-        $result = array_merge(json_decode($datas_SalesRegistration, true), json_decode($datas_registration, true));
+        // 將4個Array結合
+
+        // 正課報到、報名
+        $result_registration = array_merge(json_decode($datas_registration, true), json_decode($datas_register, true));
+
+        $result = array_merge(json_decode($datas_SalesRegistration, true), $result_registration);
         $result = array_merge($result, json_decode($datas_Activity, true));
 
         // 排序
@@ -628,7 +665,7 @@ class StudentController extends Controller
                 ->orderby('created_at', 'desc')
                 ->get();
 
-            // 學員資料加入資料來源    
+            // 學員資料加入資料來源
             if (count($students_data) != 0) {
                 foreach ($students_data as $key => $data) {
                     $sales_registration_datasource = SalesRegistration::where('sales_registration.id_student', '=', $data['id'])
