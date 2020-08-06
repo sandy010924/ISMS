@@ -4,6 +4,20 @@
 @section('header', '課程管理')
 
 @section('content')
+<style>
+  /* 重複資料Modal Y軸滾輪 Rocky(2020/08/06)*/
+  .modal-dialog {
+    overflow-y: initial !important
+  }
+
+  .modal-body_repeat {
+    height: 300px;
+    overflow-y: auto;
+  }
+
+  /* 重複資料Modal Y軸滾輪 Rocky(2020/08/06)*/
+</style>
+
 {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" /> --}}
 {{-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> --}}
 
@@ -211,7 +225,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body modal-body_repeat">
         <!-- 內容 -->
         <div id="dev_repeat"></div>
       </div>

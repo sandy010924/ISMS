@@ -4,6 +4,18 @@
 @section('header', '場次總覽')
 
 @section('content')
+<style>
+  /* 重複資料Modal Y軸滾輪 Rocky(2020/08/06)*/
+  .modal-dialog {
+    overflow-y: initial !important
+  }
+
+  .modal-body_repeat {
+    height: 300px;
+    overflow-y: auto;
+  }
+  /* 重複資料Modal Y軸滾輪 Rocky(2020/08/06)*/
+</style>
 <!-- Content Start -->
 <!--搜尋課程頁面內容-->
 <div class="card m-3">
@@ -155,7 +167,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body modal-body_repeat">
         <!-- 內容 -->
         <div id="dev_repeat"></div>
       </div>
