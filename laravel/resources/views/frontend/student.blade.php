@@ -714,17 +714,26 @@
         $('#myModal').modal('hide');
       };
 
-      function ajax_excel(array_sid) {
+      function ajax_excel(array_sid, type) {
         var defer = $.Deferred();
-        var data_student_detail = ''
+        var data_student_detail = '',
+          id_student = ''
         $.each(array_sid, function(index, val) {
           $('#tbody_student_detail').html('');
+          if (type == 0) {
+            // 有搜尋
+            id_student = array_sid[index]
+          } else if (type == 1) {
+            // 沒搜尋
+            id_student = array_sid[index]['id']
+          }
+          // console.log(id_student)
           $.ajax({
             type: 'POST',
             url: 'course_data',
             dataType: 'json',
             data: {
-              id_student: array_sid[index]
+              id_student: id_student
             },
             async: false,
             success: function(data) {
@@ -1052,8 +1061,30 @@
 
       // 匯出Excel Button
       function export_excel() {
-        var data_student_detail = ''
-        var array_sid = table.columns('5').data()[0];
+        var data_student_detail = '',
+          type = '';
+        var array_sid = [];
+
+        // 如果有搜尋條件抓表格顯示
+        if ($('#search_input').val() != '') {
+          type = 0;
+          array_sid = table.columns('5').data()[0]
+        } else {
+          // 否則抓全部學員
+          $.ajax({
+            type: 'POST',
+            url: 'get_all_student',
+            dataType: 'json',
+            async: false,
+            success: function(data) {
+              type = 1;
+              array_sid = data;
+            },
+            error: function(error) {
+              console.log(JSON.stringify(error));
+            }
+          });
+        }
 
         //Promise集合
         let myPromises = new Array();
@@ -1088,7 +1119,7 @@
               keyboard: false
             });
 
-            data_student_detail = ajax_excel(array_sid)
+            data_student_detail = ajax_excel(array_sid, type)
 
             //標註成功
             dfd.resolve();

@@ -33,7 +33,7 @@ class StudentController extends Controller
                 ->where('course.id_teacher', $id_teacher)
                 ->groupBy('id')
                 ->orderby('created_at', 'desc')
-                // ->take(500) // 取消 500 筆限制 Rocky(2020/08/06)
+                ->take(500) // 取消 500 筆限制 Rocky(2020/08/06)
                 ->get();
         } else {
             $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
@@ -41,12 +41,37 @@ class StudentController extends Controller
                 ->select('student.*', 'sales_registration.datasource')
                 ->groupBy('id')
                 ->orderby('created_at', 'desc')
-                // ->take(500) // 取消 500 筆限制 Rocky(2020/08/06)
+                ->take(500) // 取消 500 筆限制 Rocky(2020/08/06)
                 ->get();
         }
 
 
         return view('frontend.student', compact('students'));
+    }
+
+    // 匯出Excel 抓全部學員 Rocky(2020/08/06) 
+    public function getallstudent()
+    {
+        // 講師ID Rocky(2020/05/11)
+        if (isset(Auth::user()->role) == '') {
+            return view('frontend.error_authority');
+        } elseif (isset(Auth::user()->role) != '' && Auth::user()->role == "teacher") {
+            $id_teacher = Auth::user()->id_teacher;
+            $students = Student::join('sales_registration', 'student.id', '=', 'sales_registration.id_student')
+                ->join('course', 'sales_registration.id_course', '=', 'course.id')
+                ->select('student.id')
+                ->where('course.id_teacher', $id_teacher)
+                ->groupBy('id')
+                ->orderby('created_at', 'desc')
+                ->get();
+        } else {
+            $students = Student::select('student.id')
+                ->orderby('created_at', 'desc')
+                ->get();
+        }
+
+
+        return $students;
     }
 
 

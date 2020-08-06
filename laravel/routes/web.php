@@ -289,6 +289,8 @@ Route::post('history_data', 'Frontend\StudentController@historydata');
 Route::post('student_save', 'Backend\StudentController@save');
 /*** 完整內容-聯絡狀況-刪除 Rocky(2020/04/21) ***/
 Route::post('debt_show', 'Frontend\StudentController@debtshow');
+/*** 匯出Excel 抓全部學員 Rocky(2020/08/06) ***/
+Route::post('get_all_student', 'Frontend\StudentController@getallstudent');
 
 /*** [學員管理] 黑名單 ***/
 /*** 顯示資料 Rocky(2020/02/23) ***/
@@ -494,6 +496,8 @@ Route::get('report_search', 'Frontend\ReportController@search');
 |--------------------------------------------------------------------------
 */
 /*** 顯示資料 Rocky(2020/02/17) ***/
+Route::get('sandyq', 'Frontend\SandyqController@show')->name('sandyq');
+Route::post('sandyq_student', 'Frontend\SandyqController@sandyqstudent')->name('sandyq_student');
 Route::get('authority', 'Frontend\AuthorityController@show')->name('authority');
 /*** 搜尋資料 Rocky(2020/02/17) ***/
 // Route::get('authority_search', 'Frontend\AuthorityController@search');
