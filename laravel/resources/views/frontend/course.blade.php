@@ -88,12 +88,18 @@
           <input type="search" class="form-control px-3" name="daterange" id="daterange" autocomplete="off">
         </div>
       </div>
-      <div class="col-3">
-        <input type="search" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name">
-      </div>
       <div class="col">
-        <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
+        {{-- <input type="text" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name"> --}}
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name">
+          <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
+          </div>
+        </div>
       </div>
+      {{-- <div class="col">
+        <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
+      </div> --}}
     </div>
     @component('components.datatable')
     @slot('thead')
