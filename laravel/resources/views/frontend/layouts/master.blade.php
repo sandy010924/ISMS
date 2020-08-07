@@ -35,7 +35,7 @@
   <script src="{{ asset('js/popper.min.js') }}"></script>
 
   <!-- tempusdominus Sandy(2020/02/27) -->
-  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+  {{-- <script src="{{ asset('js/bootstrap.min.js') }}"></script> --}}
   <script src="{{ asset('js/moment.min.js') }}"></script>
   <script src="{{ asset('js/zh-tw.js') }}"></script>
   <script src="{{ asset('js/tempusdominus-bootstrap-4.js') }}"></script>
