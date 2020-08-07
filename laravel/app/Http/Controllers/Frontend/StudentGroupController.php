@@ -82,21 +82,29 @@ class StudentGroupController extends Controller
         }
 
         // 找到相同資料
-        if (count($array_search1) != 0 && count($array_search2) != 0 && count($array_search3) != 0) {
+
+        // ($parentPathPieces && count($parentPathPieces) == 1)
+        // if (!empty($array_search1) && !empty($array_search2)) {
+        //     return '不是空的';
+        // } else {
+        //     return '空的';
+        // }
+     
+        if (!empty($array_search1) && !empty($array_search2) && !empty($array_search3)) {
             $array_temp = [];
             $array_temp = array_uintersect(json_decode($array_search1, true), json_decode($array_search2, true), 'self::arrayvalue');
             $array_search_successful = array_uintersect($array_temp, json_decode($array_search3, true), 'self::arrayvalue');
-        } else if (count($array_search1) != 0 && count($array_search2) != 0) {
+        } elseif (!empty($array_search1) && !empty($array_search2)) {
             $array_search_successful = array_uintersect(json_decode($array_search1, true), json_decode($array_search2, true), 'self::arrayvalue');
-        } else if (count($array_search1) != 0 && count($array_search3) != 0) {
+        } elseif (!empty($array_search1) && !empty($array_search3)) {
             $array_search_successful = array_uintersect(json_decode($array_search1, true), json_decode($array_search3, true), 'self::arrayvalue');
-        } else if (count($array_search2) != 0 && count($array_search3) != 0) {
+        } elseif (!empty($array_search2) && !empty($array_search3)) {
             $array_search_successful = array_uintersect(json_decode($array_search2, true), json_decode($array_search3, true), 'self::arrayvalue');
-        } else if (count($array_search1) != 0) {
+        } elseif (!empty($array_search1)) {
             $array_search_successful = json_decode($array_search1, true);
-        } else if (count($array_search2) != 0) {
+        } elseif (!empty($array_search2)) {
             $array_search_successful = json_decode($array_search2, true);
-        } else if (count($array_search3) != 0) {
+        } elseif (!empty($array_search3)) {
             $array_search_successful = json_decode($array_search3, true);
         }
 
@@ -254,7 +262,7 @@ class StudentGroupController extends Controller
                                     break;
                             }
                         })
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->whereIn('sales_registration.id_student', array_merge($array_student_id))
                         ->groupBy('b.id')
                         ->orderBy('sales_registration.submissiondate', 'ASC')
@@ -284,7 +292,7 @@ class StudentGroupController extends Controller
                     }
                     $datas = json_encode($array_student);
 
-                    // $datas = Student::join(
+                // $datas = Student::join(
                     //     DB::raw("(SELECT * FROM sales_registration ORDER BY submissiondate asc) as b"),
                     //     function ($join) {
                     //         $join->on("student.id", "=", "b.id_student");
@@ -370,7 +378,7 @@ class StudentGroupController extends Controller
                         ->orderBy('sales_registration.submissiondate', 'DESC')
                         ->get();
 
-                    // $datas = Student::join(
+                // $datas = Student::join(
                     //     DB::raw("(SELECT * FROM sales_registration ORDER BY submissiondate desc) as b"),
                     //     function ($join) {
                     //         $join->on("student.id", "=", "b.id_student");
@@ -444,7 +452,7 @@ class StudentGroupController extends Controller
                     if ($opt2 != '3' && $opt2 != '4' && $opt2 != '5') {
                         //留單 or 完款 or 付訂
 
-                        //                         'SELECT c.name,a.id_course,a.id_events,b.id_course FROM `registration` a 
+                        //                         'SELECT c.name,a.id_course,a.id_events,b.id_course FROM `registration` a
                         // 	LEFT JOIN events_course b on a.source_events = b.id
                         //     LEFT JOIN student c on a.id_student = c.id
                         // WHERE b.id_course = '31' AND a.status_payment = '6' AND c.name = '張益裕'
@@ -462,7 +470,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('d.submissiondate', 'desc')
                             ->distinct()->get();
@@ -593,7 +601,7 @@ class StudentGroupController extends Controller
                     ->where(function ($query3) use ($sdate, $edate) {
                         $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                     })
-                    ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                    ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                     ->groupby('registration.id')
                     ->distinct()->get();
             } elseif ($type_condition == "action") {
@@ -624,7 +632,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('d.submissiondate', 'desc')
                             ->distinct()->get();
@@ -643,7 +651,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // ->groupby('registration.id')
                             // 抓最新來源
                             ->orderby('e.submissiondate', 'desc')
@@ -680,7 +688,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                         })
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('registration.id')
                         ->distinct()->get();
                 }
@@ -730,7 +738,7 @@ class StudentGroupController extends Controller
                         ->groupby('student.id')
                         ->get();
 
-                    // echo $edate;
+                // echo $edate;
                 } else {
                     // 未分配
                     $datas = Student::leftjoin('registration as b', 'student.id', '=', 'b.id_student')
