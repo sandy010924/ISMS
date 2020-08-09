@@ -203,10 +203,13 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item2" data-select="itemPay" disabled>
-              <option value="0" selected>完款+付訂</option>
-              <option value="7">完款</option>
-              <option value="8">付訂</option>
-              <option value="9">退費</option>
+              <option class="itemPay_income" value="0">完款+付訂</option>
+              <option class="itemPay_deal" value="現場完款">現場完款</option>
+              <option class="itemPay_income" value="7">完款</option>
+              <option class="itemPay_income" value="8">付訂</option>
+              <option class="itemPay_income" value="9">退費</option>
+              <option class="itemPay_deal" value="現場完款+付訂">現場完款+付訂</option>
+              <option class="itemPay_deal" value="追完款">追完款</option>
             </select>
           </div>
           <div class="col">
@@ -296,10 +299,13 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item3" data-select="itemPay" disabled>
-              <option value="0" selected>完款+付訂</option>
-              <option value="7">完款</option>
-              <option value="8">付訂</option>
-              <option value="9">退費</option>
+              <option class="itemPay_income" value="0">完款+付訂</option>
+              <option class="itemPay_deal" value="現場完款">現場完款</option>
+              <option class="itemPay_income" value="7">完款</option>
+              <option class="itemPay_income" value="8">付訂</option>
+              <option class="itemPay_income" value="9">退費</option>
+              <option class="itemPay_deal" value="現場完款+付訂">現場完款+付訂</option>
+              <option class="itemPay_deal" value="追完款">追完款</option>
             </select>
           </div>
           <div class="col">
@@ -389,10 +395,13 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item4" data-select="itemPay" disabled>
-              <option value="0" selected>完款+付訂</option>
-              <option value="7">完款</option>
-              <option value="8">付訂</option>
-              <option value="9">退費</option>
+              <option class="itemPay_income" value="0">完款+付訂</option>
+              <option class="itemPay_deal" value="現場完款">現場完款</option>
+              <option class="itemPay_income" value="7">完款</option>
+              <option class="itemPay_income" value="8">付訂</option>
+              <option class="itemPay_income" value="9">退費</option>
+              <option class="itemPay_deal" value="現場完款+付訂">現場完款+付訂</option>
+              <option class="itemPay_deal" value="追完款">追完款</option>
             </select>
           </div>
           <div class="col">
@@ -482,10 +491,13 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item5" data-select="itemPay" disabled>
-              <option value="0" selected>完款+付訂</option>
-              <option value="7">完款</option>
-              <option value="8">付訂</option>
-              <option value="9">退費</option>
+              <option class="itemPay_income" value="0">完款+付訂</option>
+              <option class="itemPay_deal" value="現場完款">現場完款</option>
+              <option class="itemPay_income" value="7">完款</option>
+              <option class="itemPay_income" value="8">付訂</option>
+              <option class="itemPay_income" value="9">退費</option>
+              <option class="itemPay_deal" value="現場完款+付訂">現場完款+付訂</option>
+              <option class="itemPay_deal" value="追完款">追完款</option>
             </select>
           </div>
           <div class="col">
@@ -608,12 +620,15 @@
           $('.itemPay option').attr('selected', false);
           if($(this).text() == "營業額"){
             $('.itemPay .itemPay_income').show();
-            $('.itemPay .itemPay_income').first().attr('selected', 'selected');
+            for(var i=1; i<6; i++){
+              $('.itemPay[name="item' + i + '"] .itemPay_income').first().attr('selected', 'selected');
+            }
             $('.itemPay .itemPay_deal').hide();
-          }
-          if($(this).text() == "成交率"){
+          }else if($(this).text() == "成交率"){
             $('.itemPay .itemPay_deal').show();
-            $('.itemPay .itemPay_deal').first().attr('selected', 'selected');
+            for(var i=1; i<6; i++){
+              $('.itemPay[name="item' + i + '"] .itemPay_deal').first().attr('selected', 'selected');
+            }
             $('.itemPay .itemPay_income').hide();
           }
         }else{
