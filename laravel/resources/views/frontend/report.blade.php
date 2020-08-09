@@ -109,10 +109,13 @@
           </div>
           <div class="col">
             <select  class="form-control itemPay" name="item1" data-select="itemPay" disabled>
-              <option value="0" selected>完款+付訂</option>
-              <option value="7">完款</option>
-              <option value="8">付訂</option>
-              <option value="9">退費</option>
+              <option class="itemPay_income" value="0">完款+付訂</option>
+              <option class="itemPay_deal" value="現場完款">現場完款</option>
+              <option class="itemPay_income" value="7">完款</option>
+              <option class="itemPay_income" value="8">付訂</option>
+              <option class="itemPay_income" value="9">退費</option>
+              <option class="itemPay_deal" value="現場完款+付訂">現場完款+付訂</option>
+              <option class="itemPay_deal" value="追完款">追完款</option>
             </select>
           </div>
           <div class="col">
@@ -578,7 +581,9 @@
         // autoUpdateInput: false,
         locale: {
           format: 'YYYY-MM-DD',
-          separator: ' ~ '
+          separator: ' ~ ',
+          applyLabel: '選擇',
+          cancelLabel: '取消',
         }
       },function(start, end) {
         // console.log("Callback has been called!");
@@ -588,15 +593,33 @@
       });
 
       // 上方link 選取狀態切換
-      $('#reportTab .nav-item > a').on('click', function(e) {
+      $('#reportTab .nav-item>a').on('click', function(e) {
         e.preventDefault();
         $('#reportTab .nav-link').removeClass('active')
         $(this).addClass('active');
-        if($(this).text() == "營業額"){
+
+        // if($(this).text() == "營業額" || $(this).text() == "成交率"){
+        //   $('.itemPay').prop('disabled',false);
+        // }else{
+        //   $('.itemPay').prop('disabled', 'disabled');
+        // }
+        if($(this).text() == "營業額" || $(this).text() == "成交率"){
           $('.itemPay').prop('disabled',false);
+          $('.itemPay option').attr('selected', false);
+          if($(this).text() == "營業額"){
+            $('.itemPay .itemPay_income').show();
+            $('.itemPay .itemPay_income').first().attr('selected', 'selected');
+            $('.itemPay .itemPay_deal').hide();
+          }
+          if($(this).text() == "成交率"){
+            $('.itemPay .itemPay_deal').show();
+            $('.itemPay .itemPay_deal').first().attr('selected', 'selected');
+            $('.itemPay .itemPay_income').hide();
+          }
         }else{
           $('.itemPay').prop('disabled', 'disabled');
         }
+
         if($(this).text() == "單場成本"){
           $('.itemCost').prop('disabled',false);
           $('.itemSource').prop('disabled', 'disabled');
@@ -604,6 +627,7 @@
           $('.itemCost').prop('disabled', 'disabled');
           $('.itemSource').prop('disabled', false);
         }
+
         if($(this).text() == "名單數據"){
           $('.itemAction').prop('disabled', false);
         }else{

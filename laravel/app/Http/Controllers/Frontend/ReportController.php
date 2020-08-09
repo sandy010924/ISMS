@@ -281,11 +281,13 @@ class ReportController extends Controller
                     if( $data_search['type'] == 1 ){
                         //銷講
                         $check = SalesRegistration::where('id_events', $data_search['id']);
+
                         //來源
                         if($data[2] != '0'){
                             // $check->where('datasource', $data[2]);
                             $check->whereIn('datasource', $data[2]);
                         }
+
                     }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                         //正課
                         $check = Register::where('id_events', $data_search['id']);
@@ -293,9 +295,34 @@ class ReportController extends Controller
 
                     $check = $check->where('id_status', 4)->get();
 
-                    $deal = Registration::where('source_events', $data_search['id'])
-                                        ->where('status_payment', 7)
-                                        ->get();
+                    $deal = Registration::where('source_events', $data_search['id']);
+                                        // ->where('status_payment', 7)
+                                        // ->get();
+                    
+                    //付款狀態
+                    switch ($data[6]) {
+                        case '現場完款':
+                            $deal->where('status_payment_original', 7);
+                            $deal->where('status_payment', '<>', 9);
+                            break;
+                        case '現場完款+付訂':
+                            $deal->Where(function($query) {
+                                        $query->orwhere('status_payment_original', 7)
+                                              ->orwhere('status_payment', 8);
+                                    })
+                                ->where('status_payment', '<>', 9);
+                            break;
+                        case '追完款':
+                            $deal->where('status_payment_original', '<>',7)
+                                    ->where('status_payment', 7);
+                            break;
+                        default:
+                            // $deal->where('status_payment_original', 7);
+                            // $deal->where('status_payment', '<>', 9);
+                            break;
+                    }
+
+                    $deal = $deal->get();
 
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
