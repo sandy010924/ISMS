@@ -814,12 +814,13 @@
         // item1.push($(this).parent().data('item'));
         // item[i][$(this).parent().data('select')] = $(this).val();
 
-
         if($(this).data('select') == "itemSource"){
           //判斷來源是否為空值，是則預設選項為所有來源
           if($(this).val() == ""){
             item[i].push(0);
-            log[i].push("所有來源");
+            if($(this).is(":enabled")){
+              log[i].push("所有來源");
+            }
           }else{
             var txt = "";
             $(this).find('option:selected').each(function(i, selected) {
@@ -830,11 +831,17 @@
               }
             });
             item[i].push($(this).val());
-            log[i].push(txt);
+            
+            if($(this).is(":enabled")){
+              log[i].push(txt);
+            }
           }
         }else{
           item[i].push($(this).val());
-          log[i].push($(this).find('option:selected').text());
+          
+          if($(this).is(":enabled")){
+            log[i].push($(this).find('option:selected').text());
+          }
         }
       });
     }
