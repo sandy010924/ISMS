@@ -1408,7 +1408,7 @@
               
               //已填表單加入來源場次按鈕 Sandy(2020/08/11)
               if( source_events != '無' ){
-                detail += '<hr/><a role="button" class="btn btn-sm btn-primary float-right mt-3" href="{{ route("course_return") }}' + '?id='+ source_events +'" target="_blank">來源場次報表</a>'
+                detail += '<hr/><a role="button" class="btn btn-sm btn-primary float-right mt-3" href="{{ route("course_return") }}' + '?id='+ source_events +'" target="_blank">場次報表</a>'
               }
             });
 
