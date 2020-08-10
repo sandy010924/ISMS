@@ -1275,7 +1275,7 @@
 
             $.each(data['datas'], function(index, val) {
               // 學員資料
-              var id_identity, sex, phone, email, birthday, company, profession, address, events, events_start
+              var id_identity, sex, phone, email, birthday, company, profession, address, events, events_start, source_events
               id_student = val['r_sid'];
               if (val['id_identity'] != null) {
                 id_identity = val['id_identity'];
@@ -1326,6 +1326,15 @@
               } else {
                 events_start = '無'
               }
+
+              ////已填表單加入來源場次按鈕 Sandy(2020/08/11)
+              if (val['source_events'] != null) {
+                source_events = val['source_events']
+              } else {
+                source_events = '無'
+              }
+
+
 
               student = '<div style="text-align:left"><b>課程服務報名表</b>' + '<br>' + '姓名:' + val['name'] + '<br>' + '性別:' + sex + '<br>' + '身分證字號:' + id_identity + '<br>' +
                 '聯絡電話:' + phone + '<br>' + '電子郵件:' + email + '<br>' + '出生日期:' + birthday + '<br>' +
@@ -1395,6 +1404,12 @@
 
               detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + course + sign + payment + '</div>'
               id_events = val['id_events']
+
+              
+              //已填表單加入來源場次按鈕 Sandy(2020/08/11)
+              if( source_events != '無' ){
+                detail += '<hr/><a role="button" class="btn btn-sm btn-primary float-right mt-3" href="{{ route("course_return") }}' + '?id='+ source_events +'" target="_blank">來源場次報表</a>'
+              }
             });
 
 
