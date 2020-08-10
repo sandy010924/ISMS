@@ -756,3 +756,7 @@ CREATE TABLE `activity` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日期',
   PRIMARY KEY ( `id` )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- 課程資料表 - 修改刷卡連結欄位 Sandy(2020/08/11)
+ALTER TABLE `course` modify COLUMN pay_url VARCHAR(255) NULL COMMENT '刷卡連結';

@@ -80,6 +80,10 @@
                     <label for="newform_price" class="col-form-label">課程一般定價</label>
                     <input type="number" id="newform_price" name="newform_price" class="form-control" value="{{ $course->money }}" required>
                   </div>
+                  <div class="form-group">
+                    <label for="newform_url" class="col-form-label">刷卡連結</label>
+                    <input type="text" id="newform_url" name="newform_url" class="form-control" value="{{ $course->pay_url = NULL ? '' : $course->pay_url }}">
+                  </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>

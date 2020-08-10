@@ -15,7 +15,7 @@ use App\Model\Payment;
 
 class CourseListEditController extends Controller
 {
-    /* 新增報名表 s */
+    /* 新增/編輯報名表 s */
     public function insert(Request $request)
     {
         try{
@@ -24,9 +24,15 @@ class CourseListEditController extends Controller
             $id_type = $request->get('newform_course');
             $courseservices = $request->get('newform_services');
             $money = $request->get('newform_price');
+            $url = $request->get('newform_url');
             
             Course::where('id', $id)
-                  ->update(['id_type' => $id_type, 'courseservices' => $courseservices, 'money' => $money]);
+                  ->update([
+                      'id_type' => $id_type, 
+                      'courseservices' => $courseservices, 
+                      'money' => $money,
+                      'pay_url' => $url,
+                    ]);
 
             return redirect()->route('course_list_edit', ['id' => $id])->with('status', '新增成功');
         } catch (\Exception $e) {
@@ -34,7 +40,7 @@ class CourseListEditController extends Controller
         }
 
     }
-    /* 新增報名表 e */
+    /* 新增/編輯報名表 e */
 
 
     /* 取消場次Sandy (2020/03/21) s */

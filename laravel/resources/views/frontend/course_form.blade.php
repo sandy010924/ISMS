@@ -279,7 +279,13 @@
                 <p>中國信託商業銀行中壢分行(代碼822)</p>
                 <p>戶名：無極限國際有限公司</p>
                 <p>帳號：129541438753</p>
-                <h5 class="font-weight-bold text-center my-5">刷卡連結（會再附上連結）</h5>
+              </div>
+              <hr>
+              <div class="form-group mb-5">
+                <h5 class="font-weight-bold text-center my-5">刷卡連結</h5>
+                @foreach( $course as $data)
+                  <p>{{ $data['name'] }}：{{ $data['pay_url'] }}</p>
+                @endforeach
               </div>
               <hr>
               <div class="form-group mb-5">
