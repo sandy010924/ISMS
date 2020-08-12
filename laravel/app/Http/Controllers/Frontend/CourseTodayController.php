@@ -38,11 +38,15 @@ class CourseTodayController extends Controller
             $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
                 ->select('events_course.*', 'course.name as course', 'course.type as type')
                 ->Where('course_start_at', 'like', '%' . date("Y-m-d") . '%')
+                ->where(function ($query) {
+                    $query->orWhere('type', '<>',1)
+                          ->orWhere('unpublish', '<>', 1);
+                })
                 ->get();
         }
 
 
-        foreach ($events as $key => $data) {
+        foreach ($events as $data) {
             $type = "";
 
             //判斷是銷講or正課
@@ -71,7 +75,7 @@ class CourseTodayController extends Controller
             array_push($count_cancel, $data_cancel);
             array_push($count_check, $data_check);
         }
-
+        
         return view('frontend.course_today', compact('events', 'count_apply', 'count_cancel', 'count_check'));
     }
 }

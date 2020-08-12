@@ -54,11 +54,11 @@ class CourseController extends Controller
             if ($data['type'] == 1) {
                 //銷講
 
-                //判斷場次是否下架
-                if( $data['unpublish'] == 1){
-                    //是則取消顯示
-                    continue;
-                }
+                // //判斷場次是否下架
+                // if( $data['unpublish'] == 1){
+                //     //是則取消顯示
+                //     continue;
+                // }
 
                 //判斷是否有下一階
                 $nextLevel = count(Course::where('id_type', $data['id_course'])
@@ -101,7 +101,9 @@ class CourseController extends Controller
                     'href_form' => route('course_form', ["id" => $data['id']]),
                     'id' => $data['id'],
                     'id_group' => $data['id_group'],
-                    'nextLevel' => $nextLevel
+                    'nextLevel' => $nextLevel,
+                    'unpublish' => $data['unpublish'],
+                    'type' => $data['type']
                 ];
             }elseif( $data['type'] == 2 || $data['type'] == 3){
                 //正課
@@ -214,7 +216,9 @@ class CourseController extends Controller
                     'href_form' => route('course_form', ["id" => $data['id']]),
                     'id' => $data['id'],
                     'id_group' => $data['id_group'],
-                    'nextLevel' => $nextLevel
+                    'nextLevel' => $nextLevel,
+                    'unpublish' => $data['unpublish'],
+                    'type' => $data['type']
                 ];
             }
         }

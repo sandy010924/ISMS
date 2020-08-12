@@ -116,7 +116,12 @@
     @foreach($events as $key => $event )
     <tr>
       <td>{{ $event['date'] }}</td>
-      <td>{{ $event['name'] }}</td>
+      <td>
+        @if( $event['type'] == 1 && $event['unpublish'] == 1 )
+        <span class="text-danger border border-danger">取消場次</span>
+        @endif
+        {{ $event['name'] }}
+      </td>
       <td>{{ $event['event'] }}</td>
       <td>{{ $event['count_apply'] }} / <span style="color:red">{{ $event['count_cancel'] }}</span></td>
       <td>{{ $event['count_check'] }}</span></td>

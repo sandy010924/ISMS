@@ -191,20 +191,20 @@
             名單
           </button>
           <div class="dropdown-menu">
-            <a role="button" class="dropdown-item" href="{{ route('course_list_apply', [ 'id' => $data['id'] ]) }}">報名名單</a>
+            <a class="dropdown-item" href="{{ route('course_list_apply', [ 'id' => $data['id'] ]) }}">報名名單</a>
             @if( $data['type'] != "銷講" )
-            <a role="button" class="dropdown-item" href="{{ route('course_list_refund', [ 'id' => $data['id'] ]) }}">退費名單</a>
+            <a class="dropdown-item" href="{{ route('course_list_refund', [ 'id' => $data['id'] ]) }}">退費名單</a>
             @endif
           </div>
         </div>
 
-        <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data', [ 'id' => $data['id'] ] ) }}">場次數據</a>
+        <a class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_data', [ 'id' => $data['id'] ] ) }}">場次數據</a>
         @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'teacher'))
-        <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit', [ 'id' => $data['id'] ] ) }}">編輯</a>
+        <a class="btn btn-secondary btn-sm mx-1" href="{{ route('course_list_edit', [ 'id' => $data['id'] ] ) }}">編輯</a>
         @endif
-        {{-- <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['all_id'] }});" value="{{ $data['all_id'] }}" >刪除</a> --}}
+        {{-- <a class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['all_id'] }});" value="{{ $data['all_id'] }}" >刪除</a> --}}
         @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'teacher'))
-        <a role="button" class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
+        <a class="btn btn-danger btn-sm mx-1 text-white" onclick="btn_delete({{ $data['id'] }});">刪除</a>
         @endif
       </td>
     </tr>
