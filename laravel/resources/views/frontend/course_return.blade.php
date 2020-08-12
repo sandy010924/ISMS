@@ -48,6 +48,17 @@
   div.dt-buttons {
     margin-bottom: 10px;
   }
+
+  /* modal層級 */
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+  }
+  .modal-backdrop.show:nth-of-type(even) {
+      z-index: 1051 !important;
+  }
+  .modal { 
+    overflow-y: auto !important; 
+  }
 </style>
 
 <!-- Content Start -->
@@ -69,7 +80,7 @@
         </h6>
         {{-- <h6>零秒成交數&nbsp;&nbsp;2019/11/20&nbsp;&nbsp;台北下午場&nbsp;&nbsp;講座地點 : 台北市金山南路一段17號5樓(博宇藝享空間)</h6> --}}
       </div>
-      <div class="col text-right">
+      <div class="col-5 text-right">
         <a role="button" class="btn btn-outline-secondary mx-2" href="{{ route('course_list_chart', ['id'=> $course->id ]) }}">場次數據圖表</a>
         <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#new_form">新增資料</button>
         <!-- 新增資料 modal -->
@@ -384,10 +395,10 @@
     @foreach($fill as $data)
     <tr>
       <td class="align-middle">
-        <button type="button" class="btn collapse-btn" data-toggle="collapse" data-target="#payment{{ $data['id'] }}" aria-expanded="false" aria-controls="payment{{ $data['id'] }}">
+        <a class="btn collapse-btn" data-toggle="collapse" data-target="#payment{{ $data['id'] }}" aria-expanded="false" aria-controls="payment{{ $data['id'] }}">
           <span class="fas fa-angle-right fa-lg collapse_open"></span>
           <span class="fas fa-angle-down fa-lg collapse_close"></span>
-        </button>
+        </a>
       </td>
       {{-- <td class="align-middle" data-toggle="modal" onclick="course_data({{ $data['id_student'] }});">{{ $data['name'] }}</td> --}}
       <td class="align-middle">
@@ -615,7 +626,7 @@
               </div>
               <div class="form-group">
                 <label for="edit_events" class="col-form-label edit_input"><strong>報名場次</strong></label>
-                <a class="mx-2" data-toggle="collapse" href="#edit_collapse" role="button" aria-expanded="false" aria-controls="edit_collapse">
+                <a class="mx-2" data-toggle="collapse" href="#edit_collapse" aria-expanded="false" aria-controls="edit_collapse">
                   編輯場次
                 </a>
                 <p name="edit_events" id="edit_events"></p>
@@ -1122,9 +1133,29 @@
         <!-- 完整內容 - E -->
       </div>
     </div>
+    <!-- 完整內容 - E -->
 
   </div>
 </div>
+
+<!-- 同電話學員選項 -->
+<div id="student_option" class="modal fade" tabindex="1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">請選擇自動填入的學員資料</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 同電話學員選項 -->
+
 <!-- Content End -->
 
 
@@ -1263,7 +1294,7 @@
           columns: '.colExcel',
           format: {
             body: function(data, column, row, node) {
-              console.log(column + $(data).text());
+              // console.log(column + $(data).text());
 
               // if( row % 2 === 1 ){
               // console.log(column + $(data).text());
@@ -1337,6 +1368,7 @@
     }
   });
 
+  //填入資料
   function fill_data(phone) {
     $.ajax({
       type: 'GET',
@@ -1348,49 +1380,82 @@
         // console.log(data);  
 
         if (data != "nodata") {
-          //針對空格做填入 
-
-          if ($("#iname").val() == "") {
-            $("#iname").val(data.name);
-          }
-
-          if (typeof($('[name="isex"]:checked').val()) == "undefined") {
-            if (data.sex == '男') {
-              $("#isex1").click();
+          if(data.length > 1){
+            $('#student_option').modal('show');
+            var option;
+            option = `<table class="table table-striped table-sm text-center border rounded-lg dataTable no-footer">
+                        <thead>
+                          <tr>
+                            <th>姓名</th>
+                            <th>電話</th>
+                            <th>信箱</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                      `;
+            for( var i = 0; i < data.length ; i++){
+              option += `<tr>
+                          <td class="align-middle">${data[i].name}</td>
+                          <td class="align-middle">${data[i].phone}</td>
+                          <td class="align-middle">${data[i].email}</td>
+                          <td class="align-middle">
+                            <button id="option_${i}" type="button" class="btn btn-sm btn-primary">選擇</button>
+                          </td>
+                         </tr>`;
             }
-            if (data.sex == '女') {
-              $("#isex2").click();
+
+            option += `</tbody></table>`;
+            $('#student_option .modal-body').html(option).on('click','button',function(){
+                //點選按鈕填入學員資料
+                // console.log($(this).closest('tr').index());
+                option_click(data[$(this).closest('tr').index()]);
+            });;
+
+          }else{
+            //針對空格做填入 
+
+            if ($("#iname").val() == "") {
+              $("#iname").val(data[0].name);
+            }
+
+            if (typeof($('[name="isex"]:checked').val()) == "undefined") {
+              if (data[0].sex == '男') {
+                $("#isex1").click();
+              }
+              if (data[0].sex == '女') {
+                $("#isex2").click();
+              }
+            }
+
+            if ($("#iid").val() == "") {
+              $("#iid").val(data[0].id_identity);
+            }
+
+            if ($("#iphone").val() == "") {
+              $("#iphone").val(data[0].phone);
+            }
+
+            if ($("#iemail").val() == "") {
+              $("#iemail").val(data[0].email);
+            }
+
+            if ($("#ibirthday").val() == "") {
+              $("#ibirthday").val(data[0].birthday);
+            }
+
+            if ($("#icompany").val() == "") {
+              $("#icompany").val(data[0].company);
+            }
+
+            if ($("#iprofession").val() == "") {
+              $("#iprofession").val(data[0].profession);
+            }
+
+            if ($("#iaddress").val() == "") {
+              $("#iaddress").val(data[0].address);
             }
           }
-
-          if ($("#iid").val() == "") {
-            $("#iid").val(data.id_identity);
-          }
-
-          if ($("#iphone").val() == "") {
-            $("#iphone").val(data.phone);
-          }
-
-          if ($("#iemail").val() == "") {
-            $("#iemail").val(data.email);
-          }
-
-          if ($("#ibirthday").val() == "") {
-            $("#ibirthday").val(data.birthday);
-          }
-
-          if ($("#icompany").val() == "") {
-            $("#icompany").val(data.company);
-          }
-
-          if ($("#iprofession").val() == "") {
-            $("#iprofession").val(data.profession);
-          }
-
-          if ($("#iaddress").val() == "") {
-            $("#iaddress").val(data.address);
-          }
-
         }
 
       },
@@ -1398,6 +1463,54 @@
         console.log("error: " + errorMessage);
       }
     });
+  }
+  
+
+  function option_click(student){
+    // $('#option_' + student.id ).click(function() {
+      if ($("#iname").val() == "") {
+        $("#iname").val(student.name);
+      }
+
+      if (typeof($('[name="isex"]:checked').val()) == "undefined") {
+        if (student.sex == '男') {
+          $("#isex1").click();
+        }
+        if (student.sex == '女') {
+          $("#isex2").click();
+        }
+      }
+
+      if ($("#iid").val() == "") {
+        $("#iid").val(student.id_identity);
+      }
+
+      if ($("#iphone").val() == "") {
+        $("#iphone").val(student.phone);
+      }
+
+      if ($("#iemail").val() == "") {
+        $("#iemail").val(student.email);
+      }
+
+      if ($("#ibirthday").val() == "") {
+        $("#ibirthday").val(student.birthday);
+      }
+
+      if ($("#icompany").val() == "") {
+        $("#icompany").val(student.company);
+      }
+
+      if ($("#iprofession").val() == "") {
+        $("#iprofession").val(student.profession);
+      }
+
+      if ($("#iaddress").val() == "") {
+        $("#iaddress").val(student.address);
+      }
+
+      $('#student_option').modal('hide');
+    // })
   }
   /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
 
@@ -1976,7 +2089,7 @@
 
       },
       error: function(jqXHR) {
-        // console.log(JSON.stringify(jqXHR));  
+        console.log(JSON.stringify(jqXHR));  
 
         /** alert **/
         $("#error_alert_text").html("新增付款失敗");

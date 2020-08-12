@@ -253,7 +253,7 @@ class CourseReturnController extends Controller
         $phone = $request->input('phone');
         
         $student = Student::Where('phone', $phone)
-                          ->first();
+                          ->get();
 
         if( !empty($student) ){
             return Response($student);
@@ -290,7 +290,7 @@ class CourseReturnController extends Controller
                 $course = Course::where('id', $data['id_course'])->first()->name;
                 $events = $course;
 
-                if( $data['id_group'] == null || $data['id_group'] == ""){
+                if( $data['id_group'] == null || $data['id_group'] == ""|| $data['id_group'] == -99){
                     $events .= "，尚未選擇場次";
                 }else{
                     $event = EventsCourse::where('id_group', $data['id_group'])

@@ -86,7 +86,10 @@ class CourseReturnController extends Controller
             /*學員報名資料 - S*/
 
             //判斷系統是否已有該學員資料
-            $check_student = Student::where('phone', $phone)->get();
+            $check_student = Student::where('name', $name)
+                                    ->where('phone', $phone)
+                                    ->where('email', $email)
+                                    ->get();
 
             // 檢查學員資料
             if (count($check_student) != 0) {
@@ -94,7 +97,7 @@ class CourseReturnController extends Controller
                     $id_student = $data_student ->id;
                 }
                 //更新學員資料
-                Student::where('phone', $phone)
+                Student::where('id', $id_student)
                     ->update([
                         'name' => $name,
                         'sex' => $sex,
@@ -707,42 +710,48 @@ class CourseReturnController extends Controller
             /*學員報名資料 - S*/
 
             //判斷系統是否已有該學員資料
-            $check_student = Student::where('phone', $phone)->get();
+            $check_student = Student::where('name', $name)
+                                    ->where('phone', $phone)
+                                    ->where('email', $email)
+                                    ->get();
 
             $id_student = "";
 
             // 檢查學員資料
             if (count($check_student) != 0) {
 
-                $id_student = Student::where('phone', $phone)->first()->id;
+                $id_student = Student::where('name', $name)
+                                    ->where('phone', $phone)
+                                    ->where('email', $email)
+                                    ->first()->id;
 
                 if($name == ""){
-                    $name = Student::where('phone', $phone)->first()->name;
+                    $name = Student::where('id', $id_student)->first()->name;
                 }
                 if($sex == ""){
-                    $sex = Student::where('phone', $phone)->first()->sex;
+                    $sex = Student::where('id', $id_student)->first()->sex;
                 }
                 if($id_identity == ""){
-                    $id_identity = Student::where('phone', $phone)->first()->id_identity;
+                    $id_identity = Student::where('id', $id_student)->first()->id_identity;
                 }
                 if($email == ""){
-                    $email = Student::where('phone', $phone)->first()->email;
+                    $email = Student::where('id', $id_student)->first()->email;
                 }
                 if($birthday == ""){
-                    $birthday = Student::where('phone', $phone)->first()->birthday;
+                    $birthday = Student::where('id', $id_student)->first()->birthday;
                 }
                 if($company == ""){
-                    $company = Student::where('phone', $phone)->first()->company;
+                    $company = Student::where('id', $id_student)->first()->company;
                 }
                 if($profession == ""){
-                    $profession = Student::where('phone', $phone)->first()->profession;
+                    $profession = Student::where('id', $id_student)->first()->profession;
                 }
                 if($address == ""){
-                    $address = Student::where('phone', $phone)->first()->address;
+                    $address = Student::where('id', $id_student)->first()->address;
                 }
 
                 //更新學員資料
-                Student::where('phone', $phone)
+                Student::where('id', $id_student)
                     ->update([
                         'name' => $name,
                         'sex' => $sex,
