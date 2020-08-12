@@ -502,10 +502,14 @@
       success: function(data) {
         // console.log(data);  
 
+        var info = table.page.info();
+
         //重整datatable區塊
         $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
           status_onload();
           table_onload();
+          //儲存不跳頁
+          table.page( info.page ).draw( 'page' );
         });
 
         // $("#" + data["list"].check_id).val(data["list"].check_status_val);
@@ -616,11 +620,15 @@
       success: function(data) {
         // console.log(JSON.stringify(data));
 
+        var info = table.page.info();
 
         $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
           status_onload();
           table_onload();
+          //儲存不跳頁
+          table.page( info.page ).draw( 'page' );
         });
+
         // //更新隱藏報到備註欄位(export用)
         // if( course_type == "checkNote"){
         //   $("#checkmemo"+data_id).html(data_val);
