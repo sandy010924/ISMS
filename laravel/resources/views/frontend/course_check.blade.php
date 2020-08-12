@@ -240,14 +240,14 @@
       <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
       <td class="align-middle">
         <button type="button" class="btn btn-sm text-white update_status" name="check_btn" id="{{ $coursecheck['check_id'] }}" value="{{ $coursecheck['check_status_val'] }}">{{ $coursecheck['check_status_name'] }}</button>
-        <div class="btn-group">
-          <button class="btn btn-sm" type="button" data-toggle="dropdown">
+        <div class="btn-group ml-1">
+          <a data-toggle="dropdown">
             •••
-          </button>
+          </a>
           <div class="dropdown-menu">
-            <button class="dropdown-item update_status" name="dropdown_check" value="{{ $coursecheck['check_id'] }}" type="button">報到</button>
-            <button class="dropdown-item update_status" name="dropdown_absent" value="{{ $coursecheck['check_id'] }}" type="button">未到</button>
-            <button class="dropdown-item update_status" name="dropdown_cancel" value="{{ $coursecheck['check_id'] }}" type="button">取消</button>
+            <button class="dropdown-item update_status" name="dropdown_check" value="{{ $coursecheck['check_id'] }}">報到</button>
+            <button class="dropdown-item update_status" name="dropdown_absent" value="{{ $coursecheck['check_id'] }}">未到</button>
+            <button class="dropdown-item update_status" name="dropdown_cancel" value="{{ $coursecheck['check_id'] }}">取消</button>
           </div>
         </div>
       </td>

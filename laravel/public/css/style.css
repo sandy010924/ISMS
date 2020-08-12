@@ -143,3 +143,17 @@ main > .header .logout:hover{
     display:inline-block; */
     cursor: pointer;
 } 
+
+button.btn, a[role="button"]{
+    border: 2px solid !important;
+}
+button.btn:hover, a[role="button"]:hover{
+    border: 2px solid #333 !important;
+}
+select, a{
+    cursor: pointer;
+}
+
+#reportTab li.nav-item:hover{
+    background-color: #dcedfe;
+}
