@@ -1164,8 +1164,8 @@ class CourseListController extends Controller
                             // $etime = strchr($new_coursedata, "-");
 
                             // 課程日期
-                            $date = mb_substr($new_coursedata, 0, 9, 'utf8');
-
+                            $date = mb_substr($new_coursedata, 0, 10, 'utf8');
+                            // return $date;
                             // 判斷課程日期要抓到哪個位置
                             if (strpos($date, '（') != false || strpos($date, '(') != false) {
                                 // 包含(

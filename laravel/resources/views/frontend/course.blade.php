@@ -14,6 +14,7 @@
     height: 300px;
     overflow-y: auto;
   }
+
   /* 重複資料Modal Y軸滾輪 Rocky(2020/08/06)*/
 </style>
 <!-- Content Start -->
@@ -93,7 +94,7 @@
         <div class="input-group">
           <input type="text" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name">
           <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
+            <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
           </div>
         </div>
       </div>

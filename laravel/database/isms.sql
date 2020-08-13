@@ -760,3 +760,7 @@ CREATE TABLE `activity` (
 
 -- 課程資料表 - 修改刷卡連結欄位 Sandy(2020/08/11)
 ALTER TABLE `course` modify COLUMN pay_url VARCHAR(255) NULL COMMENT '刷卡連結';
+
+
+-- 新增資料 - 狀態資料表 Rocky(2020/08/13)
+INSERT INTO isms_status (`name`,`type`)  VALUES ('參與','4');

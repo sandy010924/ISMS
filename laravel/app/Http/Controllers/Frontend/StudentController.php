@@ -701,11 +701,12 @@ class StudentController extends Controller
                     $datasource = $sales_registration_datasource;
 
                     $students_data[$key] = [
-                        'id'                => $data['id'],
-                        'name'              => $data['name'],
-                        'phone'             => $data['phone'],
-                        'email'             => $data['email'],
-                        'datasource'        => $datasource,
+                        'id'                    => $data['id'],
+                        'name'                  => $data['name'],
+                        'phone'                 => $data['phone'],
+                        'email'                 => $data['email'],
+                        'check_blacklist'       => $data['check_blacklist'],
+                        'datasource'            => $datasource,
                     ];
                 }
                 // 進行比較 -> 找出三個陣列都有的學員
@@ -729,6 +730,7 @@ class StudentController extends Controller
                             'name'                  => $students_data[$key]['name'],
                             'phone'                 => $students_data[$key]['phone'],
                             'email'                 => $students_data[$key]['email'],
+                            'check_blacklist'       => $data['check_blacklist'],
                             'datasource'            => $students_data[$key]['datasource']
                         ));
                     }
@@ -757,6 +759,7 @@ class StudentController extends Controller
                                 'name'                  => $students_data[$key]['name'],
                                 'phone'                 => $students_data[$key]['phone'],
                                 'email'                 => $students_data[$key]['email'],
+                                'check_blacklist'       => $data['check_blacklist'],
                                 'datasource'            => $students_data[$key]['datasource']
                             ));
                         }
@@ -787,6 +790,7 @@ class StudentController extends Controller
                         'name'              => $data['name'],
                         'phone'             => $data['phone'],
                         'email'             => $data['email'],
+                        'check_blacklist'       => $data['check_blacklist'],
                         'datasource'        => $datasource,
                     ];
                 }

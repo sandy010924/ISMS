@@ -33,7 +33,7 @@
             <option value="0">請選擇</option>
             <option value="1">銷講</option>
             <option value="2">正課</option>
-            <!-- <option value="3">活動</option> -->
+            <option value="3">活動</option>
           </select>
         </div>
         <div class="col-3">
@@ -108,7 +108,7 @@
               <option value="0">請選擇</option>
               <option value="1">銷講</option>
               <option value="2">正課</option>
-              <!-- <option value="3">活動</option> -->
+              <option value="3">活動</option>
             </select>
           </div>
           <div class="col-3">
@@ -178,7 +178,7 @@
               <option value="0">請選擇</option>
               <option value="1">銷講</option>
               <option value="2">正課</option>
-              <!-- <option value="3">活動</option> -->
+              <option value="3">活動</option>
             </select>
           </div>
           <div class="col-3">
@@ -791,6 +791,7 @@
   show_condition1();
   show_condition2();
   show_condition3();
+
   /*條件判斷 - E Rocky(2020/04/05)*/
   function show_requirement_course(type, id) {
     $.ajax({
@@ -1865,22 +1866,45 @@
     //條件類別判斷
     document.getElementById('condition').onchange = function() {
       var condition_option1 = document.getElementById('condition_option1'),
-        condition_option2 = document.getElementById('condition_option2')
-        // ,condition_option3=document.getElementById('condition_option3')
-        ,
+        condition_option2 = document.getElementById('condition_option2'),
         condition_input3 = document.getElementById('condition_input3');
+
+      condition_option2.style.display = 'none';
+      condition_input3.style.display = 'none';
 
       if (this.value == 'information') {
         // 選項一
-        $('#condition_option1').empty();
-        $('#condition_option1').append(new Option('請選擇', ''));
-        $('#condition_option1').append(new Option('原始來源', 'datasource_old'));
-        $('#condition_option1').append(new Option('最新來源', 'datasource_new'));
-        $('#condition_option1').append(new Option('報名場次', 'id_events'));
-        $('#condition_option1').append(new Option('目前職業', 'profession'));
-        $('#condition_option1').append(new Option('居住地址', 'address'));
-        // $('#condition_option1').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1').append(new Option('想了解的內容', 'course_content'));
+        if ($('#select_type').val() == "1") {
+          $('#condition_option1').empty();
+          $('#condition_option1').append(new Option('請選擇', ''));
+          $('#condition_option1').append(new Option('原始來源', 'datasource_old'));
+          $('#condition_option1').append(new Option('最新來源', 'datasource_new'));
+          $('#condition_option1').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1').append(new Option('目前職業', 'profession'));
+          $('#condition_option1').append(new Option('居住地址', 'address'));
+          $('#condition_option1').append(new Option('想了解的內容', 'course_content'));
+
+        } else if ($('#select_type').val() == "2") {
+          $('#condition_option1').empty();
+          $('#condition_option1').append(new Option('請選擇', ''));
+          $('#condition_option1').append(new Option('應付金額', 'amount_payable'));
+          $('#condition_option1').append(new Option('已付金額', 'amount_paid'));
+          $('#condition_option1').append(new Option('服務人員', 'person'));
+          $('#condition_option1').append(new Option('統一發票', 'type_invoice'));
+          $('#condition_option1').append(new Option('統編', 'number_taxid'));
+          $('#condition_option1').append(new Option('抬頭', 'companytitle'));
+          $('#condition_option1').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1').append(new Option('目前職業', 'profession'));
+          $('#condition_option1').append(new Option('居住地址', 'address'));
+        } else if ($('#select_type').val() == "3") {
+          $('#condition_option1').empty();
+          $('#condition_option1').append(new Option('請選擇', ''));
+          $('#condition_option1').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1').append(new Option('目前職業', 'profession'));
+          $('#condition_option1').append(new Option('居住地址', 'address'));
+          $('#condition_option1').append(new Option('有什麼問題想要詢問', 'course_content'));
+        }
+
 
         // 選項二
         $('#condition_option2').empty();
@@ -1890,7 +1914,7 @@
         $('#condition_option2').append(new Option('不包含', 'notlike'));
 
         $('#condition_input3').val('');
-        condition_input3.style.display = 'block';
+        // condition_input3.style.display = 'block';
 
       } else if (this.value == 'action') {
         // 選項一
@@ -1909,12 +1933,8 @@
         $('#condition_option2').append(new Option('完款', '7'));
         $('#condition_option2').append(new Option('付訂', '8'));
         $('#condition_option2').append(new Option('退款', '9'));
-        $('#condition_option2').append(new Option('參與', ''));
-        // $('#condition_option2').append(new Option('打開郵件', ''));
-        // $('#condition_option2').append(new Option('打開簡訊', ''));
+        $('#condition_option2').append(new Option('參與', '23'));
 
-        // condition_option2.innerHTML='<option value="">請選擇</option><option value="present">報到</option><option value="cancel">取消</option><option value="absent">未到</option><option value="pay">交付</option><option value="participate">參與</option><option value="open-mail">打開郵件</option><option value="open-sms">打開簡訊</option>';
-        // condition_option3.style.display='block';
         $('#condition_input3').val('');
         condition_input3.style.display = 'none';
       } else if (this.value == 'tag') {
@@ -1923,7 +1943,7 @@
         $('#condition_option1').append(new Option('請選擇', ''));
         $('#condition_option1').append(new Option('已分配', 'yes'));
         $('#condition_option1').append(new Option('未分配', 'no'));
-        // condition_option1.innerHTML='<option value="">請選擇</option><option>已分配</option><option>未分配</option>';
+
         // 選項二
         $('#condition_option2').empty();
         $('#condition_option2').append(new Option('請選擇', ''));
@@ -1932,10 +1952,10 @@
         $('#condition_option2').append(new Option('包含', 'like'));
         $('#condition_option2').append(new Option('不包含', 'notlike'));
 
-        // condition_option2.innerHTML='<option value="">請選擇</option><option>是</option><option>未</option><option>包含</option><option>不包含</option>';
+
         $('#condition_input3').val('');
-        condition_input3.style.display = 'block';
-        // condition_option3.style.display='none';
+        // condition_input3.style.display = 'block';
+
       }
     };
     // 類型 Rocky(2020/03/20)
@@ -1977,39 +1997,93 @@
           $('#condition_option1').append(new Option('目前職業', 'profession'));
           $('#condition_option1').append(new Option('居住地址', 'address'));
         }
+      } else if (this.value == '3') {
+        // 活動 Rocky(2020/08/13)        
+        if ($('#condition').val() == "information") {
+          $('#condition_option1').empty();
+          $('#condition_option1').append(new Option('請選擇', ''));
+          $('#condition_option1').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1').append(new Option('目前職業', 'profession'));
+          $('#condition_option1').append(new Option('居住地址', 'address'));
+          $('#condition_option1').append(new Option('有什麼問題想要詢問', 'course_content'));
+
+          // 選項二
+          $('#condition_option2').empty();
+          $('#condition_option2').append(new Option('是', 'yes'));
+          $('#condition_option2').append(new Option('未', 'no'));
+          $('#condition_option2').append(new Option('包含', 'like'));
+          $('#condition_option2').append(new Option('不包含', 'notlike'));
+        }
       }
     }
 
-    // 選項一 Rocky(2020/03/20)
+    // 選項三 Rocky(2020/08/12)
     document.getElementById('condition_option1').onchange = function() {
       $('#condition_input3').val('');
       $('#condition_option2').val('');
-      if (this.value == 'yes') {
+
+      if ($('#condition').val() == "tag" && this.value == 'yes') {
+        // 選項二
+        $('#condition_option2').empty();
+        $('#condition_option2').append(new Option('是', 'yes'));
+        $('#condition_option2').append(new Option('未', 'no'));
+        $('#condition_option2').append(new Option('包含', 'like'));
+        $('#condition_option2').append(new Option('不包含', 'notlike'));
+
         condition_option2.style.display = 'block';
-      } else if (this.value == 'no') {
-        condition_option2.style.display = 'none';
+        condition_input3.style.display = 'block';
+      } else if ($('#condition').val() == "tag" && this.value == 'no') {
+        // 選項二
+        $('#condition_option2').empty();
+        $('#condition_option2').append(new Option('是', 'yes'));
+        $('#condition_option2').append(new Option('包含', 'like'));
+
+        condition_option2.style.display = 'block';
+        condition_input3.style.display = 'block';
+      } else if ($('#condition').val() == "information") {
+        condition_option2.style.display = 'block';
+        condition_input3.style.display = 'block';
+      } else if ($('#condition').val() == "action") {
+        condition_option2.style.display = 'block';
         condition_input3.style.display = 'none';
+      }
+
+      // 已付、應付金額 Rocky(2020/08/12)
+      if ($('#select_type').val() == "2" && (this.value == 'amount_paid' || this.value == 'amount_payable')) {
+        $('#condition_option2').empty();
+        $('#condition_option2').append(new Option('是', 'yes'));
+        $('#condition_option2').append(new Option('未', 'no'));
+
+        // $('#condition_option2').empty();
+        // $('#condition_option2').append(new Option('等於', '='));
+        // $('#condition_option2').append(new Option('大於', '>'));
+        // $('#condition_option2').append(new Option('小於', '<'));
+      } else if ($('#select_type').val() == "2" && $('#condition').val() == "information") {
+        $('#condition_option2').empty();
+        $('#condition_option2').append(new Option('是', 'yes'));
+        $('#condition_option2').append(new Option('未', 'no'));
+        $('#condition_option2').append(new Option('包含', 'like'));
+        $('#condition_option2').append(new Option('不包含', 'notlike'));
       }
     }
 
-    document.getElementById('condition_option2').onchange = function() {
-      if (this.value == 'present' || this.value == 'cancel' || this.value == 'absent' || this.value == 'pay') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>課程選項</option>';
-      } else if (this.value == 'participate') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>課程活動</option>';
-      } else if (this.value == 'open-mail') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>郵件名稱</option>';
-      } else if (this.value == 'open-sms') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>簡訊名稱</option>';
-      }
-    }
+    // document.getElementById('condition_option2').onchange = function() {
+    //   if (this.value == 'present' || this.value == 'cancel' || this.value == 'absent' || this.value == 'pay') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>課程選項</option>';
+    //   } else if (this.value == 'participate') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>課程活動</option>';
+    //   } else if (this.value == 'open-mail') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>郵件名稱</option>';
+    //   } else if (this.value == 'open-sms') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>簡訊名稱</option>';
+    //   }
+    // }
 
     // 顯示細分條件資料 Rocky(2020/03/14)
     $("#select_type").change(function() {
       show_requirement_course($('#select_type').val(), "#select_course");
     });
   }
-
 
   function show_condition2() {
     //條件類別判斷
@@ -2018,17 +2092,41 @@
         condition_option2_2 = document.getElementById('condition_option2_2'),
         condition_input3_2 = document.getElementById('condition_input3_2');
 
+      condition_option2_2.style.display = 'none';
+      condition_input3_2.style.display = 'none';
+
       if (this.value == 'information') {
         // 選項一
-        $('#condition_option1_2').empty();
-        $('#condition_option1_2').append(new Option('請選擇', ''));
-        $('#condition_option1_2').append(new Option('原始來源', 'datasource_old'));
-        $('#condition_option1_2').append(new Option('最新來源', 'datasource_new'));
-        $('#condition_option1_2').append(new Option('報名場次', 'id_events'));
-        $('#condition_option1_2').append(new Option('目前職業', 'profession'));
-        $('#condition_option1_2').append(new Option('居住地址', 'address'));
-        // $('#condition_option1_2').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1_2').append(new Option('想了解的內容', 'course_content'));
+        if ($('#select_type2').val() == "1") {
+          $('#condition_option1_2').empty();
+          $('#condition_option1_2').append(new Option('請選擇', ''));
+          $('#condition_option1_2').append(new Option('原始來源', 'datasource_old'));
+          $('#condition_option1_2').append(new Option('最新來源', 'datasource_new'));
+          $('#condition_option1_2').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1_2').append(new Option('目前職業', 'profession'));
+          $('#condition_option1_2').append(new Option('居住地址', 'address'));
+          $('#condition_option1_2').append(new Option('想了解的內容', 'course_content'));
+
+        } else if ($('#select_type2').val() == "2") {
+          $('#condition_option1_2').empty();
+          $('#condition_option1_2').append(new Option('請選擇', ''));
+          $('#condition_option1_2').append(new Option('應付金額', 'amount_payable'));
+          $('#condition_option1_2').append(new Option('已付金額', 'amount_paid'));
+          $('#condition_option1_2').append(new Option('服務人員', 'person'));
+          $('#condition_option1_2').append(new Option('統一發票', 'type_invoice'));
+          $('#condition_option1_2').append(new Option('統編', 'number_taxid'));
+          $('#condition_option1_2').append(new Option('抬頭', 'companytitle'));
+          $('#condition_option1_2').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1_2').append(new Option('目前職業', 'profession'));
+          $('#condition_option1_2').append(new Option('居住地址', 'address'));
+        } else if ($('#select_type2').val() == "3") {
+          $('#condition_option1_2').empty();
+          $('#condition_option1_2').append(new Option('請選擇', ''));
+          $('#condition_option1_2').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1_2').append(new Option('目前職業', 'profession'));
+          $('#condition_option1_2').append(new Option('居住地址', 'address'));
+          $('#condition_option1_2').append(new Option('有什麼問題想要詢問', 'course_content'));
+        }
 
         // 選項二
         $('#condition_option2_2').empty();
@@ -2036,7 +2134,7 @@
         $('#condition_option2_2').append(new Option('未', 'no'));
         $('#condition_option2_2').append(new Option('包含', 'like'));
         $('#condition_option2_2').append(new Option('不包含', 'notlike'));
-
+        //
         condition_input3_2.style.display = 'block';
       } else if (this.value == 'action') {
         // 選項一
@@ -2054,7 +2152,7 @@
         $('#condition_option2_2').append(new Option('完款', '7'));
         $('#condition_option2_2').append(new Option('付訂', '8'));
         $('#condition_option2_2').append(new Option('退款', '9'));
-        $('#condition_option2_2').append(new Option('參與', ''));
+        $('#condition_option2_2').append(new Option('參與', '23'));
         // $('#condition_option2_2').append(new Option('打開郵件', ''));
         // $('#condition_option2_2').append(new Option('打開簡訊', ''));
 
@@ -2074,9 +2172,10 @@
         $('#condition_option2_2').append(new Option('包含', 'like'));
         $('#condition_option2_2').append(new Option('不包含', 'notlike'));
 
-        condition_input3_2.style.display = 'block';
+        // condition_input3_2.style.display = 'block';
       }
     };
+
     // 類型 Rocky(2020/03/20)
     document.getElementById('select_type2').onchange = function() {
       if (this.value == '1') {
@@ -2090,7 +2189,6 @@
           $('#condition_option1_2').append(new Option('報名場次', 'id_events'));
           $('#condition_option1_2').append(new Option('目前職業', 'profession'));
           $('#condition_option1_2').append(new Option('居住地址', 'address'));
-          // $('#condition_option1_2').append(new Option('銷講後最新狀態', ''));
           $('#condition_option1_2').append(new Option('想了解的內容', 'course_content'));
         }
       } else if (this.value == '2') {
@@ -2110,41 +2208,78 @@
           $('#condition_option1_2').append(new Option('居住地址', 'address'));
         }
       } else if (this.value == '3') {
-        // 活動
-        // 選項一
-        $('#condition_option1_2').empty();
-        $('#condition_option1_2').append(new Option('請選擇', ''));
-        $('#condition_option1_2').append(new Option('原始來源', 'datasource_old'));
-        $('#condition_option1_2').append(new Option('最新來源', 'datasource_new'));
-        $('#condition_option1_2').append(new Option('報名場次', 'id_events'));
-        $('#condition_option1_2').append(new Option('目前職業', 'profession'));
-        $('#condition_option1_2').append(new Option('居住地址', 'address'));
-        // $('#condition_option1_2').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1_2').append(new Option('想了解的內容', 'course_content'));
+        // 活動 Rocky(2020/08/13)        
+        if ($('#condition2').val() == "information") {
+          $('#condition_option1_2').empty();
+          $('#condition_option1_2').append(new Option('請選擇', ''));
+          $('#condition_option1_2').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1_2').append(new Option('目前職業', 'profession'));
+          $('#condition_option1_2').append(new Option('居住地址', 'address'));
+          $('#condition_option1_2').append(new Option('有什麼問題想要詢問', 'course_content'));
+        }
       }
     }
 
-    // 選項一 Rocky(2020/03/20)
+    // 選項三 Rocky(2020/08/12)
     document.getElementById('condition_option1_2').onchange = function() {
-      if (this.value == 'yes') {
+
+      if ($('#condition2').val() == "tag" && this.value == 'yes') {
+        // 選項二
+        $('#condition_option2_2').empty();
+        $('#condition_option2_2').append(new Option('是', 'yes'));
+        $('#condition_option2_2').append(new Option('未', 'no'));
+        $('#condition_option2_2').append(new Option('包含', 'like'));
+        $('#condition_option2_2').append(new Option('不包含', 'notlike'));
+
         condition_option2_2.style.display = 'block';
-      } else if (this.value == 'no') {
-        condition_option2_2.style.display = 'none';
+        condition_input3_2.style.display = 'block';
+      } else if ($('#condition2').val() == "tag" && this.value == 'no') {
+        // 選項二
+        $('#condition_option2_2').empty();
+        $('#condition_option2_2').append(new Option('是', 'yes'));
+        $('#condition_option2_2').append(new Option('包含', 'like'));
+
+        condition_option2_2.style.display = 'block';
+        condition_input3_2.style.display = 'block';
+      } else if ($('#condition2').val() == "information") {
+        condition_option2_2.style.display = 'block';
+        condition_input3_2.style.display = 'block';
+      } else if ($('#condition2').val() == "action") {
+        condition_option2_2.style.display = 'block';
         condition_input3_2.style.display = 'none';
       }
-    }
 
-    document.getElementById('condition_option2_2').onchange = function() {
-      if (this.value == 'present' || this.value == 'cancel' || this.value == 'absent' || this.value == 'pay') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>課程選項</option>';
-      } else if (this.value == 'participate') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>課程活動</option>';
-      } else if (this.value == 'open-mail') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>郵件名稱</option>';
-      } else if (this.value == 'open-sms') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>簡訊名稱</option>';
+
+      // 已付、應付金額 Rocky(2020/08/12)
+      if ($('#select_type2').val() == "2" && (this.value == 'amount_paid' || this.value == 'amount_payable')) {
+        $('#condition_option2_2').empty();
+        $('#condition_option2_2').append(new Option('是', 'yes'));
+        $('#condition_option2_2').append(new Option('未', 'no'));
+
+        // $('#condition_option2_2').empty();
+        // $('#condition_option2_2').append(new Option('等於', '='));
+        // $('#condition_option2_2').append(new Option('大於', '>'));
+        // $('#condition_option2_2').append(new Option('小於', '<'));
+      } else if ($('#select_type2').val() == "2" && $('#condition2').val() == "information") {
+        $('#condition_option2_2').empty();
+        $('#condition_option2_2').append(new Option('是', 'yes'));
+        $('#condition_option2_2').append(new Option('未', 'no'));
+        $('#condition_option2_2').append(new Option('包含', 'like'));
+        $('#condition_option2_2').append(new Option('不包含', 'notlike'));
       }
     }
+
+    // document.getElementById('condition_option2_2').onchange = function() {
+    //   if (this.value == 'present' || this.value == 'cancel' || this.value == 'absent' || this.value == 'pay') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>課程選項</option>';
+    //   } else if (this.value == 'participate') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>課程活動</option>';
+    //   } else if (this.value == 'open-mail') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>郵件名稱</option>';
+    //   } else if (this.value == 'open-sms') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>簡訊名稱</option>';
+    //   }
+    // }
 
     // 顯示細分條件資料 Rocky(2020/03/14)
     $("#select_type2").change(function() {
@@ -2159,17 +2294,42 @@
         condition_option2_3 = document.getElementById('condition_option2_3'),
         condition_input3_3 = document.getElementById('condition_input3_3');
 
+      condition_option2_3.style.display = 'none';
+      condition_input3_3.style.display = 'none';
+
       if (this.value == 'information') {
         // 選項一
-        $('#condition_option1_3').empty();
-        $('#condition_option1_3').append(new Option('請選擇', ''));
-        $('#condition_option1_3').append(new Option('原始來源', 'datasource_old'));
-        $('#condition_option1_3').append(new Option('最新來源', 'datasource_new'));
-        $('#condition_option1_3').append(new Option('報名場次', 'id_events'));
-        $('#condition_option1_3').append(new Option('目前職業', 'profession'));
-        $('#condition_option1_3').append(new Option('居住地址', 'address'));
-        // $('#condition_option1_3').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1_3').append(new Option('想了解的內容', 'course_content'));
+        if ($('#select_type3').val() == "1") {
+          $('#condition_option1_3').empty();
+          $('#condition_option1_3').append(new Option('請選擇', ''));
+          $('#condition_option1_3').append(new Option('原始來源', 'datasource_old'));
+          $('#condition_option1_3').append(new Option('最新來源', 'datasource_new'));
+          $('#condition_option1_3').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1_3').append(new Option('目前職業', 'profession'));
+          $('#condition_option1_3').append(new Option('居住地址', 'address'));
+          $('#condition_option1_3').append(new Option('想了解的內容', 'course_content'));
+        } else if ($('#select_type3').val() == "2") {
+          $('#condition_option1_3').empty();
+          $('#condition_option1_3').append(new Option('請選擇', ''));
+          $('#condition_option1_3').append(new Option('應付金額', 'amount_payable'));
+          $('#condition_option1_3').append(new Option('已付金額', 'amount_paid'));
+          $('#condition_option1_3').append(new Option('服務人員', 'person'));
+          $('#condition_option1_3').append(new Option('統一發票', 'type_invoice'));
+          $('#condition_option1_3').append(new Option('統編', 'number_taxid'));
+          $('#condition_option1_3').append(new Option('抬頭', 'companytitle'));
+          $('#condition_option1_3').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1_3').append(new Option('目前職業', 'profession'));
+          $('#condition_option1_3').append(new Option('居住地址', 'address'));
+
+        } else if ($('#select_type3').val() == "3") {
+          $('#condition_option1_3').empty();
+          $('#condition_option1_3').append(new Option('請選擇', ''));
+          $('#condition_option1_3').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1_3').append(new Option('目前職業', 'profession'));
+          $('#condition_option1_3').append(new Option('居住地址', 'address'));
+          $('#condition_option1_3').append(new Option('有什麼問題想要詢問', 'course_content'));
+
+        }
 
         // 選項二
         $('#condition_option2_3').empty();
@@ -2178,7 +2338,7 @@
         $('#condition_option2_3').append(new Option('包含', 'like'));
         $('#condition_option2_3').append(new Option('不包含', 'notlike'));
 
-        condition_input3_3.style.display = 'block';
+        // condition_input3_3.style.display = 'block';
       } else if (this.value == 'action') {
         // 選項一
         $('#condition_option1_3').empty();
@@ -2195,9 +2355,7 @@
         $('#condition_option2_3').append(new Option('完款', '7'));
         $('#condition_option2_3').append(new Option('付訂', '8'));
         $('#condition_option2_3').append(new Option('退款', '9'));
-        $('#condition_option2_3').append(new Option('參與', ''));
-        // $('#condition_option2_3').append(new Option('打開郵件', ''));
-        // $('#condition_option2_3').append(new Option('打開簡訊', ''));
+        $('#condition_option2_3').append(new Option('參與', '23'));
 
         condition_input3_3.style.display = 'none';
       } else if (this.value == 'tag') {
@@ -2215,9 +2373,10 @@
         $('#condition_option2_3').append(new Option('包含', 'like'));
         $('#condition_option2_3').append(new Option('不包含', 'notlike'));
 
-        condition_input3_3.style.display = 'block';
+        // condition_input3_3.style.display = 'block';
       }
     };
+
     // 類型 Rocky(2020/03/20)
     document.getElementById('select_type3').onchange = function() {
       if (this.value == '1') {
@@ -2231,7 +2390,6 @@
           $('#condition_option1_3').append(new Option('報名場次', 'id_events'));
           $('#condition_option1_3').append(new Option('目前職業', 'profession'));
           $('#condition_option1_3').append(new Option('居住地址', 'address'));
-          // $('#condition_option1_3').append(new Option('銷講後最新狀態', ''));
           $('#condition_option1_3').append(new Option('想了解的內容', 'course_content'));
         }
       } else if (this.value == '2') {
@@ -2251,41 +2409,85 @@
           $('#condition_option1_3').append(new Option('居住地址', 'address'));
         }
       } else if (this.value == '3') {
-        // 活動
-        // 選項一
-        $('#condition_option1_3').empty();
-        $('#condition_option1_3').append(new Option('請選擇', ''));
-        $('#condition_option1_3').append(new Option('原始來源', 'datasource_old'));
-        $('#condition_option1_3').append(new Option('最新來源', 'datasource_new'));
-        $('#condition_option1_3').append(new Option('報名場次', 'id_events'));
-        $('#condition_option1_3').append(new Option('目前職業', 'profession'));
-        $('#condition_option1_3').append(new Option('居住地址', 'address'));
-        // $('#condition_option1_3').append(new Option('銷講後最新狀態', ''));
-        $('#condition_option1_3').append(new Option('想了解的內容', 'course_content'));
+        // 活動 Rocky(2020/08/13)        
+        if ($('#condition2').val() == "information") {
+          $('#condition_option1_3').empty();
+          $('#condition_option1_3').append(new Option('請選擇', ''));
+          $('#condition_option1_3').append(new Option('報名場次', 'id_events'));
+          $('#condition_option1_3').append(new Option('目前職業', 'profession'));
+          $('#condition_option1_3').append(new Option('居住地址', 'address'));
+          $('#condition_option1_3').append(new Option('有什麼問題想要詢問', 'course_content'));
+
+          // 選項二
+          $('#condition_option2_2').empty();
+          $('#condition_option2_2').append(new Option('是', 'yes'));
+          $('#condition_option2_2').append(new Option('未', 'no'));
+          $('#condition_option2_2').append(new Option('包含', 'like'));
+          $('#condition_option2_2').append(new Option('不包含', 'notlike'));
+        }
       }
     }
 
-    // 選項一 Rocky(2020/03/20)
+    // 選項三 Rocky(2020/08/12)
     document.getElementById('condition_option1_3').onchange = function() {
-      if (this.value == 'yes') {
+
+      if ($('#condition3').val() == "tag" && this.value == 'yes') {
+        // 選項二
+        $('#condition_option2_2').empty();
+        $('#condition_option2_2').append(new Option('是', 'yes'));
+        $('#condition_option2_2').append(new Option('未', 'no'));
+        $('#condition_option2_2').append(new Option('包含', 'like'));
+        $('#condition_option2_2').append(new Option('不包含', 'notlike'));
+
         condition_option2_3.style.display = 'block';
-      } else if (this.value == 'no') {
-        condition_option2_3.style.display = 'none';
+        condition_input3_3.style.display = 'block';
+      } else if ($('#condition3').val() == "tag" && this.value == 'no') {
+        // 選項二
+        $('#condition_option2_2').empty();
+        $('#condition_option2_2').append(new Option('是', 'yes'));
+        $('#condition_option2_2').append(new Option('包含', 'like'));
+
+
+        condition_option2_3.style.display = 'block';
+        condition_input3_3.style.display = 'block';
+      } else if ($('#condition3').val() == "information") {
+        condition_option2_3.style.display = 'block';
+        condition_input3_3.style.display = 'block';
+      } else if ($('#condition3').val() == "action") {
+        condition_option2_3.style.display = 'block';
         condition_input3_3.style.display = 'none';
       }
-    }
 
-    document.getElementById('condition_option2_3').onchange = function() {
-      if (this.value == 'present' || this.value == 'cancel' || this.value == 'absent' || this.value == 'pay') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>課程選項</option>';
-      } else if (this.value == 'participate') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>課程活動</option>';
-      } else if (this.value == 'open-mail') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>郵件名稱</option>';
-      } else if (this.value == 'open-sms') {
-        condition_option3.innerHTML = '<option value="">請選擇</option><option>簡訊名稱</option>';
+      // 已付、應付金額 Rocky(2020/08/12)
+      if ($('#select_type3').val() == "2" && (this.value == 'amount_paid' || this.value == 'amount_payable')) {
+        $('#condition_option2_3').empty();
+        $('#condition_option2_3').append(new Option('是', 'yes'));
+        $('#condition_option2_3').append(new Option('未', 'no'));
+
+        // $('#condition_option2_2').empty();
+        // $('#condition_option2_2').append(new Option('等於', '='));
+        // $('#condition_option2_2').append(new Option('大於', '>'));
+        // $('#condition_option2_2').append(new Option('小於', '<'));
+      } else if ($('#select_type3').val() == "2" && $('#condition3').val() == "information") {
+        $('#condition_option2_3').empty();
+        $('#condition_option2_3').append(new Option('是', 'yes'));
+        $('#condition_option2_3').append(new Option('未', 'no'));
+        $('#condition_option2_3').append(new Option('包含', 'like'));
+        $('#condition_option2_3').append(new Option('不包含', 'notlike'));
       }
     }
+
+    // document.getElementById('condition_option2_3').onchange = function() {
+    //   if (this.value == 'present' || this.value == 'cancel' || this.value == 'absent' || this.value == 'pay') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>課程選項</option>';
+    //   } else if (this.value == 'participate') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>課程活動</option>';
+    //   } else if (this.value == 'open-mail') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>郵件名稱</option>';
+    //   } else if (this.value == 'open-sms') {
+    //     condition_option3.innerHTML = '<option value="">請選擇</option><option>簡訊名稱</option>';
+    //   }
+    // }
 
     // 顯示細分條件資料 Rocky(2020/03/14)
     $("#select_type3").change(function() {

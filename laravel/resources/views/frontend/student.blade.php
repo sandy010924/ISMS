@@ -103,10 +103,15 @@
         <td class="align-middle">{{ $student['datasource']}}</td>
         @endif
         <td class="align-middle">
-          <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
+          <button type="button" class="btn btn-primary btn-sm mx-1" data-toggle="modal" onclick="course_data({{ $student['id'] }});">完整內容</button>
 
           @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff' ) )
+          @if ($student['check_blacklist'] == '1')
+          <button type="button" disabled id="{{ $student['id'] }}" class="btn btn-success btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}">已加入黑名單</button>
+          @else
           <button type="button" id="{{ $student['id'] }}" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist({{ $student['id'] }});" value="{{ $student['id'] }}"><i class="fa fa-bug"></i>列入黑名單</button>
+          @endif
+
           @endif
           <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form({{ $student['id'] }});">已填表單</button>
           @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff'))
@@ -624,7 +629,13 @@
 
                 // 權限判斷 - 黑名單按鈕 / 刪除按鈕
                 if (role == "admin" || role == "marketer" || role == "officestaff" || role == "msaleser" || role == "saleser") {
-                  btn_blacklist = '<button type="button" id="' + json[i]['id'] + '" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist(' + json[i]['id'] + ');" value="' + json[i]['id'] + '"><i class="fa fa-bug"></i>列入黑名單</button> '
+
+                  if (json[i]['check_blacklist'] == '1') {
+                    btn_blacklist = '<button type="button"  disabled id="' + json[i]['id'] + '" class="btn btn-success btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist(' + json[i]['id'] + ');" value="' + json[i]['id'] + '">已加入黑名單</button> '
+                  } else {
+                    btn_blacklist = '<button type="button" id="' + json[i]['id'] + '" class="btn btn-dark btn-sm mx-1" data-toggle="modal" onclick="btn_blacklist(' + json[i]['id'] + ');" value="' + json[i]['id'] + '"><i class="fa fa-bug"></i>列入黑名單</button> '
+                  }
+
 
                   btn_delete = '<button id="' + json[i]['id'] + '" class="btn btn-danger btn-sm mx-1" onclick="btn_delete(' + json[i]['id'] + ',0,this);" value="' + json[i]['id'] + '">刪除</button> '
                 }
@@ -639,7 +650,7 @@
                 json[i][1] = json[i]['phone'];
                 json[i][2] = json[i]['email'];
                 json[i][3] = datasource;
-                json[i][4] = '<button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + json[i]['id'] + ');">完整內容</button> ' +
+                json[i][4] = '<button type="button" class="btn btn-primary btn-sm mx-1" data-toggle="modal" onclick="course_data(' + json[i]['id'] + ');">完整內容</button> ' +
                   btn_blacklist +
                   ' <button type="button" class="btn btn-secondary btn-sm mx-1" data-toggle="modal" onclick="view_form(' + json[i]['id'] + ');">已填表單</button> ' +
                   btn_delete
@@ -1405,10 +1416,10 @@
               detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + course + sign + payment + '</div>'
               id_events = val['id_events']
 
-              
+
               //已填表單加入來源場次按鈕 Sandy(2020/08/11)
-              if( source_events != '無' ){
-                detail += '<hr/><a role="button" class="btn btn-sm btn-primary float-right mt-3" href="{{ route("course_return") }}' + '?id='+ source_events +'" target="_blank">場次報表</a>'
+              if (source_events != '無') {
+                detail += '<hr/><a role="button" class="btn btn-sm btn-primary float-right mt-3" href="{{ route("course_return") }}' + '?id=' + source_events + '" target="_blank">場次報表</a>'
               }
             });
 
@@ -1830,7 +1841,7 @@
             },
             async: false,
             "dataSrc": function(json) {
-              console.log(json)
+              // console.log(json)
               for (var i = 0; i < json.length; i++) {
 
                 var status = '',
