@@ -323,7 +323,7 @@
       cache: false,
       processData: false,
       success: function(data) {
-        console.log(data)
+        // console.log(data)
         if ($("#new_type").val() == '1' || $("#new_type").val() == '4') {
 
           // 判斷有沒有重複資料(銷講 / 活動)

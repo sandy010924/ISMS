@@ -541,6 +541,9 @@ class CourseListController extends Controller
                                 $events_course->unpublish        = 0;                    // 不公開
                                 $events_course->save();
                                 $id_events = $events_course->id;
+                            } elseif ($check == 1) {
+                                // 我很遺憾的場次ID  Rocky(2020/08/14)
+                                $id_events = "-99";
                             }
                             /* 場次資料 - E*/
 
@@ -594,8 +597,9 @@ class CourseListController extends Controller
                             /*學員報名資料 - E*/
 
                             /*銷售講座報名資料 - S*/
-
+                            // return $id_course;
                             $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
+                                ->where('id_course', $id_course) // 增加課程ID判斷 Rocky (2020/08/14)
                                 ->where('id_events', $id_events)
                                 ->get();
                             // 檢查是否報名過

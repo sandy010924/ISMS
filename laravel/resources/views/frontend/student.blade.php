@@ -1401,6 +1401,14 @@
                   '<label class="col-sm-2" >場次: </label>' + select_events +
                   '</div>' +
                   '</div>'
+              } else if (type == 1) {
+                // 正課
+                course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
+                  '課程開始時間:' + events_start + '<br>' +
+                  '<div class="form-group row">' +
+                  '<label class="col-sm-2" >場次: </label>' + select_events +
+                  '</div>' +
+                  '</div>'
               } else if (type == 2) {
                 // 活動
                 course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>活動內容</b>' + '<br>' + '活動名稱:' + val['course'] + '<br>' +
