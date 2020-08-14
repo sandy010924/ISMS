@@ -150,7 +150,8 @@ class DatabaseController extends Controller
         TRUNCATE `course`;        
         TRUNCATE `receiver`;
         TRUNCATE `bonus_rule`;
-        TRUNCATE `bonus`;                
+        TRUNCATE `bonus`;   
+        TRUNCATE `activity`;                
         TRUNCATE `m_database`;";
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
