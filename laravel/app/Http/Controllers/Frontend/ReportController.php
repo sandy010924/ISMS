@@ -74,7 +74,8 @@ class ReportController extends Controller
                                     b.name as course,
                                     DATE_FORMAT(course_start_at,'%Y-%m-%d') as x")
                                 ->orderby('events_course.course_start_at')
-                                ->whereBetween('events_course.course_start_at', [$startDate, $endDate]);
+                                ->whereBetween('events_course.course_start_at', [$startDate, $endDate])
+                                ->where('events_course.unpublish', '<>', 1);
 
             //老師
             if($data[0] != '0'){
