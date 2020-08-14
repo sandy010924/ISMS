@@ -932,7 +932,7 @@
               break;
             case 'income':
               //營業額
-              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 5000;
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 50000;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
@@ -943,7 +943,7 @@
               break;
             case 'cost':
               //單場成本
-              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 5000;
+              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 50000;
               lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
