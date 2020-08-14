@@ -17,7 +17,6 @@ class FinanceController extends Controller
     // 顯示資料
     public function show()
     {
-
         $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
             ->select('events_course.*', 'course.name as course', 'course.type as type')
             // ->where('unpublish', '0')
@@ -154,7 +153,7 @@ class FinanceController extends Controller
             // echo $array_datasource[0] . "<br>";
             switch ($data['name_id']) {
                 case "0":
-                    // 名單來源包含                    
+                    // 名單來源包含
                     $datas = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
                         ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
                         ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
@@ -169,7 +168,7 @@ class FinanceController extends Controller
                                         // 名單來源包含
                                         for ($i = 0; $i < count($array_datasource); $i++) {
                                             $query->orwhere('c.datasource', 'like', '%' . $array_datasource[$i] . '%');
-                                            echo $array_datasource[$i] . "<br>";
+                                            // echo $array_datasource[$i] . "<br>";
                                         }
                                         // $query->wherein('c.datasource', explode(',', $data['value']));
                                         break;
@@ -318,7 +317,12 @@ class FinanceController extends Controller
                                     // for ($i = 0; $i < count($array_value); $i++) {
                                     //     $query->orwhere('events_course.staff', 'like', '%' . $array_value[$i] . '%');
                                     // }
-                                    $query->wherein('events_course.staff', explode(',', $data['value']));
+                                    // $query->wherein('events_course.staff', explode(',', $data['value']));
+                                    $array_datasource = explode(',', $data['value']);
+                                    for ($i = 0; $i < count($array_datasource); $i++) {
+                                        $query->orwhere('events_course.staff', 'like', '%' . $array_datasource[$i] . '%');
+                                    }
+
                                     break;
                                 case "2":
                                     // 主持開場包含
