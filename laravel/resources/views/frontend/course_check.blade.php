@@ -11,10 +11,10 @@
 <input type="hidden" id="event_id" value="{{ $course->id }}">
 <input type="hidden" id="course_type" value="{{ $course->type }}">
 <input type="hidden" id="event_date" value="{{ $course->course_start_at }}">
-<div class="card m-3">
+<div class="card m-md-3 px-md-0 px-3">
   <div class="card-body">
-    <div class="row mb-3 mt-1 align-items-center">
-      <div class="col-6">
+    <div class="row mt-1 align-items-center">
+      <div class="col-md-6 mb-3">
         <h6 class="mb-0">
           <label id="course_name">{{ $course->course }}</label>&nbsp;&nbsp;
           <label id="course_date">{{ date('Y-m-d', strtotime($course->course_start_at)) }}</label>
@@ -22,22 +22,22 @@
           <label id="course_event">{{ $course->name }}</label>
         </h6>
       </div>
-      <div class="col text-right">
+      <div class="col mb-3">
         <h6 class="mb-0">報名筆數 :
           <span id="count_apply">{{ $count_apply }}</span>
         </h6>
       </div>
-      <div class="col text-right">
+      <div class="col mb-3">
         <h6 class="mb-0">報到筆數 :
           <span id="count_check">{{ $count_check }}</span>
         </h6>
       </div>
-      <div class="col text-right">
+      <div class="col mb-3">
         <h6 class="mb-0">取消筆數 :
           <span id="count_cancel">{{ $count_cancel }}</span>
         </h6>
       </div>
-      <div class="col text-right">
+      <div class="col-md-auto mb-3 text-right">
         @if( $nextLevel > 0 )
         <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary">場次報表</button></a>
         @else
@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-md-auto mb-3">
         {{-- <p class="form_text">主持開場 : <input type="text" class="form_input"></p> --}}
         <div class="input-group mb-3">
           <div class="input-group-prepend">
@@ -55,7 +55,7 @@
           <input type="text" class="form-control auth_readonly" aria-label="host input" aria-describedby="host" id="host" value="{{ $course->host }}">
         </div>
       </div>
-      <div class="col">
+      <div class="col-md-auto mb-3">
         {{-- <p class="form_text">結束收單 : <input type="text" class="form_input"></p> --}}
         <div class="input-group mb-3">
           <div class="input-group-prepend">
@@ -64,7 +64,7 @@
           <input type="text" class="form-control auth_readonly" aria-label="closeorder input" aria-describedby="closeorder" id="closeorder" value="{{ $course->closeorder }}">
         </div>
       </div>
-      <div class="col-3">
+      <div class="col-md-3 mb-3">
         {{-- <p class="form_text">天氣 : <input type="text" class="form_input"></p> --}}
         <div class="input-group mb-3">
           <div class="input-group-prepend">
@@ -75,7 +75,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-md-3 mb-3">
         {{-- <p class="form_text">工作人員 : <input type="text" class="form_input"></p> --}}
         <div class="input-group">
           <div class="input-group-prepend">
@@ -88,10 +88,10 @@
     </div>
   </div>
 </div>
-<div class="card m-3">
+<div class="card m-md-3 px-md-0 px-1">
   <div class="card-body">
-    <div class="row mb-3">
-      <div class="col-4 mx-auto">
+    <div class="row mt-1">
+      <div class="col-md-4 mx-auto mb-3">
         <div class="input-group">
           <input type="search" class="form-control" placeholder="姓名或電話末三碼" id="search_keyword" />
           <div class="input-group-append">
@@ -99,7 +99,7 @@
           </div>
         </div>
       </div>
-      <div class="col-3 text-right">
+      <div class="col mb-3 text-right">
         @if( $course->type == 1 )
         @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'msaleser'|| Auth::user()->role == 'saleser' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'teacher'))
         <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#presentApply">現場報名</button>

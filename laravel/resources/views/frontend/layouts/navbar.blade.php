@@ -1,11 +1,14 @@
 <!-- Navbar Start -->
-<nav class="col-md-2 d-none d-md-block bg-dark sidebar" id="isms_nav">
-  <div class="text-center nav-logo">
-    <a href="#">
-      <img src="./img/logo.png" width="60" class="rounded" alt="logo">
-    </a>
-  </div>
-  <div class="sidebar-sticky">
+{{-- <nav id="sidebarMenu" class="col-md-2 d-none d-md-block bg-dark sidebar"> --}}
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+  <div class="sidebar-sticky pt-5 pt-md-3">
+    <div class=" text-center nav-logo">
+      <a href="{{ route('course') }}">
+        <img src="./img/logo.png" width="60" class="rounded" alt="logo">
+      </a>
+    </div>
+  {{-- </div>
+  <div class="sidebar-sticky"> --}}
     @if (Auth::user() == null)
     @php
     header("Location: ./error_authority");
@@ -124,4 +127,5 @@
     </ul>
   </div>
 </nav>
+
 <!-- Navbar End -->

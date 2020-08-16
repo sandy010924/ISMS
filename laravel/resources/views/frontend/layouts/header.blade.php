@@ -31,7 +31,7 @@
   
 
   //回上一頁按鈕，主頁不會出現按鈕
-  var nav_text = $("#isms_nav").text().replace(/\s+/g, "");
+  var nav_text = $("#sidebarMenu").text().replace(/\s+/g, "");
   var header_text = $("#header_title").text().replace(/\s+/g, "");
   var back = 0;
   for( var i = 0 ; i < nav_text.length ; i++ ){

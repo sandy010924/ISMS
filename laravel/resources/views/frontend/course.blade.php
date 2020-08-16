@@ -21,8 +21,8 @@
 <!--搜尋課程頁面內容-->
 <div class="card m-3">
   <div class="card-body">
-    <div class="row mb-3">
-      <div class="col-3">
+    <div class="row">
+      <div class="col-md-3 mb-3">
         @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'officestaff'))
         <button type="button" class="btn btn-outline-secondary btn_date float-left mx-1" data-toggle="modal" data-target="#form_import">匯入表單</button>
         @endif
@@ -81,7 +81,7 @@
           </div>
         </div>
       </div>
-      <div class="col-5">
+      <div class="col-md-5 mb-3">
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text">日期區間</span>
@@ -89,7 +89,7 @@
           <input type="search" class="form-control px-3" name="daterange" id="daterange" autocomplete="off">
         </div>
       </div>
-      <div class="col">
+      <div class="col-md-auto mb-3">
         {{-- <input type="text" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name"> --}}
         <div class="input-group">
           <input type="text" class="form-control" placeholder="搜尋課程" aria-label="Class's name" id="search_name">

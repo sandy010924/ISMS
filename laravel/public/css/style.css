@@ -157,3 +157,8 @@ select, a{
 #reportTab li.nav-item:hover{
     background-color: #dcedfe;
 }
+
+
+table#table_list tr{
+    white-space: nowrap; 
+}

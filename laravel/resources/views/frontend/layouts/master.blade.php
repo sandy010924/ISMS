@@ -23,6 +23,7 @@
 
   <!-- Rocky(2020/01/11) -->
   <!-- Sandy(2020/02/27) -->
+  <script src="{{ asset('js/jquery-3.4.1.slim.min.js') }}"></script>
   <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
   <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/feather.min.js') }}"></script>
@@ -109,60 +110,67 @@
 </head>
 
 <body>
-  {{-- <div class="container-fluid"> --}}
+  <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-1 shadow d-md-none">
+    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3 " href="{{ route('course') }}">無極限學員系統</a>
+    <button class="navbar-toggler position-absolute collapsed" type="button" data-toggle="collapse"
+      data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation" style="right: 10px;">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <div class="container-fluid">
+    <div class="row">
+      @include('frontend.layouts.navbar')
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-2">
 
-  @include('frontend.layouts.navbar')
+        @include('frontend.layouts.header')
 
-  <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
+        @yield('content')
 
-    @include('frontend.layouts.header')
+        <!-- form alert Start-->
+        @if (session('status') == "報名成功")
+        <div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
+          {{ session('status') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        @elseif (session('status') == "報名失敗")
+        <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
+          {{ session('status') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        @endif
+        <!-- form alert End -->
 
-    @yield('content')
+        <!-- alert Start-->
+        <!-- success -->
+        <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
+          <span id="success_alert_text"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- error -->
+        <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
+          <span id="error_alert_text"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- warn -->
+        <div class="alert alert-warning alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="warn_alert">
+          <span id="warn_alert_text"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- alert End -->
 
-    <!-- form alert Start-->
-    @if (session('status') == "報名成功")
-    <div class="alert alert-success alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
-      {{ session('status') }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      </main>
     </div>
-    @elseif (session('status') == "報名失敗")
-    <div class="alert alert-danger alert-dismissible fade show m-3 alert_fadeout position-absolute fixed-bottom" role="alert">
-      {{ session('status') }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    @endif
-    <!-- form alert End -->
-
-    <!-- alert Start-->
-    <!-- success -->
-    <div class="alert alert-success alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="success_alert">
-      <span id="success_alert_text"></span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <!-- error -->
-    <div class="alert alert-danger alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="error_alert">
-      <span id="error_alert_text"></span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <!-- warn -->
-    <div class="alert alert-warning alert-dismissible m-3 position-fixed fixed-bottom" role="alert" id="warn_alert">
-      <span id="warn_alert_text"></span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <!-- alert End -->
-
-  </main>
-  {{-- </div> --}}
+  </div>
 
   <!-- Rocky(2020/02/17) -->
   <script>
