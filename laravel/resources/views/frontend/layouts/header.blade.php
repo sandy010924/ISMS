@@ -2,7 +2,6 @@
 <div class="header shadow px-4 py-3 bg-white">
   <div class="row">
     <div class="col d-flex align-content-lg-center flex-wrap" id="header_title">
-      {{-- <a href="javascript:history.go(-1)"><span class="fas fa-2x fa-angle-left"></span></a>&nbsp; --}}
       <span class="h5 font-weight-bold" id="header_text">@yield('header')</span>
     </div>
     <div class="col text-right">
@@ -14,6 +13,23 @@
 <!-- Header End -->
 
 <script>
+  // var currentlyURL = window.location.href;
+  // var lastURL =  document.referrer;
+  
+  // console.log( 'currentlyURL:' + currentlyURL);
+  // console.log( 'lastURL:' + lastURL);
+
+  // function GoBackWithRefresh(event) {
+  //   if ( currentlyURL.includes('course_check') ) {
+  //       window.location = document.referrer;
+  //       /* OR */
+  //       //location.replace(document.referrer);
+  //   } else {
+  //       window.history.back();
+  //   }
+  // }
+  
+
   //回上一頁按鈕，主頁不會出現按鈕
   var nav_text = $("#isms_nav").text().replace(/\s+/g, "");
   var header_text = $("#header_title").text().replace(/\s+/g, "");
@@ -25,7 +41,8 @@
     }
   }
   if( back == 0 ){
-    $("#header_title").prepend('<a href="javascript:self.location=document.referrer;;"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
+    // $("#header_title").prepend('<a href="javascript:Self.location=document.referrer;;"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
+    $("#header_title").prepend('<a href="javascript:history.back();"><span class="fas fa-2x fa-angle-left text-black-50"></span></a>&nbsp;&nbsp;');
   }
   
   //  Rocky (2020/02/17)     
