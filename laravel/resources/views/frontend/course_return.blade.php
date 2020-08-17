@@ -567,7 +567,7 @@
               </div>
               <div class="form-group required">
                 <label for="edit_name" class="col-form-label"><strong>姓名</strong></label>
-                <input type="text" class="form-control edit_input" name="edit_name" id="edit_name" required>
+                <input type="text" class="form-control edit_input" name="edit_name" id="edit_name" readonly required>
               </div>
               <div class="form-group">
                 <label for="edit_sex" class="col-form-label edit_input"><strong>性別</strong></label>
@@ -588,7 +588,7 @@
               </div>
               <div class="form-group">
                 <label for="edit_email" class="col-form-label"><strong>電子郵件</strong></label>
-                <input type="text" class="form-control edit_input" name="edit_email" id="edit_email">
+                <input type="text" class="form-control edit_input" name="edit_email" id="edit_email" readonly>
               </div>
               <div class="form-group">
                 <label for="edit_birthday" class="col-form-label"><strong>出生日期</strong></label>

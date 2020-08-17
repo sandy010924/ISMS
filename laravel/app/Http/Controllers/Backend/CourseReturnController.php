@@ -730,30 +730,30 @@ class CourseReturnController extends Controller
                     
                     $id_student = $data_student_list['id'];
 
-                    if($name == ""){
-                        $name = Student::where('id', $id_student)->first()->name;
-                    }
-                    if($sex == ""){
-                        $sex = Student::where('id', $id_student)->first()->sex;
-                    }
-                    if($id_identity == ""){
-                        $id_identity = Student::where('id', $id_student)->first()->id_identity;
-                    }
-                    if($email == ""){
-                        $email = Student::where('id', $id_student)->first()->email;
-                    }
-                    if($birthday == ""){
-                        $birthday = Student::where('id', $id_student)->first()->birthday;
-                    }
-                    if($company == ""){
-                        $company = Student::where('id', $id_student)->first()->company;
-                    }
-                    if($profession == ""){
-                        $profession = Student::where('id', $id_student)->first()->profession;
-                    }
-                    if($address == ""){
-                        $address = Student::where('id', $id_student)->first()->address;
-                    }
+                    // if($name == ""){
+                    //     $name = Student::where('id', $id_student)->first()->name;
+                    // }
+                    // if($sex == ""){
+                    //     $sex = Student::where('id', $id_student)->first()->sex;
+                    // }
+                    // if($id_identity == ""){
+                    //     $id_identity = Student::where('id', $id_student)->first()->id_identity;
+                    // }
+                    // if($email == ""){
+                    //     $email = Student::where('id', $id_student)->first()->email;
+                    // }
+                    // if($birthday == ""){
+                    //     $birthday = Student::where('id', $id_student)->first()->birthday;
+                    // }
+                    // if($company == ""){
+                    //     $company = Student::where('id', $id_student)->first()->company;
+                    // }
+                    // if($profession == ""){
+                    //     $profession = Student::where('id', $id_student)->first()->profession;
+                    // }
+                    // if($address == ""){
+                    //     $address = Student::where('id', $id_student)->first()->address;
+                    // }
 
                     //更新學員資料
                     Student::where('id', $id_student)
