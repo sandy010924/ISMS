@@ -143,9 +143,9 @@ class FinanceController extends Controller
         $id_bonus = $request->get('id');
 
         // 獎金規則
-        $datas_rule = Bonus::leftjoin('bonus_rule as b', 'Bonus.id', '=', 'b.id_bonus')
-            ->select('Bonus.name as bonus_name', 'b.name', 'b.name_id', 'b.value')
-            ->where('Bonus.id', $id_bonus)
+        $datas_rule = Bonus::leftjoin('bonus_rule as b', 'bonus.id', '=', 'b.id_bonus')
+            ->select('bonus.name as bonus_name', 'b.name', 'b.name_id', 'b.value')
+            ->where('bonus.id', $id_bonus)
             ->get();
 
         foreach ($datas_rule as $key => $data) {
@@ -191,9 +191,9 @@ class FinanceController extends Controller
         $datas = '';
 
         // 獎金規則
-        $datas_rule = Bonus::leftjoin('bonus_rule as b', 'Bonus.id', '=', 'b.id_bonus')
-            ->select('Bonus.name as bonus_name', 'b.name', 'b.name_id', 'b.value')
-            ->where('Bonus.id', $id_bonus)
+        $datas_rule = Bonus::leftjoin('bonus_rule as b', 'bonus.id', '=', 'b.id_bonus')
+            ->select('bonus.name as bonus_name', 'b.name', 'b.name_id', 'b.value')
+            ->where('bonus.id', $id_bonus)
             ->where('b.name_id', $type)
             ->get();
 

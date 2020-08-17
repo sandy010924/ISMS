@@ -19,7 +19,7 @@
   <!-- DataTable styles Sandy(2020/02/25) -->
   {{-- <link href="{{ asset('css/dataTables.css') }}" rel="stylesheet"> --}}
   {{-- <link href="{{ asset('css/dataTables.bootstrap4.css') }}" rel="stylesheet"> --}}
-  <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/datatables.bootstrap4.min.css') }}" rel="stylesheet">
 
   <!-- Rocky(2020/01/11) -->
   <!-- Sandy(2020/02/27) -->
@@ -29,8 +29,11 @@
   <script src="{{ asset('js/feather.min.js') }}"></script>
 
   <!-- DataTable Sandy(2020/02/25) -->
-  <script src="{{ asset('js/dataTables.js') }}"></script>
-  <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script>
+  <!-- <script src="{{ asset('js/dataTables.js') }}"></script> -->
+  <script src="{{ asset('js/ datatables.js') }}"></script>
+
+  <script src="{{ asset('js/datatables.bootstrap4.js') }}"></script>
+  <!-- <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script> -->
   {{-- <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script> --}}
 
   <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -93,17 +96,18 @@
     /* th, td {
         white-space:nowrap;
     } */
-    #table_list th, #table_list td{
+    #table_list th,
+    #table_list td {
       vertical-align: middle;
     }
-    
+
     /* datatable excel button */
     div.dt-buttons {
       float: right;
       margin-bottom: 10px;
     }
   </style>
-  <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ asset('js/datatables.buttons.min.js') }}"></script>
   <script src="{{ asset('js/jszip.min.js') }}"></script>
   <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
   <!-- Excel 匯出 Rocky (2020/04/30) -->
@@ -112,8 +116,7 @@
 <body>
   <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-1 shadow d-md-none">
     <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3 " href="{{ route('course') }}">無極限學員系統</a>
-    <button class="navbar-toggler position-absolute collapsed" type="button" data-toggle="collapse"
-      data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation" style="right: 10px;">
+    <button class="navbar-toggler position-absolute collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation" style="right: 10px;">
       <span class="navbar-toggler-icon"></span>
     </button>
   </nav>

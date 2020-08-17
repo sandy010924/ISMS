@@ -13,10 +13,10 @@ class BlacklistController extends Controller
     public function show()
     {
         // $pagesize = 15;
-       
-        $blacklists =  Blacklist::leftJoin('student', 'Blacklist.id_student', '=', 'student.id')
-                        ->select('Blacklist.id as blacklist_id', 'Blacklist.reason', 'student.*')
-                        ->get();
+
+        $blacklists =  Blacklist::leftJoin('student', 'blacklist.id_student', '=', 'student.id')
+            ->select('blacklist.id as blacklist_id', 'blacklist.reason', 'student.*')
+            ->get();
         // dd($blacklists);
         return view('frontend.student_blacklist', compact('blacklists'));
     }
@@ -28,17 +28,17 @@ class BlacklistController extends Controller
         $search_data = $request->get('search_data');
 
         if (!empty($search_data)) {
-            $blacklists = Blacklist::leftJoin('student', 'Blacklist.id_student', '=', 'student.id')
-                            ->select('Blacklist.id as blacklist_id', 'Blacklist.reason', 'student.*')
-                            ->Where('email', 'like', '%' .$search_data. '%')
-                            ->orWhere('phone', 'like', '%' .$search_data. '%')
-                            ->paginate($pagesize);
+            $blacklists = Blacklist::leftJoin('student', 'blacklist.id_student', '=', 'student.id')
+                ->select('blacklist.id as blacklist_id', 'blacklist.reason', 'student.*')
+                ->Where('email', 'like', '%' . $search_data . '%')
+                ->orWhere('phone', 'like', '%' . $search_data . '%')
+                ->paginate($pagesize);
         } else {
-            $blacklists =  Blacklist::leftJoin('student', 'Blacklist.id_student', '=', 'student.id')
-                        ->select('Blacklist.id as blacklist_id', 'Blacklist.reason', 'student.*')
-                        ->paginate($pagesize);
+            $blacklists =  Blacklist::leftJoin('student', 'blacklist.id_student', '=', 'student.id')
+                ->select('blacklist.id as blacklist_id', 'blacklist.reason', 'student.*')
+                ->paginate($pagesize);
         }
-        
+
 
         // $returnHTML = view('frontend.student_blacklist')->with('blacklists', $blacklists)->renderSections()['content'];
         $returnHTML = view('frontend.student_blacklist')->with('blacklists', $blacklists)->render();
