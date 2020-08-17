@@ -95,19 +95,20 @@ class CourseReturnController extends Controller
             if (count($check_student) != 0) {
                 foreach ($check_student as $data_student) {
                     $id_student = $data_student ->id;
+                    
+                    //更新學員資料
+                    Student::where('id', $id_student)
+                        ->update([
+                            'name' => $name,
+                            'sex' => $sex,
+                            'id_identity' => $id_identity,
+                            'email' => $email,
+                            'birthday' => $birthday,
+                            'company' => $company,
+                            'profession' => $profession,
+                            'address' => $address,
+                        ]);
                 }
-                //更新學員資料
-                Student::where('id', $id_student)
-                    ->update([
-                        'name' => $name,
-                        'sex' => $sex,
-                        'id_identity' => $id_identity,
-                        'email' => $email,
-                        'birthday' => $birthday,
-                        'company' => $company,
-                        'profession' => $profession,
-                        'address' => $address,
-                    ]);
             } else{
                 // 新增學員資料
                 $student = new Student;
@@ -720,48 +721,54 @@ class CourseReturnController extends Controller
             // 檢查學員資料
             if (count($check_student) != 0) {
 
-                $id_student = Student::where('name', $name)
+                $student_list = Student::where('name', $name)
                                     ->where('phone', $phone)
                                     ->where('email', $email)
-                                    ->first()->id;
+                                    ->get();
 
-                if($name == ""){
-                    $name = Student::where('id', $id_student)->first()->name;
-                }
-                if($sex == ""){
-                    $sex = Student::where('id', $id_student)->first()->sex;
-                }
-                if($id_identity == ""){
-                    $id_identity = Student::where('id', $id_student)->first()->id_identity;
-                }
-                if($email == ""){
-                    $email = Student::where('id', $id_student)->first()->email;
-                }
-                if($birthday == ""){
-                    $birthday = Student::where('id', $id_student)->first()->birthday;
-                }
-                if($company == ""){
-                    $company = Student::where('id', $id_student)->first()->company;
-                }
-                if($profession == ""){
-                    $profession = Student::where('id', $id_student)->first()->profession;
-                }
-                if($address == ""){
-                    $address = Student::where('id', $id_student)->first()->address;
-                }
+                foreach( $student_list as $data_student_list ){
+                    
+                    $id_student = $data_student_list['id'];
 
-                //更新學員資料
-                Student::where('id', $id_student)
-                    ->update([
-                        'name' => $name,
-                        'sex' => $sex,
-                        'id_identity' => $id_identity,
-                        'email' => $email,
-                        'birthday' => $birthday,
-                        'company' => $company,
-                        'profession' => $profession,
-                        'address' => $address,
-                    ]);
+                    if($name == ""){
+                        $name = Student::where('id', $id_student)->first()->name;
+                    }
+                    if($sex == ""){
+                        $sex = Student::where('id', $id_student)->first()->sex;
+                    }
+                    if($id_identity == ""){
+                        $id_identity = Student::where('id', $id_student)->first()->id_identity;
+                    }
+                    if($email == ""){
+                        $email = Student::where('id', $id_student)->first()->email;
+                    }
+                    if($birthday == ""){
+                        $birthday = Student::where('id', $id_student)->first()->birthday;
+                    }
+                    if($company == ""){
+                        $company = Student::where('id', $id_student)->first()->company;
+                    }
+                    if($profession == ""){
+                        $profession = Student::where('id', $id_student)->first()->profession;
+                    }
+                    if($address == ""){
+                        $address = Student::where('id', $id_student)->first()->address;
+                    }
+
+                    //更新學員資料
+                    Student::where('id', $id_student)
+                        ->update([
+                            'name' => $name,
+                            'sex' => $sex,
+                            'id_identity' => $id_identity,
+                            'email' => $email,
+                            'birthday' => $birthday,
+                            'company' => $company,
+                            'profession' => $profession,
+                            'address' => $address,
+                        ]);
+
+                }
             } 
             /*學員報名資料 - E*/
 
