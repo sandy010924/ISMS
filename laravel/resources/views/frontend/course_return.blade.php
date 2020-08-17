@@ -53,7 +53,7 @@
   .modal:nth-of-type(even) {
     z-index: 1052 !important;
   }
-  .modal-backdrop.show:nth-of-type(even) {
+  .modal-backdrop.show:nth-of-type(odd) {
       z-index: 1051 !important;
   }
   .modal { 
