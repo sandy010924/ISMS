@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-auto mb-3">
+      <div class="col-md-4 mb-3">
         {{-- <p class="form_text">主持開場 : <input type="text" class="form_input"></p> --}}
         <div class="input-group mb-3">
           <div class="input-group-prepend">
@@ -55,7 +55,7 @@
           <input type="text" class="form-control auth_readonly" aria-label="host input" aria-describedby="host" id="host" value="{{ $course->host }}">
         </div>
       </div>
-      <div class="col-md-auto mb-3">
+      <div class="col-md-4 mb-3">
         {{-- <p class="form_text">結束收單 : <input type="text" class="form_input"></p> --}}
         <div class="input-group mb-3">
           <div class="input-group-prepend">
@@ -64,7 +64,7 @@
           <input type="text" class="form-control auth_readonly" aria-label="closeorder input" aria-describedby="closeorder" id="closeorder" value="{{ $course->closeorder }}">
         </div>
       </div>
-      <div class="col-md-3 mb-3">
+      <div class="col-md-4 mb-3">
         {{-- <p class="form_text">天氣 : <input type="text" class="form_input"></p> --}}
         <div class="input-group mb-3">
           <div class="input-group-prepend">
@@ -75,7 +75,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-3 mb-3">
+      <div class="col-md-12">
         {{-- <p class="form_text">工作人員 : <input type="text" class="form_input"></p> --}}
         <div class="input-group">
           <div class="input-group-prepend">
