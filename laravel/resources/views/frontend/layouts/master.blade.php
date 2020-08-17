@@ -30,7 +30,7 @@
 
   <!-- DataTable Sandy(2020/02/25) -->
   <!-- <script src="{{ asset('js/dataTables.js') }}"></script> -->
-  <script src="{{ asset('js/ datatables.js') }}"></script>
+  <script src="{{ asset('js/datatables.js') }}"></script>
 
   <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script>
   <!-- <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script> -->
