@@ -14,6 +14,7 @@ use App\Model\Refund;
 use Illuminate\Support\Facades\Auth;
 // use App\User;
 use App\Model\Register;
+use App\Model\Activity;
 
 class CourseListController extends Controller
 {
@@ -112,7 +113,14 @@ class CourseListController extends Controller
                 //     // ->Where('id_status','<>', 2)
                 //     // ->groupby('id_group', 'id_student')
                 //     ->get());
-            }
+            }else if ($data['type'] == 4) {
+                //活動
+                
+                //累計名單 
+                $count_list = count(Activity::Where('activity.id_course', $data['id_course'])
+                                                    ->get());
+
+            } 
 
             switch ($data['type']) {
                 case 1:
@@ -124,11 +132,11 @@ class CourseListController extends Controller
                     $type = '二階課程';
                     break;
                 case 3:
-                    //三階課程A
+                    //三階課程
                     $type = '三階課程';
                     break;
                 case 4:
-                    //三階課程B
+                    //活動
                     $type = '活動';
                     break;
                 default:

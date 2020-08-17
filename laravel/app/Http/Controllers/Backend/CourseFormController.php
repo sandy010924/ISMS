@@ -89,25 +89,29 @@ class CourseFormController extends Controller
             /*學員報名資料 - S*/
 
             //判斷系統是否已有該學員資料
-            $check_student = Student::where('phone', $phone)->get();
+            $check_student = Student::where('name', $name)
+                                    ->where('phone', $phone)
+                                    ->where('email', $email)
+                                    ->get();
 
             // 檢查學員資料
             if (count($check_student) != 0) {
                 foreach ($check_student as $data_student) {
                     $id_student = $data_student ->id;
+
+                    //更新學員資料
+                    Student::where('id', $id_student)
+                        ->update([
+                            'name' => $name,
+                            'sex' => $sex,
+                            'id_identity' => $id_identity,
+                            'email' => $email,
+                            'birthday' => $birthday,
+                            'company' => $company,
+                            'profession' => $profession,
+                            'address' => $address,
+                        ]);
                 }
-                //更新學員資料
-                Student::where('phone', $phone)
-                    ->update([
-                        'name' => $name,
-                        'sex' => $sex,
-                        'id_identity' => $id_identity,
-                        'email' => $email,
-                        'birthday' => $birthday,
-                        'company' => $company,
-                        'profession' => $profession,
-                        'address' => $address,
-                    ]);
             } else{
                 // 新增學員資料
                 $student = new Student;

@@ -1359,13 +1359,19 @@ class CourseListController extends Controller
 
                 $apply_table = SalesRegistration::where('id_course', $course->id)
                     ->get();
-            } elseif ($course->type == 2 || $course->type == 3) {
+            } else if ($course->type == 2 || $course->type == 3) {
                 //正課
                 $db_apply = Registration::where('id_course', $course->id);
 
                 $apply_table = Registration::where('id_course', $course->id)
                     ->get();
-            }
+            } else if ($course->type == 4) {
+                //活動
+                $db_apply = Activity::where('id_course', $course->id);
+
+                $apply_table = Activity::where('id_course', $course->id)
+                    ->get();
+            } 
 
             foreach ($apply_table as $data) {
                 //刪除報到

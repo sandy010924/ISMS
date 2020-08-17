@@ -10,6 +10,7 @@ use App\Uer;
 use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Register;
+use App\Model\Activity;
 
 class CourseListChartController extends Controller
 {
@@ -35,7 +36,7 @@ class CourseListChartController extends Controller
         $weekarray = array("日","一","二","三","四","五","六");
         $week = $weekarray[date('w', strtotime($events->course_start_at))];
         
-        $date = $date . '（' . $week . '）';
+        // $date = $date . '（' . $week . '）';
 
 
         //判斷銷講or正課
@@ -67,7 +68,7 @@ class CourseListChartController extends Controller
             
             
 
-        }elseif( $events->type == 2 || $events->type == 3){
+        }else if( $events->type == 2 || $events->type == 3){
             //正課    
 
             /* 報名數 */             
@@ -117,6 +118,34 @@ class CourseListChartController extends Controller
             //                         ->Where('status_payment', 6)
             //                         ->get());   
         
+
+        }else if( $events->type == 4 ){
+            //活動
+
+            /* 報名數 */
+            $count_apply = count(Activity::where('id_events', $events->id)
+                                                ->where('id_status', '<>', 2)
+                                                ->get());
+
+            /* 取消數 */
+            $count_cancel = count(Activity::where('id_events', $events->id)
+                                                ->where('id_status', 5)
+                                                ->get());
+
+            /* 報到數 */
+            $count_check = count(Activity::where('id_events', $events->id)
+                                                ->where('id_status', 4)
+                                                ->get());
+
+            /* 報到率 */
+            $rate_check = 0;
+
+            if( ($count_apply-$count_cancel) > 0 || $count_check > 0 ){
+                $rate_check = @(round($count_check/($count_apply-$count_cancel) *100, 2));
+            }
+            
+            
+            
 
         }
         
@@ -201,6 +230,7 @@ class CourseListChartController extends Controller
         $events_data = [
             'id' => $events->id,
             'date' => $date,
+            'week' => $week,
             'event' => $events->name,
             'count_apply' => $count_apply,
             'count_cancel' => $count_cancel,

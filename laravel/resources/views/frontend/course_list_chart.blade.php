@@ -7,6 +7,7 @@
 
   @component('components.course_list_chart')
     @slot('date') {{ $events_data['date']}} @endslot
+    @slot('week') {{ $events_data['week']}} @endslot
     @slot('course') {{ $events['course']}} @endslot
     @slot('event') {{ $events['name']}} @endslot
     @slot('location') {{ $events['location']}} @endslot

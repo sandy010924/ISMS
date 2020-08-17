@@ -12,6 +12,7 @@ use App\Model\Register;
 use App\Model\Debt;
 use App\Model\Refund;
 use App\Model\Payment;
+use App\Model\Activity;
 
 class CourseListApplyController extends Controller
 {
@@ -54,6 +55,18 @@ class CourseListApplyController extends Controller
 
             $status = "ok";
 
+        }else if($type == 4){
+            //活動
+            $sale = Activity::where('id', $id_apply)
+                                      ->get();
+
+            if( count($sale) != 0 ){
+                //刪除報名表
+                Activity::where('id', $id_apply)->delete();
+            }
+
+            $status = "ok";
+            
         }else {
             $status = "error";
         }

@@ -88,9 +88,14 @@
                 <th>電子郵件</th>
                 <th>目前職業</th>
 
-                <!-- 如果是銷講多加我想在講座中了解的內容 -->
-                @if( $course->type == 1 )
+                <!-- 如果是銷講與活動多加我想在講座中了解的內容 -->
+                @if( $course->type == 1 || $course->type == 4 )
                   <th>我想在講座中了解的內容</th>
+                @endif
+
+                <!-- 如果是銷講多加付款狀態 -->
+                @if( $course->type == 1 )
+                  <th>付款狀態</th>
                 @endif
 
                 @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
@@ -99,8 +104,8 @@
                 @elseif( strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d")) )
                 <!-- 已過場次 -->
                 <th>報到</th>
-                <th>付款狀態</th>
                 @endif
+                
               </tr>
             @endslot
             @slot('tbody')
@@ -118,9 +123,14 @@
                   <td>{{ $courseapply['email'] }}</td>
                   <td>{{ $courseapply['profession'] }}</td>
                   
-                  <!-- 如果是銷講多加我想在講座中了解的內容 -->
-                  @if( $course->type == 1 )
+                  <!-- 如果是銷講與活動多加我想在講座中了解的內容 -->
+                  @if( $course->type == 1 || $course->type == 4 )
                     <td>{{ ($courseapply['course_content']  == 'null')? '':$courseapply['course_content'] }}</td>
+                  @endif
+
+                  <!-- 如果是銷講多加付款狀態 -->
+                  @if( $course->type == 1 )
+                    <td>{{ $courseapply['memo2'] }}</td>
                   @endif
                   
                   @if( strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d")) )
@@ -131,8 +141,8 @@
                   @elseif( strtotime(date('Y-m-d', strtotime($course->course_start_at))) <= strtotime(date("Y-m-d")) )
                   <!-- 已過場次 -->
                   <td>{{ $courseapply['status_name'] }}</td>
-                  <td></td>
                   @endif
+                  
                 </tr>
               @endforeach
             @endslot

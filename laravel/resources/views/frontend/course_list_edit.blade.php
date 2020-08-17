@@ -104,7 +104,10 @@
     <tr>
       <th>日期</th>
       <th>場次</th>
-      <th>時間</th>
+      @if( $course['type'] != 4)
+        <!-- 活動不顯示時間 -->
+        <th>時間</th>
+      @endif
       <th>地點</th>
       <th></th>
       <th class="no-sort"></th>
@@ -115,7 +118,10 @@
     <tr>
       <td>{{ $data['date'] }}</td>
       <td>{{ $data['event'] }}</td>
-      <td>{{ $data['time'] }}</td>
+      @if( $course['type'] != 4)
+        <!-- 活動不顯示時間 -->
+        <td>{{ $data['time'] }}</td>
+      @endif
       <td>{{ $data['location'] }}</td>
       <td>
         @if( $data['unpublish'] == 0)
@@ -182,6 +188,8 @@
               <option value="高雄晚上場"></option>
             </datalist>
           </div>
+          @if( $course['type'] != 4)
+          <!-- 活動不顯示時間 -->
           <div class="form-row">
             <div class="col-md-6 mb-3 required">
               <label for="edit_starttime" class="col-form-label">課程開始時間</label><br />
@@ -202,6 +210,7 @@
               </div>
             </div>
           </div>
+          @endif
           <div class="form-group required">
             <label for="edit_location" class="col-form-label">地點</label>
             <input type="text" id="edit_location" name="edit_location" class="form-control" required />

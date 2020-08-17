@@ -220,6 +220,60 @@ class CourseController extends Controller
                     'unpublish' => $data['unpublish'],
                     'type' => $data['type']
                 ];
+            }elseif ($data['type'] == 4) {
+                //活動
+
+                // //判斷場次是否下架
+                // if( $data['unpublish'] == 1){
+                //     //是則取消顯示
+                //     continue;
+                // }
+
+                //判斷是否有下一階
+                $nextLevel = count(Course::where('id_type', $data['id_course'])
+                    ->get());
+
+                //報名筆數
+                $count_apply = count(EventsCourse::join('activity', 'activity.id_events', '=', 'events_course.id')
+                    ->Where('events_course.id', $data['id'])
+                    ->Where('id_status', '<>', 2)
+                    ->get());
+
+                //取消筆數
+                $count_cancel = count(EventsCourse::join(
+                    'activity',
+                    'activity.id_events',
+                    '=',
+                    'events_course.id'
+                )
+                    ->Where('events_course.id', $data['id'])
+                    ->Where('id_status', 5)
+                    ->get());
+
+                //報到筆數
+                $count_check = count(EventsCourse::join('activity', 'activity.id_events', '=', 'events_course.id')
+                    ->Where('events_course.id', $data['id'])
+                    ->Where('id_status', 4)
+                    ->get());
+
+                $events[count($events)] = [
+                    'date' => date('Y-m-d', strtotime($data['course_start_at'])),
+                    'name' => $data['course'],
+                    'event' => $data['name'],
+                    'count_apply' => $count_apply,
+                    'count_cancel' => $count_cancel,
+                    'count_check' => $count_check,
+                    'href_check' => route('course_check', ["id" => $data['id']]),
+                    'href_list' => route('course_apply', ["id" => $data['id']]),
+                    'href_adv' => route('course_advanced', ["id" => $data['id']]),
+                    'href_return' => route('course_return', ["id" => $data['id']]),
+                    'href_form' => route('course_form', ["id" => $data['id']]),
+                    'id' => $data['id'],
+                    'id_group' => $data['id_group'],
+                    'nextLevel' => $nextLevel,
+                    'unpublish' => $data['unpublish'],
+                    'type' => $data['type']
+                ];
             }
         }
 

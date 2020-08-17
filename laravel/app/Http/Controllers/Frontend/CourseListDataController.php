@@ -11,6 +11,7 @@ use App\Model\SalesRegistration;
 use App\Model\Registration;
 use App\Model\Register;
 use App\Model\Teacher;
+use App\Model\Activity;
 
 class CourseListDataController extends Controller
 {
@@ -90,7 +91,7 @@ class CourseListDataController extends Controller
                     $rate_deal = round($deal / $count_check * 100, 1);
                 }
 
-            }else{
+            }else if( $course->type == 2 || $course->type == 3 ){
                 //正課    
 
                 /* 報名數 */             
@@ -126,6 +127,44 @@ class CourseListDataController extends Controller
                 if( $deal > 0 && $count_check > 0 ){
                     $rate_deal = round($deal / $count_check * 100, 1);
                 }
+            }else if( $course->type == 4 ){
+                //活動
+
+                /* 報名數 */
+                $count_apply = count(Activity::where('id_events', $data['id'])
+                                                    ->where('id_status', '<>', 2)
+                                                    ->get());
+
+                /* 取消數 */
+                $count_cancel = count(Activity::where('id_events', $data['id'])
+                                                    ->where('id_status', 5)
+                                                    ->get());
+
+                /* 報到數 */
+                $count_check = count(Activity::where('id_events', $data['id'])
+                                                    ->where('id_status', 4)
+                                                    ->get());
+
+                /* 報到率 */
+                $rate_check = 0;
+
+                if( ($count_apply-$count_cancel) > 0 && $count_check > 0 ){
+                    $rate_check = round($count_check/($count_apply-$count_cancel) * 100, 1);
+                }
+                
+                
+                /* 成交數 */
+                $deal = 0;
+                $rate_deal = 0;
+
+                $deal = count(Registration::Where('source_events', $data['id'] )
+                                        ->Where('status_payment', 7)
+                                        ->get()); 
+
+                if( $deal > 0 && $count_check > 0 ){
+                    $rate_deal = round($deal / $count_check * 100, 1);
+                }
+
             }
 
             $events[$key] = array(

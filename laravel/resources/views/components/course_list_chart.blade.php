@@ -1,13 +1,18 @@
 <!-- Content Start -->
 <!--搜尋課程頁面內容-->
-<div class="card m-3">
+<div class="card m-3" id="contentPDF">
   <div class="card-body">
     <!-- 詳細報名資訊 -->
     <div class="card">
       <div class="card-header">
         <div class="row">
           <div class="col">
-            <h6>{{ $date }} {{ $course }} {{ $event }}</h6>
+            <h6>
+              <label id="course_date">{{ $date }}</label>
+              （{{ $week }}）
+              <label id="course_name">{{ $course }}</label>
+              <label id="course_event">{{ $event }}</label>
+            </h6>
           </div>
           <div class="col">
             <h6>銷講地點：{{ $location }}</h6>

@@ -11,6 +11,7 @@ use App\Model\Register;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use DB;
+use App\Model\Activity;
 
 class ReportController extends Controller
 {
@@ -140,6 +141,18 @@ class ReportController extends Controller
                         }
 
                         // $events[$key_events]['y'] = count($count->get());
+                    }else if( $data_search['type'] == 4 ){
+                        //活動
+                        $count = Activity::where('id_events', $data_search['id']);
+
+                        //動作
+                        if($data[3] != '0'){
+                            $count->where('id_status', $data[3]);
+                        }
+
+                        // $events[$key_events]['y'] = count($count->get());
+                        // $events['y'] = count($count->get());
+
                     }
 
                     $count = $count->get();
@@ -205,6 +218,10 @@ class ReportController extends Controller
                         //正課
                         $apply = Register::where('id_events', $data_search['id']);
                         $check = Register::where('id_events', $data_search['id']);
+                    }else if( $data_search['type'] == 4 ){
+                        //活動
+                        $apply = Activity::where('id_events', $data_search['id']);
+                        $check = Activity::where('id_events', $data_search['id']);
                     }
 
 
@@ -292,6 +309,9 @@ class ReportController extends Controller
                     }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                         //正課
                         $check = Register::where('id_events', $data_search['id']);
+                    }else if( $data_search['type'] == 4 ){
+                        //活動
+                        $check = Activity::where('id_events', $data_search['id']);
                     }
 
                     $check = $check->where('id_status', 4)->get();
@@ -433,6 +453,9 @@ class ReportController extends Controller
 
                         }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                             //正課沒有來源故為0
+                            $pay = [];
+                        }else if( $data_search['type'] == 4 ){
+                            //活動沒有來源故為0
                             $pay = [];
                         }
 

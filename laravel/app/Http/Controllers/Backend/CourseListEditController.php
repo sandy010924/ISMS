@@ -203,7 +203,13 @@ class CourseListEditController extends Controller
                 Registration::where('id_group', $id_group)->delete();
                 // }
 
-            }
+            }else if ($events[0]->type == 4) {
+                //活動
+                foreach ($events as $data) {
+                    //刪除報名表
+                    Activity::where('id_events', $data->id)->delete();
+                }
+            } 
 
             //刪除場次  
             EventsCourse::where('id_group', $id_group)->delete();

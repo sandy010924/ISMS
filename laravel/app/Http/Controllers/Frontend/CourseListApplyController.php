@@ -12,6 +12,7 @@ use App\Model\Registration;
 use App\Model\Student;
 use App\Model\Teacher;
 use App\Model\Refund;
+use App\Model\Activity;
 
 class CourseListApplyController extends Controller
 {
@@ -50,23 +51,23 @@ class CourseListApplyController extends Controller
             foreach( $apply_table as $key => $data ){
 
                 
-                //檢查學員是否退費成功
-                $refund = Refund::where('id_registration', $data['id'])
-                                ->where('review', 1)
-                                ->get();
-                if( count($refund) != 0){
-                    continue;
-                }
+                // //檢查學員是否退費成功
+                // $refund = Refund::where('id_registration', $data['id'])
+                //                 ->where('review', 1)
+                //                 ->get();
+                // if( count($refund) != 0){
+                //     continue;
+                // }
 
-                //檢查學員是否申請退費
-                $refund = Refund::where('id_registration', $data['id'])
-                                ->where('review', 0)
-                                ->get();
-                if( count($refund) != 0){
-                    $refund_status = 1;  //有
-                }else{
-                    $refund_status = 0;  //沒有
-                }
+                // //檢查學員是否申請退費
+                // $refund = Refund::where('id_registration', $data['id'])
+                //                 ->where('review', 0)
+                //                 ->get();
+                // if( count($refund) != 0){
+                //     $refund_status = 1;  //有
+                // }else{
+                //     $refund_status = 0;  //沒有
+                // }
                 
 
 
@@ -85,7 +86,7 @@ class CourseListApplyController extends Controller
                     'email' => $data['email'],
                     'profession' => $data['profession'],
                     'content' => $data['course_content'],
-                    'refund_status' => $refund_status,
+                    'refund_status' => 0,
                 );
             }
 
@@ -106,7 +107,7 @@ class CourseListApplyController extends Controller
                             // ->get('date')
                             // ->unique('id');
 
-        }elseif( $course->type == 2 || $course->type == 3) {
+        }else if( $course->type == 2 || $course->type == 3) {
             //正課
             // $apply_table = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
             //                      ->join('student', 'student.id', '=', 'registration.id_student')
@@ -207,6 +208,58 @@ class CourseListApplyController extends Controller
                             ->orderBy('date','desc')
                             ->first();
             
+        }else if( $course->type == 4){
+            //活動
+            $apply_table = Activity::join('events_course', 'events_course.id', '=', 'activity.id_events')
+                                    ->join('student', 'student.id', '=', 'activity.id_student')
+                                    ->select('student.name as name', 
+                                            'student.phone as phone', 
+                                            'student.email as email', 
+                                            'student.profession as profession', 
+                                            'activity.*', 
+                                            'events_course.name as event', 
+                                            'events_course.course_start_at as course_start_at')
+                                    ->Where('activity.id_course', $id)
+                                    ->get();
+                                      
+            foreach( $apply_table as $key => $data ){             
+
+                $weekarray = array("日","一","二","三","四","五","六");
+                $week = $weekarray[date('w', strtotime($data['course_start_at']))];
+
+                $event = date('Y-m-d', strtotime($data['course_start_at'])) . '(' . $week . ')' . $data['event'];
+
+                $apply[$key] = array(
+                    'id' => $data['id'],
+                    'date' => $data['submissiondate'],
+                    // 'source' => $data['datasource'],
+                    'event' => $event,
+                    'name' => $data['name'],
+                    'phone' => $data['phone'],
+                    'email' => $data['email'],
+                    'profession' => $data['profession'],
+                    'content' => $data['course_content'],
+                    'refund_status' => 0,
+                );
+            }
+
+            
+            //開始時間
+            $start_array = Activity::select('submissiondate as date')
+                            ->where('id_course', $id)
+                            ->orderBy('date','asc')
+                            ->first();
+                            // ->get('date')
+                            // ->unique('id');
+
+            //結束時間
+            $end_array = Activity::select('submissiondate as date')
+                            ->where('id_course',$id)
+                            ->orderBy('date','desc')
+                            ->first();
+                            // ->get('date')
+                            // ->unique('id');
+
         }
         
         if( $start_array!="" && $end_array!="" ){

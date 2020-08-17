@@ -12,6 +12,7 @@ use App\Model\EventsCourse;
 use App\Model\Register;
 use App\Model\Teacher;
 use App\Model\Refund;
+use App\Model\Activity;
 
 class CourseApplyController extends Controller
 {
@@ -50,7 +51,12 @@ class CourseApplyController extends Controller
             //報名資訊
             $courseapplys = SalesRegistration::join('isms_status', 'isms_status.id', 'sales_registration.id_status')
                                             ->join('student', 'student.id', 'sales_registration.id_student')
-                                            ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'sales_registration.*', 'isms_status.name as status_name')
+                                            ->select('student.name as name', 
+                                                    'student.phone as phone', 
+                                                    'student.email as email', 
+                                                    'student.profession as profession', 
+                                                    'sales_registration.*', 
+                                                    'isms_status.name as status_name')
                                             ->Where('sales_registration.id_events', $id)
                                             ->Where('sales_registration.id_status', '<>', 2)
                                             ->get();
@@ -68,7 +74,7 @@ class CourseApplyController extends Controller
                                                 ->Where('id_status', 5)
                                                 ->get());
 
-        }elseif($course->type == 2 || $course->type == 3){
+        }else if($course->type == 2 || $course->type == 3){
             //正課
 
             if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d"))){
@@ -166,6 +172,50 @@ class CourseApplyController extends Controller
                     $count_cancel++;
                 }
             }
+        }else if($course->type == 4){
+            //活動
+            
+            if(strtotime(date('Y-m-d', strtotime($course->course_start_at))) > strtotime(date("Y-m-d"))){
+                //未過場次 狀態預設改為已報名
+                Activity::Where('id_events', $id)
+                                ->where(function($q) { 
+                                    $q->orWhere('id_status', 3);
+                                    // ->orWhere('id_status', 4);
+                                })
+                                ->update(['id_status' => 1]);
+            }else{
+                //已過場次 狀態預設已報到改為未到
+                Activity::Where('id_events', $id)
+                                ->Where('id_status', 1)
+                                ->update(['id_status' => 3]);
+            }
+
+            //報名資訊
+            $courseapplys = Activity::join('isms_status', 'isms_status.id', 'activity.id_status')
+                                            ->join('student', 'student.id', 'activity.id_student')
+                                            ->select('student.name as name', 
+                                                    'student.phone as phone', 
+                                                    'student.email as email', 
+                                                    'student.profession as profession', 
+                                                    'activity.*', 
+                                                    'isms_status.name as status_name')
+                                            ->Where('activity.id_events', $id)
+                                            ->Where('activity.id_status', '<>', 2)
+                                            ->get();
+                                            
+            //報名筆數
+            $count_apply = count($courseapplys);
+
+            //報名筆數
+            $count_check = count(Activity::Where('id_events', $id)
+                                                ->Where('id_status', 4)
+                                                ->get());
+
+            //取消筆數
+            $count_cancel = count(Activity::Where('id_events', $id)
+                                                ->Where('id_status', 5)
+                                                ->get());
+
         }
             
 

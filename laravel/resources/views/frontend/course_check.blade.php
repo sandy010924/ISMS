@@ -39,9 +39,9 @@
       </div>
       <div class="col-md-auto mb-3 text-right">
         @if( $nextLevel > 0 )
-        <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary">場次報表</button></a>
-        @else
-        <button type="button" class="btn btn-primary" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」按鈕，在「對應課程」選擇此課程做串接。');location.href ='{{ route('course_return', ['id' => $course->id]) }}'">場次報表</button>
+          <a href="{{ route('course_return', ['id' => $course->id]) }}"><button type="button" class="btn btn-primary">場次報表</button></a>
+        @elseif( $course->type != 4 )
+          <button type="button" class="btn btn-primary" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」按鈕，在「對應課程」選擇此課程做串接。');location.href ='{{ route('course_return', ['id' => $course->id]) }}'">場次報表</button>
         @endif
       </div>
     </div>
@@ -209,7 +209,7 @@
             </div>
           </div>
         </div>
-        @else
+        @elseif( $course->type != 4 )
         <button type="button" class="btn btn-outline-secondary mx-1" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">進階報名表</button>
         @endif
       </div>
@@ -515,8 +515,8 @@
         // $("#" + data["list"].check_id).val(data["list"].check_status_val);
         // $("#" + data["list"].check_id).html(data["list"].check_status_name);
 
-        // $("#count_check").html(data.count_check);
-        // $("#count_cancel").html(data.count_cancel);
+        $("#count_check").html(data.count_check);
+        $("#count_cancel").html(data.count_cancel);
 
         // status_style(data["list"].check_id, data["list"].check_status_val);
 

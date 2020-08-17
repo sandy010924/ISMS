@@ -12,6 +12,7 @@ use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Register;
 use App\Model\Mark;
+use App\Model\Activity;
 
 class CourseCheckController extends Controller
 {
@@ -146,7 +147,7 @@ class CourseCheckController extends Controller
             if($course_type == 1){
                 //銷講
                 $db_check = SalesRegistration::where('id', $check_id);
-            }elseif($course_type == 2 || $course_type == 3){
+            }else if($course_type == 2 || $course_type == 3){
                 //正課
                 $db_check = Register::where('id', $check_id);
 
@@ -208,6 +209,9 @@ class CourseCheckController extends Controller
 
                     
                 
+            }else if($course_type == 4){
+                //活動
+                $db_check = Activity::where('id', $check_id);
             }
             switch($update_status){
                 case 'check_btn':
@@ -257,7 +261,7 @@ class CourseCheckController extends Controller
                 $count_cancel = count(SalesRegistration::Where('id_events', $list->id_events)
                     ->Where('id_status','=', 5)
                     ->get());
-            }elseif($course_type == 2 || $course_type == 3){
+            }else if($course_type == 2 || $course_type == 3){
                 //正課
                 $list = Register::join('isms_status', 'isms_status.id', '=', 'register.id_status')
                                     ->join('student', 'student.id', '=', 'register.id_student')
@@ -275,6 +279,27 @@ class CourseCheckController extends Controller
                     ->Where('id_status','=', 5)
                     ->get());
                 
+            }else if($course_type == 4){
+                //活動
+                $list = Activity::join('isms_status', 'isms_status.id', '=', 'activity.id_status')
+                                            ->join('student', 'student.id', '=', 'activity.id_student')
+                                            ->select('activity.id as check_id', 
+                                                    'student.name as check_name', 
+                                                    'activity.id_events as id_events', 
+                                                    'activity.id_status as check_status_val', 
+                                                    'isms_status.name as check_status_name')
+                                            ->Where('activity.id','=', $check_id)
+                                            ->first();
+
+                
+                //報到筆數
+                $count_check = count(Activity::Where('id_events', $list->id_events)
+                    ->Where('id_status','=', 4)
+                    ->get());
+                //取消筆數
+                $count_cancel = count(Activity::Where('id_events', $list->id_events)
+                    ->Where('id_status','=', 5)
+                    ->get());
             }
                 
             return Response(array('list'=>$list, 'count_check'=>$count_check, 'count_cancel'=>$count_cancel));
@@ -327,10 +352,14 @@ class CourseCheckController extends Controller
                         //銷講
                         SalesRegistration::where('id', $data_id)
                                          ->update(['memo' => $data_val]);
-                    }elseif($course_type == 2 || $course_type == 3){
+                    }else if($course_type == 2 || $course_type == 3){
                         //正課
                         Register::where('id', $data_id)
                                     ->update(['memo' => $data_val]);
+                    }else if( $course_type == 4 ){
+                        //活動
+                        Activity::where('id', $data_id)
+                                ->update(['memo' => $data_val]);
                     }
                     break;
                 default:
@@ -472,6 +501,18 @@ class CourseCheckController extends Controller
 
             $status = "ok";
 
+        }else if($type == 4){
+            //活動
+            $activity = Activity::where('id', $id_apply)
+                                      ->get();
+
+            if( count($activity) != 0 ){
+                //刪除報名表
+                Activity::where('id', $id_apply)->delete();
+            }
+
+            $status = "ok";
+            
         }else {
             $status = "error";
         }

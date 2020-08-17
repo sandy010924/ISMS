@@ -192,7 +192,7 @@
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="{{ route('course_list_apply', [ 'id' => $data['id'] ]) }}">報名名單</a>
-            @if( $data['type'] != "銷講" )
+            @if( $data['type'] != "銷講" && $data['type'] != "活動" )
             <a class="dropdown-item" href="{{ route('course_list_refund', [ 'id' => $data['id'] ]) }}">退費名單</a>
             @endif
           </div>

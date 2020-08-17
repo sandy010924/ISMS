@@ -11,6 +11,7 @@ use App\Model\ISMSStatus;
 use App\Model\Course;
 use App\Model\EventsCourse;
 use App\Model\Register;
+use App\Model\Activity;
 
 class CourseApplyController extends Controller
 {
@@ -55,7 +56,7 @@ class CourseApplyController extends Controller
                 $count_cancel = count(SalesRegistration::Where('id_events', $id_events)
                     ->Where('id_status','=', 5)
                     ->get());
-            }elseif($course_type == 2 || $course_type == 3){
+            }else if($course_type == 2 || $course_type == 3){
                 //正課
                 if( $apply_status == 1){
                     Register::where('id', '=', $apply_id)
@@ -79,6 +80,34 @@ class CourseApplyController extends Controller
                     ->get());
                 //取消筆數
                 $count_cancel = count(Register::Where('id_events', $id_events)
+                    ->Where('id_status','=', 5)
+                    ->get());
+            }else if($course_type == 4){
+                //活動
+                if( $apply_status == 1){
+                    Activity::where('id', '=', $apply_id)
+                                    ->update(['id_status' => 5]);
+                }
+                else{
+                    Activity::where('id', '=', $apply_id)
+                                    ->update(['id_status' => 1]);
+                }
+                
+                $new_apply = Activity::join('isms_status', 'isms_status.id', '=', 'activity.id_status')
+                                            ->join('student', 'student.id', '=', 'activity.id_student')
+                                            ->select('student.name as name', 
+                                                    'activity.id as id', 
+                                                    'activity.id_status as id_status', 
+                                                    'isms_status.name as status_name')
+                                            ->Where('activity.id','=', $apply_id)
+                                            ->first();
+            
+                //報到筆數
+                $count_check = count(Activity::Where('id_events', $id_events)
+                    ->Where('id_status','=', 4)
+                    ->get());
+                //取消筆數
+                $count_cancel = count(Activity::Where('id_events', $id_events)
                     ->Where('id_status','=', 5)
                     ->get());
             }

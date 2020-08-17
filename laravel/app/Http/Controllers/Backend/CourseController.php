@@ -17,6 +17,7 @@ use App\Model\Refund;
 use App\Model\Payment;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
+use App\Model\Activity;
 
 class CourseController extends Controller
 {
@@ -694,7 +695,7 @@ class CourseController extends Controller
                     // $apply_table = SalesRegistration::where('id_events', $events->id)
                     //                                 ->get();
                 }
-            } elseif ($events[0]->type == 2 || $events[0]->type == 3) {
+            } else if ($events[0]->type == 2 || $events[0]->type == 3) {
                 //正課
                 // foreach( $events as $data){
 
@@ -718,7 +719,13 @@ class CourseController extends Controller
                 //刪除報名表
                 Registration::where('id_group', $id_group)->delete();
                 // }
-            }
+            } else if ($events[0]->type == 4) {
+                //活動
+                foreach ($events as $data) {
+                    //刪除報名表
+                    Activity::where('id_events', $data->id)->delete();
+                }
+            } 
 
             //刪除場次
             EventsCourse::where('id_group', $id_group)->delete();
