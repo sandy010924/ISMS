@@ -124,7 +124,7 @@ var check_in_rate_config = {
     labels: ["實到人數", "未到人數", "取消人數"],
     datasets: [{
       backgroundColor: ["#26a34f", "#ddd", "#d41e1e"],
-      data: [count_check, count_apply - count_check, count_cancel]
+      data: [count_check, count_apply - count_check - count_cancel, count_cancel]
     }]
   },
   options: {
