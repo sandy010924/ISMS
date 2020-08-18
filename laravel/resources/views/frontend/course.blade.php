@@ -132,28 +132,28 @@
         <!-- 今日場次 -->
         {{-- <a href="{{ $event['href_check'] }}"><button type="button" class="btn btn-success btn-sm mx-1">簽到表</button></a> --}}
         <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-        <button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button>
-        <button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button>
+        <button class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button>
+        <button class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button>
         @elseif( strtotime($event['date']) > strtotime(date("Y-m-d")) )
         <!-- 未過場次 -->
         {{-- <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">簽到表</button></a> --}}
-        <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
-        <button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button>
-        <button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button>
+        <a href="{{ $event['href_list'] }}"><button class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+        <button class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button>
+        <button class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button>
         @elseif( strtotime($event['date']) < strtotime(date("Y-m-d")) ) <!-- 已過場次 -->
           {{-- <a><button type="button" class="btn btn-success btn-sm mx-1" disabled="ture">簽到表</button></a> --}}
-          <a href="{{ $event['href_list'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
+          <a href="{{ $event['href_list'] }}"><button class="btn btn-secondary btn-sm mx-1">查詢名單</button></a>
           @if( $event['nextLevel'] > 0 )
-          <a href="{{ $event['href_adv'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
-          <a href="{{ $event['href_return'] }}"><button type="button" class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
+          <a href="{{ $event['href_adv'] }}"><button class="btn btn-secondary btn-sm mx-1">查看進階填單名單</button></a>
+          <a href="{{ $event['href_return'] }}"><button class="btn btn-secondary btn-sm mx-1">場次報表</button></a>
           @else
           @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'teacher' || Auth::user()->role == 'marketer' || Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'accountant' || Auth::user()->role == 'officestaff'))
-            @if( $event['type'] == 4 )
-              <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">查看進階填單名單</button>
-              <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');location.href ='{{ $event['href_return'] }}'">場次報表</button>
+            @if( $event['type'] != 4 )
+              <button class="btn btn-secondary btn-sm mx-1" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');">查看進階填單名單</button>
+              <button class="btn btn-secondary btn-sm mx-1" onclick="alert('尚未串接進階課程！\n請先到【課程管理】找到該課程的進階課程，進入至進階課程的【編輯】，點選「新增報名表」或「修改報名表」按鈕，在「對應課程」選擇此課程做串接。');location.href ='{{ $event['href_return'] }}'">場次報表</button>
             @else
-              <button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button>
-              <button type="button" class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button>
+              <button class="btn btn-secondary btn-sm mx-1" disabled="ture">查看進階填單名單</button>
+              <button class="btn btn-secondary btn-sm mx-1" disabled="ture">場次報表</button>
             @endif
           @endif
           @endif
