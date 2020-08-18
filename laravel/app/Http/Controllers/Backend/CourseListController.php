@@ -1220,9 +1220,8 @@ class CourseListController extends Controller
                             $check_events = $events_course::where('name', $events)
                                 ->where('id_course', $id_course)
                                 // ->where('location', $address) 場次判斷不要判斷地址 Rocky (2020/07/01)
-                                // 活動沒有開始時間 Rocky (2020/08/05)
-                                // ->where('course_start_at', $time_start)
-                                // ->where('course_end_at', $time_end)
+                                ->where('course_start_at', $date)
+                                ->where('course_end_at', $date)
                                 ->get();
                             if (count($check_events) != 0) {
                                 $id_events = $check_events[0]["id"];
@@ -1237,7 +1236,7 @@ class CourseListController extends Controller
                                 $events_course->course_start_at  = $date;          // 課程開始時間
                                 $events_course->course_end_at    = $date;            // 課程結束時間
                                 $events_course->memo             = '';                   // 課程備註
-                                $events_course->id_group         = strtotime($time_start) . $id_course;     // 群組ID
+                                $events_course->id_group         = strtotime($date) . $excel_data[$key] . $id_course;     // 群組ID
                                 $events_course->unpublish        = 0;                    // 不公開
                                 $events_course->save();
                                 $id_events = $events_course->id;
@@ -1371,7 +1370,7 @@ class CourseListController extends Controller
 
                 $apply_table = Activity::where('id_course', $course->id)
                     ->get();
-            } 
+            }
 
             foreach ($apply_table as $data) {
                 //刪除報到
