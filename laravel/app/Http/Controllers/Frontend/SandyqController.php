@@ -96,7 +96,7 @@ class SandyqController extends Controller
         // 刪除
         Student::wherein('id', $delete_id)->delete();
 
-        $data = Student::wherein('id', $idlist)
+        $data = Student::where('id', $idlist)
             ->select('student.name')
             ->get();
 
