@@ -26,7 +26,7 @@ class SandyqController extends Controller
     // 顯示資料
     public function show()
     {
-        return view('frontend.sandyq', compact('events'));
+        return view('frontend.sandyq');
     }
 
 
