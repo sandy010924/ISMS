@@ -120,6 +120,8 @@
 
 <script>
   var table;
+  var today = moment(new Date()).format("YYYYMMDD");
+  var title = today + '_推播成效_' + $('a[name="teacher_tab"].active').text();
 
   $("document").ready(function() {
 
@@ -189,7 +191,8 @@
           text: '匯出Excel',
           exportOptions: {
               columns: ':visible'
-          }
+          },
+          title: title,
           // messageTop: $('#h3_title').text(),
         }],
     });
