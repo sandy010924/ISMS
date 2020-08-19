@@ -49,6 +49,14 @@
     margin-bottom: 10px;
   }
 
+  /* datatable bg color */
+  #table_list tbody tr.rowExcel:nth-child(4n+1){
+    background-color: #f4f4f4 !important;
+  }
+  #table_list tbody tr.rowExcel:nth-child(4n+3){
+    background-color: #fff !important;
+  }
+
   /* modal層級 */
   .modal:nth-of-type(even) {
     z-index: 1052 !important;
@@ -71,10 +79,10 @@
     <div class="row mb-3">
       <div class="col align-self-center">
         <h6 class="mb-0 ">
-          {{ $course->course }}&nbsp;&nbsp;
-          {{ date('Y-m-d', strtotime($course->course_start_at)) }}
+          <label id="course_name">{{ $course->course }}</label>&nbsp;&nbsp;
+          <label id="course_date">{{ date('Y-m-d', strtotime($course->course_start_at)) }}</label>
           ( {{ $week }} )&nbsp;
-          {{ $course->name }}&nbsp;&nbsp;
+          <label id="course_event">{{ $course->name }}</label>&nbsp;&nbsp;
           講座地點：
           {{ $course->location }}
         </h6>
@@ -373,7 +381,7 @@
   <div class="card-body">
     @component('components.datatable')
     @slot('thead')
-    <tr>
+    <tr class="rowExcel">
       <th class="text-nowrap"></th>
       <th class="text-nowrap colExcel">學員姓名</th>
       <th class="text-nowrap colExcel">連絡電話</th>
@@ -393,7 +401,7 @@
     @endslot
     @slot('tbody')
     @foreach($fill as $data)
-    <tr>
+    <tr class="rowExcel">
       <td class="align-middle">
         <a class="btn collapse-btn" data-toggle="collapse" data-target="#payment{{ $data['id'] }}" aria-expanded="false" aria-controls="payment{{ $data['id'] }}">
           <span class="fas fa-angle-right fa-lg collapse_open"></span>
@@ -470,54 +478,52 @@
       </td>
       @endif
     </tr>
-    <tr class="trPayment">
+    <tr class="trPayment collapse multi-collapse" id="payment{{ $data['id'] }}">
       <td colspan="12">
-        <div class="collapse multi-collapse" id="payment{{ $data['id'] }}">
-          <div class="card card-body p-1">
-            <div class="table-responsive">
-              <table class="table table-striped table-sm text-center border rounded-lg mb-0 return_table" id="payment_table{{ $data['id'] }}">
-                <thead class="thead-dark" style="font-size:14px;">
-                  <tr>
-                    <th class="text-nowrap"></th>
-                    <th class="text-nowrap">付款方式</th>
-                    <th class="text-nowrap">金額</th>
-                    <th class="text-nowrap">帳戶/卡號後四碼</th>
-                    <th class="text-nowrap"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach($data['payment'] as $key_payment => $data_payment)
-                  <tr name="tr{{ $data['id'] }}">
-                    <td class="align-middle">{{ $key_payment+1 }}</td>
-                    <td class="align-middle">
-                      {{-- <input type="select" class="form-control form-control-sm" value="{{ $data_payment['pay_model'] }}"> --}}
-                      <select class="custom-select border-0 bg-transparent" id="pay_model{{ $data_payment['id_payment'] }}" name="pay_model" value="{{$data_payment['pay_model']}}">
-                        <option selected disabled>{{$data_payment['pay_model']}}</option>
-                        <option value="0">現金</option>
-                        <option value="1">匯款</option>
-                        <option value="2">刷卡：輕鬆付</option>
-                        <option value="3">刷卡：一次付</option>
-                        <option value="4">現金分期</option>
-                      </select>
-                    </td>
-                    <td class="align-middle">
-                      <input type="number" class="form-control form-control-sm" id="cash{{ $data_payment['id_payment'] }}" name="cash" value="{{ $data_payment['cash'] }}" data-registration="{{ $data['id'] }}">
-                    </td>
-                    <td class="align-middle">
-                      <input type="number" class="form-control form-control-sm" id="number{{ $data_payment['id_payment'] }}" name="number" value="{{ $data_payment['number'] }}">
-                    </td>
-                    <td class="align-middle">
-                      {{-- <button type="button" class="btn btn-secondary btn-sm mx-1">修改</button>
-                                <button type="button" class="btn btn-success btn-sm mx-1">儲存</button> --}}
-                      <button type="button" class="btn btn-danger btn-sm mx-1" onclick="btn_delete_payment({{ $data_payment['id_payment'] }});">刪除</button>
-                    </td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-              @if(count($data['payment']) < 3) <button type="button" class="btn btn-primary btn-sm m-2 add_payment" id="add_payment{{ $data['id'] }}" data-name="{{ $data['name'] }}" data-phone="{{ $data['phone'] }}" data-toggle="modal" data-target="#add_payment">新增付款</button>
-                @endif
-            </div>
+        <div class="card card-body p-1">
+          <div class="table-responsive">
+            <table class="table table-striped table-sm text-center border rounded-lg mb-0 return_table" id="payment_table{{ $data['id'] }}">
+              <thead class="thead-dark" style="font-size:14px;">
+                <tr>
+                  <th class="text-nowrap"></th>
+                  <th class="text-nowrap">付款方式</th>
+                  <th class="text-nowrap">金額</th>
+                  <th class="text-nowrap">帳戶/卡號後四碼</th>
+                  <th class="text-nowrap"></th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($data['payment'] as $key_payment => $data_payment)
+                <tr name="tr{{ $data['id'] }}">
+                  <td class="align-middle">{{ $key_payment+1 }}</td>
+                  <td class="align-middle">
+                    {{-- <input type="select" class="form-control form-control-sm" value="{{ $data_payment['pay_model'] }}"> --}}
+                    <select class="custom-select border-0 bg-transparent" id="pay_model{{ $data_payment['id_payment'] }}" name="pay_model" value="{{$data_payment['pay_model']}}">
+                      <option selected disabled>{{$data_payment['pay_model']}}</option>
+                      <option value="0">現金</option>
+                      <option value="1">匯款</option>
+                      <option value="2">刷卡：輕鬆付</option>
+                      <option value="3">刷卡：一次付</option>
+                      <option value="4">現金分期</option>
+                    </select>
+                  </td>
+                  <td class="align-middle">
+                    <input type="number" class="form-control form-control-sm" id="cash{{ $data_payment['id_payment'] }}" name="cash" value="{{ $data_payment['cash'] }}" data-registration="{{ $data['id'] }}">
+                  </td>
+                  <td class="align-middle">
+                    <input type="number" class="form-control form-control-sm" id="number{{ $data_payment['id_payment'] }}" name="number" value="{{ $data_payment['number'] }}">
+                  </td>
+                  <td class="align-middle">
+                    {{-- <button type="button" class="btn btn-secondary btn-sm mx-1">修改</button>
+                              <button type="button" class="btn btn-success btn-sm mx-1">儲存</button> --}}
+                    <button type="button" class="btn btn-danger btn-sm mx-1" onclick="btn_delete_payment({{ $data_payment['id_payment'] }});">刪除</button>
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+            @if(count($data['payment']) < 3) <button type="button" class="btn btn-primary btn-sm m-2 add_payment" id="add_payment{{ $data['id'] }}" data-name="{{ $data['name'] }}" data-phone="{{ $data['phone'] }}" data-toggle="modal" data-target="#add_payment">新增付款</button>
+              @endif
           </div>
         </div>
       </td>
@@ -1167,6 +1173,9 @@
   var id_student_old = '';
   var elt = $('#isms_tags');
   var table, table2;
+  var today = moment(new Date()).format("YYYYMMDD");
+  var title = today + '_場次報表' + '_' + $('#course_name').text() + '(' + $('#course_date').text() + ' ' + $('#course_event').text() + ')';
+
 
   $(document).ready(function() {
     // // 新增報表 - 報名日期
@@ -1271,12 +1280,39 @@
 
     var buttonCommon = {
       exportOptions: {
+        rows: '.rowExcel',
+        columns: '.colExcel',
         format: {
-          body: function(data, column, row, node) {
-            if (column.cla) {
-              return $(data).find("option:selected").text();
+          body: function(data, row, column, node) {
+            if (column == 0) {
+              if ($(data).is("a")) {
+                var arr = $(data).text();
+                return arr
+              } else {
+                return data
+              }
+            } else if (column == 3) {
+                return $(data).find("option:selected").text()
+            } else if (column == 4 ) {
+              if ($(data).is("input")) {
+                var val_input = $(data).val()
+                if (val_input == '') {
+                  return '0'
+                } else {
+                  return val_input
+                }
+              }
+            } else if (column == 7 || column == 8 || column == 9) {
+              if ($(data).is("input")) {
+                var val_input = $(data).val()
+                if (val_input == '') {
+                  return ''
+                } else {
+                  return val_input
+                }
+              }
             } else {
-              return $(data).text();
+              return data
             }
           }
         }
@@ -1284,39 +1320,14 @@
     };
 
     table = $('#table_list').DataTable({
-      dom: '<<t>>',
+      dom: '<B<t>>',
       paging: false,
       ordering: false,
-      buttons: [{
+      buttons: [$.extend(true, {}, buttonCommon, {
         extend: 'excel',
         text: '匯出Excel',
-        exportOptions: {
-          columns: '.colExcel',
-          format: {
-            body: function(data, column, row, node) {
-              // console.log(column + $(data).text());
-
-              // if( row % 2 === 1 ){
-              // console.log(column + $(data).text());
-              //   if ( column == 1 || column == 2 || column == 3 || column == 6 || column == 7 ) {
-              //     return $(data).text();
-              // console.log($(data).text());
-              //   }else if( column == 5 || column == 8 || column == 9 || column == 10 ){
-              //     return $(data).val();
-              // console.log($(data).val());
-              //   }else if( column == 4 ){
-              //     return $(data).find("option:selected").text();
-              //   }
-              // }
-            }
-          }
-        }
-        // exportOptions: {
-        //     columns: '.colExcel'
-        // }
-        // messageTop: $('#h3_title').text(),
-      }],
-      // buttons: [ $.extend(true, {}, buttonCommon, { extend: "excel" })]
+        title: title,
+      })],
     });
   }
 
@@ -1956,9 +1967,9 @@
         if (data == 'success') {
           status = 'success';
 
-          // $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
-          //   table_onload();
-          // });
+          $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
+            table_onload();
+          });
 
 
           /** alert **/
