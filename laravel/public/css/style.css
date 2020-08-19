@@ -144,6 +144,7 @@ main > .header .logout:hover{
     cursor: pointer;
 } 
 
+/* button hover顯示加粗黑框 */
 button.btn, a[role="button"]{
     border: 2px solid !important;
 }
@@ -154,11 +155,20 @@ select, a{
     cursor: pointer;
 }
 
+
+/* 數據報表nav 選項hover */
 #reportTab li.nav-item:hover{
     background-color: #dcedfe;
 }
 
 
+/* datatable 欄位過多則出現x軸 */
 table#table_list tr{
     white-space: nowrap; 
+}
+
+
+/* nav 不隨頁面卷軸移動 */
+.sidebar-sticky{
+    position: relative !important;
 }

@@ -111,6 +111,11 @@
   <script src="{{ asset('js/jszip.min.js') }}"></script>
   <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
   <!-- Excel 匯出 Rocky (2020/04/30) -->
+
+  <!-- Excel 匯出 Sandy (2020/08/20) -->
+  <script src="{{ asset('js/html2canvas.js') }}"></script>
+  <script src="{{ asset('js/jspdf.min.js') }}"></script>
+  <!-- Excel 匯出 Sandy (2020/08/20) -->
 </head>
 
 <body>
