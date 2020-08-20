@@ -142,6 +142,7 @@ class CourseCheckController extends Controller
         $course_type = $request->input('course_type');
         $check_value = $request->input('check_value');
         $update_status = $request->input('update_status');
+
         try{
             //判斷是銷講or正課
             if($course_type == 1){
@@ -149,70 +150,12 @@ class CourseCheckController extends Controller
                 $db_check = SalesRegistration::where('id', $check_id);
             }else if($course_type == 2 || $course_type == 3){
                 //正課
-                $db_check = Register::where('id', $check_id);
-
-
-                /* 正課報到標籤 */
-                $register = Register::join('registration', 'registration.id', '=', 'register.id_registration')
-                                    // ->join('course', 'course.id', '=', 'registration.id_course')
-                                    ->select('register.*', 'registration.id_course as id_course')
-                                    ->where('register.id', $check_id)
-                                    ->first();
-                                    
-                if($update_status=='dropdown_check' || ($update_status=='check_btn' && $check_value != 4)){
-                    
-                        // 檢查是否標記過
-                        $check_mark = Mark::where('id_course', $register->id_course)
-                                        ->where('id_student', $register->id_student)
-                                        ->get();
-
-                        $course = Course::select('id', 'name')->where('id', $register->id_course)->first();
-
-                        if ( count($check_mark) == 0 ) {
-
-                            // 新增標記資料
-                            $mark = new Mark;
-
-                            $mark->id_student    = $register->id_student;         // 學員ID
-                            $mark->name_mark     = $course->name . '學員';          // 標記名稱
-                            // $mark->name_course   = $name_course;  // 課程名稱
-                            $mark->id_course     = $course->id;        // 課程ID
-                            $mark->id_events     = $register->id_events;        // 場次ID
-                            
-                            $mark->save();
-                            $id_mark = $mark->id;
-                        }else{
-                            //更新付款資料
-                            Mark::where('id_course', $course->id)
-                                ->where('id_student', $register ->id_student)
-                                ->update([
-                                    'id_events' => $register->id_events,
-                                ]);
-                        }
-                    // $group = Register::where('id_registration' ,$register->id_registration)
-                    //                 ->orderby('id_events', desc)
-                    //                 ->first();
-
-                    // $registration = Registration::where('id' ,$register->id_registration)
-                    //                 ->first();
-
-                    
-
-                }
-                // else{
-                //     /* 刪除標記 */
-                //     Mark::where('id_course', $register ->id_course)
-                //         ->where('id_student', $register ->id_student)
-                //         ->delete();
-                // }
-            
-
-                    
-                
+                $db_check = Register::where('id', $check_id);                  
             }else if($course_type == 4){
                 //活動
                 $db_check = Activity::where('id', $check_id);
             }
+
             switch($update_status){
                 case 'check_btn':
                     //報到/未到
@@ -264,10 +207,18 @@ class CourseCheckController extends Controller
             }else if($course_type == 2 || $course_type == 3){
                 //正課
                 $list = Register::join('isms_status', 'isms_status.id', '=', 'register.id_status')
-                                    ->join('student', 'student.id', '=', 'register.id_student')
-                                    ->select('register.id as check_id', 'student.name as check_name', 'register.id_events as id_events', 'register.id_status as check_status_val', 'isms_status.name as check_status_name')
-                                    ->Where('register.id','=', $check_id)
-                                    ->first();
+                                ->join('student', 'student.id', '=', 'register.id_student')
+                                ->join('registration', 'registration.id', '=', 'register.id_registration')
+                                ->select('register.id as check_id', 
+                                        'register.id_events as id_events', 
+                                        'register.id_status as check_status_val', 
+                                        'register.id_registration as id_registration', 
+                                        'registration.id_course as id_course', 
+                                        'student.id as id_student', 
+                                        'student.name as check_name', 
+                                        'isms_status.name as check_status_name')
+                                ->Where('register.id','=', $check_id)
+                                ->first();
 
                 
                 //報到筆數
@@ -279,17 +230,82 @@ class CourseCheckController extends Controller
                     ->Where('id_status','=', 5)
                     ->get());
                 
+                
+
+                /* 正課報到標籤 */
+                $register = Register::join('registration', 'registration.id', '=', 'register.id_registration')
+                                    ->join('events_course', 'events_course.id', '=', 'register.id_events')
+                                    ->select('register.*', 'registration.id_course as id_course')
+                                    ->where('registration.id_student', $list->id_student)
+                                    ->where('registration.id_course', $list->id_course)
+                                    ->where('register.id_status', 4)
+                                    ->orderby('events_course.course_start_at', 'desc')
+                                    ->first();
+                                    
+                // if($update_status=='dropdown_check' || ($update_status=='check_btn' && $check_value != 4)){
+                if( !empty($register) ){
+                    //至少一天報到
+
+                    // 檢查是否標記過
+                    $check_mark = Mark::where('id_course', $register->id_course)
+                                    ->where('id_student', $register->id_student)
+                                    ->get();
+
+                    $course = Course::select('id', 'name')->where('id', $register->id_course)->first();
+
+                    if ( count($check_mark) == 0 ) {
+                        //沒有標記過
+
+                        // 新增標記資料
+                        $mark = new Mark;
+
+                        $mark->id_student    = $register->id_student;         // 學員ID
+                        $mark->name_mark     = $course->name . '學員';          // 標記名稱
+                        // $mark->name_course   = $name_course;  // 課程名稱
+                        $mark->id_course     = $course->id;        // 課程ID
+                        $mark->id_events     = $register->id_events;        // 場次ID
+                        
+                        $mark->save();
+                        $id_mark = $mark->id;
+                    }else{
+                        //有標記過 
+                        
+                        //更新付款資料
+                        Mark::where('id_course', $course->id)
+                            ->where('id_student', $register ->id_student)
+                            ->update([
+                                'id_events' => $register->id_events,
+                            ]);
+                    }
+                    // $group = Register::where('id_registration' ,$register->id_registration)
+                    //                 ->orderby('id_events', desc)
+                    //                 ->first();
+
+                    // $registration = Registration::where('id' ,$register->id_registration)
+                    //                 ->first();
+                }else{
+                    //皆無報到
+
+                    /* 刪除標記 */
+                    Mark::where('id_course', $list->id_course)
+                        ->where('id_student', $list->id_student)
+                        ->delete();
+                }
+            
+
             }else if($course_type == 4){
                 //活動
                 $list = Activity::join('isms_status', 'isms_status.id', '=', 'activity.id_status')
-                                            ->join('student', 'student.id', '=', 'activity.id_student')
-                                            ->select('activity.id as check_id', 
-                                                    'student.name as check_name', 
-                                                    'activity.id_events as id_events', 
-                                                    'activity.id_status as check_status_val', 
-                                                    'isms_status.name as check_status_name')
-                                            ->Where('activity.id','=', $check_id)
-                                            ->first();
+                                ->join('student', 'student.id', '=', 'activity.id_student')
+                                ->select('activity.id as check_id', 
+                                        'activity.id_events as id_events', 
+                                        'activity.id_status as check_status_val',
+                                        'activity.id_course as id_course',  
+                                        'student.id as id_student',
+                                        'student.name as check_name', 
+                                        'isms_status.name as check_status_name')
+                                ->Where('activity.id','=', $check_id)
+                                ->first();
 
                 
                 //報到筆數
@@ -300,6 +316,68 @@ class CourseCheckController extends Controller
                 $count_cancel = count(Activity::Where('id_events', $list->id_events)
                     ->Where('id_status','=', 5)
                     ->get());
+
+                
+                /* 活動報到標籤 */
+                $register = Activity::join('events_course', 'events_course.id', '=', 'activity.id_events')
+                                    ->where('activity.id_student', $list->id_student)
+                                    ->where('activity.id_course', $list->id_course)
+                                    ->where('activity.id_status', 4)
+                                    ->orderby('events_course.course_start_at', 'desc')
+                                    ->first();
+                                    
+                // if($update_status=='dropdown_check' || ($update_status=='check_btn' && $check_value != 4)){
+                if( !empty($register) ){
+                    //至少一天報到
+
+                    // 檢查是否標記過
+                    $check_mark = Mark::where('id_course', $register->id_course)
+                                    ->where('id_student', $register->id_student)
+                                    ->get();
+
+                    $course = Course::select('id', 'name')->where('id', $register->id_course)->first();
+
+                    if ( count($check_mark) == 0 ) {
+                        //沒有標記過
+
+                        // 新增標記資料
+                        $mark = new Mark;
+
+                        $mark->id_student    = $register->id_student;         // 學員ID
+                        $mark->name_mark     = $course->name . '學員';          // 標記名稱
+                        // $mark->name_course   = $name_course;  // 課程名稱
+                        $mark->id_course     = $course->id;        // 課程ID
+                        $mark->id_events     = $register->id_events;        // 場次ID
+                        
+                        $mark->save();
+                        $id_mark = $mark->id;
+                    }else{
+                        //有標記過 
+                        
+                        //更新付款資料
+                        Mark::where('id_course', $course->id)
+                            ->where('id_student', $register ->id_student)
+                            ->update([
+                                'id_events' => $register->id_events,
+                            ]);
+                    }
+                    // $group = Register::where('id_registration' ,$register->id_registration)
+                    //                 ->orderby('id_events', desc)
+                    //                 ->first();
+
+                    // $registration = Registration::where('id' ,$register->id_registration)
+                    //                 ->first();
+
+                    
+
+                }else{
+                    //皆無報到
+
+                    /* 刪除標記 */
+                    Mark::where('id_course', $list->id_course)
+                        ->where('id_student', $list->id_student)
+                        ->delete();
+                }
             }
                 
             return Response(array('list'=>$list, 'count_check'=>$count_check, 'count_cancel'=>$count_cancel));
