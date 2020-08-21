@@ -75,7 +75,7 @@ class SendEmail extends Command
 
             if( !empty($emailAddr) ){
                 //寄送訊息
-                Mail::send('frontend.testMail', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
+                Mail::send('frontend.model_email', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
                     $message->subject($mailTitle);
                     foreach ($emailAddr as $email) {
                         $message->to($email->email);

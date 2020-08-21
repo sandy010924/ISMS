@@ -1452,7 +1452,7 @@ class CourseReturnController extends Controller
     // {
     //     $mailContents = str_replace("\n", "<br>", $mailContents);
         
-    //     Mail::send('frontend.testMail', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
+    //     Mail::send('frontend.model_email', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
     //         $message->subject($mailTitle);
     //         $message->to($emailAddr);
     //     });

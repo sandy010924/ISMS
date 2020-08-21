@@ -202,7 +202,7 @@ class RemindMsg extends Command
                     
                     $mailContents = str_replace("\n", "<br>", $content);
                     
-                    Mail::send('frontend.testMail', ['content'=>$mailContents], function($message) use ($mailTitle, $mailAddr) {
+                    Mail::send('frontend.model_email', ['content'=>$mailContents], function($message) use ($mailTitle, $mailAddr) {
                         $message->subject($mailTitle);
                         $message->to($mailAddr);
                     });
