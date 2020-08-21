@@ -150,9 +150,9 @@
                <h6>選擇日期和時間</h6>
 
                 <div class="form-group">
-                  <div class='input-group date' id='datetimepicker1' data-target-input='nearest'>
-                    <input type='text' id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker1" name="params['start_time']" data-toggle="datetimepicker" autocomplete="off"/>
-                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                  <div class='input-group date' data-target-input='nearest'>
+                    <input type='text' id="scheduleTime" class="form-control datetimepicker-input" data-target="#scheduleTime" name="params['start_time']" data-toggle="datetimepicker" autocomplete="off"/>
+                    <div class="input-group-append" data-target="#scheduleTime" data-toggle="datetimepicker">
                       <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>
                   </div>
@@ -252,430 +252,433 @@
 
 <!-- crossorigin="anonymous" -->
 <script>
-$(document).ready(function () {
-  init();
-  var groupData;
-  var allDataPhone = [];
-  var allDataEmail = [];
-  var selectedDataId = [];
+  $(document).ready(function () {
+    init();
+    var groupData;
+    var allDataPhone = [];
+    var allDataEmail = [];
+    var selectedDataId = [];
 
-  //預約日期選擇器
-  $('#datetimepicker1').datetimepicker({
-    format: "YYYY-MM-DD HH:mm",
-    defaultDate: new Date(),
-    minDate : new Date(),
-    // locale:"zh-tw"
-  });
+    var schedule = moment(new Date()).add(11, 'minute');
 
-  $.ajax({
-    type: "post",
-    url: "messageDetailGroup"
-  }).done(function(res) {
-    groupData = res;
+    //預約日期選擇器
+    $('#scheduleTime').datetimepicker({
+      format: "YYYY-MM-DD HH:mm",
+      defaultDate: schedule,
+      minDate : schedule,
+      // locale:"zh-tw"
+    });
 
-    var settings = {
-    "groupDataArray": groupData,
-    "groupItemName": "groupName",
-    "groupArrayName": "groupData",
-    "itemName": "name",
-    "valueName": "id",
-    tabNameText: "細分組成員",
-    rightTabNameText: "已選擇細分組成員",
-    searchPlaceholderText: "搜尋細分組成員",
-    "callable": function (data, names) {
-      selectedDataId = [];
-      data.forEach(item => {
-        selectedDataId.push(parseInt(item.id,10))
-      });
-      console.log(selectedDataId);
-    }
-  };
+    $.ajax({
+      type: "post",
+      url: "messageDetailGroup"
+    }).done(function(res) {
+      groupData = res;
 
-    var transfer = $(".transfer").transfer(settings);
-      // get selected items
-    var items = transfer.getSelectedItems();
-    // console.log(items);
+      var settings = {
+      "groupDataArray": groupData,
+      "groupItemName": "groupName",
+      "groupArrayName": "groupData",
+      "itemName": "name",
+      "valueName": "id",
+      tabNameText: "細分組成員",
+      rightTabNameText: "已選擇細分組成員",
+      searchPlaceholderText: "搜尋細分組成員",
+      "callable": function (data, names) {
+        selectedDataId = [];
+        data.forEach(item => {
+          selectedDataId.push(parseInt(item.id,10))
+        });
+        // console.log(selectedDataId);
+      }
+    };
 
-  }).fail(function(err) {
-    console.log(err);
-  });
+      var transfer = $(".transfer").transfer(settings);
+        // get selected items
+      var items = transfer.getSelectedItems();
+      // console.log(items);
 
-
-  // 防呆
-  $('#groupDetailBtn').on('click', function() {
-    if ( !($('#messageCheckBox').prop('checked') || $('#mailCheckBox').prop('checked' ) )) {
-      alert('請先勾選發送方式!');
-        return false;
-    }
-  });
+    }).fail(function(err) {
+      console.log(err);
+    });
 
 
-  // 細分組搜尋確定Btn
-  $('#wndSaveChecked').on('click', function() {
-    // 清空data
-    allDataPhone = [];
-    allDataEmail = [];
+    // 防呆
+    $('#groupDetailBtn').on('click', function() {
+      if ( !($('#messageCheckBox').prop('checked') || $('#mailCheckBox').prop('checked' ) )) {
+        alert('請先勾選發送方式!');
+          return false;
+      }
+    });
 
-    // 比對id 撈出phone、email
-    for( var i = 0; i<groupData.length;i++) {
-      for( var j = 0; j<groupData[i].groupData.length; j++) {
-        for( var z = 0; z<selectedDataId.length; z++) {
-          if (selectedDataId[z] == groupData[i].groupData[j].id) {
-            console.log(groupData[i].groupData[j].phone);
-            allDataPhone.push(groupData[i].groupData[j].phone);
-            allDataEmail.push(groupData[i].groupData[j].email);
+
+    // 細分組搜尋確定Btn
+    $('#wndSaveChecked').on('click', function() {
+      // 清空data
+      allDataPhone = [];
+      allDataEmail = [];
+
+      // 比對id 撈出phone、email
+      for( var i = 0; i<groupData.length;i++) {
+        for( var j = 0; j<groupData[i].groupData.length; j++) {
+          for( var z = 0; z<selectedDataId.length; z++) {
+            if (selectedDataId[z] == groupData[i].groupData[j].id) {
+              // console.log(groupData[i].groupData[j].phone);
+              allDataPhone.push(groupData[i].groupData[j].phone);
+              allDataEmail.push(groupData[i].groupData[j].email);
+            }
+
           }
-
         }
       }
-    }
-    console.log(allDataPhone);
-    console.log(allDataEmail);
+      // console.log(allDataPhone);
+      // console.log(allDataEmail);
 
-    if ( $('#mailCheckBox').prop('checked') ) {
-      $('#receiverEmail').val(allDataEmail);
-    }
+      if ( $('#mailCheckBox').prop('checked') ) {
+        $('#receiverEmail').val(allDataEmail);
+      }
 
-    if ( $('#messageCheckBox').prop('checked') ) {
-      $('#receiverPhone').val(allDataPhone);
-    }
+      if ( $('#messageCheckBox').prop('checked') ) {
+        $('#receiverPhone').val(allDataPhone);
+      }
 
-    // 找傳送給哪一個細分組，後端做紀錄
-    // for (var i = 0; i< $(".group-select-all-1e5364e841u5i1m541urm1b0tblg0").length; i++) {
-    //   if ($(".group-select-all-1e5364e841u5i1m541urm1b0tblg0").eq(i).prop("checked")) {
-    //     console.log($(this).id);
+      // 找傳送給哪一個細分組，後端做紀錄
+      // for (var i = 0; i< $(".group-select-all-1e5364e841u5i1m541urm1b0tblg0").length; i++) {
+      //   if ($(".group-select-all-1e5364e841u5i1m541urm1b0tblg0").eq(i).prop("checked")) {
+      //     console.log($(this).id);
 
-    //   }
-    // }
+      //   }
+      // }
 
 
-  });
+    });
 
-  // 簡訊寄送方式被觸發時
-  $('#messageCheckBox').on('click', function() {
-    if( $(this).is(':checked') && $('#mailCheckBox').prop('checked') == false) {
-      // 簡訊方式開始
-      // $('#msgTitle').prop('disabled', false);
-      $('#receiverPhone').prop('disabled', false);
-      $('#receiverEmail').prop('disabled', 'disabled');
-      $('#emailTitle').prop('disabled', 'disabled');
-    } else if ( $('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == false)) {
+    // 簡訊寄送方式被觸發時
+    $('#messageCheckBox').on('click', function() {
+      if( $(this).is(':checked') && $('#mailCheckBox').prop('checked') == false) {
+        // 簡訊方式開始
+        // $('#msgTitle').prop('disabled', false);
+        $('#receiverPhone').prop('disabled', false);
+        $('#receiverEmail').prop('disabled', 'disabled');
+        $('#emailTitle').prop('disabled', 'disabled');
+      } else if ( $('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == false)) {
+          // $('#msgTitle').prop('disabled', 'disabled');
+          $('#receiverPhone').prop('disabled', 'disabled');
+          $('#receiverEmail').prop('disabled', false);
+          $('#emailTitle').prop('disabled', false);
+      } else if($('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == true)) {
+        // $('#msgTitle').prop('disabled', false);
+        $('#receiverPhone').prop('disabled', false);
+        $('#receiverEmail').prop('disabled', false);
+        $('#emailTitle').prop('disabled', false);
+      }else {
+        // 簡訊方式隱藏
+        // $('#msgTitle').prop('disabled', 'disabled');
+        $('#receiverPhone').prop('disabled', 'disabled');
+        $('#receiverEmail').prop('disabled', 'disabled');
+        $('#emailTitle').prop('disabled', 'disabled');
+      }
+    });
+
+    // Email寄送方式被觸發時
+    $('#mailCheckBox').on('click', function() {
+      if( $(this).is(':checked') && $('#messageCheckBox').prop('checked') == false ) {
+        // Email方式開始，title隱藏
         // $('#msgTitle').prop('disabled', 'disabled');
         $('#receiverPhone').prop('disabled', 'disabled');
         $('#receiverEmail').prop('disabled', false);
         $('#emailTitle').prop('disabled', false);
-    } else if($('#mailCheckBox').is(':checked') && ( $(this).prop('checked') == true)) {
-      // $('#msgTitle').prop('disabled', false);
-      $('#receiverPhone').prop('disabled', false);
-      $('#receiverEmail').prop('disabled', false);
-      $('#emailTitle').prop('disabled', false);
-    }else {
-      // 簡訊方式隱藏
-      // $('#msgTitle').prop('disabled', 'disabled');
-      $('#receiverPhone').prop('disabled', 'disabled');
-      $('#receiverEmail').prop('disabled', 'disabled');
-      $('#emailTitle').prop('disabled', 'disabled');
-    }
-  });
+      } else if ( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == false) ) {
+        // Email方式開始、title開啟
+        // $('#msgTitle').prop('disabled', false);
+        $('#receiverPhone').prop('disabled', false);
+        $('#receiverEmail').prop('disabled', 'disabled');
+        $('#emailTitle').prop('disabled', 'disabled');
 
-  // Email寄送方式被觸發時
-  $('#mailCheckBox').on('click', function() {
-    if( $(this).is(':checked') && $('#messageCheckBox').prop('checked') == false ) {
-      // Email方式開始，title隱藏
-      // $('#msgTitle').prop('disabled', 'disabled');
-      $('#receiverPhone').prop('disabled', 'disabled');
-      $('#receiverEmail').prop('disabled', false);
-      $('#emailTitle').prop('disabled', false);
-    } else if ( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == false) ) {
-      // Email方式開始、title開啟
-      // $('#msgTitle').prop('disabled', false);
-      $('#receiverPhone').prop('disabled', false);
-      $('#receiverEmail').prop('disabled', 'disabled');
-      $('#emailTitle').prop('disabled', 'disabled');
-
-    } else if( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == true) ) {
-      // $('#msgTitle').prop('disabled', false);
-      $('#receiverPhone').prop('disabled', false);
-      $('#receiverEmail').prop('disabled', false);
-      $('#emailTitle').prop('disabled', false);
-    }else {
-      // Email方式隱藏
-      // $('#msgTitle').prop('disabled', 'disabled');
-      $('#receiverPhone').prop('disabled', 'disabled');
-      $('#receiverEmail').prop('disabled', 'disabled');
-      $('#emailTitle').prop('disabled', 'disabled');
-    }
-  });
+      } else if( $('#messageCheckBox').is(':checked') && ( $(this).prop('checked') == true) ) {
+        // $('#msgTitle').prop('disabled', false);
+        $('#receiverPhone').prop('disabled', false);
+        $('#receiverEmail').prop('disabled', false);
+        $('#emailTitle').prop('disabled', false);
+      }else {
+        // Email方式隱藏
+        // $('#msgTitle').prop('disabled', 'disabled');
+        $('#receiverPhone').prop('disabled', 'disabled');
+        $('#receiverEmail').prop('disabled', 'disabled');
+        $('#emailTitle').prop('disabled', 'disabled');
+      }
+    });
 
 
-  /* 立即傳送 */
-  $('#sendMessageBtn').on('click', function(e) {
-    e.preventDefault();
+    /* 立即傳送 */
+    $('#sendMessageBtn').on('click', function(e) {
+      e.preventDefault();
 
-    var empty = verifyEmpty();
-    
-    if( empty > 0 ){
-      return false;
-    }
-
-    var form = getData();
-    var phoneAddr = $('#receiverPhone').val();
-    var emailAddr = $('#receiverEmail').val();
-
-    //判斷簡訊發送人數超過500 (API上限為500筆)
-    if($('#messageCheckBox').prop('checked')){
-      if( phoneAddr.split(",").length > 500 ){
-        alert('發送人數超過500筆，簡訊寄送一次以500筆為上限。');
+      var empty = verifyEmpty();
+      
+      if( empty > 0 ){
         return false;
       }
-    }
 
-    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>立即傳送');
-    $(this).prop('disabled', 'disabled');
-    
-    $.ajax({
-        type:'POST',
-        url:'message_insert',
-        data:{
+      var form = getFormData();
+      var phoneAddr = $('#receiverPhone').val();
+      var emailAddr = $('#receiverEmail').val();
+
+      //判斷簡訊發送人數超過500 (API上限為500筆)
+      if($('#messageCheckBox').prop('checked')){
+        if( phoneAddr.split(",").length > 500 ){
+          alert('發送人數超過500筆，簡訊寄送一次以500筆為上限。');
+          return false;
+        }
+      }
+
+      $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>立即傳送');
+      $(this).prop('disabled', 'disabled');
+      
+      $.ajax({
+          type:'POST',
+          url:'message_insert',
+          // dataType:"json",
+          data:{
+            form:form,
+            phoneNumber: phoneAddr.split(","),
+            emailAddr: emailAddr.split(","),
+          },
+          success:function(res){
+            console.log(res);  
+            
+            if( res['status'] == 'success' && res['AccountPoint'] != null){
+              /** alert **/
+              $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "，發送人數為" + res['count'] + "人。");
+              fade($("#success_alert"));
+
+              $('input[type="button"]').prop('disabled', 'disabled');
+              setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+            }else if( res['status'] == 'success' ){
+              /** alert **/ 
+              $("#success_alert_text").html("寄送成功。");
+              fade($("#success_alert"));    
+              
+              $('input[type="button"]').prop('disabled', 'disabled');
+              setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+            }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
+              /** alert **/ 
+              $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
+              fade($("#error_alert"));    
+              
+              $('#sendMessageBtn').html('立即傳送');
+              $('#sendMessageBtn').prop('disabled', false);
+            }else if( res['status'] == 'error' ){
+              /** alert **/ 
+              $("#error_alert_text").html("寄送失敗。");
+              fade($("#error_alert"));   
+
+              $('#sendMessageBtn').html('立即傳送');
+              $('#sendMessageBtn').prop('disabled', false); 
+            }else{
+              /** alert **/ 
+              $("#error_alert_text").html("寄送失敗。");
+              fade($("#error_alert"));   
+
+              $('#sendMessageBtn').html('立即傳送');
+              $('#sendMessageBtn').prop('disabled', false); 
+            }
+
+          },
+          error: function(jqXHR, textStatus, errorMessage){
+              console.log("error: "+ errorMessage);    
+              console.log(jqXHR);
+              $(this).html('立即傳送');
+              $(this).prop('disabled', false);
+          }
+        });
+    });
+
+
+    /* 儲存草稿 */
+    $('#draftBtn').on('click', function(e) {
+      
+      e.preventDefault();
+
+      var empty = verifyEmpty();
+      
+      if( empty > 0 ){
+        return false;
+      }
+
+      $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>儲存為草稿');
+      $(this).prop('disabled', 'disabled');
+
+      var form = getFormData();
+
+      var phoneAddr = $('#receiverPhone').val();
+      var emailAddr = $('#receiverEmail').val();
+      
+      $.ajax({
+        type: "POST",
+        url: "draftInsert",
+        data: {
           form:form,
           phoneNumber: phoneAddr.split(","),
           emailAddr: emailAddr.split(","),
-        },
-        success:function(res){
-          console.log(res);  
-          
-          if( res['status'] == 'success' && res['AccountPoint'] != null){
-            /** alert **/
-            $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "，發送人數為" + res['count'] + "人。");
-            fade($("#success_alert"));
-
-            $('button').prop('disabled', 'disabled');
-            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
-          }else if( res['status'] == 'success' ){
-            /** alert **/ 
-            $("#success_alert_text").html("寄送成功。");
-            fade($("#success_alert"));    
-            
-            $('button').prop('disabled', 'disabled');
-            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
-          }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
-            /** alert **/ 
-            $("#error_alert_text").html("寄送失敗，" + res['msg'] + "。");
-            fade($("#error_alert"));    
-            
-            $('#sendMessageBtn').html('立即傳送');
-            $('#sendMessageBtn').prop('disabled', false);
-          }else if( res['status'] == 'error' ){
-            /** alert **/ 
-            $("#error_alert_text").html("寄送失敗。");
-            fade($("#error_alert"));   
-
-            $('#sendMessageBtn').html('立即傳送');
-            $('#sendMessageBtn').prop('disabled', false); 
-          }else{
-            /** alert **/ 
-            $("#error_alert_text").html("寄送失敗。");
-            fade($("#error_alert"));   
-
-            $('#sendMessageBtn').html('立即傳送');
-            $('#sendMessageBtn').prop('disabled', false); 
-          }
-
-        },
-        error: function(jqXHR, textStatus, errorMessage){
-            console.log("error: "+ errorMessage);    
-            console.log(jqXHR);
-            $(this).html('立即傳送');
-            $(this).prop('disabled', false);
         }
-      });
-  });
+      }).done(function(res) {
+        console.log(res);
 
+        if( res['status'] == 'success' ){
+          /** alert **/
+          $("#success_alert_text").html("儲存草稿成功");
+          fade($("#success_alert"));
 
-  /* 儲存草稿 */
-  $('#draftBtn').on('click', function(e) {
-    
-    e.preventDefault();
+          setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+          
+        }else{
+          /** alert **/ 
+          $("#error_alert_text").html("儲存草稿失敗");
+          fade($("#error_alert")); 
+          $('#draftBtn').prop('disabled', false);     
+        }
 
-    var empty = verifyEmpty();
-    
-    if( empty > 0 ){
-      return false;
-    }
-
-    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>儲存為草稿');
-    $(this).prop('disabled', 'disabled');
-
-    var form = getData();
-
-    var phoneAddr = $('#receiverPhone').val();
-    var emailAddr = $('#receiverEmail').val();
-    
-    $.ajax({
-      type: "POST",
-      url: "draftInsert",
-      data: {
-        form:form,
-        phoneNumber: phoneAddr.split(","),
-        emailAddr: emailAddr.split(","),
-      }
-    }).done(function(res) {
-      console.log(res);
-
-      if( res['status'] == 'success' ){
-        /** alert **/
-        $("#success_alert_text").html("儲存草稿成功");
-        fade($("#success_alert"));
-
-        setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+      }).fail(function(err) {
+        console.log(err);
         
-      }else{
         /** alert **/ 
         $("#error_alert_text").html("儲存草稿失敗");
-        fade($("#error_alert")); 
-        $('#draftBtn').prop('disabled', false);     
+        fade($("#error_alert"));     
+        $('#draftBtn').prop('disabled', false);   
+
+      });
+    });
+
+
+    /* 排程設定 */
+    $('#saveScheduleBtn').on('click', function(e) {
+
+      // $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
+
+      e.preventDefault();
+
+      var empty = verifyEmpty();
+      
+      if( empty > 0 ){
+        $('#scheduleModal').modal('hide');
+        return false;
+      }
+      
+      if( $('#scheduleTime').val() == "" ){
+        alert('請輸入排程時間');
+        return false;
       }
 
-    }).fail(function(err) {
-      console.log(err);
+      /* 排程防呆，不得排今日訊息 */
+      var d = new Date($('#scheduleTime').val());
+
+      var month = d.getMonth()+1;
+      var day = d.getDate();
+      var h = d.getHours();
+      var n = d.getMinutes();
+
+      var scheduleDate = d.getFullYear() + '-' +
+      (month<10 ? '0' : '') + month + '-' +
+      (day<10 ? '0' : '') + day + ' ' +
+      (h<10 ? '0' : '') + h + ':' +
+      (n<10 ? '0' : '') + n;
       
-      /** alert **/ 
-      $("#error_alert_text").html("儲存草稿失敗");
-      fade($("#error_alert"));     
-      $('#draftBtn').prop('disabled', false);   
+      var rule = moment().add(10, 'minutes').format("YYYY-MM-DD HH:mm");
 
-    });
-  });
+      // if( today == scheduleDate ){
+      //   alert('無法排程當日訊息，請選擇今天以後的日期。');
+      //   return false;
+      // }
 
-
-  /* 排程設定 */
-  $('#saveScheduleBtn').on('click', function(e) {
-
-    // $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
-
-    e.preventDefault();
-
-    var empty = verifyEmpty();
-    
-    if( empty > 0 ){
-      $('#scheduleModal').modal('hide');
-      return false;
-    }
-    
-    if( $('#scheduleTime').val() == "" ){
-      alert('請輸入排程時間');
-      return false;
-    }
-
-    /* 排程防呆，不得排今日訊息 */
-    var d = new Date($('#scheduleTime').val());
-
-    var month = d.getMonth()+1;
-    var day = d.getDate();
-    var h = d.getHours();
-    var n = d.getMinutes();
-
-    var scheduleDate = d.getFullYear() + '-' +
-    (month<10 ? '0' : '') + month + '-' +
-    (day<10 ? '0' : '') + day + ' ' +
-    (h<10 ? '0' : '') + h + ':' +
-    (n<10 ? '0' : '') + n;
-    
-    var rule = moment().add(10, 'minutes').format("YYYY-MM-DD HH:mm");
-
-    // if( today == scheduleDate ){
-    //   alert('無法排程當日訊息，請選擇今天以後的日期。');
-    //   return false;
-    // }
-
-    if( rule >= scheduleDate ){
-      alert('輸入的預約時間必須⼤於系統時間10分鐘。');
-      return false;
-    }
-    
-    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
-    $(this).prop('disabled', 'disabled');
+      if( rule >= scheduleDate ){
+        alert('輸入的預約時間必須⼤於系統時間10分鐘。');
+        return false;
+      }
+      
+      $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>預約排程');
+      $(this).prop('disabled', 'disabled');
 
 
-    var form = getData();
-    var send_at = $('#scheduleTime').val();
+      var form = getFormData();
+      var send_at = $('#scheduleTime').val();
 
-    var phoneAddr = $('#receiverPhone').val();
-    var emailAddr = $('#receiverEmail').val();
-    
+      var phoneAddr = $('#receiverPhone').val();
+      var emailAddr = $('#receiverEmail').val();
+      
 
-    $.ajax({
-        type:'POST',
-        url:'scheduleInsert',
-        data:{
-          form:form,
-          phoneNumber: phoneAddr.split(","),
-          emailAddr: emailAddr.split(","),
-          send_at: send_at,
-        },
-        success:function(res){
-          console.log(res);  
+      $.ajax({
+          type:'POST',
+          url:'scheduleInsert',
+          data:{
+            form:form,
+            phoneNumber: phoneAddr.split(","),
+            emailAddr: emailAddr.split(","),
+            send_at: send_at,
+          },
+          success:function(res){
+            console.log(res);  
 
-          if( res['status'] == 'success' && res['AccountPoint'] != null){
-            $('#scheduleModal').modal('hide');
+            if( res['status'] == 'success' && res['AccountPoint'] != null){
+              $('#scheduleModal').modal('hide');
 
-            /** alert **/
-            $("#success_alert_text").html("訊息預約成功，簡訊餘額尚有" + res['AccountPoint'] + "，預約發送人數為" + res['count'] + "人。");
-            fade($("#success_alert"));
+              /** alert **/
+              $("#success_alert_text").html("訊息預約成功，簡訊餘額尚有" + res['AccountPoint'] + "，預約發送人數為" + res['count'] + "人。");
+              fade($("#success_alert"));
 
-            $('button').prop('disabled', 'disabled');
-            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
-          }else if( res['status'] == 'success' ){
-            $('#scheduleModal').modal('hide');
+              $('input[type="button"]').prop('disabled', 'disabled');
+              setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+            }else if( res['status'] == 'success' ){
+              $('#scheduleModal').modal('hide');
 
-            /** alert **/ 
-            $("#success_alert_text").html("訊息預約成功。");
-            fade($("#success_alert"));    
-            
-            $('button').prop('disabled', 'disabled');
-            setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
-          }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
-            /** alert **/ 
-            $("#error_alert_text").html("訊息預約失敗，" + res['msg'] + "。");
-            fade($("#error_alert"));    
-            
-            $('#saveScheduleBtn').html('排程設定');
-            $('#saveScheduleBtn').prop('disabled', false);
-          }else if( res['status'] == 'error' ){
-            /** alert **/ 
-            $("#error_alert_text").html("訊息預約失敗。");
-            fade($("#error_alert"));   
+              /** alert **/ 
+              $("#success_alert_text").html("訊息預約成功。");
+              fade($("#success_alert"));    
+              
+              $('input[type="button"]').prop('disabled', 'disabled');
+              setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+            }else if( res['status'] == 'error' && typeof(res['msg']) != "undefined"){
+              /** alert **/ 
+              $("#error_alert_text").html("訊息預約失敗，" + res['msg'] + "。");
+              fade($("#error_alert"));    
+              
+              $('#saveScheduleBtn').html('排程設定');
+              $('#saveScheduleBtn').prop('disabled', false);
+            }else if( res['status'] == 'error' ){
+              /** alert **/ 
+              $("#error_alert_text").html("訊息預約失敗。");
+              fade($("#error_alert"));   
 
-            $('#saveScheduleBtn').html('排程設定');
-            $('#saveScheduleBtn').prop('disabled', false); 
+              $('#saveScheduleBtn').html('排程設定');
+              $('#saveScheduleBtn').prop('disabled', false); 
+            }
+
+          },
+          error: function(jqXHR, textStatus, errorMessage){
+              console.log("error: "+ errorMessage);  
+
+              /** alert **/ 
+              $("#error_alert_text").html("訊息預約失敗。");
+              fade($("#error_alert"));   
+
+              $('#saveScheduleBtn').html('排程設定');
+              $('#saveScheduleBtn').prop('disabled', false); 
+              // $(this).html('立即傳送');
+              // $(this).prop('disabled', false);
           }
+        });
+      
+    });
 
-        },
-        error: function(jqXHR, textStatus, errorMessage){
-            console.log("error: "+ errorMessage);  
-
-            /** alert **/ 
-            $("#error_alert_text").html("訊息預約失敗。");
-            fade($("#error_alert"));   
-
-            $('#saveScheduleBtn').html('排程設定');
-            $('#saveScheduleBtn').prop('disabled', false); 
-            // $(this).html('立即傳送');
-            // $(this).prop('disabled', false);
-        }
-      });
     
-  });
+    //select2 講師及課程下拉式搜尋 Sandy(2020/04/14)
+    $("#msgTeacher, #msgCourse").select2({
+        width: 'resolve', // need to override the changed default
+        theme: 'bootstrap'
+    });
+    $.fn.select2.defaults.set( "theme", "bootstrap" );
 
-  
-  //select2 講師及課程下拉式搜尋 Sandy(2020/04/14)
-  $("#msgTeacher, #msgCourse").select2({
-      width: 'resolve', // need to override the changed default
-      theme: 'bootstrap'
   });
-  $.fn.select2.defaults.set( "theme", "bootstrap" );
-
-});
 
 
   /* 初始化 */
@@ -715,7 +718,7 @@ $(document).ready(function () {
 
 
   /* 取得Data */
-  function getData(){
+  function getFormData(){
     var id_message = $('#id_message').val();
     var type ="";
     var name =$('#msgTitle').val();
