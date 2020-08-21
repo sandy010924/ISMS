@@ -530,6 +530,8 @@
           $("#success_alert_text").html("儲存草稿成功");
           fade($("#success_alert"));
 
+          $('input[type="button"]').prop('disabled', 'disabled');
+
           setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
           
         }else{
