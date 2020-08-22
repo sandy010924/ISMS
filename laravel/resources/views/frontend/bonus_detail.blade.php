@@ -339,8 +339,8 @@
     $.fn.dataTable.ext.search.push(
       function(settings, data, dataIndex) {
 
-        var min = picker.startDate.format('YYYY-MM-DD');
-        var max = picker.endDate.format('YYYY-MM-DD');
+        var min = picker.startDate.format('YYYY-MM-DD 00:00:00');
+        var max = picker.endDate.format('YYYY-MM-DD 24:00:00');
 
         var startDate = data[1];
         if (startDate <= max && startDate >= min) {
