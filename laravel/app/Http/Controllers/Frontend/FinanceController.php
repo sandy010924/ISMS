@@ -40,6 +40,10 @@ class FinanceController extends Controller
                 ->selectRaw("SUM(CASE WHEN invoice is NOT null THEN 1 ELSE 0 END) as count_invoice")
                 ->Where('source_events', $data['id'])
                 ->Where('status_payment', '7')
+                ->Where(function ($query) {
+                    $query->orwhere('type_invoice', 1);
+                    $query->orwhere('type_invoice', 2);
+                })
                 ->get();
 
             // 篩選多天 Rocky(2020/06/30)
@@ -85,6 +89,10 @@ class FinanceController extends Controller
             ->select('registration.*', 'student.name', 'student.address')
             ->Where('status_payment', '7')
             ->Where('source_events', $id_events)
+            ->Where(function ($query) {
+                $query->orwhere('type_invoice', 1);
+                $query->orwhere('type_invoice', 2);
+            })
             ->orderby('registration.created_at', 'desc')
             ->get();
 

@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\Backup::class,
         \App\Console\Commands\SendEmail::class,
-        \App\Console\Commands\AutoMsg::class,
+        // \App\Console\Commands\AutoMsg::class,
     ];
 
     /**
