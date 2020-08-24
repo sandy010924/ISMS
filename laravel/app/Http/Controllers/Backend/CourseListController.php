@@ -1236,7 +1236,7 @@ class CourseListController extends Controller
                                 $events_course->course_start_at  = $date;          // 課程開始時間
                                 $events_course->course_end_at    = $date;            // 課程結束時間
                                 $events_course->memo             = '';                   // 課程備註
-                                $events_course->id_group         = strtotime($date) . $excel_data[$key] . $id_course;     // 群組ID
+                                $events_course->id_group         = strtotime($date) . $id_course . $id_course;     // 群組ID
                                 $events_course->unpublish        = 0;                    // 不公開
                                 $events_course->save();
                                 $id_events = $events_course->id;
