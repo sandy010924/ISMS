@@ -61,7 +61,7 @@
         </td>
         <td>
           <div class="col-sm-8">
-            <span>{{ $event['cost_message'] }}</span>
+            <input type="number" class="form-control form-control-sm auth_readonly" name="msg_costs" onblur="auto_update_data($(this), {{ $event['id_group'] }},{{ $event['id_course'] }} ,1);" value="{{ $event['cost_message'] }}" />
           </div>
         </td>
         <td>
