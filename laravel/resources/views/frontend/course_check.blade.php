@@ -231,6 +231,8 @@
       @if( $course->type == 1 )
       <th class="colExcel">付費備註</th>
       <th></th>
+      @elseif( $course->type == 4 )
+      <th></th>
       @endif
     </tr>
     @endslot
@@ -268,6 +270,13 @@
         <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete({{ $coursecheck['check_id'] }});">刪除</a>
         @endif
       </td>
+      @elseif( $course->type == 4 )
+      <td class="align-middle">
+        <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $coursecheck['check_id'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
+        @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'msaleser' || Auth::user()->role == 'teacher'))
+        <a role="button" class="btn btn-danger btn-sm text-white" onclick="btn_delete({{ $coursecheck['check_id'] }});">刪除</a>
+        @endif
+      </td>
       @endif
     </tr>
     @endforeach
@@ -295,7 +304,7 @@
           <input type="hidden" name="edit_id" id="edit_id" value="">
           <div class="form-group required">
             <label for="edit_name" class="col-form-label">姓名</label>
-            <input type="text" class="form-control" name="edit_name" id="edit_name" required>
+            <input type="text" class="form-control" name="edit_name" id="edit_name" readonly>
           </div>
           <div class="form-group required">
             <label for="edit_phone" class="col-form-label">聯絡電話</label>
@@ -304,12 +313,12 @@
           </div>
           <div class="form-group">
             <label for="edit_email">電子郵件</label>
-            <input type="text" class="form-control" name="edit_email" id="edit_email">
+            <input type="text" class="form-control" name="edit_email" id="edit_email" readonly>
             <label class="text-secondary"><small>example@example.com</small></label>
           </div>
           <div class="form-group">
             <label for="edit_address" class="col-form-label">居住區域</label>
-            <select class="custom-select form-control" name="edit_address" id="edit_address" readonly>
+            <select class="custom-select form-control" name="edit_address" id="edit_address">
               <option selected disabled>請選擇居住區域</option>
               <option>宜蘭</option>
               <option>基隆</option>
