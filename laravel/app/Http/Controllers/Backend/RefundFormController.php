@@ -28,7 +28,10 @@ class RefundFormController extends Controller
                 $reason = $reason_other;
             }
             
-            $student = Student::where('phone', $phone)->first();
+            $student = Student::where('name', $name)
+                                ->where('phone', $phone)
+                                ->where('email', $email)
+                                ->first();
 
             if( empty($student) ){
                 return 'nostudent';

@@ -30,9 +30,6 @@ class CourseCheckController extends Controller
             $new_pay = $request->get('new_paymodel');
             $new_account = $request->get('new_account');
 
-            // $course = new Course;
-            $student = new Student;
-            $SalesRegistration = new SalesRegistration;
 
             //取得課程資訊
             $item_event = EventsCourse::select('id_course')
@@ -40,7 +37,10 @@ class CourseCheckController extends Controller
             $id_course = $item_event[0]['id_course'];
 
             //判斷系統是否已有該學員資料
-            $check_student = $student::where('phone', $new_phone)->get();
+            $check_student = Student::where('name', $new_name)
+                                     ->where('phone', $new_phone)
+                                     ->where('email', $new_email)
+                                     ->get();
 
 
             /*學員報名資料 - S*/
@@ -48,16 +48,15 @@ class CourseCheckController extends Controller
             // 檢查學生資料
             if (count($check_student) != 0) {
                 foreach ($check_student as $data_student) {
-                    $id_student = $data_student ->id;
+                    $id_student = $data_student->id;
                 }
 
                 //更新學員資料
-                Student::where('phone', $new_phone)
-                        ->update(['name' => $new_name,
-                                  'email' => $new_email,
-                                //   'address' => $address,
-                                  'profession' => $new_profession]);
+                Student::where('id', $id_student)
+                        ->update(['profession' => $new_profession]);
             } else{
+                $student = new Student;
+
                 // 新增學員資料
                 $student->name          = $new_name;         // 學員姓名
                 $student->sex           = '';                // 性別
@@ -79,14 +78,16 @@ class CourseCheckController extends Controller
 
             /*銷售講座報名資料 - S*/
 
-            $check_SalesRegistration = $SalesRegistration::where('id_student', $id_student)
+            $check_SalesRegistration = SalesRegistration::where('id_student', $id_student)
                                                             ->where('id_events', $id_events)
                                                             ->get();
         
             // 檢查是否報名過
             if (count($check_SalesRegistration) == 0 && $id_student != "") {
                 // 新增銷售講座報名資料
-                if ($id_events != "" && $id_student != "") {                           
+                if ($id_events != "" && $id_student != "") {   
+                    $SalesRegistration = new SalesRegistration;
+
                     // Submission Date
                     $date = date('Y-m-d H:i:s');
                     $SalesRegistration->submissiondate   = $date;                         
@@ -476,33 +477,38 @@ class CourseCheckController extends Controller
             /*學員報名資料 - S*/
 
             //判斷系統是否已有該學員資料
-            $check_student = Student::where('phone', $phone)->get();
+            $check_student = Student::where('name', $name)
+                                    ->where('phone', $phone)
+                                    ->where('email', $email)
+                                    ->get();
 
             // 檢查學員資料
             if (count($check_student) != 0) {
 
+                foreach ($check_student as $data_student) {
+                    $id_student = $data_student->id;
+                }
+
                 if($name == ""){
-                    $name = Student::where('phone', $phone)->first()->name;
+                    $name = Student::where('id', $id_student)->first()->name;
                 }
                 if($email == ""){
-                    $email = Student::where('phone', $phone)->first()->email;
+                    $email = Student::where('id', $id_student)->first()->email;
                 }
                 
                 //如果原本有地址就不更新地址
-                $old_address = Student::where('phone', $phone)->first()->address;
+                $old_address = Student::where('id', $id_student)->first()->address;
                 if($old_address != ""){
                     $address = $old_address;
                 }
                     
                 if($profession == ""){
-                    $profession = Student::where('phone', $phone)->first()->profession;
+                    $profession = Student::where('id', $id_student)->first()->profession;
                 }
 
                 //更新學員資料
-                Student::where('phone', $phone)
+                Student::where('id', $id_student)
                     ->update([
-                        'name' => $name,
-                        'email' => $email,
                         'address' => $address,
                         'profession' => $profession,
                     ]);

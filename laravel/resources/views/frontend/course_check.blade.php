@@ -129,8 +129,8 @@
                     <label class="text-secondary"><small>聯繫方式</small></label>
                   </div>
                   <div class="form-group required">
-                    <label for="new_email">電子郵件</label>
-                    <input type="text" class="form-control" name="new_email" id="new_email">
+                    <label for="new_email" class="col-form-label">電子郵件</label>
+                    <input type="text" class="form-control" name="new_email" id="new_email" required>
                     <label class="text-secondary"><small>example@example.com</small></label>
                   </div>
                   <div class="form-group">
@@ -156,7 +156,7 @@
                       <option>花蓮</option>
                     </select>
                   </div>
-                  <div class="form-group required">
+                  <div class="form-group">
                     <label for="new_profession">目前職業</label>
                     <input type="text" class="form-control" name="new_profession" id="new_profession">
                     <label class="text-secondary"><small>目前的工作職稱</small></label>
