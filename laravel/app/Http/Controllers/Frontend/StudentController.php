@@ -421,9 +421,15 @@ class StudentController extends Controller
             ->leftjoin('isms_status', 'isms_status.id', '=', 'registration.status_payment')
             ->leftjoin('course', 'course.id', '=', 'registration.id_course')
             ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
+            ->leftjoin(
+                DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as e"),
+                function ($join) {
+                    $join->on("e.id", "=", "Registration.source_events");
+                }
+            )
             ->select('registration.*', 'register.id_status', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events', 'events_course.course_start_at as registration_course_start_at')
             ->where('registration.id_student', $id_student)
-            ->orderBy('registration.created_at', 'desc')
+            ->orderBy('e.submissiondate', 'desc')
             ->first();
 
         // 退費
