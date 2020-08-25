@@ -19,7 +19,7 @@ class CourseCheckController extends Controller
     //現場報名(只限銷講、活動)
     public function insert(Request $request)
     {
-        try{
+        try {
             //讀取data
             $id_events = $request->get('form_event_id');
             $type = $request->get('form_event_type');
@@ -31,7 +31,7 @@ class CourseCheckController extends Controller
             $new_profession = $request->get('new_profession');
 
             //如果是銷講則加上付款方式、卡號後五碼
-            if( $type == 1 ){
+            if ($type == 1) {
                 $new_pay = $request->get('new_paymodel');
                 $new_account = $request->get('new_account');
             }
@@ -56,10 +56,19 @@ class CourseCheckController extends Controller
                     $id_student = $data_student->id;
                 }
 
+                //判斷地址是否為空值，否 則不更新
+                $address = Student::where('id', $id_student)->first()->address;
+                if ($address == '' || $address == null || $address == 'Excel無資料') {
+                    $address = $new_address;
+                }
+
                 //更新學員資料
                 Student::where('id', $id_student)
-                        ->update(['profession' => $new_profession]);
-            } else{
+                        ->update([
+                            'address' => $address,
+                            'profession' => $new_profession
+                            ]);
+            } else {
                 $student = new Student;
 
                 // 新增學員資料
@@ -82,7 +91,7 @@ class CourseCheckController extends Controller
 
 
             /* 報名資料 - S*/
-            if( $type == 1 ){
+            if ($type == 1) {
                 //銷講
 
                 $check_SalesRegistration = SalesRegistration::where('id_student', $id_student)
@@ -92,22 +101,22 @@ class CourseCheckController extends Controller
                 // 檢查是否報名過
                 if (count($check_SalesRegistration) == 0 && $id_student != "") {
                     // 新增銷售講座報名資料
-                    if ($id_events != "" && $id_student != "") {   
+                    if ($id_events != "" && $id_student != "") {
                         $SalesRegistration = new SalesRegistration;
 
                         // Submission Date
                         $date = date('Y-m-d H:i:s');
-                        $SalesRegistration->submissiondate   = $date;                         
+                        $SalesRegistration->submissiondate   = $date;
                         // 表單來源
-                        $SalesRegistration->datasource       = '現場';                   
+                        $SalesRegistration->datasource       = '現場';
                         // 學員ID
-                        $SalesRegistration->id_student      = $id_student;                      
-                        // 課程ID 
-                        $SalesRegistration->id_course       = $id_course;  
-                        // 場次ID 
-                        $SalesRegistration->id_events       = $id_events;   
+                        $SalesRegistration->id_student      = $id_student;
+                        // 課程ID
+                        $SalesRegistration->id_course       = $id_course;
+                        // 場次ID
+                        $SalesRegistration->id_events       = $id_events;
                         // 報名狀態ID
-                        $SalesRegistration->id_status       = 4;                                
+                        $SalesRegistration->id_status       = 4;
                         
                         if ($new_pay != '') {
                             $SalesRegistration->pay_model       = $new_pay;              // 付款方式
@@ -126,7 +135,13 @@ class CourseCheckController extends Controller
                         $id_SalesRegistration = $data_SalesRegistration ->id;
                     }
                 }
-            }else if( $type == 4 ){
+
+                if ($id_student != "" && $id_events != "" && $id_SalesRegistration != "") {
+                    return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名成功');
+                } else {
+                    return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名失敗');
+                }
+            } elseif ($type == 4) {
                 //活動
 
                 $check_activity = Activity::where('id_student', $id_student)
@@ -136,22 +151,20 @@ class CourseCheckController extends Controller
                 // 檢查是否報名過
                 if (count($check_activity) == 0 && $id_student != "") {
                     // 新增銷售講座報名資料
-                    if ($id_events != "" && $id_student != "") {   
+                    if ($id_events != "" && $id_student != "") {
                         $activity = new Activity;
 
                         // Submission Date
                         $date = date('Y-m-d H:i:s');
-                        $activity->submissiondate   = $date;                         
-                        // 表單來源
-                        $activity->datasource       = '現場';                   
+                        $activity->submissiondate   = $date;
                         // 學員ID
-                        $activity->id_student      = $id_student;                      
-                        // 課程ID 
-                        $activity->id_course       = $id_course;  
-                        // 場次ID 
-                        $activity->id_events       = $id_events;   
+                        $activity->id_student      = $id_student;
+                        // 課程ID
+                        $activity->id_course       = $id_course;
+                        // 場次ID
+                        $activity->id_events       = $id_events;
                         // 報名狀態ID
-                        $activity->id_status       = 4;                                
+                        $activity->id_status       = 4;
                         
                         $activity->course_content  = '';                 // 想聽到的課程有哪些
                         $activity->memo  = '現場報名';                 // 報名備註
@@ -164,21 +177,21 @@ class CourseCheckController extends Controller
                         $id_activity = $data_activity ->id;
                     }
                 }
+
+                if ($id_student != "" && $id_events != "" && $id_activity != "") {
+                    return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名成功');
+                } else {
+                    return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名失敗');
+                }
             }
             
-            /*銷售講座報名資料 - E*/
-            if ($id_student != "" && $id_events != "" && $id_SalesRegistration != "" || $id_activity != "") {
-                return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名成功');
-            } else {
-                return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名失敗');
-            }
+            /* 報名資料 - E*/
         } catch (\Exception $e) {
             return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名失敗');
             // return json_encode(array(
             //     'errorMsg' => '儲存失敗'
             // ));
         }
-
     }
 
     /*** 報到狀態改寫 ***/
@@ -190,26 +203,25 @@ class CourseCheckController extends Controller
         $check_value = $request->input('check_value');
         $update_status = $request->input('update_status');
 
-        try{
+        try {
             //判斷是銷講or正課
-            if($course_type == 1){
+            if ($course_type == 1) {
                 //銷講
                 $db_check = SalesRegistration::where('id', $check_id);
-            }else if($course_type == 2 || $course_type == 3){
+            } elseif ($course_type == 2 || $course_type == 3) {
                 //正課
-                $db_check = Register::where('id', $check_id);                  
-            }else if($course_type == 4){
+                $db_check = Register::where('id', $check_id);
+            } elseif ($course_type == 4) {
                 //活動
                 $db_check = Activity::where('id', $check_id);
             }
 
-            switch($update_status){
+            switch ($update_status) {
                 case 'check_btn':
                     //報到/未到
-                    if( $check_value == 4){
+                    if ($check_value == 4) {
                         $db_check->update(['id_status' => 3]);
-                    }
-                    else{
+                    } else {
                         $db_check->update(['id_status' => 4]);
                     }
                     break;
@@ -234,47 +246,49 @@ class CourseCheckController extends Controller
             
             
             //判斷是銷講or正課
-            if($course_type == 1){
+            if ($course_type == 1) {
                 //銷講
                 $list = SalesRegistration::join('isms_status', 'isms_status.id', '=', 'sales_registration.id_status')
                                             ->join('student', 'student.id', '=', 'sales_registration.id_student')
                                             ->select('sales_registration.id as check_id', 'student.name as check_name', 'sales_registration.id_events as id_events', 'sales_registration.id_status as check_status_val', 'isms_status.name as check_status_name')
-                                            ->Where('sales_registration.id','=', $check_id)
+                                            ->Where('sales_registration.id', '=', $check_id)
                                             ->first();
 
                 
                 //報到筆數
                 $count_check = count(SalesRegistration::Where('id_events', $list->id_events)
-                    ->Where('id_status','=', 4)
+                    ->Where('id_status', '=', 4)
                     ->get());
                 //取消筆數
                 $count_cancel = count(SalesRegistration::Where('id_events', $list->id_events)
-                    ->Where('id_status','=', 5)
+                    ->Where('id_status', '=', 5)
                     ->get());
-            }else if($course_type == 2 || $course_type == 3){
+            } elseif ($course_type == 2 || $course_type == 3) {
                 //正課
                 $list = Register::join('isms_status', 'isms_status.id', '=', 'register.id_status')
                                 ->join('student', 'student.id', '=', 'register.id_student')
                                 ->join('registration', 'registration.id', '=', 'register.id_registration')
-                                ->select('register.id as check_id', 
-                                        'register.id_events as id_events', 
-                                        'register.id_status as check_status_val', 
-                                        'register.id_registration as id_registration', 
-                                        'registration.id_course as id_course', 
-                                        'student.id as id_student', 
-                                        'student.name as check_name', 
-                                        'isms_status.name as check_status_name')
-                                ->Where('register.id','=', $check_id)
+                                ->select(
+                                    'register.id as check_id',
+                                    'register.id_events as id_events',
+                                    'register.id_status as check_status_val',
+                                    'register.id_registration as id_registration',
+                                    'registration.id_course as id_course',
+                                    'student.id as id_student',
+                                    'student.name as check_name',
+                                    'isms_status.name as check_status_name'
+                                )
+                                ->Where('register.id', '=', $check_id)
                                 ->first();
 
                 
                 //報到筆數
                 $count_check = count(Register::Where('id_events', $list->id_events)
-                    ->Where('id_status','=', 4)
+                    ->Where('id_status', '=', 4)
                     ->get());
                 //取消筆數
                 $count_cancel = count(Register::Where('id_events', $list->id_events)
-                    ->Where('id_status','=', 5)
+                    ->Where('id_status', '=', 5)
                     ->get());
                 
                 
@@ -290,7 +304,7 @@ class CourseCheckController extends Controller
                                     ->first();
                                     
                 // if($update_status=='dropdown_check' || ($update_status=='check_btn' && $check_value != 4)){
-                if( !empty($register) ){
+                if (!empty($register)) {
                     //至少一天報到
 
                     // 檢查是否標記過
@@ -300,7 +314,7 @@ class CourseCheckController extends Controller
 
                     $course = Course::select('id', 'name')->where('id', $register->id_course)->first();
 
-                    if ( count($check_mark) == 0 ) {
+                    if (count($check_mark) == 0) {
                         //沒有標記過
 
                         // 新增標記資料
@@ -314,8 +328,8 @@ class CourseCheckController extends Controller
                         
                         $mark->save();
                         $id_mark = $mark->id;
-                    }else{
-                        //有標記過 
+                    } else {
+                        //有標記過
                         
                         //更新付款資料
                         Mark::where('id_course', $course->id)
@@ -330,7 +344,7 @@ class CourseCheckController extends Controller
 
                     // $registration = Registration::where('id' ,$register->id_registration)
                     //                 ->first();
-                }else{
+                } else {
                     //皆無報到
 
                     /* 刪除標記 */
@@ -338,30 +352,30 @@ class CourseCheckController extends Controller
                         ->where('id_student', $list->id_student)
                         ->delete();
                 }
-            
-
-            }else if($course_type == 4){
+            } elseif ($course_type == 4) {
                 //活動
                 $list = Activity::join('isms_status', 'isms_status.id', '=', 'activity.id_status')
                                 ->join('student', 'student.id', '=', 'activity.id_student')
-                                ->select('activity.id as check_id', 
-                                        'activity.id_events as id_events', 
-                                        'activity.id_status as check_status_val',
-                                        'activity.id_course as id_course',  
-                                        'student.id as id_student',
-                                        'student.name as check_name', 
-                                        'isms_status.name as check_status_name')
-                                ->Where('activity.id','=', $check_id)
+                                ->select(
+                                    'activity.id as check_id',
+                                    'activity.id_events as id_events',
+                                    'activity.id_status as check_status_val',
+                                    'activity.id_course as id_course',
+                                    'student.id as id_student',
+                                    'student.name as check_name',
+                                    'isms_status.name as check_status_name'
+                                )
+                                ->Where('activity.id', '=', $check_id)
                                 ->first();
 
                 
                 //報到筆數
                 $count_check = count(Activity::Where('id_events', $list->id_events)
-                    ->Where('id_status','=', 4)
+                    ->Where('id_status', '=', 4)
                     ->get());
                 //取消筆數
                 $count_cancel = count(Activity::Where('id_events', $list->id_events)
-                    ->Where('id_status','=', 5)
+                    ->Where('id_status', '=', 5)
                     ->get());
 
                 
@@ -374,7 +388,7 @@ class CourseCheckController extends Controller
                                     ->first();
                                     
                 // if($update_status=='dropdown_check' || ($update_status=='check_btn' && $check_value != 4)){
-                if( !empty($register) ){
+                if (!empty($register)) {
                     //至少一天報到
 
                     // 檢查是否標記過
@@ -384,7 +398,7 @@ class CourseCheckController extends Controller
 
                     $course = Course::select('id', 'name')->where('id', $register->id_course)->first();
 
-                    if ( count($check_mark) == 0 ) {
+                    if (count($check_mark) == 0) {
                         //沒有標記過
 
                         // 新增標記資料
@@ -398,8 +412,8 @@ class CourseCheckController extends Controller
                         
                         $mark->save();
                         $id_mark = $mark->id;
-                    }else{
-                        //有標記過 
+                    } else {
+                        //有標記過
                         
                         //更新付款資料
                         Mark::where('id_course', $course->id)
@@ -414,10 +428,7 @@ class CourseCheckController extends Controller
 
                     // $registration = Registration::where('id' ,$register->id_registration)
                     //                 ->first();
-
-                    
-
-                }else{
+                } else {
                     //皆無報到
 
                     /* 刪除標記 */
@@ -428,13 +439,11 @@ class CourseCheckController extends Controller
             }
                 
             return Response(array('list'=>$list, 'count_check'=>$count_check, 'count_cancel'=>$count_cancel));
-
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return json_encode(array(
                 'errorMsg' => '報到狀態修改失敗'
             ));
         }
-
     }
 
     /*** 課程資料儲存 ***/
@@ -446,8 +455,8 @@ class CourseCheckController extends Controller
         $data_type = $request->input('data_type');
         $data_val = $request->input('data_val');
 
-        try{
-            switch($data_type){
+        try {
+            switch ($data_type) {
                 case 'host':
                     //主持開場
                     EventsCourse::where('id', $event_id)
@@ -473,15 +482,15 @@ class CourseCheckController extends Controller
                     $data_id = $request->input('data_id');
 
                     //判斷是銷講or正課
-                    if( $course_type == 1 ){
+                    if ($course_type == 1) {
                         //銷講
                         SalesRegistration::where('id', $data_id)
                                          ->update(['memo' => $data_val]);
-                    }else if($course_type == 2 || $course_type == 3){
+                    } elseif ($course_type == 2 || $course_type == 3) {
                         //正課
                         Register::where('id', $data_id)
                                     ->update(['memo' => $data_val]);
-                    }else if( $course_type == 4 ){
+                    } elseif ($course_type == 4) {
                         //活動
                         Activity::where('id', $data_id)
                                 ->update(['memo' => $data_val]);
@@ -494,8 +503,7 @@ class CourseCheckController extends Controller
             }
         
             return 'success';
-
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return 'error';
             // return json_encode(array(
             //     'errorMsg' => '儲存失敗'
@@ -518,12 +526,12 @@ class CourseCheckController extends Controller
         $profession = $request->get('edit_profession');
 
         //如果是銷講則加上付款方式、卡號後五碼
-        if( $type == 1 ){
+        if ($type == 1) {
             $pay_model = $request->get('edit_paymodel');
             $account = $request->get('edit_account');
         }
         
-        try{
+        try {
 
             /*學員報名資料 - S*/
 
@@ -535,25 +543,28 @@ class CourseCheckController extends Controller
 
             // 檢查學員資料
             if (count($check_student) != 0) {
-
                 foreach ($check_student as $data_student) {
                     $id_student = $data_student->id;
                 }
 
-                if($name == ""){
+                if ($name == "") {
                     $name = Student::where('id', $id_student)->first()->name;
                 }
-                if($email == ""){
+                if ($email == "") {
                     $email = Student::where('id', $id_student)->first()->email;
                 }
                 
-                //如果原本有地址就不更新地址
-                $old_address = Student::where('id', $id_student)->first()->address;
-                if($old_address != ""){
-                    $address = $old_address;
+                ////如果原本有地址就不更新地址
+                // $old_address = Student::where('id', $id_student)->first()->address;
+                // if ($old_address != "") {
+                //     $address = $old_address;
+                // }
+                if ($address == "") {
+                    $address = Student::where('id', $id_student)->first()->address;
                 }
+
                     
-                if($profession == ""){
+                if ($profession == "") {
                     $profession = Student::where('id', $id_student)->first()->profession;
                 }
 
@@ -569,7 +580,7 @@ class CourseCheckController extends Controller
 
             /*報名資料 - S*/
 
-            if( $type == 1 ){
+            if ($type == 1) {
                 //銷講
 
                 //判斷系統是否已有該報名資料
@@ -588,7 +599,7 @@ class CourseCheckController extends Controller
                     SalesRegistration::where('id', $id)->update([
                         'pay_model' => $pay_model,
                         'account' => $account,
-                    ]);                     
+                    ]);
                 }
             }
             // else if( $type == 4 ){
@@ -602,7 +613,7 @@ class CourseCheckController extends Controller
             //         Activity::where('id', $id)->update([
             //             'pay_model' => $pay_model,
             //             'account' => $account,
-            //         ]);                     
+            //         ]);
             //     }
             // }
             
@@ -610,8 +621,7 @@ class CourseCheckController extends Controller
             /*報名資料 - E*/
             
             return redirect()->route('course_check', ['id' => $id_events])->with('status', '修改成功');
-        
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return redirect()->route('course_check', ['id' => $id_events])->with('status', '修改失敗');
         }
     }
@@ -623,55 +633,51 @@ class CourseCheckController extends Controller
         $type = $request->get('type');
         $id_apply = $request->get('id_apply');
             
-        if($type == 1){
+        if ($type == 1) {
             //銷講
             $sale = SalesRegistration::where('id', $id_apply)
                                       ->get();
 
-            if( count($sale) != 0 ){
+            if (count($sale) != 0) {
                 //刪除報名表
                 SalesRegistration::where('id', $id_apply)->delete();
             }
 
             $status = "ok";
-            
-        }elseif( $type == 2 || $type == 3) {
+        } elseif ($type == 2 || $type == 3) {
             //正課
             $formal = Registration::where('id', $id_apply)
                                   ->get();
 
-            if( count($formal) != 0 ){
+            if (count($formal) != 0) {
                 //刪除報到表
                 Register::where('id_registration', $id_apply)->delete();
                 //刪除付款表
-                Debt::where('id_registration', $id_apply)->delete();   
+                Debt::where('id_registration', $id_apply)->delete();
                 //刪除追單表
                 Payment::where('id_registration', $id_apply)->delete();
                 //刪除退費
-                Refund::where('id_registration', $id_apply)->delete();   
+                Refund::where('id_registration', $id_apply)->delete();
                 //刪除報名表
                 Registration::where('id', $id_apply)->delete();
             }
 
             $status = "ok";
-
-        }else if($type == 4){
+        } elseif ($type == 4) {
             //活動
             $activity = Activity::where('id', $id_apply)
                                       ->get();
 
-            if( count($activity) != 0 ){
+            if (count($activity) != 0) {
                 //刪除報名表
                 Activity::where('id', $id_apply)->delete();
             }
 
             $status = "ok";
-            
-        }else {
+        } else {
             $status = "error";
         }
         
-         return json_encode($status);
+        return json_encode($status);
     }
-
 }

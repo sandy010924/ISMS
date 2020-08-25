@@ -318,6 +318,10 @@
           </div>
           <div class="form-group">
             <label for="edit_address" class="col-form-label">居住區域</label>
+            <input type="text" class="form-control" name="edit_address" id="edit_address">
+          </div>
+          <!-- <div class="form-group">
+            <label for="edit_address" class="col-form-label">居住區域</label>
             <select class="custom-select form-control" name="edit_address" id="edit_address">
               <option selected disabled>請選擇居住區域</option>
               <option>宜蘭</option>
@@ -338,7 +342,7 @@
               <option>台東</option>
               <option>花蓮</option>
             </select>
-          </div>
+          </div> -->
           <div class="form-group">
             <label for="edit_profession">目前職業</label>
             <input type="text" class="form-control" name="edit_profession" id="edit_profession">
