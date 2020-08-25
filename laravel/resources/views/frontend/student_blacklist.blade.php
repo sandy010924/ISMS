@@ -344,6 +344,9 @@
   var elt = $('#isms_tags');
   var table, table2;
 
+  var today = moment(new Date()).format("YYYYMMDD");
+  var title = today + '_黑名單';
+
 
   $("document").ready(function() {
     btn_blackadd();
@@ -368,7 +371,8 @@
         messageTop: '黑名單',
         exportOptions: {
           columns: [0, 1, 2, 3]
-        }
+        },
+        title: title
       }],
       // "ordering": false,
     });
