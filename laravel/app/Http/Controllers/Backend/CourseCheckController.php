@@ -16,20 +16,25 @@ use App\Model\Activity;
 
 class CourseCheckController extends Controller
 {
-    //現場報名(只限銷講)
+    //現場報名(只限銷講、活動)
     public function insert(Request $request)
     {
         try{
             //讀取data
             $id_events = $request->get('form_event_id');
+            $type = $request->get('form_event_type');
+
             $new_name = $request->get('new_name');
             $new_phone = $request->get('new_phone');
             $new_email = $request->get('new_email');
             $new_address = $request->get('new_address');
             $new_profession = $request->get('new_profession');
-            $new_pay = $request->get('new_paymodel');
-            $new_account = $request->get('new_account');
 
+            //如果是銷講則加上付款方式、卡號後五碼
+            if( $type == 1 ){
+                $new_pay = $request->get('new_paymodel');
+                $new_account = $request->get('new_account');
+            }
 
             //取得課程資訊
             $item_event = EventsCourse::select('id_course')
@@ -76,52 +81,93 @@ class CourseCheckController extends Controller
             /*學員報名資料 - E*/
 
 
-            /*銷售講座報名資料 - S*/
+            /* 報名資料 - S*/
+            if( $type == 1 ){
+                //銷講
 
-            $check_SalesRegistration = SalesRegistration::where('id_student', $id_student)
-                                                            ->where('id_events', $id_events)
-                                                            ->get();
-        
-            // 檢查是否報名過
-            if (count($check_SalesRegistration) == 0 && $id_student != "") {
-                // 新增銷售講座報名資料
-                if ($id_events != "" && $id_student != "") {   
-                    $SalesRegistration = new SalesRegistration;
+                $check_SalesRegistration = SalesRegistration::where('id_student', $id_student)
+                                                                ->where('id_events', $id_events)
+                                                                ->get();
+            
+                // 檢查是否報名過
+                if (count($check_SalesRegistration) == 0 && $id_student != "") {
+                    // 新增銷售講座報名資料
+                    if ($id_events != "" && $id_student != "") {   
+                        $SalesRegistration = new SalesRegistration;
 
-                    // Submission Date
-                    $date = date('Y-m-d H:i:s');
-                    $SalesRegistration->submissiondate   = $date;                         
-                    // 表單來源
-                    $SalesRegistration->datasource       = '現場';                   
-                    // 學員ID
-                    $SalesRegistration->id_student      = $id_student;                      
-                    // 課程ID 
-                    $SalesRegistration->id_course       = $id_course;  
-                    // 場次ID 
-                    $SalesRegistration->id_events       = $id_events;   
-                    // 報名狀態ID
-                    $SalesRegistration->id_status       = 4;                                
-                    
-                    if ($new_pay != '') {
-                        $SalesRegistration->pay_model       = $new_pay;              // 付款方式
+                        // Submission Date
+                        $date = date('Y-m-d H:i:s');
+                        $SalesRegistration->submissiondate   = $date;                         
+                        // 表單來源
+                        $SalesRegistration->datasource       = '現場';                   
+                        // 學員ID
+                        $SalesRegistration->id_student      = $id_student;                      
+                        // 課程ID 
+                        $SalesRegistration->id_course       = $id_course;  
+                        // 場次ID 
+                        $SalesRegistration->id_events       = $id_events;   
+                        // 報名狀態ID
+                        $SalesRegistration->id_status       = 4;                                
+                        
+                        if ($new_pay != '') {
+                            $SalesRegistration->pay_model       = $new_pay;              // 付款方式
+                        }
+                        if ($new_account != '') {
+                            $SalesRegistration->account         = $new_account;          // 帳號/卡號後五碼
+                        }
+                        $SalesRegistration->course_content  = '';                 // 想聽到的課程有哪些
+                        $SalesRegistration->memo  = '現場報名';                 // 報名備註
+                        
+                        $SalesRegistration->save();
+                        $id_SalesRegistration = $SalesRegistration->id;
                     }
-                    if ($new_account != '') {
-                        $SalesRegistration->account         = $new_account;          // 帳號/卡號後五碼
+                } else {
+                    foreach ($check_SalesRegistration as $data_SalesRegistration) {
+                        $id_SalesRegistration = $data_SalesRegistration ->id;
                     }
-                    $SalesRegistration->course_content  = '';                 // 想聽到的課程有哪些
-                    $SalesRegistration->memo  = '現場報名';                 // 報名備註
-                    
-                    $SalesRegistration->save();
-                    $id_SalesRegistration = $SalesRegistration->id;
                 }
-            } else {
-                foreach ($check_SalesRegistration as $data_SalesRegistration) {
-                    $id_SalesRegistration = $data_SalesRegistration ->id;
+            }else if( $type == 4 ){
+                //活動
+
+                $check_activity = Activity::where('id_student', $id_student)
+                                        ->where('id_events', $id_events)
+                                        ->get();
+            
+                // 檢查是否報名過
+                if (count($check_activity) == 0 && $id_student != "") {
+                    // 新增銷售講座報名資料
+                    if ($id_events != "" && $id_student != "") {   
+                        $activity = new Activity;
+
+                        // Submission Date
+                        $date = date('Y-m-d H:i:s');
+                        $activity->submissiondate   = $date;                         
+                        // 表單來源
+                        $activity->datasource       = '現場';                   
+                        // 學員ID
+                        $activity->id_student      = $id_student;                      
+                        // 課程ID 
+                        $activity->id_course       = $id_course;  
+                        // 場次ID 
+                        $activity->id_events       = $id_events;   
+                        // 報名狀態ID
+                        $activity->id_status       = 4;                                
+                        
+                        $activity->course_content  = '';                 // 想聽到的課程有哪些
+                        $activity->memo  = '現場報名';                 // 報名備註
+                        
+                        $activity->save();
+                        $id_activity = $activity->id;
+                    }
+                } else {
+                    foreach ($check_activity as $data_activity) {
+                        $id_activity = $data_activity ->id;
+                    }
                 }
             }
             
             /*銷售講座報名資料 - E*/
-            if ($id_student != "" && $id_events != "" && $id_SalesRegistration != "") {
+            if ($id_student != "" && $id_events != "" && $id_SalesRegistration != "" || $id_activity != "") {
                 return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名成功');
             } else {
                 return redirect()->route('course_check', ['id' => $id_events])->with('status', '報名失敗');

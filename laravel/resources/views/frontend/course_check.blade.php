@@ -100,7 +100,7 @@
         </div>
       </div>
       <div class="col mb-3 text-right">
-        @if( $course->type == 1 )
+        @if( $course->type == 1 || $course->type == 4)
         @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'msaleser'|| Auth::user()->role == 'saleser' || Auth::user()->role == 'marketer' || Auth::user()->role == 'officestaff' || Auth::user()->role == 'teacher'))
         <button type="button" class="btn btn-outline-secondary mx-1" data-toggle="modal" data-target="#presentApply">現場報名</button>
         @endif
@@ -119,6 +119,7 @@
                 <form action="{{ url('course_check_insert') }}" name="insert" method="POST">
                   @csrf
                   <input type="hidden" name="form_event_id" id="form_event_id" value="{{ $course->id }}">
+                  <input type="hidden" name="form_event_type" id="form_event_type" value="{{ $course->type }}">
                   <div class="form-group required">
                     <label for="new_name" class="col-form-label">姓名</label>
                     <input type="text" class="form-control" name="new_name" id="new_name" required>
@@ -161,6 +162,7 @@
                     <input type="text" class="form-control" name="new_profession" id="new_profession">
                     <label class="text-secondary"><small>目前的工作職稱</small></label>
                   </div>
+                  @if( $course->type == 1)
                   <div class="form-group">
                     <label for="new_paymodel" class="col-form-label">付款方式</label>
                     <div class="custom-control custom-radio">
@@ -176,6 +178,7 @@
                     <label for="new_account" class="col-form-label">帳號/卡號後五碼</label>
                     <input type="text" class="form-control" name="new_account" id="new_account">
                   </div>
+                  @endif
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
