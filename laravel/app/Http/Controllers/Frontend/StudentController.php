@@ -49,7 +49,7 @@ class StudentController extends Controller
         return view('frontend.student', compact('students'));
     }
 
-    // 匯出Excel 抓全部學員 Rocky(2020/08/06) 
+    // 匯出Excel 抓全部學員 Rocky(2020/08/06)
     public function getallstudent()
     {
         // 講師ID Rocky(2020/05/11)
@@ -570,7 +570,7 @@ class StudentController extends Controller
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
             ->orderBy('registration.created_at', 'desc')
-            ->get();
+            ->distinct()->get();
 
 
         // 活動資料
