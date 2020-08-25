@@ -291,6 +291,7 @@
         <form action="{{ url('course_check_edit') }}" method="POST">
           @csrf
           <input type="hidden" name="edit_idevents" id="edit_idevents" value="">
+          <input type="hidden" name="edit_type" id="edit_type" value="">
           <input type="hidden" name="edit_id" id="edit_id" value="">
           <div class="form-group required">
             <label for="edit_name" class="col-form-label">姓名</label>
@@ -334,6 +335,7 @@
             <input type="text" class="form-control" name="edit_profession" id="edit_profession">
             <label class="text-secondary"><small>目前的工作職稱</small></label>
           </div>
+          @if( $course->type == 1 )
           <div class="form-group">
             <label for="edit_paymodel" class="col-form-label">付款方式</label>
             <div class="custom-control custom-radio">
@@ -349,6 +351,7 @@
             <label for="edit_account" class="col-form-label">帳號/卡號後五碼</label>
             <input type="text" class="form-control" name="edit_account" id="edit_account">
           </div>
+          @endif
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
@@ -657,11 +660,13 @@
   /* 編輯資料 S Sandy(2020/06/28) */
   $('.edit_data').on('click', function(e) {
     var id = $(this).data('id');
+    var type = $('#course_type').val();
     $.ajax({
       type: 'GET',
       url: 'course_check_fill',
       data: {
-        id: id
+        id: id,
+        type: type
       },
       success: function(data) {
         console.log(data);
@@ -671,6 +676,7 @@
 
         if (data != "nodata") {
           $("#edit_idevents").val($('#event_id').val()); //場次ID
+          $("#edit_type").val($('#course_type').val()); //課程類型
           $("#edit_id").val(id); //報名ID
           $("#edit_name").val(data['name']);
           $("#edit_phone").val(data['phone']); //電話

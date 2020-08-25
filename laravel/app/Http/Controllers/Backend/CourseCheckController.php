@@ -509,14 +509,19 @@ class CourseCheckController extends Controller
     {
         //讀取data
         $id_events = $request->get('edit_idevents');
+        $type = $request->get('edit_type');
         $id = $request->get('edit_id');
         $name = $request->get('edit_name');
         $phone = $request->get('edit_phone');
         $email = $request->get('edit_email');
         $address = $request->get('edit_address');
         $profession = $request->get('edit_profession');
-        $pay_model = $request->get('edit_paymodel');
-        $account = $request->get('edit_account');
+
+        //如果是銷講則加上付款方式、卡號後五碼
+        if( $type == 1 ){
+            $pay_model = $request->get('edit_paymodel');
+            $account = $request->get('edit_account');
+        }
         
         try{
 
@@ -564,24 +569,43 @@ class CourseCheckController extends Controller
 
             /*報名資料 - S*/
 
-            //判斷系統是否已有該報名資料
-            $check_salesregistration = SalesRegistration::where('id', $id)->get();
+            if( $type == 1 ){
+                //銷講
 
-            // 檢查報名資料
-            if (count($check_salesregistration) != 0) {
+                //判斷系統是否已有該報名資料
+                $check_salesregistration = SalesRegistration::where('id', $id)->get();
 
-                // if($pay_model == ""){
-                //     $pay_model = SalesRegistration::where('id', $id)->first()->pay_model;
-                // }
-                // if($account == ""){
-                //     $account = SalesRegistration::where('id', $id)->first()->account;
-                // }
+                // 檢查報名資料
+                if (count($check_salesregistration) != 0) {
 
-                SalesRegistration::where('id', $id)->update([
-                    'pay_model' => $pay_model,
-                    'account' => $account,
-                ]);                     
-           }
+                    // if($pay_model == ""){
+                    //     $pay_model = SalesRegistration::where('id', $id)->first()->pay_model;
+                    // }
+                    // if($account == ""){
+                    //     $account = SalesRegistration::where('id', $id)->first()->account;
+                    // }
+
+                    SalesRegistration::where('id', $id)->update([
+                        'pay_model' => $pay_model,
+                        'account' => $account,
+                    ]);                     
+                }
+            }
+            // else if( $type == 4 ){
+            //     //活動
+
+            //     //判斷系統是否已有該報名資料
+            //     $check_activity = Activity::where('id', $id)->get();
+
+            //     // 檢查報名資料
+            //     if (count($check_activity) != 0) {
+            //         Activity::where('id', $id)->update([
+            //             'pay_model' => $pay_model,
+            //             'account' => $account,
+            //         ]);                     
+            //     }
+            // }
+            
         
             /*報名資料 - E*/
             

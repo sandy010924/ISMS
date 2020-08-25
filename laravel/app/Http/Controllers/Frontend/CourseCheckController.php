@@ -298,11 +298,20 @@ class CourseCheckController extends Controller
     public function fill( Request $request )
     {
         $id = $request->input('id');
+        $type = $request->input('type');
 
-        $data = SalesRegistration::join('student','student.id','=','sales_registration.id_student')
-                        // ->join('payment','id_registration','=','registration.id')
-                        ->Where('sales_registration.id', $id)
-                        ->first();    
+        if( $type == 1 ){
+            //銷講
+            $data = SalesRegistration::join('student','student.id','=','sales_registration.id_student')
+                            // ->join('payment','id_registration','=','registration.id')
+                            ->Where('sales_registration.id', $id)
+                            ->first();    
+        }else if( $type == 4 ){
+            //活動
+            $data = Activity::join('student','student.id','=','activity.id_student')
+                            ->Where('activity.id', $id)
+                            ->first();  
+        }
 
         if( !empty($data) ){
             return $data;
