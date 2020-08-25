@@ -563,7 +563,25 @@ class CourseCheckController extends Controller
                         'address' => $address,
                         'profession' => $profession,
                     ]);
-            } 
+            } else{
+                $student = new Student;
+
+                // 新增學員資料
+                $student->name          = $name;         // 學員姓名
+                $student->sex           = '';                // 性別
+                $student->id_identity   = '';                // 身分證
+                $student->phone         = $phone;        // 電話
+                $student->email         = $email;        // email
+                $student->birthday      = '';                // 生日
+                $student->company       = '';                // 公司
+                $student->profession    = $profession;   // 職業
+                if ($new_address != "") {
+                    $student->address       = $address;  // 居住地
+                }
+                
+                $student->save();
+                $id_student = $student->id;
+            }
             /*學員報名資料 - E*/
 
 

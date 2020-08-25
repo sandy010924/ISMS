@@ -304,16 +304,16 @@
           <input type="hidden" name="edit_id" id="edit_id" value="">
           <div class="form-group required">
             <label for="edit_name" class="col-form-label">姓名</label>
-            <input type="text" class="form-control" name="edit_name" id="edit_name" readonly>
+            <input type="text" class="form-control" name="edit_name" id="edit_name">
           </div>
           <div class="form-group required">
             <label for="edit_phone" class="col-form-label">聯絡電話</label>
-            <input type="text" class="form-control" name="edit_phone" id="edit_phone" readonly>
+            <input type="text" class="form-control" name="edit_phone" id="edit_phone">
             <label class="text-secondary"><small>聯繫方式</small></label>
           </div>
           <div class="form-group">
             <label for="edit_email">電子郵件</label>
-            <input type="text" class="form-control" name="edit_email" id="edit_email" readonly>
+            <input type="text" class="form-control" name="edit_email" id="edit_email">
             <label class="text-secondary"><small>example@example.com</small></label>
           </div>
           <div class="form-group">
