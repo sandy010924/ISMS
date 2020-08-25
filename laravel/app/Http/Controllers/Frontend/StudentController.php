@@ -49,7 +49,7 @@ class StudentController extends Controller
         return view('frontend.student', compact('students'));
     }
 
-    // 匯出Excel 抓全部學員 Rocky(2020/08/06) 
+    // 匯出Excel 抓全部學員 Rocky(2020/08/06)
     public function getallstudent()
     {
         // 講師ID Rocky(2020/05/11)
@@ -421,9 +421,15 @@ class StudentController extends Controller
             ->leftjoin('isms_status', 'isms_status.id', '=', 'registration.status_payment')
             ->leftjoin('course', 'course.id', '=', 'registration.id_course')
             ->leftjoin('events_course', 'events_course.id', '=', 'registration.id_events')
+            ->leftjoin(
+                DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as e"),
+                function ($join) {
+                    $join->on("e.id", "=", "Registration.source_events");
+                }
+            )
             ->select('registration.*', 'register.id_status', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events', 'events_course.course_start_at as registration_course_start_at')
             ->where('registration.id_student', $id_student)
-            ->orderBy('registration.created_at', 'desc')
+            ->orderBy('e.submissiondate', 'desc')
             ->first();
 
         // 退費
@@ -553,7 +559,7 @@ class StudentController extends Controller
         $datas_register = Register::leftjoin('registration', 'register.id_registration', '=', 'registration.id')
             ->leftjoin('isms_status as a', 'a.id', '=', 'register.id_status')
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
-            ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
+            ->leftjoin('events_course as c', 'c.id_group', '=', 'registration.id_group')
             ->select('registration.id', 'registration.created_at', 'registration.id_student')
             ->selectRaw(' CASE
                                         WHEN register.id_status = 1  THEN "正課已報名"
@@ -564,7 +570,7 @@ class StudentController extends Controller
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
             ->orderBy('registration.created_at', 'desc')
-            ->get();
+            ->distinct()->get();
 
 
         // 活動資料
