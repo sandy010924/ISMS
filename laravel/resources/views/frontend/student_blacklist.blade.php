@@ -234,6 +234,7 @@
                 @slot('thead')
                 <tr>
                   <th>時間</th>
+                  <th>來源</th>
                   <th>動作</th>
                   <th>內容</th>
                 </tr>
@@ -721,7 +722,8 @@
           for (var i = 0, ien = json.length; i < ien; i++) {
 
             var status = '',
-              course_sales = '';
+              course_sales = '',
+              datasource = '';
             if (json[i]['status_sales'] == null) {
               status = '無'
             } else {
@@ -733,11 +735,17 @@
             } else {
               course_sales = json[i]['course_sales']
             }
+            if (json[i]['datasource'] == null) {
+              datasource = '無'
+            } else {
+              datasource = json[i]['datasource']
+            }
 
             // id_student = json[i]['id_student'];
             json[i][0] = json[i]['created_at'];
-            json[i][1] = status;
-            json[i][2] = course_sales;
+            json[i][1] = datasource;
+            json[i][2] = status;
+            json[i][3] = course_sales;
           }
           return json;
 

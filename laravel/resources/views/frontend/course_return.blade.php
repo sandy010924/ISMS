@@ -50,10 +50,11 @@
   }
 
   /* datatable bg color */
-  #table_list tbody tr.rowExcel:nth-child(4n+1){
+  #table_list tbody tr.rowExcel:nth-child(4n+1) {
     background-color: #f4f4f4 !important;
   }
-  #table_list tbody tr.rowExcel:nth-child(4n+3){
+
+  #table_list tbody tr.rowExcel:nth-child(4n+3) {
     background-color: #fff !important;
   }
 
@@ -61,11 +62,13 @@
   .modal:nth-of-type(even) {
     z-index: 1052 !important;
   }
+
   .modal-backdrop.show:nth-of-type(odd) {
-      z-index: 1051 !important;
+    z-index: 1051 !important;
   }
-  .modal { 
-    overflow-y: auto !important; 
+
+  .modal {
+    overflow-y: auto !important;
   }
 </style>
 
@@ -968,6 +971,7 @@
                 @slot('thead')
                 <tr>
                   <th>時間</th>
+                  <th>來源</th>
                   <th>動作</th>
                   <th>內容</th>
                 </tr>
@@ -1155,7 +1159,7 @@
         </button>
       </div>
       <div class="modal-body">
-        
+
       </div>
     </div>
   </div>
@@ -1292,8 +1296,8 @@
                 return data
               }
             } else if (column == 3) {
-                return $(data).find("option:selected").text()
-            } else if (column == 4 ) {
+              return $(data).find("option:selected").text()
+            } else if (column == 4) {
               if ($(data).is("input")) {
                 var val_input = $(data).val()
                 if (val_input == '') {
@@ -1391,7 +1395,7 @@
         // console.log(data);  
 
         if (data != "nodata") {
-          if(data.length > 1){
+          if (data.length > 1) {
             $('#student_option').modal('show');
             var option;
             option = `<table class="table table-striped table-sm text-center border rounded-lg dataTable no-footer">
@@ -1405,7 +1409,7 @@
                         </thead>
                         <tbody>
                       `;
-            for( var i = 0; i < data.length ; i++){
+            for (var i = 0; i < data.length; i++) {
               option += `<tr>
                           <td class="align-middle">${data[i].name}</td>
                           <td class="align-middle">${data[i].phone}</td>
@@ -1417,13 +1421,13 @@
             }
 
             option += `</tbody></table>`;
-            $('#student_option .modal-body').html(option).on('click','button',function(){
-                //點選按鈕填入學員資料
-                // console.log($(this).closest('tr').index());
-                option_click(data[$(this).closest('tr').index()]);
+            $('#student_option .modal-body').html(option).on('click', 'button', function() {
+              //點選按鈕填入學員資料
+              // console.log($(this).closest('tr').index());
+              option_click(data[$(this).closest('tr').index()]);
             });;
 
-          }else{
+          } else {
             //針對空格做填入 
 
             if ($("#iname").val() == "") {
@@ -1475,52 +1479,52 @@
       }
     });
   }
-  
 
-  function option_click(student){
+
+  function option_click(student) {
     // $('#option_' + student.id ).click(function() {
-      if ($("#iname").val() == "") {
-        $("#iname").val(student.name);
-      }
+    if ($("#iname").val() == "") {
+      $("#iname").val(student.name);
+    }
 
-      if (typeof($('[name="isex"]:checked').val()) == "undefined") {
-        if (student.sex == '男') {
-          $("#isex1").click();
-        }
-        if (student.sex == '女') {
-          $("#isex2").click();
-        }
+    if (typeof($('[name="isex"]:checked').val()) == "undefined") {
+      if (student.sex == '男') {
+        $("#isex1").click();
       }
-
-      if ($("#iid").val() == "") {
-        $("#iid").val(student.id_identity);
+      if (student.sex == '女') {
+        $("#isex2").click();
       }
+    }
 
-      if ($("#iphone").val() == "") {
-        $("#iphone").val(student.phone);
-      }
+    if ($("#iid").val() == "") {
+      $("#iid").val(student.id_identity);
+    }
 
-      if ($("#iemail").val() == "") {
-        $("#iemail").val(student.email);
-      }
+    if ($("#iphone").val() == "") {
+      $("#iphone").val(student.phone);
+    }
 
-      if ($("#ibirthday").val() == "") {
-        $("#ibirthday").val(student.birthday);
-      }
+    if ($("#iemail").val() == "") {
+      $("#iemail").val(student.email);
+    }
 
-      if ($("#icompany").val() == "") {
-        $("#icompany").val(student.company);
-      }
+    if ($("#ibirthday").val() == "") {
+      $("#ibirthday").val(student.birthday);
+    }
 
-      if ($("#iprofession").val() == "") {
-        $("#iprofession").val(student.profession);
-      }
+    if ($("#icompany").val() == "") {
+      $("#icompany").val(student.company);
+    }
 
-      if ($("#iaddress").val() == "") {
-        $("#iaddress").val(student.address);
-      }
+    if ($("#iprofession").val() == "") {
+      $("#iprofession").val(student.profession);
+    }
 
-      $('#student_option').modal('hide');
+    if ($("#iaddress").val() == "") {
+      $("#iaddress").val(student.address);
+    }
+
+    $('#student_option').modal('hide');
     // })
   }
   /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
@@ -2100,7 +2104,7 @@
 
       },
       error: function(jqXHR) {
-        console.log(JSON.stringify(jqXHR));  
+        console.log(JSON.stringify(jqXHR));
 
         /** alert **/
         $("#error_alert_text").html("新增付款失敗");
@@ -2545,7 +2549,8 @@
           for (var i = 0, ien = json.length; i < ien; i++) {
 
             var status = '',
-              course_sales = '';
+              course_sales = '',
+              datasource = '';
             if (json[i]['status_sales'] == null) {
               status = '無'
             } else {
@@ -2557,11 +2562,17 @@
             } else {
               course_sales = json[i]['course_sales']
             }
+            if (json[i]['datasource'] == null) {
+              datasource = '無'
+            } else {
+              datasource = json[i]['datasource']
+            }
 
             // id_student = json[i]['id_student'];
             json[i][0] = json[i]['created_at'];
-            json[i][1] = status;
-            json[i][2] = course_sales;
+            json[i][1] = datasource;
+            json[i][2] = status;
+            json[i][3] = course_sales;
           }
           return json;
 

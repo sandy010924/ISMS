@@ -424,7 +424,9 @@ class StudentController extends Controller
             ->leftjoin(
                 DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as e"),
                 function ($join) {
-                    $join->on("e.id", "=", "Registration.source_events");
+                    // $join->on("e.id", "=", "registration.source_events");
+                    $join->on("e.id_events", "=", "registration.source_events");
+                    $join->on('e.id_student', '=', 'registration.id_student');
                 }
             )
             ->select('registration.*', 'register.id_status', 'isms_status.name as status_registration', 'course.name as course_registration', 'events_course.name as course_events', 'events_course.course_start_at as registration_course_start_at')
@@ -503,7 +505,7 @@ class StudentController extends Controller
         $datas_SalesRegistration = SalesRegistration::leftjoin('isms_status as a', 'a.id', '=', 'sales_registration.id_status')
             ->leftjoin('course as b', 'b.id', '=', 'sales_registration.id_course')
             ->leftjoin('events_course as c', 'c.id', '=', 'sales_registration.id_events')
-            ->select('sales_registration.created_at', 'sales_registration.id_student')
+            ->select('sales_registration.datasource', 'sales_registration.created_at', 'sales_registration.id_student')
             ->selectRaw(' CASE
                                         WHEN sales_registration.id_status = 1 THEN "銷講已報名"
                                         WHEN sales_registration.id_status = 2 THEN "我很遺憾"
@@ -543,7 +545,14 @@ class StudentController extends Controller
         $datas_registration = Registration::leftjoin('isms_status as a', 'a.id', '=', 'registration.status_payment')
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
-            ->select('registration.created_at', 'registration.id_student')
+            ->leftjoin(
+                DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as e"),
+                function ($join) {
+                    $join->on("e.id_events", "=", "registration.source_events");
+                    $join->on('e.id_student', '=', 'registration.id_student');
+                }
+            )
+            ->select('e.datasource', 'registration.created_at', 'registration.id_student')
             ->selectRaw(' CASE
                                         WHEN registration.status_payment = 6 THEN "正課留單"
                                         WHEN registration.status_payment = 7 THEN "正課完款"
@@ -560,7 +569,14 @@ class StudentController extends Controller
             ->leftjoin('isms_status as a', 'a.id', '=', 'register.id_status')
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id_group', '=', 'registration.id_group')
-            ->select('registration.id', 'registration.created_at', 'registration.id_student')
+            ->leftjoin(
+                DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as e"),
+                function ($join) {
+                    $join->on("e.id_events", "=", "registration.source_events");
+                    $join->on('e.id_student', '=', 'registration.id_student');
+                }
+            )
+            ->select('e.datasource', 'registration.id', 'registration.created_at', 'registration.id_student')
             ->selectRaw(' CASE
                                         WHEN register.id_status = 1  THEN "正課已報名"
                                         WHEN register.id_status = 3  THEN "正課未到"

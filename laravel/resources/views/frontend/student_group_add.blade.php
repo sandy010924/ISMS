@@ -489,6 +489,7 @@
             @slot('thead')
             <tr>
               <th>時間</th>
+              <th>來源</th>
               <th>動作</th>
               <th>內容</th>
             </tr>
@@ -1470,7 +1471,8 @@
         $('#history_data_detail').html('');
         $.each(data, function(index, val) {
           var status = '',
-            course_sales = '';
+            course_sales = '',
+            datasource = '';
           if (val['status_sales'] == null) {
             status = '無'
           } else {
@@ -1483,10 +1485,17 @@
             course_sales = val['course_sales']
           }
 
+          if (val['datasource'] == null) {
+            datasource = '無'
+          } else {
+            datasource = val['datasource']
+          }
+
           id_student = val['id_student'];
           data +=
             '<tr>' +
             '<td>' + val['created_at'] + '</td>' +
+            '<td>' + datasource + '</td>' +
             '<td>' + status + '</td>' +
             '<td style="text-align:left">' + course_sales + '</td>' +
             '</tr>'
