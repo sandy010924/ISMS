@@ -101,11 +101,17 @@
               <div class="col-2">
               </div>
               <div class="col-3">
-                <div class="input-group date" data-target-input="nearest">
+                {{-- <div class="input-group date" data-target-input="nearest">
                   <input type="text" id="invoice_search_date" name="invoice_search_date" class="form-control datetimepicker-input" data-target="#invoice_search_date" placeholder="購買日期" data-toggle="datetimepicker" autocomplete="off">
                   <div class="input-group-append" data-target="#invoice_search_date" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                   </div>
+                </div> --}}
+                <div class="input-group">
+                  {{-- <div class="input-group-prepend">
+                    <span class="input-group-text">購買日期區間</span>
+                  </div> --}}
+                  <input type="search" class="form-control px-3" name="invoice_search_date" id="invoice_search_date" placeholder="購買日期區間" autocomplete="off">
                 </div>
               </div>
               <div class="col-3">
@@ -144,6 +150,7 @@
 <!-- Content End -->
 <script>
   var table, table2;
+  var start,end;
 
   $("document").ready(function() {
 
@@ -151,8 +158,28 @@
     $('#search_date').datetimepicker({
       format: 'YYYY-MM-DD'
     });
-    $('#invoice_search_date').datetimepicker({
-      format: 'YYYY-MM-DD'
+    // $('#invoice_search_date').datetimepicker({
+    //   format: 'YYYY-MM-DD'
+    // });
+
+    //有資料設定日期區間
+    $('#invoice_search_date').daterangepicker({
+      autoUpdateInput: false,
+      locale: {
+        format: 'YYYY-MM-DD',
+        separator: ' ~ ',
+        applyLabel: '搜尋',
+        cancelLabel: '取消',
+      }
+    });
+
+    /* 日期區間搜尋 */
+    $('#invoice_search_date').on('apply.daterangepicker', function(ev, picker) {
+      //輸入框key入選取的日期
+      $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
+
+        start = picker.startDate.format('YYYY-MM-DD 00:00:00');
+        end = picker.endDate.format('YYYY-MM-DD 24:00:00');
     });
 
 
@@ -484,7 +511,19 @@
   });
 
   $("#btn_search2").click(function() {
-    table2.columns(0).search($('#invoice_search_date').val()).columns(1).search($("#invoice_search_name").val()).draw();
+    // table2.columns(0).search($('#invoice_search_date').val()).columns(1).search($("#invoice_search_name").val()).draw();
+    
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+
+          var startDate = data[0];
+          if (startDate <= end && startDate >= start) {
+            return true;
+          }
+          return false;
+        });
+
+      table2.draw();
   });
   /* 搜尋 Rocky(2020/04/24) - E */
 </script>
