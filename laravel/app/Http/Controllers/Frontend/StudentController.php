@@ -559,7 +559,7 @@ class StudentController extends Controller
         $datas_register = Register::leftjoin('registration', 'register.id_registration', '=', 'registration.id')
             ->leftjoin('isms_status as a', 'a.id', '=', 'register.id_status')
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
-            ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
+            ->leftjoin('events_course as c', 'c.id_group', '=', 'registration.id_group')
             ->select('registration.id', 'registration.created_at', 'registration.id_student')
             ->selectRaw(' CASE
                                         WHEN register.id_status = 1  THEN "正課已報名"
