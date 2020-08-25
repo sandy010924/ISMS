@@ -51,9 +51,9 @@
       <div class="col-3">
         <input type="search" class="form-control" placeholder="輸入電話 / email / 姓名" aria-label="Student's Phone or Email" id="search_input">
       </div>
-      <div class="col-2">
+      <div class="col-4">
         <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
-        <button class="btn buttons-excel buttons-html5" type="button" id="btn_excel" onclick="export_excel();">匯出Excel</button>
+        <button class="btn buttons-excel buttons-html5" type="button" id="btn_excel" onclick="export_excel();">匯出學員詳細資料</button>
       </div>
     </div>
     <div class="table-responsive">
@@ -594,13 +594,16 @@
           btn_delete = ''
         role = JSON.parse($('#auth_role').val())['role']
 
+        var today = moment(new Date()).format("YYYYMMDD");
+        var title = today + '_學員管理';
 
         // 修改搜尋方式 Rocky (2020/06/11)
         table.clear().draw();
         table.destroy();
 
         table = $('#table_list').DataTable({
-          "dom": '<l<t>p>',
+          // "dom": '<l<t>p>',
+          "dom": '<Bl<td>tp>',
           "columnDefs": [{
               "targets": 'no-sort',
               "orderable": false,
@@ -615,6 +618,15 @@
           "destroy": true,
           "retrieve": true,
           "autoWidth": false,
+          buttons: [{
+            extend: 'excel',
+            text: '匯出學員基本資料',
+            // messageTop: '學員管理',
+            exportOptions: {
+              columns: [0, 1, 2]
+            },
+            title: title
+          }],
           "ajax": {
             "url": "student_search",
             "type": "POST",
@@ -663,8 +675,11 @@
         });
       });
 
-      $("document").ready(function() {
 
+
+      $("document").ready(function() {
+        var today = moment(new Date()).format("YYYYMMDD");
+        var title = today + '_學員管理';
 
         //日期選擇器
         $('#debt_date').datetimepicker({
@@ -677,7 +692,8 @@
 
         // Rocky (2020/03/27)
         table = $('#table_list').DataTable({
-          "dom": '<l<t>p>',
+          // "dom": '<l<t>p>',
+          "dom": '<Bl<td>tp>',
           "columnDefs": [{
               "targets": 'no-sort',
               "orderable": false,
@@ -689,9 +705,40 @@
           ],
           "destroy": true,
           "retrieve": true,
-          "autoWidth": false
-          // "ordering": false,
+          "autoWidth": false,
+          buttons: [{
+            extend: 'excel',
+            text: '匯出學員基本資料',
+            // messageTop: '學員管理',
+            exportOptions: {
+              columns: [0, 1, 2]
+            },
+            title: title
+          }],
         });
+
+
+
+        // // Rocky (2020/03/27)
+        //     table = $('#table_list').DataTable({
+        //       "dom": '<Bl<td>tp>',
+        //       "columnDefs": [{
+        //         "targets": 'no-sort',
+        //         "orderable": false,
+        //       }],
+
+        //       "destroy": true,
+        //       "retrieve": true,
+        //       buttons: [{
+        //         extend: 'excel',
+        //         text: '匯出Excel',
+        //         messageTop: '黑名單',
+        //         exportOptions: {
+        //           columns: [0, 1, 2, 3]
+        //         }
+        //       }],
+        //       // "ordering": false,
+        //     });
 
         // Rocky (2020/04/17)
         // table2 = $('#table_list_history').DataTable({
@@ -1399,8 +1446,8 @@
                   '課程開始時間:' + events_start + '<br>' +
                   '<div class="form-group row">' +
                   '<label class="col-sm-2" >場次: </label>' + select_events +
-                  '</div>' 
-                  // +'</div>'
+                  '</div>'
+                // +'</div>'
               } else if (type == 1) {
                 // 正課
                 course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
@@ -1408,32 +1455,32 @@
                   '<div class="form-group row">' +
                   '<label class="col-sm-2" >場次: </label>' + select_events +
                   '</div>'
-                  //  +'</div>'
+                //  +'</div>'
               } else if (type == 2) {
                 // 活動
                 course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>活動內容</b>' + '<br>' + '活動名稱:' + val['course'] + '<br>' +
                   '活動開始時間:' + events_start + '<br>' +
                   '<div class="form-group row">' +
                   '<label class="col-sm-2" >場次: </label>' + select_events +
-                  '</div>' 
-                  // +'</div>'
+                  '</div>'
+                // +'</div>'
               }
 
               id_events = val['id_events']
-              
+
               //已填表單加入該場場次報表按鈕 Sandy(2020/08/11)
               // if (source_events != '無') {
               //   detail += '<hr/><a role="button" class="btn btn-sm btn-primary float-right mt-3" href="{{ route("course_return") }}' + '?id=' + source_events + '" target="_blank">場次報表</a>'
               // }
-              if ( id_events != "" && id_events != null && id_events != 0 && id_events != -99) {
+              if (id_events != "" && id_events != null && id_events != 0 && id_events != -99) {
                 course += '<div class="form-group row"><a role="button" class="btn btn-sm btn-primary ml-auto mr-3" href="{{ route("course_return") }}' + '?id=' + id_events + '" target="_blank">場次報表</a></div></div>'
-              }else{
+              } else {
                 course += '</div>';
               }
 
 
               detail = '<div class="tab-pane fade show active" id="' + val['id'] + '" role="tabpanel" aria-labelledby="form_finished1">' + student + course + sign + payment + '</div>'
-              
+
 
             });
 
