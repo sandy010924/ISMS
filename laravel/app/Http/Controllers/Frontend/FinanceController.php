@@ -277,7 +277,9 @@ class FinanceController extends Controller
                                     }
                                 }
                             })
-                            ->groupby('b.id')
+                            // ->where('c.id_student', '13160')
+                            // ->groupby('b.id')
+                            ->groupby('c.id')
                             ->get();
 
                         $arr = array_column(
@@ -304,7 +306,7 @@ class FinanceController extends Controller
                                 ));
                             }
                         }
-
+                        // return $datas_stuent;
                         $datas = $array_student;
                 }
             }
