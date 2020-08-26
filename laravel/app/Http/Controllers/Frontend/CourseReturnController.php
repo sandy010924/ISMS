@@ -255,7 +255,7 @@ class CourseReturnController extends Controller
         $student = Student::Where('phone', $phone)
                           ->get();
 
-        if( !empty($student) ){
+        if( count($student) != 0 ){
             return Response($student);
         }else {
             return 'nodata';

@@ -1195,7 +1195,25 @@
     // $("#idate").val(output);
 
 
-    //日期&g時間選擇器 Sandy (2020/02/27)
+    table2 = $('#table_list_history').DataTable();
+
+    $(".demo2").tooltip();
+
+    //datatable onload
+    table_onload();
+
+    //日期&g時間選擇器 onload
+    dateinput_onload();
+
+    // 權限判斷 Rocky(2020/05/10)
+    check_auth();
+
+
+  });
+
+
+  /* 日期&g時間選擇器 Sandy (2020/02/27) */
+  function dateinput_onload() {
     var iconlist = {
       time: 'fas fa-clock',
       date: 'fas fa-calendar',
@@ -1209,7 +1227,6 @@
     }
 
     $('.pay_date').datetimepicker({
-      // languate: 'zh-TW',
       format: 'YYYY-MM-DD',
       icons: iconlist
     });
@@ -1265,19 +1282,8 @@
     $('#debt_remind').datetimepicker({
       format: 'YYYY-MM-DD'
     });
-
-    table2 = $('#table_list_history').DataTable();
-
-    $(".demo2").tooltip();
-
-    //datatable onload
-    table_onload();
-
-    // 權限判斷 Rocky(2020/05/10)
-    check_auth();
-
-
-  });
+  }
+  /* 日期&g時間選擇器 Sandy (2020/02/27) */
 
   //datatable onload
   function table_onload() {
@@ -1372,11 +1378,11 @@
 
   /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
   // 現場完款
-  $('#iphone').on('blur', function() {
+  $('body').on('blur', '#iphone', function() {
     var phone = $(this).val();
     fill_data(phone);
   });
-  $('#iphone').on('keyup', function(e) {
+  $('body').on('keyup', '#iphone', function(e) {
     if (e.keyCode === 13) {
       var phone = $(this).val();
       fill_data(phone);
@@ -1530,7 +1536,7 @@
   /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
 
   /* 編輯資料 S Sandy(2020/06/25) */
-  $('.edit_data').on('click', function(e) {
+  $('body').on('click', '.edit_data', function(e) {
     var id = $(this).data('id');
     var phone = $(this).data('phone');
     $.ajax({
@@ -1610,11 +1616,11 @@
   });
 
   //編輯場次開啟
-  $('#edit_collapse').on('show.bs.collapse', function() {
+  $('body').on('show.bs.collapse', '#edit_collapse', function() {
     $('#edit_collapse_val').val(1);
   })
   //編輯場次關閉
-  $('#edit_collapse').on('hidden.bs.collapse', function() {
+  $('body').on('hidden.bs.collapse', '#edit_collapse', function() {
     $('#edit_collapse_val').val(0);
   })
   /* 編輯資料 E Sandy(2020/06/25) */
@@ -1973,6 +1979,9 @@
 
           $("#datatableDiv").load(window.location.href + " #datatableDiv", function() {
             table_onload();
+
+            //日期&g時間選擇器 onload
+            dateinput_onload();
           });
 
 
