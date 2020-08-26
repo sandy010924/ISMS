@@ -59,19 +59,24 @@ class CourseApplyController extends Controller
                                                     'isms_status.name as status_name')
                                             ->Where('sales_registration.id_events', $id)
                                             ->Where('sales_registration.id_status', '<>', 2)
+                                            ->Where('student.check_blacklist', 0 ) 
                                             ->get();
                                             
             //報名筆數
             $count_apply = count($courseapplys);
 
             //報名筆數
-            $count_check = count(SalesRegistration::Where('id_events', $id)
-                                                ->Where('id_status', 4)
+            $count_check = count(SalesRegistration::join('student', 'student.id', 'sales_registration.id_student')
+                                                ->Where('sales_registration.id_events', $id)
+                                                ->Where('sales_registration.id_status', 4)
+                                                ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
             //取消筆數
-            $count_cancel = count(SalesRegistration::Where('id_events', $id)
-                                                ->Where('id_status', 5)
+            $count_cancel = count(SalesRegistration::join('student', 'student.id', 'sales_registration.id_student')
+                                                ->Where('sales_registration.id_events', $id)
+                                                ->Where('sales_registration.id_status', 5)
+                                                ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
         }else if($course->type == 2 || $course->type == 3){
@@ -112,6 +117,7 @@ class CourseApplyController extends Controller
                                 $q->orWhere('registration.status_payment', 7)
                                 ->orWhere('registration.status_payment', 9);
                             })
+                            ->Where('student.check_blacklist', 0 )
                             ->get();
                             
             $courseapplys = array();
@@ -201,20 +207,25 @@ class CourseApplyController extends Controller
                                                     'isms_status.name as status_name')
                                             ->Where('activity.id_events', $id)
                                             ->Where('activity.id_status', '<>', 2)
+                                            ->Where('student.check_blacklist', 0 )
                                             ->get();
                                             
             //報名筆數
             $count_apply = count($courseapplys);
 
             //報名筆數
-            $count_check = count(Activity::Where('id_events', $id)
-                                                ->Where('id_status', 4)
-                                                ->get());
+            $count_check = count(Activity::join('student', 'student.id', 'activity.id_student')
+                                            ->Where('activity.id_events', $id)
+                                            ->Where('activity.id_status', 4)
+                                            ->Where('student.check_blacklist', 0 )
+                                            ->get());
 
             //取消筆數
-            $count_cancel = count(Activity::Where('id_events', $id)
-                                                ->Where('id_status', 5)
-                                                ->get());
+            $count_cancel = count(Activity::join('student', 'student.id', 'activity.id_student')
+                                            ->Where('activity.id_events', $id)
+                                            ->Where('activity.id_status', 5)
+                                            ->Where('student.check_blacklist', 0 )
+                                            ->get());
 
         }
             

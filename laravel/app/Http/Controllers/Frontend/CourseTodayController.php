@@ -51,24 +51,35 @@ class CourseTodayController extends Controller
 
             //判斷是銷講or正課
             if ($data['type'] == 1) {
+                //銷講
                 $type = "sales_registration";
-            } else {
+            } else if ( $data['type'] == 2 || $data['type'] == 3 ){
+                //正課
                 $type = "register";
+            } else if ( $data['type'] == 4 ){
+                //活動
+                $type = "activity";
             }
 
             $data_apply = count(EventsCourse::join($type, $type . '.id_events', '=', 'events_course.id')
+                ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
-                ->Where('id_status', '<>', 2)
+                ->Where( $type . '.id_status', '<>', 2)
+                ->Where('student.check_blacklist', 0 )
                 ->get());
 
             $data_cancel = count(EventsCourse::join($type, $type . '.id_events', '=', 'events_course.id')
+                ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
-                ->Where('id_status', 5)
+                ->Where( $type . '.id_status', 5)
+                ->Where('student.check_blacklist', 0 )
                 ->get());
 
             $data_check = count(EventsCourse::join($type, $type . '.id_events', '=', 'events_course.id')
+                ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
-                ->Where('id_status', 4)
+                ->Where( $type . '.id_status', 4)
+                ->Where('student.check_blacklist', 0 )
                 ->get());
 
             array_push($count_apply, $data_apply);

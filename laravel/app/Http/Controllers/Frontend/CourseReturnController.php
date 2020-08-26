@@ -39,6 +39,7 @@ class CourseReturnController extends Controller
                                     'isms_status.name as status_payment_name')
                             ->Where('registration.source_events', $id )
                             // ->groupby('registration.id_student')
+                            ->Where('student.check_blacklist', 0 )
                             ->get();
 
         foreach( $fill_table as $key => $data){    
@@ -122,18 +123,24 @@ class CourseReturnController extends Controller
         $count_order = 0;
 
         //完款
-        $count_settle = count(Registration::Where('source_events', $id )
-                                          ->Where('status_payment', 7 )
+        $count_settle = count(Registration::join('student', 'student.id', '=', 'registration.id_student')
+                                          ->Where('registration.source_events', $id )
+                                          ->Where('registration.status_payment', 7 )
+                                          ->Where('student.check_blacklist', 0 )
                                           ->get());
 
         //付訂
-        $count_deposit = count(Registration::Where('source_events', $id )
-                                          ->Where('status_payment', 8 )
+        $count_deposit = count(Registration::join('student', 'student.id', '=', 'registration.id_student')
+                                          ->Where('registration.source_events', $id )
+                                          ->Where('registration.status_payment', 8 )
+                                          ->Where('student.check_blacklist', 0 )
                                           ->get());
 
         //留單
-        $count_order = count(Registration::Where('source_events', $id )
-                                          ->Where('status_payment', 6 )
+        $count_order = count(Registration::join('student', 'student.id', '=', 'registration.id_student')
+                                          ->Where('registration.source_events', $id )
+                                          ->Where('registration.status_payment', 6 )
+                                          ->Where('student.check_blacklist', 0 )
                                           ->get());
 
 
@@ -253,6 +260,7 @@ class CourseReturnController extends Controller
         $phone = $request->input('phone');
         
         $student = Student::Where('phone', $phone)
+                          ->Where('student.check_blacklist', 0 )
                           ->get();
 
         if( count($student) != 0 ){

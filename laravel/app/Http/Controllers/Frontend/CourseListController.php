@@ -77,7 +77,10 @@ class CourseListController extends Controller
                 //     ->get());
                 
                 //累計名單 
-                $count_list = count(SalesRegistration::Where('sales_registration.id_course', $data['id_course'])
+                $count_list = count(SalesRegistration::join('student', 'student.id', '=', 'sales_registration.id_student')
+                                                    ->join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
+                                                    ->Where('sales_registration.id_course', $data['id_course'])
+                                                    ->Where('student.check_blacklist', 0 )
                                                     ->get());
 
             } else if($data['type'] == 2 || $data['type'] == 3) {
@@ -90,25 +93,29 @@ class CourseListController extends Controller
                 //                                 ->get());
 
                 //累計名單     
-                $registration = Registration::Where('id_course', $data['id_course'])
+                $registration = Registration::join('student', 'student.id', '=', 'registration.id_student')
+                                            ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
+                                            ->select('registration.id as id')   
+                                            ->Where('registration.id_course', $data['id_course'])
                                             ->where(function($q) { 
-                                                $q->orWhere('status_payment', 7)
-                                                ->orWhere('status_payment', 9);
+                                                $q ->orWhere('registration.status_payment', 7)
+                                                    ->orWhere('registration.status_payment', 9);
                                             })
+                                            ->Where('student.check_blacklist', 0 )
+                                            ->distinct()
                                             ->get();
                 $count_list = 0;
                 foreach( $registration as $data_registration){
                     //檢查是否通過退費
-                    $check_refund = array();
                     $check_refund = Refund::where('id_registration', $data_registration['id'])
                                         ->where('review', 1)
-                                        ->first();
-                    if( !empty($check_refund) ){
-                        continue;
-                    }else{
+                                        ->get();
+                                        
+                    if( count($check_refund) == 0){
                         $count_list++;
                     }
                 }
+
                 // $count_list = count(Registration::Where('id_course', $data['id_course'])
                 //     // ->Where('id_status','<>', 2)
                 //     // ->groupby('id_group', 'id_student')
@@ -117,8 +124,11 @@ class CourseListController extends Controller
                 //活動
                 
                 //累計名單 
-                $count_list = count(Activity::Where('activity.id_course', $data['id_course'])
-                                                    ->get());
+                $count_list = count(Activity::join('student', 'student.id', '=', 'activity.id_student')
+                                            ->join('events_course', 'events_course.id', '=', 'activity.id_events')
+                                            ->Where('activity.id_course', $data['id_course'])
+                                            ->Where('student.check_blacklist', 0 )
+                                            ->get());
 
             } 
 

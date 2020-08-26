@@ -46,6 +46,7 @@ class CourseListApplyController extends Controller
                                                 'events_course.name as event', 
                                                 'events_course.course_start_at as course_start_at')
                                       ->Where('sales_registration.id_course', $id)
+                                      ->Where('student.check_blacklist', 0 )
                                       ->get();
                                       
             foreach( $apply_table as $key => $data ){
@@ -115,6 +116,7 @@ class CourseListApplyController extends Controller
             //                      ->Where('registration.id_course', $id)
             //                      ->get();
             $apply_table = Registration::join('student', 'student.id', '=', 'registration.id_student')
+                                        ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
                                         ->select('student.name as name','student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*')
                                         ->Where('registration.id_course', $id)
                                         // ->Where('registration.status_payment', 7)
@@ -122,6 +124,8 @@ class CourseListApplyController extends Controller
                                             $q->orWhere('registration.status_payment', 7)
                                               ->orWhere('registration.status_payment', 9);
                                         })
+                                        ->Where('student.check_blacklist', 0 )
+                                        ->distinct()
                                         ->get();
 
             $id_group='';      
@@ -220,6 +224,7 @@ class CourseListApplyController extends Controller
                                             'events_course.name as event', 
                                             'events_course.course_start_at as course_start_at')
                                     ->Where('activity.id_course', $id)
+                                    ->Where('student.check_blacklist', 0 )
                                     ->get();
                                       
             foreach( $apply_table as $key => $data ){             

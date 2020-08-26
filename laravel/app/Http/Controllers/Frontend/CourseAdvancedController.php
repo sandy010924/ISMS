@@ -54,6 +54,7 @@ class CourseAdvancedController extends Controller
                                     // 'events_course.id_group as id_group'
                                     )
                             ->Where('registration.source_events', $id )
+                            ->Where('student.check_blacklist', 0 )
                             // ->Where('registration.id_course', $next_course->id_course)
                             // ->Where('registration.created_at', 'like', '%'. date('Y-m-d', strtotime($course->course_start_at)). '%' )
                             ->get();

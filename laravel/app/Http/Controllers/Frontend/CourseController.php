@@ -66,25 +66,26 @@ class CourseController extends Controller
 
                 //報名筆數
                 $count_apply = count(EventsCourse::join('sales_registration', 'sales_registration.id_events', '=', 'events_course.id')
+                    ->join('student', 'student.id', '=', 'sales_registration.id_student')
                     ->Where('events_course.id', $data['id'])
-                    ->Where('id_status', '<>', 2)
+                    ->Where('sales_registration.id_status', '<>', 2)
+                    ->Where('student.check_blacklist', 0 ) 
                     ->get());
 
                 //取消筆數
-                $count_cancel = count(EventsCourse::join(
-                    'sales_registration',
-                    'sales_registration.id_events',
-                    '=',
-                    'events_course.id'
-                )
+                $count_cancel = count(EventsCourse::join('sales_registration', 'sales_registration.id_events', '=', 'events_course.id')
+                    ->join('student', 'student.id', '=', 'sales_registration.id_student')
                     ->Where('events_course.id', $data['id'])
-                    ->Where('id_status', 5)
+                    ->Where('sales_registration.id_status', 5)
+                    ->Where('student.check_blacklist', 0 ) 
                     ->get());
 
                 //報到筆數
                 $count_check = count(EventsCourse::join('sales_registration', 'sales_registration.id_events', '=', 'events_course.id')
+                    ->join('student', 'student.id', '=', 'sales_registration.id_student')
                     ->Where('events_course.id', $data['id'])
-                    ->Where('id_status', 4)
+                    ->Where('sales_registration.id_status', 4)
+                    ->Where('student.check_blacklist', 0 ) 
                     ->get());
 
                 $events[count($events)] = [
@@ -120,12 +121,14 @@ class CourseController extends Controller
                 //抓出場次所有報名表
                 $register = Register::leftjoin('registration', 'registration.id', '=', 'register.id_registration')
                                     ->leftjoin('events_course', 'events_course.id', '=', 'register.id_events')
+                                    ->leftjoin('student', 'student.id', '=', 'registration.id_student')
                                     ->Where('events_course.id', $data['id'])
                                     ->where(function($q) { 
                                         $q->orWhere('registration.status_payment', 7)
                                         ->orWhere('registration.status_payment', 9);
                                     })
                                     ->Where('register.id_status','<>', 2)
+                                    ->Where('student.check_blacklist', 0 ) 
                                     ->get();
 
                 //報名筆數
@@ -143,8 +146,8 @@ class CourseController extends Controller
 
                     //檢查是否通過退費
                     $check_refund = Refund::where('id_registration', $data_register['id_registration'])
-                                    ->where('review', 1)                
-                                    ->first();
+                                            ->where('review', 1)                
+                                            ->first();
                     if( !empty($check_refund) ){
                         continue;
                     }else{
@@ -168,8 +171,8 @@ class CourseController extends Controller
 
                     //檢查是否通過退費
                     $check_refund = Refund::where('id_registration', $data_register['id_registration'])
-                                    ->where('review', 1)                
-                                    ->first();
+                                            ->where('review', 1)                
+                                            ->first();
                     if( !empty($check_refund) ){
                         continue;
                     }else{
@@ -192,8 +195,8 @@ class CourseController extends Controller
 
                     //檢查是否通過退費
                     $check_refund = Refund::where('id_registration', $data_register['id_registration'])
-                                    ->where('review', 1)                
-                                    ->first();
+                                            ->where('review', 1)                
+                                            ->first();
                     if( !empty($check_refund) ){
                         continue;
                     }else{
@@ -235,26 +238,27 @@ class CourseController extends Controller
 
                 //報名筆數
                 $count_apply = count(EventsCourse::join('activity', 'activity.id_events', '=', 'events_course.id')
-                    ->Where('events_course.id', $data['id'])
-                    ->Where('id_status', '<>', 2)
-                    ->get());
+                                                ->join('student', 'student.id', '=','activity.id_student')
+                                                ->Where('events_course.id', $data['id'])
+                                                ->Where('activity.id_status', '<>', 2)
+                                                ->Where('student.check_blacklist', 0 ) 
+                                                ->get());
 
                 //取消筆數
-                $count_cancel = count(EventsCourse::join(
-                    'activity',
-                    'activity.id_events',
-                    '=',
-                    'events_course.id'
-                )
-                    ->Where('events_course.id', $data['id'])
-                    ->Where('id_status', 5)
-                    ->get());
+                $count_cancel = count(EventsCourse::join('activity', 'activity.id_events', '=', 'events_course.id')
+                                                ->join('student', 'student.id', '=','activity.id_student')
+                                                ->Where('events_course.id', $data['id'])
+                                                ->Where('activity.id_status', 5)
+                                                ->Where('student.check_blacklist', 0 ) 
+                                                ->get());
 
                 //報到筆數
                 $count_check = count(EventsCourse::join('activity', 'activity.id_events', '=', 'events_course.id')
-                    ->Where('events_course.id', $data['id'])
-                    ->Where('id_status', 4)
-                    ->get());
+                                                ->join('student', 'student.id', '=','activity.id_student')
+                                                ->Where('events_course.id', $data['id'])
+                                                ->Where('activity.id_status', 4)
+                                                ->Where('student.check_blacklist', 0 ) 
+                                                ->get());
 
                 $events[count($events)] = [
                     'date' => date('Y-m-d', strtotime($data['course_start_at'])),
