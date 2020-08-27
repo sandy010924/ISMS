@@ -44,7 +44,7 @@ class CourseCheckController extends Controller
             //判斷系統是否已有該學員資料
             $check_student = Student::where('name', $new_name)
                                      ->where('phone', $new_phone)
-                                     ->where('email', $new_email)
+                                    //  ->where('email', $new_email)
                                      ->get();
 
 
@@ -65,6 +65,7 @@ class CourseCheckController extends Controller
                 //更新學員資料
                 Student::where('id', $id_student)
                         ->update([
+                            'email' => $new_email,
                             'address' => $address,
                             'profession' => $new_profession
                             ]);
