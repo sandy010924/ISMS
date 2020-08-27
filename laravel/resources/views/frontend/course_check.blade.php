@@ -313,7 +313,7 @@
           </div>
           <div class="form-group">
             <label for="edit_email">電子郵件</label>
-            <input type="text" class="form-control" name="edit_email" id="edit_email" readonly>
+            <input type="text" class="form-control" name="edit_email" id="edit_email">
             <label class="text-secondary"><small>example@example.com</small></label>
           </div>
           <div class="form-group">
