@@ -279,6 +279,32 @@ class CourseController extends Controller
                     'type' => $data['type']
                 ];
             }
+
+
+            /* 篩選多天 Sandy(2020/08/28) S */
+            $events_multi_data = '';
+
+            $events_multi = EventsCourse::where('events_course.id_group', '=', $data['id_group'])
+                ->select('events_course.course_start_at', 'events_course.id_group')
+                ->orderBy('events_course.course_start_at', 'desc')
+                ->get();
+
+            if (count($events_multi) > 1) {
+                foreach ($events_multi as $key2 => $data2) {
+                    if( $key2 == count($events_multi)-1 ){
+                        $events_multi_data .= date('Y-m-d', strtotime($data2['course_start_at']));
+                    }else{
+                        $events_multi_data .= date('Y-m-d', strtotime($data2['course_start_at'])) . ',  ';
+                    }
+                }
+                $events[count($events)-1]['name'] .= "(多天)";
+            }
+
+            $events[count($events)-1]['events_multi_data'] = $events_multi_data;
+
+            
+            /* 篩選多天 Sandy(2020/08/28) E */
+
         }
 
         return view('frontend.course', compact('events', 'course', 'teachers'));

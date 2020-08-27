@@ -117,9 +117,12 @@
     @foreach($events as $key => $event )
     <tr>
       <td>{{ $event['date'] }}</td>
-      <td>
+      <td class="text-left">
         @if( $event['type'] == 1 && $event['unpublish'] == 1 )
         <span class="text-danger border border-danger">取消場次</span>
+        @endif
+        @if($event['events_multi_data'] != '')
+          <button type="button" class="btn btn-secondary btn-sm mx-1 btn_multi_data" data-toggle="modal" data-target=".modal_multi_data" value="{{ $event['events_multi_data'] }}">多天</button>
         @endif
         {{ $event['name'] }}
       </td>
@@ -169,6 +172,19 @@
   </div>
 </div>
 
+
+<!-- 場次多天詳細資料 Sandy (2020/08/28) - S -->
+<div class="modal fade text-left modal_multi_data" id="modal_multi_data" tabindex="-1" role="dialog" aria-labelledby="multi_dataLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 場次多天詳細資料 Sandy (2020/08/28) - E -->
+
+
 <!-- Content End -->
 
 <!-- 重複資料 Rocky(2020/08/02) -->
@@ -215,6 +231,7 @@
       return false;
     }
   );
+
 
   $("document").ready(function() {
     // Rocky(2020/01/06)
@@ -284,6 +301,12 @@
 
   });
 
+
+  /* 多天按鈕點選代入值進modal Sandy(2020/08/28) */
+  $('body').on('click', '.btn_multi_data', function () {
+    $('#modal_multi_data .modal-body').html( $(this).val() );
+  })
+  
 
   // Excel 匯入 Rocky(2020/08/01)
   $('#form_excel_upload').on('submit', function(event) {
