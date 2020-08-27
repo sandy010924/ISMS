@@ -567,6 +567,7 @@ class StudentController extends Controller
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
             ->orderBy('registration.created_at', 'desc')
+            ->groupBy('e.id_course', 'e.id_events', 'registration.status_payment')
             ->get();
 
         // 正課報到
@@ -591,6 +592,7 @@ class StudentController extends Controller
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
             ->orderBy('registration.created_at', 'desc')
+            ->groupBy('e.id_course', 'e.id_events', 'register.id_status')
             ->distinct()->get();
 
 

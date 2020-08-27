@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use DB;
 use Response;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
@@ -219,7 +220,14 @@ class FinanceController extends Controller
 
                         // 先找符合條件、90天內資料
                         $datas_stuent_90 = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
-                            ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
+                            // ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
+                            ->leftjoin(
+                                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as c"),
+                                function ($join) {
+                                    $join->on('b.id_student', '=', 'c.id_student');
+                                    $join->on('b.source_events', '=', 'c.id_events');
+                                }
+                            )
                             ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
                             ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
                             ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
@@ -259,7 +267,14 @@ class FinanceController extends Controller
 
                         // 找全部資料(沒有90天內限制)
                         $datas_stuent = EventsCourse::join('registration as b', 'events_course.id', '=', 'b.source_events')
-                            ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
+                            // ->leftjoin('sales_registration as c', 'b.id_student', '=', 'c.id_student', 'b.source_events', '=', 'c.id_events')
+                            ->leftjoin(
+                                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as c"),
+                                function ($join) {
+                                    $join->on('b.id_student', '=', 'c.id_student');
+                                    $join->on('b.source_events', '=', 'c.id_events');
+                                }
+                            )
                             ->leftjoin('student as d', 'b.id_student', '=', 'd.id')
                             ->leftjoin('course as e', 'events_course.id_course', '=', 'e.id')
                             ->leftjoin('isms_status as f', 'f.id', '=', 'b.status_payment')
@@ -365,7 +380,8 @@ class FinanceController extends Controller
                             }
                         }
                     })
-                    ->groupby('b.id')
+                    // ->groupby('b.id')
+                    ->groupby('b.id', 'b.id_student', 'b.id_course', 'b.id_events')
                     ->get();
             }
         }

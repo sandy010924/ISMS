@@ -54,7 +54,13 @@ class BlacklistController extends Controller
         $array_blacklist = array();   // 符合黑名單的資料
 
         // 累積未到、取消
-        $acc_student = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+        $acc_student = Student::leftjoin(
+            DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as b"),
+            function ($join) {
+                $join->on('b.id_student', '=', 'student.id');
+            }
+        )
+            //leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
             ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
             ->where('student.check_blacklist', '0')
             ->where(function ($query) {
@@ -69,7 +75,13 @@ class BlacklistController extends Controller
             ->get();
 
         // 一個學員對一個課程的 取消、未到總計
-        $sin_student = Student::leftjoin('sales_registration as b', 'b.id_student', '=', 'student.id')
+        $sin_student = Student::leftjoin(
+            DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as b"),
+            function ($join) {
+                $join->on('b.id_student', '=', 'student.id');
+            }
+        )
+            //leftjoin('sales_registration as b', 'b.id_student', '=', 'student.id')
             ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
             ->where('student.check_blacklist', '0')
             ->where(function ($query) {
@@ -100,7 +112,7 @@ class BlacklistController extends Controller
                     ->whereRaw('registration.id_student = sales_registration.id_student');
             })
             ->groupby('sales_registration.id_student')
-            ->select('sales_registration.id_student as id', 'sales_registration.id_status', 'c.name')
+            ->select('sales_registration.id_student as id', 'sales_registration.id_status', 'sales_registration.id_course', 'sales_registration.id_events', 'c.name')
             ->selectRaw("SUM(CASE WHEN sales_registration.id_status = 4 THEN 1 ELSE 0 END) AS count_att")
             ->get();
         // 規則
