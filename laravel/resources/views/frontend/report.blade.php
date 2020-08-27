@@ -1068,7 +1068,7 @@
                   padding: 3,
                   exportOptions: fixNewLine,
                   title: title + '_' + $("ul#reportTab a.active").text(),
-                  // messageTop: $('#h3_title').text(),
+                  messageTop: $("#show_log").html().replace( /<br\s*\/?>/ig, "\r\n" ),
                 }]
             });
 
