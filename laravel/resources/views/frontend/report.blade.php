@@ -1067,7 +1067,7 @@
                   text: '匯出Excel',
                   padding: 3,
                   exportOptions: fixNewLine,
-                  title: title,
+                  title: title + '_' + $("ul#reportTab a.active").text(),
                   // messageTop: $('#h3_title').text(),
                 }]
             });
