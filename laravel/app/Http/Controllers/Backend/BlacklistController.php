@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend;
 
+
+use DB;
 use App\Model\Rule;
 use App\Model\Mark;
 use App\Model\Student;
@@ -81,7 +83,14 @@ class BlacklistController extends Controller
             ->selectRaw("SUM(CASE WHEN b.id_status ='5' THEN 1 ELSE 0 END) AS count_cancel")
             ->get();
         // 出席幾次但未留單
-        $att_student = SalesRegistration::leftjoin('course as c', 'c.id_type', '=', 'sales_registration.id_course')
+        // 改寫法 Rocky (2020/08/27)
+        $att_student = SalesRegistration::leftjoin(
+            DB::raw(" (SELECT * FROM course  GROUP BY id_type) as c"),
+            function ($join) {
+                $join->on("c.id_type", "=", "sales_registration.id_course");
+            }
+        )
+            // leftjoin('course as c', 'c.id_type', '=', 'sales_registration.id_course')
             ->leftjoin('student as d', 'd.id', '=', 'sales_registration.id_student')
             ->where('d.check_blacklist', '0')
             ->where('sales_registration.id_status', '4')

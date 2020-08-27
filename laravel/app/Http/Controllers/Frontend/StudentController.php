@@ -502,7 +502,11 @@ class StudentController extends Controller
         $id_student = $request->get('id_student');
 
         // 銷講資料
-        $datas_SalesRegistration = SalesRegistration::leftjoin('isms_status as a', 'a.id', '=', 'sales_registration.id_status')
+        // 原來寫法SalesRegistration::
+        $datas_SalesRegistration = DB::table(
+            DB::raw(" (SELECT * FROM sales_registration ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
+        ) // 改寫 Rock (2020/08/27)
+            ->leftjoin('isms_status as a', 'a.id', '=', 'sales_registration.id_status')
             ->leftjoin('course as b', 'b.id', '=', 'sales_registration.id_course')
             ->leftjoin('events_course as c', 'c.id', '=', 'sales_registration.id_events')
             ->select('sales_registration.datasource', 'sales_registration.created_at', 'sales_registration.id_student')
@@ -516,6 +520,7 @@ class StudentController extends Controller
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('sales_registration.id_student', $id_student)
             ->orderBy('sales_registration.created_at', 'desc')
+            ->groupBy('sales_registration.id_course', 'sales_registration.id_events')
             ->get();
 
         // 正課資料
@@ -546,7 +551,7 @@ class StudentController extends Controller
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
             ->leftjoin(
-                DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as e"),
+                DB::raw(" (SELECT * FROM sales_registration  ORDER BY created_at desc LIMIT 9999999999) as e"),
                 function ($join) {
                     $join->on("e.id_events", "=", "registration.source_events");
                     $join->on('e.id_student', '=', 'registration.id_student');
@@ -570,7 +575,7 @@ class StudentController extends Controller
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id_group', '=', 'registration.id_group')
             ->leftjoin(
-                DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as e"),
+                DB::raw(" (SELECT * FROM sales_registration ORDER BY created_at desc LIMIT 9999999999) as e"),
                 function ($join) {
                     $join->on("e.id_events", "=", "registration.source_events");
                     $join->on('e.id_student', '=', 'registration.id_student');
