@@ -115,7 +115,8 @@ class ReportController extends Controller
                     $events = [];
                     if( $data_search['type'] == 1 ){
                         //銷講
-                        $count = SalesRegistration::where('id_events', $data_search['id']);
+                        $count = SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
+                                                    ->where('sales_registration.id_events', $data_search['id']);
 
                         //來源
                         if($data[2] != '0'){
@@ -133,7 +134,13 @@ class ReportController extends Controller
 
                     }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                         //正課
-                        $count = Register::where('id_events', $data_search['id']);
+                        $count = Register::leftjoin('student', 'student.id', '=', 'register.id_student')
+                                        ->where('register.id_events', $data_search['id'])
+                                        ->whereNotExists(function($query){
+                                            $query->from('refund')
+                                                ->whereRaw('register.id_registration = refund.id_registration')
+                                                ->where('refund.review' , 1);
+                                        });
 
                         //動作
                         if($data[3] != '0'){
@@ -143,7 +150,8 @@ class ReportController extends Controller
                         // $events[$key_events]['y'] = count($count->get());
                     }else if( $data_search['type'] == 4 ){
                         //活動
-                        $count = Activity::where('id_events', $data_search['id']);
+                        $count = Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
+                                        ->where('activity.id_events', $data_search['id']);
 
                         //動作
                         if($data[3] != '0'){
@@ -155,7 +163,7 @@ class ReportController extends Controller
 
                     }
 
-                    $count = $count->get();
+                    $count = $count->Where('student.check_blacklist', 0 )->get();
 
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
@@ -204,8 +212,10 @@ class ReportController extends Controller
                     $events = [];
                     if( $data_search['type'] == 1 ){
                         //銷講
-                        $apply = SalesRegistration::where('id_events', $data_search['id']);
-                        $check = SalesRegistration::where('id_events', $data_search['id']);
+                        $apply = SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
+                                                    ->where('id_events', $data_search['id']);
+                        $check = SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
+                                                    ->where('id_events', $data_search['id']);
 
                         //來源
                         if($data[2] != '0'){
@@ -216,19 +226,34 @@ class ReportController extends Controller
                         }
                     }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                         //正課
-                        $apply = Register::where('id_events', $data_search['id']);
-                        $check = Register::where('id_events', $data_search['id']);
+                        $apply = Register::leftjoin('student', 'student.id', '=', 'register.id_student')
+                                        ->where('id_events', $data_search['id'])
+                                        ->whereNotExists(function($query){
+                                            $query->from('refund')
+                                                ->whereRaw('register.id_registration = refund.id_registration')
+                                                ->where('refund.review' , 1);
+                                        });
+                        $check = Register::leftjoin('student', 'student.id', '=', 'register.id_student')
+                                        ->where('id_events', $data_search['id'])
+                                        ->whereNotExists(function($query){
+                                            $query->from('refund')
+                                                ->whereRaw('register.id_registration = refund.id_registration')
+                                                ->where('refund.review' , 1);
+                                        });
                     }else if( $data_search['type'] == 4 ){
                         //活動
-                        $apply = Activity::where('id_events', $data_search['id']);
-                        $check = Activity::where('id_events', $data_search['id']);
+                        $apply = Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
+                                        ->where('id_events', $data_search['id']);
+                        $check = Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
+                                        ->where('id_events', $data_search['id']);
                     }
 
 
                     $apply = $apply->Where('id_status', '<>', 2)
                                     ->Where('id_status', '<>', 5)
+                                    ->Where('student.check_blacklist', 0 )
                                     ->get();
-                    $check = $check->where('id_status', 4)->get();
+                    $check = $check->where('id_status', 4)->Where('student.check_blacklist', 0 )->get();
                 
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
@@ -298,7 +323,8 @@ class ReportController extends Controller
                     $events = [];
                     if( $data_search['type'] == 1 ){
                         //銷講
-                        $check = SalesRegistration::where('id_events', $data_search['id']);
+                        $check = SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
+                                                ->where('id_events', $data_search['id']);
 
                         //來源
                         if($data[2] != '0'){
@@ -308,15 +334,25 @@ class ReportController extends Controller
 
                     }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                         //正課
-                        $check = Register::where('id_events', $data_search['id']);
+                        $check = Register::leftjoin('student', 'student.id', '=', 'register.id_student')
+                                        ->where('id_events', $data_search['id'])
+                                        ->whereNotExists(function($query){
+                                            $query->from('refund')
+                                                ->whereRaw('register.id_registration = refund.id_registration')
+                                                ->where('refund.review' , 1);
+                                        });
                     }else if( $data_search['type'] == 4 ){
                         //活動
-                        $check = Activity::where('id_events', $data_search['id']);
+                        $check = Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
+                                        ->where('id_events', $data_search['id']);
                     }
 
-                    $check = $check->where('id_status', 4)->get();
+                    $check = $check->where('id_status', 4)
+                                    ->Where('student.check_blacklist', 0 )
+                                    ->get();
 
-                    $deal = Registration::where('source_events', $data_search['id']);
+                    $deal = Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                        ->where('source_events', $data_search['id']);
                                         // ->where('status_payment', 7)
                                         // ->get();
                     
@@ -343,7 +379,13 @@ class ReportController extends Controller
                             break;
                     }
 
-                    $deal = $deal->get();
+                    $deal = $deal->Where('student.check_blacklist', 0 )
+                                ->whereNotExists(function($query){
+                                    $query->from('refund')
+                                        ->whereRaw('registration.id = refund.id_registration')
+                                        ->where('refund.review' , 1);
+                                })
+                                ->get();
 
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
@@ -434,11 +476,17 @@ class ReportController extends Controller
                                             
                         //若該場為銷講
                         if( $data_search['type'] == 1 ){
-                            $pay = Registration::leftjoin('sales_registration', 'sales_registration.id_events', '=', 'registration.source_events')
+                            $pay = Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                                ->leftjoin('sales_registration', 'sales_registration.id_events', '=', 'registration.source_events')
                                                 ->leftjoin('payment', 'payment.id_registration', '=', 'registration.id')
                                                 ->where('source_events', $data_search['id'])
                                                 ->where('status_payment', '<>', 9)
-                                                ->whereIn('datasource', $data[2]);
+                                                ->whereIn('datasource', $data[2])
+                                                ->whereNotExists(function($query){
+                                                    $query->from('refund')
+                                                        ->whereRaw('registration.id = refund.id_registration')
+                                                        ->where('refund.review' , 1);
+                                                }); 
                                                 // ->where('datasource', $data[2]);
                                                         
                             //付款狀態
@@ -449,7 +497,7 @@ class ReportController extends Controller
                                 $pay->whereIn('status_payment', [7,8]);
                             }
 
-                            $pay = $pay->get();
+                            $pay = $pay->Where('student.check_blacklist', 0 )->get();
 
                         }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                             //正課沒有來源故為0
@@ -461,8 +509,14 @@ class ReportController extends Controller
 
                     }else{
                         
-                        $pay = Registration::leftjoin('payment', 'payment.id_registration', '=', 'registration.id')
-                                            ->where('registration.source_events', $data_search['id']);
+                        $pay = Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                            ->leftjoin('payment', 'payment.id_registration', '=', 'registration.id')
+                                            ->where('registration.source_events', $data_search['id'])
+                                            ->whereNotExists(function($query){
+                                                $query->from('refund')
+                                                    ->whereRaw('registration.id = refund.id_registration')
+                                                    ->where('refund.review' , 1);
+                                            }); 
                                             
                         //付款狀態
                         if($data[6] != '0'){
@@ -472,7 +526,7 @@ class ReportController extends Controller
                             $pay->whereIn('status_payment', [7,8]);
                         }
 
-                        $pay = $pay->get();
+                        $pay = $pay->Where('student.check_blacklist', 0 )->get();
                     
                     }
 

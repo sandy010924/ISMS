@@ -44,18 +44,24 @@ class CourseListChartController extends Controller
             //銷講
 
             /* 報名數 */
-            $count_apply = count(SalesRegistration::where('id_events', $events->id)
-                                                ->where('id_status', '<>', 2)
+            $count_apply = count(SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
+                                                ->where('sales_registration.id_events', $events->id)
+                                                ->where('sales_registration.id_status', '<>', 2)
+                                                ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
             /* 取消數 */
-            $count_cancel = count(SalesRegistration::where('id_events', $events->id)
-                                                ->where('id_status', 5)
+            $count_cancel = count(SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
+                                                ->where('sales_registration.id_events', $events->id)
+                                                ->where('sales_registration.id_status', 5)
+                                                ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
             /* 報到數 */
-            $count_check = count(SalesRegistration::where('id_events', $events->id)
-                                                ->where('id_status', 4)
+            $count_check = count(SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
+                                                ->where('sales_registration.id_events', $events->id)
+                                                ->where('sales_registration.id_status', 4)
+                                                ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
             /* 報到率 */
@@ -72,19 +78,40 @@ class CourseListChartController extends Controller
             //正課    
 
             /* 報名數 */             
-            $count_apply = count(Register::where('id_events', $events->id)
-                                        ->where('id_status', '<>', 2)
+            $count_apply = count(Register::leftjoin('student', 'student.id', '=', 'register.id_student')
+                                        ->where('register.id_events', $events->id)
+                                        ->where('register.id_status', '<>', 2)
+                                        ->Where('student.check_blacklist', 0 ) 
+                                        ->whereNotExists(function($query){
+                                            $query->from('refund')
+                                                ->whereRaw('register.id_registration = refund.id_registration')
+                                                ->where('refund.review' , 1);
+                                        })
                                         ->get());
 
             /* 取消數 */
-            $count_cancel = count(Register::where('id_events', $events->id)
-                                                ->where('id_status', 5)
-                                                ->get());
+            $count_cancel = count(Register::leftjoin('student', 'student.id', '=', 'register.id_student')
+                                            ->where('register.id_events', $events->id)
+                                            ->where('register.id_status', 5)
+                                            ->Where('student.check_blacklist', 0 )
+                                            ->whereNotExists(function($query){
+                                                $query->from('refund')
+                                                    ->whereRaw('register.id_registration = refund.id_registration')
+                                                    ->where('refund.review' , 1);
+                                            })
+                                            ->get());
 
             /* 報到數 */
-            $count_check = count(Register::where('id_events', $events->id)
-                                                ->where('id_status', 4)
-                                                ->get());
+            $count_check = count(Register::leftjoin('student', 'student.id', '=', 'register.id_student')
+                                            ->where('register.id_events', $events->id)
+                                            ->where('register.id_status', 4)
+                                            ->Where('student.check_blacklist', 0 ) 
+                                            ->whereNotExists(function($query){
+                                                $query->from('refund')
+                                                    ->whereRaw('register.id_registration = refund.id_registration')
+                                                    ->where('refund.review' , 1);
+                                            })
+                                            ->get());
 
             /* 報到率 */
             $rate_check = 0;
@@ -123,19 +150,25 @@ class CourseListChartController extends Controller
             //活動
 
             /* 報名數 */
-            $count_apply = count(Activity::where('id_events', $events->id)
-                                                ->where('id_status', '<>', 2)
-                                                ->get());
+            $count_apply = count(Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
+                                            ->where('activity.id_events', $events->id)
+                                            ->where('activity.id_status', '<>', 2)
+                                            ->Where('student.check_blacklist', 0 ) 
+                                            ->get());
 
             /* 取消數 */
-            $count_cancel = count(Activity::where('id_events', $events->id)
-                                                ->where('id_status', 5)
-                                                ->get());
+            $count_cancel = count(Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
+                                            ->where('activity.id_events', $events->id)
+                                            ->where('activity.id_status', 5)
+                                            ->Where('student.check_blacklist', 0 ) 
+                                            ->get());
 
             /* 報到數 */
-            $count_check = count(Activity::where('id_events', $events->id)
-                                                ->where('id_status', 4)
-                                                ->get());
+            $count_check = count(Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
+                                            ->where('activity.id_events', $events->id)
+                                            ->where('activity.id_status', 4)
+                                            ->Where('student.check_blacklist', 0 ) 
+                                            ->get());
 
             /* 報到率 */
             $rate_check = 0;
@@ -152,20 +185,34 @@ class CourseListChartController extends Controller
         
         /* 圖表顯示-完款數 */
         $chart_settle_original = 0;
-        $chart_settle_original = count(Registration::Where('source_events', $events->id )
-                                ->Where('status_payment_original', 7)
-                                ->Where('status_payment', 7)
-                                ->get());  
+        $chart_settle_original = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                                ->Where('registration.source_events', $events->id )
+                                                ->Where('registration.status_payment_original', 7)
+                                                ->Where('registration.status_payment', 7)
+                                                ->Where('student.check_blacklist', 0 ) 
+                                                ->whereNotExists(function($query){
+                                                    $query->from('refund')
+                                                        ->whereRaw('registration.id = refund.id_registration')
+                                                        ->where('refund.review' , 1);
+                                                })
+                                                ->get());  
                                 
         /* 圖表顯示-追完款數 */
         $chart_settle_new = 0;
-        $chart_settle_new = count(Registration::Where('source_events', $events->id )
-                                ->where(function($q) { 
-                                    $q->orWhere('status_payment_original', '<>', 7)
-                                    ->orWhere('status_payment_original', null);
-                                })
-                                ->Where('status_payment', 7)
-                                ->get());  
+        $chart_settle_new = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                            ->Where('registration.source_events', $events->id )
+                                            ->where(function($q) { 
+                                                $q->orWhere('registration.status_payment_original', '<>', 7)
+                                                ->orWhere('registration.status_payment_original', null);
+                                            })
+                                            ->Where('registration.status_payment', 7)
+                                            ->Where('student.check_blacklist', 0 ) 
+                                            ->whereNotExists(function($query){
+                                                $query->from('refund')
+                                                    ->whereRaw('registration.id = refund.id_registration')
+                                                    ->where('refund.review' , 1);
+                                            })
+                                            ->get());  
 
         /* 成交率 */
         $rate_settle = 0;
@@ -178,52 +225,108 @@ class CourseListChartController extends Controller
         /* 完款數 */
         //原始
         $settle_original = 0;
-        $settle_original = count(Registration::Where('source_events', $events->id )
-                                ->Where('status_payment_original', 7)
-                                ->get()); 
+        $settle_original = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                            ->Where('registration.source_events', $events->id )
+                                            ->Where('registration.status_payment_original', 7)
+                                            ->Where('student.check_blacklist', 0 ) 
+                                            ->whereNotExists(function($query){
+                                                $query->from('refund')
+                                                    ->whereRaw('registration.id = refund.id_registration')
+                                                    ->where('refund.review' , 1);
+                                            })
+                                            ->get()); 
         //最新
         $settle = 0;
-        $settle = count(Registration::Where('source_events', $events->id )
-                                ->Where('status_payment', 7)
-                                ->get()); 
+        $settle = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                    ->Where('registration.source_events', $events->id )
+                                    ->Where('registration.status_payment', 7)
+                                    ->Where('student.check_blacklist', 0 ) 
+                                    ->whereNotExists(function($query){
+                                        $query->from('refund')
+                                            ->whereRaw('registration.id = refund.id_registration')
+                                            ->where('refund.review' , 1);
+                                    })
+                                    ->get()); 
 
         
         /* 付訂數 */
         //原始
         $deposit_original = 0;
-        $deposit_original = count(Registration::Where('source_events', $events->id )
-                                ->Where('status_payment_original', 8)
+        $deposit_original = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                ->Where('registration.source_events', $events->id )
+                                ->Where('registration.status_payment_original', 8)
+                                ->Where('student.check_blacklist', 0 ) 
+                                ->whereNotExists(function($query){
+                                    $query->from('refund')
+                                        ->whereRaw('registration.id = refund.id_registration')
+                                        ->where('refund.review' , 1);
+                                })
                                 ->get());   
         //最新
         $deposit = 0;
-        $deposit = count(Registration::Where('source_events', $events->id )
-                                ->Where('status_payment', 8)
+        $deposit = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                ->Where('registration.source_events', $events->id )
+                                ->Where('registration.status_payment', 8)
+                                ->Where('student.check_blacklist', 0 ) 
+                                ->whereNotExists(function($query){
+                                    $query->from('refund')
+                                        ->whereRaw('registration.id = refund.id_registration')
+                                        ->where('refund.review' , 1);
+                                })
                                 ->get());   
 
 
         /* 留單數 */
         //原始
         $order_original = 0;
-        $order_original = count(Registration::Where('source_events', $events->id )
-                                            ->Where('status_payment_original', 6)
+        $order_original = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                            ->Where('registration.source_events', $events->id )
+                                            ->Where('registration.status_payment_original', 6)
+                                            ->Where('student.check_blacklist', 0 ) 
+                                            ->whereNotExists(function($query){
+                                                $query->from('refund')
+                                                    ->whereRaw('registration.id = refund.id_registration')
+                                                    ->where('refund.review' , 1);
+                                            })
                                             ->get());   
         //最新
         $order = 0;
-        $order = count(Registration::Where('source_events', $events->id )
-                                ->Where('status_payment', 6)
+        $order = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                ->Where('registration.source_events', $events->id )
+                                ->Where('registration.status_payment', 6)
+                                ->Where('student.check_blacklist', 0 ) 
+                                ->whereNotExists(function($query){
+                                    $query->from('refund')
+                                        ->whereRaw('registration.id = refund.id_registration')
+                                        ->where('refund.review' , 1);
+                                })
                                 ->get());   
 
         
         /* 退費數 */
         //原始
         $refund_original = 0;
-        $refund_original = count(Registration::Where('source_events', $events->id )
-                                            ->Where('status_payment_original', 9)
+        $refund_original = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                            ->Where('registration.source_events', $events->id )
+                                            ->Where('registration.status_payment_original', 9)
+                                            ->Where('student.check_blacklist', 0 ) 
+                                            ->whereNotExists(function($query){
+                                                $query->from('refund')
+                                                    ->whereRaw('registration.id = refund.id_registration')
+                                                    ->where('refund.review' , 1);
+                                            })
                                             ->get());   
         //最新
         $refund = 0;
-        $refund = count(Registration::Where('source_events', $events->id )
-                                ->Where('status_payment', 9)
+        $refund = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
+                                ->Where('registration.source_events', $events->id )
+                                ->Where('registration.status_payment', 9)
+                                ->Where('student.check_blacklist', 0 ) 
+                                ->whereNotExists(function($query){
+                                    $query->from('refund')
+                                        ->whereRaw('registration.id = refund.id_registration')
+                                        ->where('refund.review' , 1);
+                                })
                                 ->get());   
         
                                 
