@@ -1938,6 +1938,7 @@
         $('#condition_option2').append(new Option('報到', '4'));
         $('#condition_option2').append(new Option('取消', '5'));
         $('#condition_option2').append(new Option('未到', '3'));
+        $('#condition_option2').append(new Option('我很遺憾', '2'));
         $('#condition_option2').append(new Option('留單', '6'));
         $('#condition_option2').append(new Option('完款', '7'));
         $('#condition_option2').append(new Option('付訂', '8'));
@@ -2158,6 +2159,7 @@
         $('#condition_option2_2').append(new Option('報到', '4'));
         $('#condition_option2_2').append(new Option('取消', '5'));
         $('#condition_option2_2').append(new Option('未到', '3'));
+        $('#condition_option2_2').append(new Option('我很遺憾', '2'));
         $('#condition_option2_2').append(new Option('完款', '7'));
         $('#condition_option2_2').append(new Option('付訂', '8'));
         $('#condition_option2_2').append(new Option('退款', '9'));
@@ -2361,6 +2363,7 @@
         $('#condition_option2_3').append(new Option('報到', '4'));
         $('#condition_option2_3').append(new Option('取消', '5'));
         $('#condition_option2_3').append(new Option('未到', '3'));
+        $('#condition_option2_3').append(new Option('我很遺憾', '2'));
         $('#condition_option2_3').append(new Option('完款', '7'));
         $('#condition_option2_3').append(new Option('付訂', '8'));
         $('#condition_option2_3').append(new Option('退款', '9'));

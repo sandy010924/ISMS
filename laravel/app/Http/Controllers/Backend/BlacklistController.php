@@ -62,6 +62,7 @@ class BlacklistController extends Controller
         )
             //leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
             ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+            ->join('events_course', 'events_course.id', '=', 'b.id_events')
             ->where('student.check_blacklist', '0')
             ->where(function ($query) {
                 $query->where(function ($query) {
@@ -82,6 +83,7 @@ class BlacklistController extends Controller
             }
         )
             //leftjoin('sales_registration as b', 'b.id_student', '=', 'student.id')
+            ->join('events_course', 'events_course.id', '=', 'b.id_events')
             ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
             ->where('student.check_blacklist', '0')
             ->where(function ($query) {
@@ -102,6 +104,7 @@ class BlacklistController extends Controller
                 $join->on("c.id_type", "=", "sales_registration.id_course");
             }
         )
+            ->join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
             // leftjoin('course as c', 'c.id_type', '=', 'sales_registration.id_course')
             ->leftjoin('student as d', 'd.id', '=', 'sales_registration.id_student')
             ->where('d.check_blacklist', '0')
