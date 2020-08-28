@@ -379,7 +379,12 @@ class StudentController extends Controller
         $to = date('Y-m-d H:m:s', strtotime("+90 days"));
 
         // 搜尋現在日期90天以內的銷講資料 Rocky(2020/07/24)
-        $datas_datasource_old = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+        $datas_datasource_old =
+            // SalesRegistration::
+            DB::table(
+                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
+            ) // 改寫 Rock (2020/08/27)
+            ->leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
             ->select('sales_registration.datasource', 'sales_registration.id as sales_registration_old', 'sales_registration.submissiondate as sales_registration_old_submissiondate')
             ->orderBy('sales_registration.submissiondate', 'ASC')
             ->where('b.id', $id_student)
@@ -387,7 +392,12 @@ class StudentController extends Controller
             ->first();
         // 如果90天內沒有銷講資料 -> 抓submissiondate最早的資料 Rocky(2020/07/24)
         if ($datas_datasource_old == null) {
-            $datas_datasource_old = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+            $datas_datasource_old =
+                // SalesRegistration::
+                DB::table(
+                    DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
+                ) // 改寫 Rock (2020/08/27)
+                ->leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
                 ->select('sales_registration.datasource', 'sales_registration.id as sales_registration_old', 'sales_registration.submissiondate as sales_registration_old_submissiondate')
                 ->orderBy('sales_registration.submissiondate', 'ASC')
                 ->where('b.id', $id_student)
@@ -395,7 +405,12 @@ class StudentController extends Controller
         }
 
         // 最新來源 Rocky(2020/07/24)
-        $datas_datasource_new = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+        $datas_datasource_new =
+            // SalesRegistration::
+            DB::table(
+                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
+            ) // 改寫 Rock (2020/08/27)
+            ->leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
             ->select('sales_registration.datasource')
             ->orderBy('sales_registration.submissiondate', 'desc')
             ->where('b.id', $id_student)
@@ -551,7 +566,7 @@ class StudentController extends Controller
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
             ->leftjoin(
-                DB::raw(" (SELECT * FROM sales_registration  ORDER BY created_at desc LIMIT 9999999999) as e"),
+                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student  ORDER BY created_at desc LIMIT 9999999999) as e"),
                 function ($join) {
                     $join->on("e.id_events", "=", "registration.source_events");
                     $join->on('e.id_student', '=', 'registration.id_student');
@@ -567,7 +582,7 @@ class StudentController extends Controller
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
             ->orderBy('registration.created_at', 'desc')
-            ->groupBy('e.id_course', 'e.id_events', 'registration.status_payment')
+            ->groupBy('registration.status_payment')
             ->get();
 
         // 正課報到
@@ -576,7 +591,7 @@ class StudentController extends Controller
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id_group', '=', 'registration.id_group')
             ->leftjoin(
-                DB::raw(" (SELECT * FROM sales_registration ORDER BY created_at desc LIMIT 9999999999) as e"),
+                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as e"),
                 function ($join) {
                     $join->on("e.id_events", "=", "registration.source_events");
                     $join->on('e.id_student', '=', 'registration.id_student');
