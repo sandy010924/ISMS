@@ -4,7 +4,7 @@
 <!-- Content Start -->
 <!--搜尋課程頁面內容-->
 
-<div class="card m-3">
+<div class="card m-3 d-none">
   <div class="card-body">
     <div class="row mb-3">
       <div class="=col-12 ml-3">
@@ -31,8 +31,120 @@
   </div>
 </div>
 
+
+<div class="card m-3">
+  <div class="card-body">
+    <div class="row mb-3">
+      <div class="=col-12 ml-3">
+        <div class="form-group required">
+          <label for="search">快速搜尋小工具</label>
+          <b style="color:#d03939">(輸入姓名，已半形空白為分割)</b>
+          <input id="textlist" type="text" class="border-top-0 border-right-0 border-left-0 mx-1 w-100 p-3 text-center">
+          <button id="search" type="submit" class="btn btn-primary">儲存</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div id="search_content" class="col">
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  table td{
+    background-color: #fff;
+  }
+  table{
+    white-space: nowrap;
+    overflow-x: scroll;
+  }
+</style>
 <!-- Content End -->
 <script>
+
+  $('#search').click(function() {
+    $.ajax({
+      type: 'GET',
+      url: 'sandyq_search',
+      data: {
+        list: $('#textlist').val()
+      },
+      success: function(data) {
+        console.log(data)
+
+        //datatable Layout
+        var tableLayout = `
+            <table id="search_table" name="search_table" class="table table-striped table-sm border rounded-lg bg-withe">
+              <thead id="tableHead">
+                <tr>姓名</tr>
+                <tr>資料</tr>
+                <tr>id</tr>
+                <tr>備注</tr>
+              </thead>
+              <tbody id="tableBody">
+              </tbody>
+            </table>`;
+
+        $('#search_content').html(tableLayout);
+
+        var td = '';
+
+        for( var i = 0 ; i < data.length ; i++ ){
+            td += "<tr><td>" + data[i]['name'] + "</td>";
+            td += "<td>" + data[i]['id'] + "</td>";
+            td += "<td>" + data[i]['memo'] + "</td>";
+            td += "<td><table>";
+            for( var j = 0 ; j < data[i]['student'].length ; j++ ){
+              td += "<tr>";
+              td += "<td>" + data[i]['student'][j]['id'] + "</td>";
+              td += "<td>" + data[i]['student'][j]['name'] + "</td>";
+              td += "<td>" + data[i]['student'][j]['phone'] + "</td>";
+              td += "<td>" + data[i]['student'][j]['email'] + "</td>";
+              td += "<td>" + data[i]['student'][j]['sex'] + "</td>";
+              td += "<td>" + data[i]['student'][j]['id_identity'] + "</td>";
+              td += "<td>" + data[i]['student'][j]['birthday'] + "</td>";
+              td += "<td>" + data[i]['student'][j]['profession'] + "</td>";
+              td += "</tr>";
+            }
+            td += "<tr/></table>";
+        }
+
+
+        $('#search_content #search_table #tableBody').html(td);
+
+        /** alert **/
+        // $("#success_alert_text").html("資料更新成功");
+        // fade($("#success_alert"));
+        // location.reload();
+      },
+      error: function(jqXHR) {
+        console.log(JSON.stringify(jqXHR));
+
+        /** alert **/
+        $("#error_alert_text").html("搜尋失敗");
+        fade($("#error_alert"));
+      }
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   var table;
 
   $("document").ready(function() {

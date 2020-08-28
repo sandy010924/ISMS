@@ -395,4 +395,61 @@ class SandyqController extends Controller
             'count' => count($datas_rule)
         ]);
     }
+
+    
+    // 快速搜尋小工具
+    public function search(Request $request)
+    {
+        $list = $request->input('list');
+
+        $list = explode(" ", $list);
+
+        $data = array();
+
+        foreach ( $list as $item){
+
+            $student = Student::where('name', $item)->get();
+
+            $id = '';
+            $phone = array();
+            $email = array();
+
+            foreach( $student as $key => $item2 ){
+                if( $key == 0 ){
+                    $id .= $item2['id'] . '|';
+                }else if ( $key == count($student)-1 ){
+                    $id .= $item2['id'];
+                }else{
+                    $id .= $item2['id'] . ',';
+                }
+
+                array_push($phone, $item2['phone']);
+                array_push($email, $item2['email']);
+            }
+
+            $phone = array_unique($phone);
+            $email = array_unique($email);
+
+            $memo = '';
+            if(count($phone)>1){
+                $memo .= '電話不同';
+            }
+            if(count($email)>1){
+                if( $memo != '' ){
+                    $memo .= '、';
+                }
+                $memo .= '信箱不同';
+            }
+            
+            $data[count($data)] = [
+                'name' => $item,
+                'student' => $student,
+                'id' => $id,
+                'memo' => $memo
+            ];
+        }
+
+
+        return $data;
+    }
 }
