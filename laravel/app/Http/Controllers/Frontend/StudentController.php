@@ -379,12 +379,7 @@ class StudentController extends Controller
         $to = date('Y-m-d H:m:s', strtotime("+90 days"));
 
         // 搜尋現在日期90天以內的銷講資料 Rocky(2020/07/24)
-        $datas_datasource_old =
-            // SalesRegistration::
-            DB::table(
-                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
-            ) // 改寫 Rock (2020/08/27)
-            ->leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+        $datas_datasource_old = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
             ->select('sales_registration.datasource', 'sales_registration.id as sales_registration_old', 'sales_registration.submissiondate as sales_registration_old_submissiondate')
             ->orderBy('sales_registration.submissiondate', 'ASC')
             ->where('b.id', $id_student)
@@ -392,12 +387,7 @@ class StudentController extends Controller
             ->first();
         // 如果90天內沒有銷講資料 -> 抓submissiondate最早的資料 Rocky(2020/07/24)
         if ($datas_datasource_old == null) {
-            $datas_datasource_old =
-                // SalesRegistration::
-                DB::table(
-                    DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
-                ) // 改寫 Rock (2020/08/27)
-                ->leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+            $datas_datasource_old = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
                 ->select('sales_registration.datasource', 'sales_registration.id as sales_registration_old', 'sales_registration.submissiondate as sales_registration_old_submissiondate')
                 ->orderBy('sales_registration.submissiondate', 'ASC')
                 ->where('b.id', $id_student)
@@ -405,12 +395,7 @@ class StudentController extends Controller
         }
 
         // 最新來源 Rocky(2020/07/24)
-        $datas_datasource_new =
-            // SalesRegistration::
-            DB::table(
-                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
-            ) // 改寫 Rock (2020/08/27)
-            ->leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
+        $datas_datasource_new = SalesRegistration::leftjoin('student as b', 'sales_registration.id_student', '=', 'b.id')
             ->select('sales_registration.datasource')
             ->orderBy('sales_registration.submissiondate', 'desc')
             ->where('b.id', $id_student)
@@ -518,13 +503,13 @@ class StudentController extends Controller
 
         // 銷講資料
         // 原來寫法SalesRegistration::
-        $datas_SalesRegistration = DB::table(
-            DB::raw(" (SELECT * FROM sales_registration ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
-        ) // 改寫 Rock (2020/08/27)
-            ->leftjoin('isms_status as a', 'a.id', '=', 'sales_registration.id_status')
+        // $datas_SalesRegistration = DB::table(
+        //     DB::raw(" (SELECT * FROM sales_registration ORDER BY created_at desc LIMIT 9999999999) as sales_registration")
+        // ) // 改寫 Rock (2020/08/27)
+        $datas_SalesRegistration = SalesRegistration::leftjoin('isms_status as a', 'a.id', '=', 'sales_registration.id_status')
             ->leftjoin('course as b', 'b.id', '=', 'sales_registration.id_course')
             ->leftjoin('events_course as c', 'c.id', '=', 'sales_registration.id_events')
-            ->select('sales_registration.datasource', 'sales_registration.created_at', 'sales_registration.id_student')
+            ->select('sales_registration.datasource', 'sales_registration.submissiondate as created_at', 'sales_registration.id_student')
             ->selectRaw(' CASE
                                         WHEN sales_registration.id_status = 1 THEN "銷講已報名"
                                         WHEN sales_registration.id_status = 2 THEN "我很遺憾"
@@ -534,8 +519,7 @@ class StudentController extends Controller
                                     END as status_sales')
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('sales_registration.id_student', $id_student)
-            ->orderBy('sales_registration.created_at', 'desc')
-            ->groupBy('sales_registration.id_course', 'sales_registration.id_events')
+            ->orderBy('sales_registration.submissiondate', 'desc')
             ->get();
 
         // 正課資料
@@ -566,13 +550,13 @@ class StudentController extends Controller
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id', '=', 'registration.id_events')
             ->leftjoin(
-                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student  ORDER BY created_at desc LIMIT 9999999999) as e"),
+                DB::raw(" (SELECT * FROM sales_registration  ORDER BY submissiondate desc LIMIT 9999999999) as e"),
                 function ($join) {
                     $join->on("e.id_events", "=", "registration.source_events");
                     $join->on('e.id_student', '=', 'registration.id_student');
                 }
             )
-            ->select('e.datasource', 'registration.created_at', 'registration.id_student')
+            ->select('e.datasource', 'e.submissiondate as created_at', 'registration.id_student')
             ->selectRaw(' CASE
                                         WHEN registration.status_payment = 6 THEN "正課留單"
                                         WHEN registration.status_payment = 7 THEN "正課完款"
@@ -581,7 +565,7 @@ class StudentController extends Controller
                                     END as status_sales')
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
-            ->orderBy('registration.created_at', 'desc')
+            ->orderBy('e.submissiondate', 'desc')
             ->groupBy('registration.status_payment')
             ->get();
 
@@ -591,13 +575,13 @@ class StudentController extends Controller
             ->leftjoin('course as b', 'b.id', '=', 'registration.id_course')
             ->leftjoin('events_course as c', 'c.id_group', '=', 'registration.id_group')
             ->leftjoin(
-                DB::raw(" (SELECT * FROM sales_registration GROUP BY id_course,id_events,id_student ORDER BY created_at desc LIMIT 9999999999) as e"),
+                DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999999999) as e"),
                 function ($join) {
                     $join->on("e.id_events", "=", "registration.source_events");
                     $join->on('e.id_student', '=', 'registration.id_student');
                 }
             )
-            ->select('e.datasource', 'registration.id', 'registration.created_at', 'registration.id_student')
+            ->select('e.datasource', 'registration.id', 'registration.submissiondate as created_at', 'registration.id_student')
             ->selectRaw(' CASE
                                         WHEN register.id_status = 1  THEN "正課已報名"
                                         WHEN register.id_status = 3  THEN "正課未到"
@@ -606,8 +590,8 @@ class StudentController extends Controller
                                     END as status_sales')
             ->selectRaw("CONCAT(b.name,c.name,date_format(c.course_start_at, '%Y/%m/%d %H:%i'),' ',date_format(c.course_end_at, '%Y/%m/%d %H:%i'),c.location) AS course_sales ")
             ->where('registration.id_student', $id_student)
-            ->orderBy('registration.created_at', 'desc')
-            ->groupBy('e.id_course', 'e.id_events', 'register.id_status')
+            ->orderBy('e.submissiondate', 'desc')
+            ->groupBy('register.id_status')
             ->distinct()->get();
 
 
