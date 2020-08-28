@@ -535,8 +535,12 @@ class StudentGroupController extends Controller
                             })
                             ->where(function ($query) use ($opt2) {
                                 // $query->where('b.id_status', '<>', $opt2);
-                                $query->where('b.id_status', '=', '1')
-                                    ->orwhere('b.id_status', '=', '3');
+                                if ($opt2 == "4") {
+                                    $query->where('b.id_status', '=', '1')
+                                        ->orwhere('b.id_status', '=', '3');
+                                } else {
+                                    $query->where('b.id_status', '<>', $opt2);
+                                }
                             })
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
