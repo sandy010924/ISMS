@@ -1114,11 +1114,11 @@ class StudentGroupController extends Controller
                         ->where('b.status_payment', '7')
                         ->where('b.id_events', '<>', '-99')
                         ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
-                        ->whereNotExists(function ($query) {
-                            $query->from('refund')
-                                ->whereRaw('b.id = refund.id_registration')
-                                ->where('refund.review', 1);
-                        }) // 篩選退款資料 Rocky (2020/08/28)
+                        // ->whereNotExists(function ($query) {
+                        //     $query->from('refund')
+                        //         ->whereRaw('b.id = refund.id_registration')
+                        //         ->where('refund.review', 1);
+                        // }) // 篩選退款資料 Rocky (2020/08/28)
                         ->groupby('student.id')
                         ->get();
                 } else {
@@ -1154,11 +1154,11 @@ class StudentGroupController extends Controller
                         ->where('a.status_payment', '7')
                         ->where('a.id_events', '<>', '-99')
                         ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
-                        ->whereNotExists(function ($query) {
-                            $query->from('refund')
-                                ->whereRaw('a.id = refund.id_registration')
-                                ->where('refund.review', 1);
-                        }) // 篩選退款資料 Rocky (2020/08/28)
+                        // ->whereNotExists(function ($query) {
+                        //     $query->from('refund')
+                        //         ->whereRaw('a.id = refund.id_registration')
+                        //         ->where('refund.review', 1);
+                        // }) // 篩選退款資料 Rocky (2020/08/28)
                         ->groupby('student.id')
                         ->get();
 
@@ -1212,12 +1212,12 @@ class StudentGroupController extends Controller
                                         break;
                                 }
                             })
-                            // ->where('a.status_payment', '7')
-                            ->whereNotExists(function ($query) {
-                                $query->from('refund')
-                                    ->whereRaw('a.id = refund.id_registration')
-                                    ->where('refund.review', 1);
-                            }) // 篩選退款資料 Rocky (2020/08/28)
+                            ->where('a.status_payment', '7')
+                            // ->whereNotExists(function ($query) {
+                            //     $query->from('refund')
+                            //         ->whereRaw('a.id = refund.id_registration')
+                            //         ->where('refund.review', 1);
+                            // }) // 篩選退款資料 Rocky (2020/08/28)
                             ->where('a.id_events', '<>', '-99')
                             ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->groupby('student.id')
@@ -1239,12 +1239,12 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            // ->where('a.status_payment', '7')
-                            ->whereNotExists(function ($query) {
-                                $query->from('refund')
-                                    ->whereRaw('a.id = refund.id_registration')
-                                    ->where('refund.review', 1);
-                            }) // 篩選退款資料 Rocky (2020/08/28)
+                            ->where('a.status_payment', '7')
+                            // ->whereNotExists(function ($query) {
+                            //     $query->from('refund')
+                            //         ->whereRaw('a.id = refund.id_registration')
+                            //         ->where('refund.review', 1);
+                            // }) // 篩選退款資料 Rocky (2020/08/28)
                             ->where('a.id_events', '<>', '-99')
                             ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->groupby('student.id')
