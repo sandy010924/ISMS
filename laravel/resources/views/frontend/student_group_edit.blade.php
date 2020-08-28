@@ -694,7 +694,8 @@
     search_show_log = '',
     or_log = '',
     count_log = 0,
-    old_count_log = 0
+    old_count_log = 0,
+    check_search = 0
   var check_condition2 = 0,
     check_condition3 = 0;
 
@@ -1064,6 +1065,7 @@
       success: function(data) {
         // console.log(data)
         show(data, "search");
+        check_search = 1;
         /*log Rocky(2020/04/04)*/
         count_log++;
         write_log()
@@ -1926,33 +1928,63 @@
     var name_group = $('#name_group').val()
     var id = $('#id_group').val()
     var condition = search_show_log + search_orlog + search_log
-    // console.log(id)
-    $.ajax({
-      type: 'POST',
-      url: 'studentgroup_update',
-      // dataType:'json',
-      data: {
-        id: id,
-        name_group: name_group,
-        condition: condition,
-        array_upate_studentid: array_upate_studentid
-      },
-      success: function(data) {
-        // console.log(data)
-        if (data = "儲存成功") {
-          $("#success_alert_text").html("儲存成功");
-          fade($("#success_alert"));
 
-          location.replace(location)
-        } else {
-          $("#error_alert_text").html("儲存失敗");
-          fade($("#error_alert"));
+    // 檢查有沒有搜尋 
+    if (check_search == 1) {
+      $.ajax({
+        type: 'POST',
+        url: 'studentgroup_update',
+        // dataType:'json',
+        data: {
+          id: id,
+          name_group: name_group,
+          condition: condition,
+          array_upate_studentid: array_upate_studentid
+        },
+        success: function(data) {
+          // console.log(data)
+          if (data = "儲存成功") {
+            $("#success_alert_text").html("儲存成功");
+            fade($("#success_alert"));
+
+            location.replace(location)
+          } else {
+            $("#error_alert_text").html("儲存失敗");
+            fade($("#error_alert"));
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error))
         }
-      },
-      error: function(error) {
-        console.log(JSON.stringify(error))
-      }
-    })
+      })
+    } else {
+      $.ajax({
+        type: 'POST',
+        url: 'studentgroup_update',
+        // dataType:'json',
+        data: {
+          id: id,
+          name_group: name_group,
+          condition: condition
+        },
+        success: function(data) {
+          // console.log(data)
+          if (data = "儲存成功") {
+            $("#success_alert_text").html("儲存成功");
+            fade($("#success_alert"));
+
+            location.replace(location)
+          } else {
+            $("#error_alert_text").html("儲存失敗");
+            fade($("#error_alert"));
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error))
+        }
+      })
+    }
+
   }
 
   // 自動儲存

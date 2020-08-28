@@ -1902,7 +1902,8 @@
               id_student: id_student_old
             },
             async: false,
-            "dataSrc": function(json) { 
+            "dataSrc": function(json) {
+              // console.log(json)
               for (var i = 0; i < json.length; i++) {
                 var status = '',
                   course_sales = '',

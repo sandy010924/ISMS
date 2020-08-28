@@ -17,7 +17,12 @@ class StudentGroupController extends Controller
     // 顯示列表資料 Rocky(2020/03/14)
     public function showgroup()
     {
-        $datas = StudentGroup::leftjoin('student_groupdetail as b', 'b.id_group', '=', 'student_group.id')
+        $datas = StudentGroup::leftjoin(
+                DB::raw(" (SELECT * FROM student_groupdetail GROUP BY id_student,id_group) as b"),
+                function ($join) {
+                    $join->on("b.id_group", "=", "student_group.id");
+                }
+            )
             ->select('student_group.id', 'student_group.name', 'student_group.created_at')
             ->selectraw('COUNT(b.id) as COUNT')
             ->groupby('student_group.id')
@@ -534,13 +539,7 @@ class StudentGroupController extends Controller
                                 $query2->whereIn('b.id_course', $id_course);
                             })
                             ->where(function ($query) use ($opt2) {
-                                // $query->where('b.id_status', '<>', $opt2);
-                                if ($opt2 == "4") {
-                                    $query->where('b.id_status', '=', '1')
-                                        ->orwhere('b.id_status', '=', '3');
-                                } else {
-                                    $query->where('b.id_status', '<>', $opt2);
-                                }
+                                $query->where('b.id_status', '<>', $opt2);
                             })
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
