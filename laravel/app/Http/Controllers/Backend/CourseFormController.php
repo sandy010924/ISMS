@@ -511,7 +511,7 @@ class CourseFormController extends Controller
                         $registration->status_payment_original    = 6;                             // 原始付款狀態
                         $registration->id_events         = -99;                           // 場次ID
                         $registration->registration_join = $join;                         // 我想參加課程
-                        $registration->id_group          = null;                            // 群組ID
+                        $registration->id_group          = -99;                            // 群組ID
                         $registration->pay_date          = null;                          // 付款日期
                         $registration->pay_memo          = '';                            // 付款備註
                         $registration->person            = '';                            // 服務人員

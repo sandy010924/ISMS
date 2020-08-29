@@ -543,7 +543,7 @@ class CourseReturnController extends Controller
                     $registration->status_payment_original    = $istatus;             //原始付款狀態 
                     $registration->id_events         = -99;                           // 場次ID
                     $registration->registration_join = $join;                         // 我想參加課程
-                    $registration->id_group          = null;                          // 群組ID
+                    $registration->id_group          = -99;                          // 群組ID
                     $registration->pay_date          = $pay_date;                          // 付款日期
                     $registration->pay_memo          = $pay_memo;                            // 付款備註
                     $registration->person            = $person;                            // 服務人員
