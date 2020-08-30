@@ -896,6 +896,9 @@
           //y軸title
           lineChart.config.options.scales.yAxes[0].scaleLabel.labelString = $("ul#reportTab a.active").text();
 
+          //判斷結算數量|金額|百分比
+          var settle = "";
+
           //y軸距差、tooltips內容
           switch ($("ul#reportTab a.active").data('nav')) {
             case 'list':
@@ -908,6 +911,10 @@
                 // return [x, course, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
                 return course;
               };
+
+              settle = "amount";
+
+              break;
             case 'check':
               //報到率
               lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
@@ -918,6 +925,9 @@
                 // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}%`];
                 return course;
               };
+
+              settle = "rate";
+
               break;
             case 'deal':
               //成交率
@@ -929,6 +939,9 @@
                 // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}%`];
                 return course;
               };
+
+              settle = "rate";
+
               break;
             case 'income':
               //營業額
@@ -940,6 +953,9 @@
                 // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
                 return course;
               };
+
+              settle = "money";
+
               break;
             case 'cost':
               //單場成本
@@ -951,16 +967,19 @@
                 // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
                 return course;
               };
+
+              settle = "money";
+
               break;
             default:
-              lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
-              lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
-                const dataset = data.datasets[tooltipItem.datasetIndex];
-                const currentValue = dataset.data[tooltipItem.index];
-                const { y, x, course } = currentValue
-                // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
-                return course;
-              };
+              // lineChart.config.options.scales.yAxes[0].ticks.stepSize = 100;
+              // lineChart.config.options.tooltips.callbacks.label = function(tooltipItem, data) {
+              //   const dataset = data.datasets[tooltipItem.datasetIndex];
+              //   const currentValue = dataset.data[tooltipItem.index];
+              //   const { y, x, course } = currentValue
+              //   // return [x, `${course}`, '', `${$("ul#reportTab li a.active").text()}: ${y}`];
+              //   return course;
+              // };
               break;
           }
 
@@ -991,6 +1010,13 @@
           //完全無資料
           if(res['labelDate'].length == 0){
             tableHead += "<th></th>";
+          }else{
+            if ( settle == "amount" || settle == "money" ) {
+              tableHead += "<th>總計</th>";
+              tableHead += "<th>平均</th>";
+            }else if ( settle == "rate" ) {
+              tableHead += "<th>平均</th>";
+            }
           }
           $('#reportTable #tableHead tr').html(tableHead);
 
@@ -1013,8 +1039,9 @@
               // lineChart.data.datasets[i].pointStyle = 'rectRounded';
 
 
-
             if( res['result'][i].length > 0){
+              var total = 0;
+              
               tableBody += "<tr><th>" + "第"+ chNum[collapse[i]-1] + "組" + "</th>";
                 
               for( var k = 0 ; k < res['labelDate'].length ; k++ ){
@@ -1022,15 +1049,24 @@
                   if( res['labelDate'][k] == res['result'][i][j]['x'] ){
                     // tableBody += "<td>" + res['result'][i][j]['y'] + "</td>";
                     tableBody += "<td>" + res['result'][i][j]['course'].join("<br/>") + "</td>";
+                    total += res['result'][i][j]['y'];
                     break;
                   }else if( j == res['result'][i].length-1){
                     tableBody += "<td>無</td>";
                   }
                 }
-                tableHead += "<th>" + res['labelDate'][i] + "</th>";
+              }
+            
+              if ( settle == "amount") {
+                tableBody += "<td>" + total + "</td>";
+                tableBody += "<td>" + (total / res['result'][i].length ).toFixed(1) + " /天 </td></tr>";
+              }else if ( settle == "money" ) {
+                tableBody += "<td>$" + total + "</td>";
+                tableBody += "<td>$" + (total / res['result'][i].length ).toFixed(1) + " /天 </td></tr>";
+              }else if ( settle == "rate" ) {
+                tableBody += "<td>" + (total / res['result'][i].length ).toFixed(1) + "% /天 </td></tr>";
               }
               
-              tableBody += "</tr>";
             }else{
               
               // tableBody += "<tr><th>查無資料</th></tr>";
