@@ -167,6 +167,7 @@
 <script src="https://cdn.bootcss.com/jspdf-autotable/3.0.0-alpha.1/jspdf.plugin.autotable.min.js"></script> --}}
 {{-- <script  src="http://html2canvas.hertzen.com/dist/html2canvas.js"></script> --}}
 <!--PDF外掛END-->
+  {{-- <script src="https://unpkg.com/jspdf@2.1.0/dist/jspdf.umd.min.js"></script> --}}
 
 <script>
   var chart_settle_original = '<?php echo $chart_settle_original; ?>';
@@ -191,17 +192,35 @@
   var today = moment(new Date()).format("YYYYMMDD");
   var title = today + '_場次數據圖表' + '_' + $('#course_name').text() + '(' + $('#course_date').text() + ' ' +$('#course_event').text() + ')';
 
+
   $(function () {
+    
     $('#btnPDF').click(function () {        
       html2canvas( $('#contentPDF') , { 
         onrendered:function(canvas) { 
           //返回圖片dataURL，參數：圖片格式和清晰度(0-1) 
-          var pageData = canvas.toDataURL('image/png'); 
+          var pageData = canvas.toDataURL('image/png' , 1.0); 
           //方向默認豎直，尺寸ponits，格式a4[595.28,841.89] 
-          var pdf = new jsPDF('landscape'); 
+          const pdf = new jsPDF('landscape', 'px', 'a4'); 
+
+          const pageWidth = pdf.internal.pageSize.width;
+          const pageHeight = pdf.internal.pageSize.height;
+
+          const widthRatio = pageWidth / canvas.width;
+          const heightRatio = pageHeight / canvas.height;
+          const ratio = widthRatio > heightRatio ? heightRatio : widthRatio;
+
+          const canvasWidth = canvas.width * ratio;
+          const canvasHeight = canvas.height * ratio;
+
+          const marginX = (pageWidth - canvasWidth) / 2;
+          const marginY = (pageHeight - canvasHeight) / 2;
+
+          var width = pdf.internal.pageSize.width;
+          var height = pdf.internal.pageSize.height;
+
           //addImage後兩個參數控制添加圖片的尺寸，此處將頁面高度按照a4紙寬高比列進行壓縮
-          pdf.addImage(pageData, 'PNG', 10, 10); 
-          // pdf.addImage(pageData, 'PNG', 0, 0, 595.28, 592.28/canvas.width * canvas.height ); 
+          pdf.addImage(pageData, 'PNG', marginX, 10, canvasWidth, canvasHeight); 
           pdf.save( title + '.pdf' ); 
         } 
       })
