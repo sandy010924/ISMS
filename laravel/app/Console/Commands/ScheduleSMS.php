@@ -55,10 +55,11 @@ class ScheduleSMS extends Command
     {
         //找出已預約到時間要發送的訊息
         $msg = Message::where('send_at', '<', date('Y-m-d H:i:s'))
-                        ->where(function ($query) {
-                            $query->orwhere('type', '=', 0);
-                                //   ->orWhere('type', '=', 1);
-                        })
+                        // ->where(function ($query) {
+                        //     $query->orwhere('type', '=', 0);
+                        //         //   ->orWhere('type', '=', 1);
+                        // })
+                        ->where('type', 0)
                         ->where('id_status', 21)
                         ->get();
 
