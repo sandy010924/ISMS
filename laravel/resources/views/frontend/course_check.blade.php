@@ -240,7 +240,12 @@
     @foreach($coursechecks as $key => $coursecheck)
     <tr>
       <td class="align-middle">{{ $coursecheck['row']  }}</td>
-      <td scope="row" class="align-middle" name="search_name">{{ $coursecheck['name'] }}</td>
+      <td scope="row" class="align-middle" name="search_name">
+        @if( $coursecheck['check_blacklist'] == 1 )
+          <span class="text-danger border border-danger">黑名單</span>
+        @endif
+        {{ $coursecheck['name'] }}
+      </td>
       <td class="align-middle" name="search_phone">{{ substr_replace($coursecheck['phone'], '***', 4, 3) }}</td>
       <td class="align-middle">{{ substr_replace($coursecheck['email'], '***', strrpos($coursecheck['email'], '@')) }}</td>
       <td class="align-middle">

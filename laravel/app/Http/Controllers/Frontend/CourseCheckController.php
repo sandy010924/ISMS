@@ -88,7 +88,7 @@ class CourseCheckController extends Controller
                 //         ->orWhere('id_status', 5);
                 // })
                 // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->orderBy('sales_registration.created_at')
                 ->get();
 
@@ -105,7 +105,8 @@ class CourseCheckController extends Controller
                     'check_status_val' => $data['check_status_val'],
                     'check_status_name' => $data['check_status_name'],
                     'memo' => $data['memo'],
-                    'memo2' => $data['memo2']
+                    'memo2' => $data['memo2'],
+                    'check_blacklist' => $data['check_blacklist'],
                 ];
             }
 
@@ -161,7 +162,7 @@ class CourseCheckController extends Controller
                                 $q->orWhere('registration.status_payment', 7)
                                   ->orWhere('registration.status_payment', 9);
                             })
-                            ->Where('student.check_blacklist', 0 )
+                            // ->Where('student.check_blacklist', 0 )
                             ->orderBy('register.created_at')
                             ->get();
 
@@ -186,7 +187,8 @@ class CourseCheckController extends Controller
                     'check_id' => $data['check_id'],
                     'check_status_val' => $data['check_status_val'],
                     'check_status_name' => $data['check_status_name'],
-                    'memo' => $data['memo']
+                    'memo' => $data['memo'],
+                    'check_blacklist' => $data['check_blacklist'],
                 ];
             }
             
@@ -261,7 +263,7 @@ class CourseCheckController extends Controller
                 //         ->orWhere('id_status', 5);
                 // })
                 // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->orderBy('activity.created_at')
                 ->get();
 
@@ -278,6 +280,7 @@ class CourseCheckController extends Controller
                     'check_status_val' => $data['check_status_val'],
                     'check_status_name' => $data['check_status_name'],
                     'memo' => $data['memo'],
+                    'check_blacklist' => $data['check_blacklist'],
                     // 'memo2' => $data['memo2']
                 ];
             }
