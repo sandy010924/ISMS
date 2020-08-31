@@ -87,7 +87,7 @@
           ( {{ $week }} )&nbsp;
           <label id="course_event">{{ $course->name }}</label>&nbsp;&nbsp;
           講座地點：
-          {{ $course->location }}
+          <label id="course_location">{{ $course->location }}</label>
         </h6>
         {{-- <h6>零秒成交數&nbsp;&nbsp;2019/11/20&nbsp;&nbsp;台北下午場&nbsp;&nbsp;講座地點 : 台北市金山南路一段17號5樓(博宇藝享空間)</h6> --}}
       </div>
@@ -306,16 +306,16 @@
     </div>
     <div class="row">
       <div class="col-3 mb-2">
-        <h6>主持開場 : {{ $course->host }}</h6>
+        <h6>主持開場 : <label id="course_host">{{ $course->host }}</label></h6>
       </div>
       <div class="col-3 mb-2">
-        <h6>結束收單 : {{ $course->closeorder }}</h6>
+        <h6>結束收單 : <label id="course_closeorder">{{ $course->closeorder }}</label></h6>
       </div>
       <div class="col-3 mb-2">
-        <h6>工作人員 : {{ $course->staff }}</h6>
+        <h6>工作人員 : <label id="course_staff">{{ $course->staff }}</label></h6>
       </div>
       <div class="col-3 mb-2">
-        <h6>天氣 : {{ $course->weather }}</h6>
+        <h6>天氣 : <label id="course_weather">{{ $course->weather }}</label></h6>
       </div>
     </div>
     <div class="row">
@@ -1337,6 +1337,120 @@
         extend: 'excel',
         text: '匯出Excel',
         title: title,
+        messageTop: function () {
+            var output = "";
+            
+
+            output = $("#course_name").text() + " " + $("#course_date").text() + " " + $("#course_event").text() + "\r\n";
+            output += "講座地點：" + $("#course_location").text() + "\r\n";
+            output += "主持開場：" + $("#course_host").text() + "，結束收單：" + $("#course_closeorder").text() + "，工作人員：" + $("#course_staff").text() + "，天氣：" + $("#course_weather").text() + "\r\n";
+            output += "該場總金額：" + $("#cash").text() + "，完款：" + $("#count_settle").text() + "，付訂：" + $("#count_deposit").text() + "，留單：" + $("#count_order").text() + "\r\n";
+            output += "現場完款金額：" + $("#money").val() + "，五日內完款金額：" + $("#money_fivedays").val() + "，分期付款金額：" + $("#money_installment").val() + "\r\n";
+            output += "該場備註：" + $("#memo").val();
+            
+            return output;
+        }
+        // customize: function (xlsx) {
+        //   console.log(xlsx);
+        //   var sheet = xlsx.xl.worksheets['sheet1.xml'];
+        //   var downrows = 6;
+        //   var clRow = $('row', sheet);
+        //   //update Row
+        //   clRow.each(function () {
+        //       var attr = $(this).attr('r');
+        //       var ind = parseInt(attr);
+        //       ind = ind + downrows;
+        //       $(this).attr("r",ind);
+        //   });
+  
+        //   // Update  row > c
+        //   $('row c ', sheet).each(function () {
+        //       var attr = $(this).attr('r');
+        //       var pre = attr.substring(0, 1);
+        //       var ind = parseInt(attr.substring(1, attr.length));
+        //       ind = ind + downrows;
+        //       $(this).attr("r", pre + ind);
+        //   });
+  
+        //   function Addrow(index,data) {
+        //       msg='<row r="'+index+'">'
+        //       for(i=0;i<data.length;i++){
+        //           var key=data[i].k;
+        //           var value=data[i].v;
+        //           msg += '<c t="inlineStr" r="' + key + index + '" s="42">';
+        //           msg += '<is>';
+        //           msg +=  '<t>'+value+'</t>';
+        //           msg+=  '</is>';
+        //           msg+='</c>';
+        //       }
+        //       msg += '</row>';
+        //       return msg;
+        //   }
+  
+        //   //insert
+        //   var r1 = Addrow(1, [
+        //     { k: 'A', v: $('#course_name').text() + " " + $('#course_date').text() + " " + $('#course_event').text() }, 
+        //     { k: 'B', v: '' }, 
+        //     { k: 'C', v: '' }, 
+        //     { k: 'D', v: '' }, 
+        //     { k: 'E', v: '' }, 
+        //     { k: 'F', v: '' }, 
+        //     { k: 'G', v: '' }, 
+        //     { k: 'H', v: '' }, 
+        //     { k: 'I', v: '' }, 
+        //     { k: 'J', v: '' }
+        //   ]);
+        //   var r2 = Addrow(2, [
+        //     { k: 'A', v: '主持開場' }, 
+        //     { k: 'B', v: '' }, 
+        //     { k: 'C', v: '結束收單' }, 
+        //     { k: 'D', v: '' }, 
+        //     { k: 'E', v: '工作人員' }, 
+        //     { k: 'F', v: '' }, 
+        //     { k: 'G', v: '' }, 
+        //     { k: 'H', v: '' }, 
+        //     { k: 'I', v: '天氣' }, 
+        //     { k: 'J', v: '' }
+        //   ]);
+        //   var r3 = Addrow(3, [
+        //     { k: 'A', v: '該場總金額' }, 
+        //     { k: 'B', v: '' }, 
+        //     { k: 'C', v: '' }, 
+        //     { k: 'D', v: '' }, 
+        //     { k: 'E', v: '完款' }, 
+        //     { k: 'F', v: '' }, 
+        //     { k: 'G', v: '付訂' }, 
+        //     { k: 'H', v: '' }, 
+        //     { k: 'I', v: '留單' }, 
+        //     { k: 'J', v: '' }
+        //   ]);
+        //   var r4 = Addrow(4, [
+        //     { k: 'A', v: '現場完款金額' }, 
+        //     { k: 'B', v: '' }, 
+        //     { k: 'C', v: '' }, 
+        //     { k: 'D', v: '五日內完款金額' }, 
+        //     { k: 'E', v: '' }, 
+        //     { k: 'F', v: '' }, 
+        //     { k: 'G', v: '分期付款金額' }, 
+        //     { k: 'H', v: '' }, 
+        //     { k: 'I', v: '' }, 
+        //     { k: 'J', v: '' }
+        //   ]);
+        //   var r5 = Addrow(5, [
+        //     { k: 'A', v: '該場備注' }, 
+        //     { k: 'B', v: '' }, 
+        //     { k: 'C', v: '' }, 
+        //     { k: 'D', v: '' }, 
+        //     { k: 'E', v: '' }, 
+        //     { k: 'F', v: '' }, 
+        //     { k: 'G', v: '' }, 
+        //     { k: 'H', v: '' }, 
+        //     { k: 'I', v: '' }, 
+        //     { k: 'J', v: '' }
+        //   ]);
+          
+        //   sheet.childNodes[0].childNodes[1].innerHTML = r1 + r2+ r3+ r4+ r5+ sheet.childNodes[0].childNodes[1].innerHTML;
+        // }
       })],
     });
   }
