@@ -689,36 +689,112 @@ class CourseController extends Controller
             if ($events[0]->type == 1) {
                 //銷講
                 foreach ($events as $data) {
-                    //刪除報名表
-                    SalesRegistration::where('id_events', $data->id)->delete();
 
-                    // $apply_table = SalesRegistration::where('id_events', $events->id)
-                    //                                 ->get();
+                    /* 刪除該報名表相關進階資料 S */
+                    $apply_table = Registration::where('source_events', $data->id)->get();
+
+                    foreach ($apply_table as $data_apply) {
+                        
+                        // /* 刪除該進階報名表相關進階資料 S */
+                        // $apply_table_adv = Registration::where('source_events', $data_apply['id'])->get();
+
+                        // foreach ($apply_table_adv as $data_apply_adv) {
+                        //     //刪除報到
+                        //     Register::where('id_registration', $data_apply_adv['id'])->delete();
+
+                        //     //刪除追單
+                        //     Debt::where('id_registration', $data_apply_adv['id'])->delete();
+
+                        //     //刪除退費
+                        //     Refund::where('id_registration', $data_apply_adv['id'])->delete();
+
+                        //     //刪除付款
+                        //     Payment::where('id_registration', $data_apply_adv['id'])->delete();
+                        // }
+
+                        // //刪除進階報名表
+                        // Registration::where('source_events', $data_apply['id'])->delete();
+
+                        // /* 刪除該進階報名表相關進階資料 E */
+
+
+                        //刪除報到
+                        Register::where('id_registration', $data_apply['id'])->delete();
+
+                        //刪除追單
+                        Debt::where('id_registration', $data_apply['id'])->delete();
+
+                        //刪除退費
+                        Refund::where('id_registration', $data_apply['id'])->delete();
+
+                        //刪除付款
+                        Payment::where('id_registration', $data_apply['id'])->delete();
+                        
+                    }
+
+                    //刪除進階報名表
+                    Registration::where('source_events', $data->id)->delete();
+
+                    /* 刪除該報名表相關進階資料 E */
                 }
+                //刪除報名表
+                SalesRegistration::where('id_events', $data->id)->delete();
+
             } else if ($events[0]->type == 2 || $events[0]->type == 3) {
                 //正課
-                // foreach( $events as $data){
 
-                $apply_table = Registration::where('id_group', $id_group)
-                    ->get();
+                // $apply_table = Registration::where('id_group', $id_group)
+                //     ->get();
 
-                foreach ($apply_table as $data_apply) {
-                    //刪除報到
-                    Register::where('id_registration', $data_apply['id'])->delete();
+                foreach ($events as $data) {
+                    /* 刪除該報名表相關進階資料 S */
+                    $apply_table = Registration::where('source_events', $data->id)->get();
 
-                    //刪除追單
-                    Debt::where('id_registration', $data_apply['id'])->delete();
+                    foreach ($apply_table as $data_apply) {
 
-                    //刪除退費
-                    Refund::where('id_registration', $data_apply['id'])->delete();
+                        // /* 刪除該報名表相關進階資料 S */
+                        // $apply_table_adv = Registration::where('source_events', $data_apply['id'])->get();
 
-                    //刪除付款
-                    Payment::where('id_registration', $data_apply['id'])->delete();
+                        // foreach ($apply_table_adv as $data_apply_adv) {
+                        //     //刪除報到
+                        //     Register::where('id_registration', $data_apply_adv['id'])->delete();
+
+                        //     //刪除追單
+                        //     Debt::where('id_registration', $data_apply_adv['id'])->delete();
+
+                        //     //刪除退費
+                        //     Refund::where('id_registration', $data_apply_adv['id'])->delete();
+
+                        //     //刪除付款
+                        //     Payment::where('id_registration', $data_apply_adv['id'])->delete();
+                        // }
+
+                        // //刪除進階報名表
+                        // Registration::where('source_events', $data_apply['id'])->delete();
+
+                        // /* 刪除該報名表相關進階資料 E */
+
+                        //刪除報到
+                        Register::where('id_registration', $data_apply['id'])->delete();
+
+                        //刪除追單
+                        Debt::where('id_registration', $data_apply['id'])->delete();
+
+                        //刪除退費
+                        Refund::where('id_registration', $data_apply['id'])->delete();
+
+                        //刪除付款
+                        Payment::where('id_registration', $data_apply['id'])->delete();
+                    }
+
+                    //刪除進階報名表
+                    Registration::where('source_events', $data->id)->delete();
+
+                    /* 刪除該報名表相關進階資料 E */
                 }
-
                 //刪除報名表
                 Registration::where('id_group', $id_group)->delete();
-                // }
+
             } else if ($events[0]->type == 4) {
                 //活動
                 foreach ($events as $data) {
