@@ -234,6 +234,23 @@
           </div>
         </div>
 
+
+        <div id="loading" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                {{-- <div class="modal-content">
+                  <div class="modal-body"> --}}
+                      {{-- <span class="fa fa-spinner fa-spin fa-3x"></span> --}}
+                      {{-- <div class="m-auto"> --}}
+                        <div class="spinner-grow text-light m-auto" style="width: 3rem; height: 3rem;" role="status">
+                          <span class="sr-only">傳送中</span>
+                        </div>
+                      {{-- </div> --}}
+                  {{-- </div>
+                </div> --}}
+            </div>
+        </div>
+
+
 <!-- Content End -->
 
 <script src="{{ asset('js/ckeditor.js') }}"></script>
@@ -414,6 +431,8 @@
     $('#sendMessageBtn').on('click', function(e) {
       e.preventDefault();
 
+       $('#loading').modal('show');
+       
       var empty = verifyEmpty();
       
       if( empty > 0 ){
@@ -447,13 +466,38 @@
           success:function(res){
             console.log(res);  
             
-            if( res['status'] == 'success' && res['AccountPoint'] != null){
+            if( res['status'] == 'success' && typeof(res['AccountPoint']) != "undefined" ){
+
+              var error_alert = "";
+
+              if( 'error_phone' in res ){
+                for (var i = 0; i < res['error_phone'].length; i++) {
+                  error_alert += res['error_phone'][i] + "：" + res['error_msg'][i];
+                }
+              }
+
               /** alert **/
-              $("#success_alert_text").html("寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "，發送人數為" + res['count'] + "人。");
+              // $("#success_alert").css({ bottom: '50px' });
+              $("#success_alert_text").html("訊息寄送成功，簡訊餘額尚有" + res['AccountPoint'] + "，成功發送人數為" + res['count'] + "人。");
               fade($("#success_alert"));
+              // $("#error_alert_text").html(error_alert);
+              // fade($("#error_alert"));   
 
               $('input[type="button"]').prop('disabled', 'disabled');
-              setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+
+              if( error_alert != "" ){
+                setTimeout( function(){ 
+                  alert( "訊息發送錯誤通知" + "\r\n\r\n" + error_alert );
+                  location.href="{{URL::to('message')}}";
+                }, 2000);
+              }else{
+                setTimeout( function(){ 
+                  location.href="{{URL::to('message')}}";
+                }, 3000);
+              }
+
+
+              // setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
             }else if( res['status'] == 'success' ){
               /** alert **/ 
               $("#success_alert_text").html("寄送成功。");
@@ -468,6 +512,7 @@
               
               $('#sendMessageBtn').html('立即傳送');
               $('#sendMessageBtn').prop('disabled', false);
+              $('#loading').modal('hide');
             }else if( res['status'] == 'error' ){
               /** alert **/ 
               $("#error_alert_text").html("寄送失敗。");
@@ -475,6 +520,7 @@
 
               $('#sendMessageBtn').html('立即傳送');
               $('#sendMessageBtn').prop('disabled', false); 
+              $('#loading').modal('hide');
             }else{
               /** alert **/ 
               $("#error_alert_text").html("寄送失敗。");
@@ -482,14 +528,21 @@
 
               $('#sendMessageBtn').html('立即傳送');
               $('#sendMessageBtn').prop('disabled', false); 
+              $('#loading').modal('hide');
             }
 
           },
           error: function(jqXHR, textStatus, errorMessage){
               console.log("error: "+ errorMessage);    
               console.log(jqXHR);
-              $(this).html('立即傳送');
-              $(this).prop('disabled', false);
+
+              /** alert **/ 
+              $("#error_alert_text").html("寄送失敗。");
+              fade($("#error_alert"));   
+
+              $('#sendMessageBtn').html('立即傳送');
+              $('#sendMessageBtn').prop('disabled', false); 
+              $('#loading').modal('hide');
           }
         });
     });
@@ -497,8 +550,9 @@
 
     /* 儲存草稿 */
     $('#draftBtn').on('click', function(e) {
-      
       e.preventDefault();
+      
+      $('#loading').modal('show');
 
       var empty = verifyEmpty();
       
@@ -538,7 +592,8 @@
           /** alert **/ 
           $("#error_alert_text").html("儲存草稿失敗");
           fade($("#error_alert")); 
-          $('#draftBtn').prop('disabled', false);     
+          $('#draftBtn').prop('disabled', false);  
+          $('#loading').modal('hide');   
         }
 
       }).fail(function(err) {
@@ -548,6 +603,7 @@
         $("#error_alert_text").html("儲存草稿失敗");
         fade($("#error_alert"));     
         $('#draftBtn').prop('disabled', false);   
+        $('#loading').modal('hide');
 
       });
     });
@@ -559,6 +615,8 @@
       // $('#displaySchedule').text(`排程時間 : ${ $('#scheduleTime').val() }`);
 
       e.preventDefault();
+
+      $('#loading').modal('show');
 
       var empty = verifyEmpty();
       
@@ -619,17 +677,37 @@
             send_at: send_at,
           },
           success:function(res){
-            console.log(res);  
+            // console.log(res);  
 
-            if( res['status'] == 'success' && res['AccountPoint'] != null){
+            if( res['status'] == 'success' && typeof(res['AccountPoint']) != "undefined" ){
               $('#scheduleModal').modal('hide');
 
+              var error_alert = "";
+
+              if( 'error_phone' in res ){
+                for (var i = 0; i < res['error_phone'].length; i++) {
+                  error_alert += res['error_phone'][i] + "：" + res['error_msg'][i];
+                }
+              }
+
               /** alert **/
-              $("#success_alert_text").html("訊息預約成功，簡訊餘額尚有" + res['AccountPoint'] + "，預約發送人數為" + res['count'] + "人。");
+              $("#success_alert_text").html("訊息預約成功，簡訊餘額尚有" + res['AccountPoint'] + "，成功預約發送人數為" + res['count'] + "人。");
               fade($("#success_alert"));
 
               $('input[type="button"]').prop('disabled', 'disabled');
-              setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
+              
+              if( error_alert != "" ){
+                setTimeout( function(){ 
+                  alert( "預約發送錯誤通知" + "\r\n\r\n" + error_alert );
+                  location.href="{{URL::to('message')}}";
+                }, 2000);
+              }else{
+                setTimeout( function(){ 
+                  location.href="{{URL::to('message')}}";
+                }, 3000);
+              }
+
+              // setTimeout( function(){location.href="{{URL::to('message')}}"}, 3000);
             }else if( res['status'] == 'success' ){
               $('#scheduleModal').modal('hide');
 
@@ -646,6 +724,7 @@
               
               $('#saveScheduleBtn').html('排程設定');
               $('#saveScheduleBtn').prop('disabled', false);
+              $('#loading').modal('hide');
             }else if( res['status'] == 'error' ){
               /** alert **/ 
               $("#error_alert_text").html("訊息預約失敗。");
@@ -653,6 +732,15 @@
 
               $('#saveScheduleBtn').html('排程設定');
               $('#saveScheduleBtn').prop('disabled', false); 
+              $('#loading').modal('hide');
+            }else{
+              /** alert **/ 
+              $("#error_alert_text").html("訊息預約失敗。");
+              fade($("#error_alert"));   
+
+              $('#saveScheduleBtn').html('排程設定');
+              $('#saveScheduleBtn').prop('disabled', false); 
+              $('#loading').modal('hide');
             }
 
           },
@@ -665,6 +753,7 @@
 
               $('#saveScheduleBtn').html('排程設定');
               $('#saveScheduleBtn').prop('disabled', false); 
+              $('#loading').modal('hide');
               // $(this).html('立即傳送');
               // $(this).prop('disabled', false);
           }

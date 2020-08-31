@@ -47,7 +47,7 @@
               <tbody>
                 @foreach($scheduleMsg as $data )
                 <tr>
-                  <td class="d-none">{{ $data['created_at'] }}</td>
+                  <td class="d-none">{{ $data['send_at'] }}</td>
                   <td>{{ $data['name'] }}</td>
                   <td class="ellipsis">{{ $data['content'] }}</td>
                   <td>{{ $data['type'] }}</td>
@@ -83,7 +83,7 @@
               <tbody>
                 @foreach($draftMsg as $data )
                 <tr>
-                  <td class="d-none">{{ $data['created_at'] }}</td>
+                  <td class="d-none">{{ $data['updated_at'] }}</td>
                   <td>{{ $data['name'] }}</td>
                   <td class="ellipsis">{{ $data['content'] }}</td>
                   <td>{{ $data['type'] }}</td>
@@ -115,7 +115,7 @@
               <tbody>
                 @foreach($sentMsg as $data )
                 <tr href="{{ route('message_data', ['id' => $data['id']]) }}" style="cursor: pointer;">
-                  <td class="d-none">{{ $data['created_at'] }}</td>
+                  <td class="d-none">{{ $data['send_at'] }}</td>
                   <td>{{ $data['name'] }}</td>
                   <td class="ellipsis">{{ $data['content'] }}</td>
                   <td>{{ $data['type'] }}</td>

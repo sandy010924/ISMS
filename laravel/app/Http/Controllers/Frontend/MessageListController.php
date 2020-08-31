@@ -44,7 +44,7 @@ class MessageListController extends Controller
             //過時預約訊息不得取消故不顯示
             if( date( 'Y-m-d H:i' ,strtotime($data['send_at'])) > date( 'Y-m-d H:i' ,strtotime('now')) ){
               $scheduleMsg[count($scheduleMsg)] = [
-                'created_at' => $data['created_at'],
+                'updated_at' => $data['updated_at'],
                 'id' => $data['id'],
                 'name' => $data['name'],
                 'content' => html_entity_decode(strip_tags($data['content'])),
@@ -57,7 +57,7 @@ class MessageListController extends Controller
           case 18:
             //草稿
             $draftMsg[count($draftMsg)] = [
-              'created_at' => $data['created_at'],
+              'updated_at' => $data['updated_at'],
               'id' => $data['id'],
               'name' => $data['name'],
               'content' => html_entity_decode(strip_tags($data['content'])),
@@ -68,7 +68,7 @@ class MessageListController extends Controller
           case 19:
             //已傳送
             $sentMsg[count($sentMsg)] = [
-              'created_at' => $data['created_at'],
+              'updated_at' => $data['updated_at'],
               'id' => $data['id'],
               'name' => $data['name'],
               'content' => html_entity_decode(strip_tags($data['content'])),
@@ -86,14 +86,14 @@ class MessageListController extends Controller
       $start_array = Message::orderBy('send_at','asc')
                             ->whereNotNull('send_at')
                             ->where('send_at', '<>', '0000-00-00 00:00:00')
-                            // ->orderBy('created_at', 'asc')
+                            // ->orderBy('updated_at', 'asc')
                             ->first();
 
       //結束時間
       $end_array = Message::orderBy('send_at','desc')
                           ->whereNotNull('send_at')
                           ->where('send_at', '<>', '0000-00-00 00:00:00')
-                          // ->orderBy('created_at', 'desc')
+                          // ->orderBy('updated_at', 'desc')
                           ->first();
 
       
