@@ -58,7 +58,7 @@ class SendEmail extends Command
         $msg = Message::where('send_at', '<', date('Y-m-d H:i:s'))
                         ->where('send_at', 'like', '%' . date('Y-m-d') . '%')
                         ->where(function ($query) {
-                            $query->where('type', '=', 1)
+                            $query->orwhere('type', '=', 1)
                                   ->orWhere('type', '=', 2);
                         })
                         ->where('id_status', 21)
@@ -78,11 +78,9 @@ class SendEmail extends Command
                 Mail::send('frontend.model_email', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
                     $message->subject($mailTitle);
                     foreach ($emailAddr as $email) {
-                        $message->to($email->email);
+                        $message->to($email['email']);
                     }
-                });
-
-                
+                });              
                 // 更新訊息狀態為已傳送
                 Message::where('id', $dataMsg['id'])
                         ->update([
