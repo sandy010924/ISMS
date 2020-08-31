@@ -15,7 +15,9 @@
       </div>
       <div class="col-3">
         <div class="input-group date" data-target-input="nearest">
-          <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期" data-toggle="datetimepicker" autocomplete="off">
+          <!-- <input type="text" id="search_date" name="search_date" class="form-control datetimepicker-input" data-target="#search_date" placeholder="日期" data-toggle="datetimepicker" autocomplete="off"> -->
+          <input type="search" class="form-control px-3" name="search_date" id="search_date" placeholder="日期" autocomplete="off">
+
           <div class="input-group-append" data-target="#search_date" data-toggle="datetimepicker">
             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
           </div>
@@ -101,16 +103,13 @@
               <div class="col-2">
               </div>
               <div class="col-3">
-                {{-- <div class="input-group date" data-target-input="nearest">
+                <!-- <div class="input-group date" data-target-input="nearest">
                   <input type="text" id="invoice_search_date" name="invoice_search_date" class="form-control datetimepicker-input" data-target="#invoice_search_date" placeholder="購買日期" data-toggle="datetimepicker" autocomplete="off">
                   <div class="input-group-append" data-target="#invoice_search_date" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                   </div>
-                </div> --}}
+                </div> -->
                 <div class="input-group">
-                  {{-- <div class="input-group-prepend">
-                    <span class="input-group-text">購買日期區間</span>
-                  </div> --}}
                   <input type="search" class="form-control px-3" name="invoice_search_date" id="invoice_search_date" placeholder="購買日期區間" autocomplete="off">
                 </div>
               </div>
@@ -150,14 +149,44 @@
 <!-- Content End -->
 <script>
   var table, table2;
-  var start,end;
+  var start, end;
 
   $("document").ready(function() {
 
     // 日期選擇器 Rocky(2020/04/24)
-    $('#search_date').datetimepicker({
-      format: 'YYYY-MM-DD'
+    // $('#search_date').datetimepicker({
+    //   format: 'YYYY-MM-DD'
+    // });
+
+    $('#search_date').daterangepicker({
+      autoUpdateInput: false,
+      locale: {
+        format: 'YYYY-MM-DD',
+        separator: ' ~ ',
+        applyLabel: '搜尋',
+        cancelLabel: '取消',
+      }
     });
+    /* 日期區間搜尋 */
+    $('#search_date').on('apply.daterangepicker', function(ev, picker) {
+      //輸入框key入選取的日期
+      $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+
+          var min = picker.startDate.format('YYYY-MM-DD 00:00:00');
+          var max = picker.endDate.format('YYYY-MM-DD 24:00:00');
+
+          var startDate = data[0];
+          if (startDate <= max && startDate >= min) {
+            return true;
+          }
+          return false;
+        });
+      table.draw();
+
+    });
+
     // $('#invoice_search_date').datetimepicker({
     //   format: 'YYYY-MM-DD'
     // });
@@ -177,9 +206,20 @@
     $('#invoice_search_date').on('apply.daterangepicker', function(ev, picker) {
       //輸入框key入選取的日期
       $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
 
-        start = picker.startDate.format('YYYY-MM-DD 00:00:00');
-        end = picker.endDate.format('YYYY-MM-DD 24:00:00');
+          var min = picker.startDate.format('YYYY-MM-DD 00:00:00');
+          var max = picker.endDate.format('YYYY-MM-DD 24:00:00');
+
+          var startDate = data[0];
+          if (startDate <= max && startDate >= min) {
+            return true;
+          }
+          return false;
+        });
+      table2.draw();
+
     });
 
 
@@ -298,6 +338,13 @@
     $("#invoice_search_date").val('');
     $("#invoice_search_name").val('');
 
+    start = ""
+    end = ""
+
+    // 清除搜尋紀錄
+    $.fn.dataTable.ext.search.pop()
+    table2.columns().search('')
+
     table2.clear().draw();
     table2.destroy();
 
@@ -340,6 +387,7 @@
         "targets": 'no-sort',
         "orderable": false,
       }],
+      "stateSave": true,
       "orderCellsTop": true,
       "destroy": true,
       "retrieve": true,
@@ -356,7 +404,7 @@
         "data": {
           id_events: id_events
         },
-        async: false,
+        // async: false,
         "dataSrc": function(json) {
           // console.log(json)
           for (var i = 0, ien = json.length; i < ien; i++) {
@@ -506,24 +554,12 @@
   // );
 
   $("#btn_search").click(function() {
-    table.columns(0).search($('#search_date').val()).columns(1).search($("#search_course").val()).draw();
+    table.columns(1).search($("#search_course").val()).draw();
     // table.search($('#search_course').val() + " " + $('#search_date').val()).draw();
   });
 
   $("#btn_search2").click(function() {
-    // table2.columns(0).search($('#invoice_search_date').val()).columns(1).search($("#invoice_search_name").val()).draw();
-    
-      $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-
-          var startDate = data[0];
-          if (startDate <= end && startDate >= start) {
-            return true;
-          }
-          return false;
-        });
-
-      table2.draw();
+    table2.columns(1).search($("#invoice_search_name").val()).draw();
   });
   /* 搜尋 Rocky(2020/04/24) - E */
 </script>
