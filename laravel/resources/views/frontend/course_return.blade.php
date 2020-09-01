@@ -414,6 +414,10 @@
       {{-- <td class="align-middle" data-toggle="modal" onclick="course_data({{ $data['id_student'] }});">{{ $data['name'] }}</td> --}}
       <td class="align-middle">
         {{-- <a class="contact" data-id="{{ $data['id_student'] }}" data-toggle="modal" data-target="#contact">{{ $data['name'] }}</a> --}}
+        
+        @if( $data['check_blacklist'] == 1 )
+          <span class="text-danger border border-danger">黑名單</span> 
+        @endif
         <a class="btn_tableName" data-toggle="modal" onclick="course_data({{ $data['id_student'] }});">{{ $data['name'] }}</a>
       </td>
       <td class="align-middle">{{ $data['phone'] }}</td>

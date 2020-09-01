@@ -89,7 +89,7 @@ class CourseCheckController extends Controller
                 // })
                 // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
                 // ->Where('student.check_blacklist', 0 )
-                ->orderBy('sales_registration.created_at')
+                ->orderBy('sales_registration.id')
                 ->get();
 
 
@@ -118,13 +118,13 @@ class CourseCheckController extends Controller
             $count_check = count(SalesRegistration::join('student', 'student.id', '=', 'sales_registration.id_student')
                 ->Where('sales_registration.id_events','=', $id)
                 ->Where('sales_registration.id_status','=', 4)
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->get());
             //報到筆數
             $count_cancel = count(SalesRegistration::join('student', 'student.id', '=', 'sales_registration.id_student')
                 ->Where('sales_registration.id_events','=', $id)
                 ->Where('sales_registration.id_status','=', 5)
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->get());
         }elseif( $course->type == 2 || $course->type == 3){
             //正課
@@ -163,7 +163,7 @@ class CourseCheckController extends Controller
                                   ->orWhere('registration.status_payment', 9);
                             })
                             // ->Where('student.check_blacklist', 0 )
-                            ->orderBy('register.created_at')
+                            ->orderBy('register.id')
                             ->get();
 
             $coursechecks = array();
@@ -264,7 +264,7 @@ class CourseCheckController extends Controller
                 // })
                 // ->orderByRaw('FIELD(id_status, "4", "3", "5")')
                 // ->Where('student.check_blacklist', 0 )
-                ->orderBy('activity.created_at')
+                ->orderBy('activity.id')
                 ->get();
 
 
@@ -293,13 +293,13 @@ class CourseCheckController extends Controller
             $count_check = count(Activity::join('student', 'student.id', '=', 'activity.id_student')
                 ->Where('activity.id_events','=', $id)
                 ->Where('activity.id_status','=', 4)
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->get());
             //報到筆數
             $count_cancel = count(Activity::join('student', 'student.id', '=', 'activity.id_student')
                 ->Where('activity.id_events','=', $id)
                 ->Where('activity.id_status','=', 5)
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->get());
         }
 
