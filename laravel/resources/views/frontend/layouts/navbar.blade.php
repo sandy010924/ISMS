@@ -7,7 +7,7 @@
         <img src="./img/logo.png" width="60" class="rounded" alt="logo">
       </a>
     </div>
-  {{-- </div>
+    {{-- </div>
   <div class="sidebar-sticky"> --}}
     @if (Auth::user() == null)
     @php
@@ -119,6 +119,7 @@
         <a class="nav-link nav-sub-item" href="{{ route('authority') }}">權限管理</a>
         @if (Auth::user()->role == 'admin' )
         <a class="nav-link nav-sub-item" href="{{ route('database') }}">備份管理</a>
+        <a class="nav-link nav-sub-item" href="{{ route('merge_student') }}">合併學員</a>
         @endif
         <a class="nav-link nav-sub-item" href="{{ route('blacklist_rule') }}">黑名單規則</a>
       </li>

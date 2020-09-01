@@ -38,7 +38,9 @@ Route::post('login', 'Frontend\LoginController@login');
 Route::get('logout', 'Frontend\LoginController@logout')->name('logout');
 
 
-
+Route::get('xxx', function () {
+    return view('frontend.xxx');
+})->name('xxx');
 /*
 |--------------------------------------------------------------------------
 | Error
@@ -496,9 +498,10 @@ Route::get('report_search', 'Frontend\ReportController@search');
 |--------------------------------------------------------------------------
 */
 /*** 顯示資料 Rocky(2020/02/17) ***/
-Route::get('sandyq', 'Frontend\SandyqController@show')->name('sandyq');
-Route::get('sandyq_search', 'Frontend\SandyqController@search')->name('sandyq_search');
-Route::post('sandyq_student', 'Frontend\SandyqController@sandyqstudent')->name('sandyq_student');
+Route::get('merge_student', 'Frontend\MergeStudentController@show')->name('merge_student');
+Route::get('merge_student_search', 'Frontend\MergeStudentController@search')->name('merge_student_search');
+Route::post('merge_student_student', 'Frontend\MergeStudentController@merge')->name('merge_student_student');
+
 Route::get('authority', 'Frontend\AuthorityController@show')->name('authority');
 /*** 搜尋資料 Rocky(2020/02/17) ***/
 // Route::get('authority_search', 'Frontend\AuthorityController@search');

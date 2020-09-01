@@ -32,6 +32,7 @@ class BlacklistController extends Controller
                 ->select('blacklist.id as blacklist_id', 'blacklist.reason', 'student.*')
                 ->Where('email', 'like', '%' . $search_data . '%')
                 ->orWhere('phone', 'like', '%' . $search_data . '%')
+                > orWhere('student.name', 'like', '%' . $search_data . '%')
                 ->paginate($pagesize);
         } else {
             $blacklists =  Blacklist::leftJoin('student', 'blacklist.id_student', '=', 'student.id')
