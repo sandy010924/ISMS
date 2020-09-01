@@ -44,7 +44,7 @@ class CourseCheckController extends Controller
             //判斷系統是否已有該學員資料
             $check_student = Student::where('name', $new_name)
                                      ->where('phone', $new_phone)
-                                    //  ->where('email', $new_email)
+                                     ->where('email', $new_email)
                                      ->get();
 
 
@@ -56,17 +56,16 @@ class CourseCheckController extends Controller
                     $id_student = $data_student->id;
                 }
 
-                //判斷地址是否為空值，否 則不更新
-                $address = Student::where('id', $id_student)->first()->address;
-                if ($address == '' || $address == null || $address == 'Excel無資料') {
-                    $address = $new_address;
-                }
+                // //判斷地址是否為空值，否 則不更新
+                // $address = Student::where('id', $id_student)->first()->address;
+                // if ($address == '' || $address == null || $address == 'Excel無資料') {
+                //     $address = $new_address;
+                // }
 
                 //更新學員資料
                 Student::where('id', $id_student)
                         ->update([
-                            'email' => $new_email,
-                            'address' => $address,
+                            'address' => $new_address,
                             'profession' => $new_profession
                             ]);
             } else {
@@ -90,7 +89,7 @@ class CourseCheckController extends Controller
             }
             /*學員報名資料 - E*/
 
-
+            
             /* 報名資料 - S*/
             if ($type == 1) {
                 //銷講
@@ -539,7 +538,7 @@ class CourseCheckController extends Controller
             //判斷系統是否已有該學員資料
             $check_student = Student::where('name', $name)
                                     ->where('phone', $phone)
-                                    // ->where('email', $email)
+                                    ->where('email', $email)
                                     ->get();
 
             // 檢查學員資料
@@ -548,31 +547,30 @@ class CourseCheckController extends Controller
                     $id_student = $data_student->id;
                 }
 
-                if ($name == "") {
-                    $name = Student::where('id', $id_student)->first()->name;
-                }
-                if ($email == "") {
-                    $email = Student::where('id', $id_student)->first()->email;
-                }
+                // if ($name == "") {
+                //     $name = Student::where('id', $id_student)->first()->name;
+                // }
+                // if ($email == "") {
+                //     $email = Student::where('id', $id_student)->first()->email;
+                // }
                 
                 ////如果原本有地址就不更新地址
                 // $old_address = Student::where('id', $id_student)->first()->address;
                 // if ($old_address != "") {
                 //     $address = $old_address;
                 // }
-                if ($address == "") {
-                    $address = Student::where('id', $id_student)->first()->address;
-                }
+                // if ($address == "") {
+                //     $address = Student::where('id', $id_student)->first()->address;
+                // }
 
                     
-                if ($profession == "") {
-                    $profession = Student::where('id', $id_student)->first()->profession;
-                }
+                // if ($profession == "") {
+                //     $profession = Student::where('id', $id_student)->first()->profession;
+                // }
 
                 //更新學員資料
                 Student::where('id', $id_student)
                     ->update([
-                        'email' => $email,
                         'address' => $address,
                         'profession' => $profession,
                     ]);

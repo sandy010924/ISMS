@@ -121,13 +121,13 @@
                   <input type="hidden" name="form_event_id" id="form_event_id" value="{{ $course->id }}">
                   <input type="hidden" name="form_event_type" id="form_event_type" value="{{ $course->type }}">
                   <div class="form-group required">
-                    <label for="new_name" class="col-form-label">姓名</label>
-                    <input type="text" class="form-control" name="new_name" id="new_name" required>
-                  </div>
-                  <div class="form-group required">
                     <label for="new_phone" class="col-form-label">聯絡電話</label>
                     <input type="text" class="form-control" name="new_phone" id="new_phone" required>
-                    <label class="text-secondary"><small>聯繫方式</small></label>
+                    <label class="text-secondary"><small>聯繫方式，自動代入已輸入過學員資料</small></label>
+                  </div>
+                  <div class="form-group required">
+                    <label for="new_name" class="col-form-label">姓名</label>
+                    <input type="text" class="form-control" name="new_name" id="new_name" required>
                   </div>
                   <div class="form-group">
                     <label for="new_email" class="col-form-label">電子郵件</label>
@@ -136,26 +136,28 @@
                   </div>
                   <div class="form-group">
                     <label for="new_address" class="col-form-label">居住區域</label>
-                    <select class="custom-select form-control" name="new_address" id="new_address">
+                    <input type="search" list="list_address" id="new_address" name="new_address" class="form-control" required />
+                    <datalist class="w-100" id="list_address">
+                    {{-- <select class="custom-select form-control" name="new_address" id="new_address"> --}}
                       <option selected disabled>請選擇居住區域</option>
-                      <option>宜蘭</option>
-                      <option>基隆</option>
-                      <option>台北</option>
-                      <option>新北</option>
-                      <option>桃園</option>
-                      <option>新竹</option>
-                      <option>苗栗</option>
-                      <option>台中</option>
-                      <option>彰化</option>
-                      <option>南投</option>
-                      <option>雲林</option>
-                      <option>嘉義</option>
-                      <option>台南</option>
-                      <option>高雄</option>
-                      <option>屏東</option>
-                      <option>台東</option>
-                      <option>花蓮</option>
-                    </select>
+                      <option value="宜蘭"></option>
+                      <option value="基隆"></option>
+                      <option value="台北"></option>
+                      <option value="新北"></option>
+                      <option value="桃園"></option>
+                      <option value="新竹"></option>
+                      <option value="苗栗"></option>
+                      <option value="台中"></option>
+                      <option value="彰化"></option>
+                      <option value="南投"></option>
+                      <option value="雲林"></option>
+                      <option value="嘉義"></option>
+                      <option value="台南"></option>
+                      <option value="高雄"></option>
+                      <option value="屏東"></option>
+                      <option value="台東"></option>
+                      <option value="花蓮"></option>
+                    </datalist>
                   </div>
                   <div class="form-group">
                     <label for="new_profession">目前職業</label>
@@ -290,6 +292,23 @@
   </div>
 </div>
 
+<!-- 同電話學員選項 -->
+<div id="student_option" class="modal fade" tabindex="1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">請選擇自動填入的學員資料</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 同電話學員選項 -->
 
 <!-- 編輯報名 modal -->
 <div class="modal fade" id="edit_form" tabindex="-1" role="dialog" aria-labelledby="EditCheckLabel" aria-hidden="true">
@@ -318,36 +337,13 @@
           </div>
           <div class="form-group">
             <label for="edit_email">電子郵件</label>
-            <input type="text" class="form-control" name="edit_email" id="edit_email">
+            <input type="text" class="form-control" name="edit_email" id="edit_email" readonly>
             <label class="text-secondary"><small>example@example.com</small></label>
           </div>
           <div class="form-group">
             <label for="edit_address" class="col-form-label">居住區域</label>
-            <input type="text" class="form-control" name="edit_address" id="edit_address">
+            <input type="search" list="list_address" class="form-control" name="edit_address" id="edit_address">
           </div>
-          <!-- <div class="form-group">
-            <label for="edit_address" class="col-form-label">居住區域</label>
-            <select class="custom-select form-control" name="edit_address" id="edit_address">
-              <option selected disabled>請選擇居住區域</option>
-              <option>宜蘭</option>
-              <option>基隆</option>
-              <option>台北</option>
-              <option>新北</option>
-              <option>桃園</option>
-              <option>新竹</option>
-              <option>苗栗</option>
-              <option>台中</option>
-              <option>彰化</option>
-              <option>南投</option>
-              <option>雲林</option>
-              <option>嘉義</option>
-              <option>台南</option>
-              <option>高雄</option>
-              <option>屏東</option>
-              <option>台東</option>
-              <option>花蓮</option>
-            </select>
-          </div> -->
           <div class="form-group">
             <label for="edit_profession">目前職業</label>
             <input type="text" class="form-control" name="edit_profession" id="edit_profession">
@@ -380,10 +376,23 @@
   </div>
 </div>
 
-
 <style>
   table#table_list {
     width: 100% !important;
+  }
+
+  
+  /* modal層級 */
+  .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+  }
+
+  .modal-backdrop.show:nth-of-type(odd) {
+    z-index: 1051 !important;
+  }
+
+  .modal {
+    overflow-y: auto !important;
   }
 </style>
 <script>
@@ -674,6 +683,125 @@
   }
   // 資料自動儲存 End
 
+  /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
+  // 現場完款
+  $('body').on('blur', '#new_phone', function() {
+    var phone = $(this).val();
+    fill_data(phone);
+  });
+  $('body').on('keyup', '#new_phone', function(e) {
+    if (e.keyCode === 13) {
+      var phone = $(this).val();
+      fill_data(phone);
+    }
+  });
+
+  //填入資料
+  function fill_data(phone) {
+    $.ajax({
+      type: 'GET',
+      url: 'course_check_fill',
+      data: {
+        phone: phone
+      },
+      success: function(data) {
+        // console.log(data);  
+
+        if (data != "nodata") {
+          if (data.length > 1) {
+            $('#student_option').modal('show');
+            var option;
+            option = `<table class="table table-striped table-sm text-center border rounded-lg dataTable no-footer">
+                        <thead>
+                          <tr>
+                            <th>姓名</th>
+                            <th>電話</th>
+                            <th>信箱</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                      `;
+            for (var i = 0; i < data.length; i++) {
+              option += `<tr>
+                          <td class="align-middle">${data[i].name}</td>
+                          <td class="align-middle">${data[i].phone}</td>
+                          <td class="align-middle">${data[i].email}</td>
+                          <td class="align-middle">
+                            <button id="option_${i}" type="button" class="btn btn-sm btn-primary">選擇</button>
+                          </td>
+                         </tr>`;
+            }
+
+            option += `</tbody></table>`;
+            $('#student_option .modal-body').html(option).on('click', 'button', function() {
+              //點選按鈕填入學員資料
+              // console.log($(this).closest('tr').index());
+              option_click(data[$(this).closest('tr').index()]);
+            });;
+
+          } else {
+            //針對空格做填入 
+
+            if ($("#new_name").val() == "") {
+              $("#new_name").val(data[0].name);
+            }
+
+            if ($("#new_phone").val() == "") {
+              $("#new_phone").val(data[0].phone);
+            }
+
+            if ($("#new_email").val() == "") {
+              $("#new_email").val(data[0].email);
+            }
+
+            if ($("#new_profession").val() == "") {
+              $("#new_profession").val(data[0].profession);
+            }
+
+            if ($("#new_address").val() == "") {
+              $("#new_address").val(data[0].address);
+            }
+          }
+        }
+
+      },
+      error: function(jqXHR, textStatus, errorMessage) {
+        console.log("error: " + errorMessage);
+      }
+    });
+  }
+
+
+  function option_click(student) {
+    // $('#option_' + student.id ).click(function() {
+    
+    if ($("#new_name").val() == "") {
+      $("#new_name").val(student.name);
+    }
+
+    if ($("#new_phone").val() == "") {
+      $("#new_phone").val(student.phone);
+    }
+
+    if ($("#new_email").val() == "") {
+      $("#new_email").val(student.email);
+    }
+
+    if ($("#new_profession").val() == "") {
+      $("#new_profession").val(student.profession);
+    }
+
+    if ($("#new_address").val() == "") {
+      $("#new_address").val(student.address);
+    }
+
+    $('#student_option').modal('hide');
+    // })
+  }
+  /* 新增資料-聯絡電話 搜尋學員既有資料Sandy(0329) S */
+
+
 
   /* 編輯資料 S Sandy(2020/06/28) */
   $('.edit_data').on('click', function(e) {
@@ -681,7 +809,7 @@
     var type = $('#course_type').val();
     $.ajax({
       type: 'GET',
-      url: 'course_check_fill',
+      url: 'course_check_edit_fill',
       data: {
         id: id,
         type: type

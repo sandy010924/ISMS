@@ -11,6 +11,7 @@ use App\Model\EventsCourse;
 use App\Model\Register;
 use App\Model\Refund;
 use App\Model\Activity;
+use App\Model\Student;
 // use DB;
 
 class CourseCheckController extends Controller
@@ -308,8 +309,23 @@ class CourseCheckController extends Controller
     }
 
     
-    // 編輯資料填入 Sandy (2020/06/26)
+    // 尋找學員資料做預設填入 Sandy (2020/03/04)
     public function fill( Request $request )
+    {
+        $phone = $request->input('phone');
+        
+        $student = Student::Where('phone', $phone)
+                          ->get();
+
+        if( count($student) != 0 ){
+            return Response($student);
+        }else {
+            return 'nodata';
+        }
+    }
+
+    // 編輯資料填入 Sandy (2020/06/26)
+    public function edit_fill( Request $request )
     {
         $id = $request->input('id');
         $type = $request->input('type');
