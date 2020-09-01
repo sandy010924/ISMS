@@ -176,6 +176,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        
+        /*
+         * A Simple GUID creator package for PHP.  Sandy(2020/09/02)
+         */
+        Sujip\Guid\GuidServiceProvider::class,
     ],
 
     /*
@@ -227,6 +233,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        
+        /*
+         * A Simple GUID creator package for PHP.  Sandy(2020/09/02)
+         */
+        'Guid' => Sujip\Guid\Guid::class,
     ],
 
 ];
