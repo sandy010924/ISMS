@@ -1057,7 +1057,8 @@
     $.each(array_studentid, function(index, val) {
       var datasource = '',
         submissiondate = '',
-        email = ''
+        email = '',
+        name = ''
       id_student = val['id_student'];
 
       if (val['email'] != null) {
@@ -1078,9 +1079,16 @@
         submissiondate = "無";
       }
 
+      if (val['check_blacklist'] == 1) {
+        name = '<span class="text-danger border border-danger">黑名單</span>' + val['name']
+
+      } else {
+        name = val['name']
+      }
+
       data +=
         '<tr>' +
-        '<td>' + val['name'] + '</td>' +
+        '<td>' + name + '</td>' +
         '<td>' + val['phone'] + '</td>' +
         '<td>' + email + '</td>' +
         '<td>' + datasource + '</td>' +

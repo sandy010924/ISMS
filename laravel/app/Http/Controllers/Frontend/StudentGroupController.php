@@ -205,7 +205,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->orderby('b.submissiondate')
                         ->get();
@@ -253,6 +253,7 @@ class StudentGroupController extends Controller
                             'email'                 => $datas_stuent_90[$key]['email'],
                             'datasource'            => $datas_stuent_90[$key]['datasource'],
                             'submissiondate'        => $datas_stuent_90[$key]['submissiondate'],
+                            'check_blacklist'        => $datas_stuent_90[$key]['check_blacklist'],
                         ));
                     }
 
@@ -275,7 +276,7 @@ class StudentGroupController extends Controller
                                     break;
                             }
                         })
-                        ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->whereIn('sales_registration.id_student', array_merge($array_student_id))
                         ->groupBy('b.id')
                         ->orderBy('sales_registration.submissiondate', 'ASC')
@@ -300,6 +301,7 @@ class StudentGroupController extends Controller
                                 'email'                 => $datas_stuent[$key]['email'],
                                 'datasource'            => $datas_stuent[$key]['datasource'],
                                 'submissiondate'        => $datas_stuent[$key]['submissiondate'],
+                                'check_blacklist'        => $datas_stuent_90[$key]['check_blacklist'],
                             ));
                         }
                     }
@@ -355,7 +357,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->orderby('b.submissiondate')
                         ->get();
@@ -456,7 +458,7 @@ class StudentGroupController extends Controller
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
                         ->where('b.id_status', '<>', '5')
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist。', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->distinct()->get();
                 }
             } elseif ($type_condition == "action") {
@@ -483,7 +485,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->whereNotExists(function ($query) {
                                 $query->from('refund')
                                     ->whereRaw('registration.id = refund.id_registration')
@@ -500,7 +502,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query) use ($opt2) {
                                 $query->where('b.id_status', '=', $opt2);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('b.submissiondate', 'desc')
                             ->distinct()->get();
@@ -517,7 +519,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('b.submissiondate', 'desc')
                             ->distinct()->get();
@@ -549,7 +551,7 @@ class StudentGroupController extends Controller
                                     ->whereRaw('registration.id = refund.id_registration')
                                     ->where('refund.review', 1);
                             }) // 篩選退款資料 Rocky (2020/08/28)
-                            ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('d.submissiondate', 'desc')
                             ->distinct()->get();
@@ -566,7 +568,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('b.submissiondate', 'desc')
                             ->distinct()->get();
@@ -621,7 +623,7 @@ class StudentGroupController extends Controller
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
 
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->get();
                 } else {
@@ -655,7 +657,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->get();
 
@@ -712,7 +714,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->groupby('student.id')
                             ->get();
 
@@ -734,7 +736,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->groupby('student.id')
                             ->get();
 
@@ -798,7 +800,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('d.course_start_at', [$sdate, $edate]);
                         })
-                        ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->whereNotExists(function ($query) {
                             $query->from('refund')
                                 ->whereRaw('registration.id = refund.id_registration')
@@ -822,7 +824,7 @@ class StudentGroupController extends Controller
                             ->leftjoin('payment as f', 'f.id_registration', '=', 'registration.id')
                             ->select('b.*', 'e.datasource', 'e.submissiondate', DB::raw('sum(f.cash) as sum_cash'))
                             ->whereIn('f.id_registration', array_merge($array_registration_id))
-                            ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->whereNotExists(function ($query) {
                                 $query->from('refund')
                                     ->whereRaw('registration.id = refund.id_registration')
@@ -843,7 +845,7 @@ class StudentGroupController extends Controller
                             ->leftjoin('payment as f', 'f.id_registration', '=', 'registration.id')
                             ->select('b.*', 'e.datasource', 'e.submissiondate', DB::raw('sum(f.cash) as sum_cash'))
                             ->whereIn('f.id_registration', array_merge($array_registration_id))
-                            ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->whereNotExists(function ($query) {
                                 $query->from('refund')
                                     ->whereRaw('registration.id = refund.id_registration')
@@ -899,7 +901,7 @@ class StudentGroupController extends Controller
                                 ->whereRaw('registration.id = refund.id_registration')
                                 ->where('refund.review', 1);
                         }) // 篩選退款資料 Rocky (2020/08/28)
-                        ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('registration.id')
                         ->distinct()->get();
                 }
@@ -936,7 +938,7 @@ class StudentGroupController extends Controller
                                     ->whereRaw('registration.id = refund.id_registration')
                                     ->where('refund.review', 1);
                             }) // 篩選退款資料 Rocky (2020/08/28)
-                            ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('d.submissiondate', 'desc')
                             ->distinct()->get();
@@ -960,7 +962,7 @@ class StudentGroupController extends Controller
                                     ->whereRaw('registration.id = refund.id_registration')
                                     ->where('refund.review', 1);
                             }) // 篩選退款資料 Rocky (2020/08/28)
-                            ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // ->groupby('registration.id')
                             // 抓最新來源
                             ->orderby('e.submissiondate', 'desc')
@@ -1016,7 +1018,7 @@ class StudentGroupController extends Controller
                                     ->whereRaw('registration.id = refund.id_registration')
                                     ->where('refund.review', 1);
                             }) // 篩選退款資料 Rocky (2020/08/28)
-                            ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
                             ->orderby('d.submissiondate', 'desc')
                             ->distinct()->get();
@@ -1040,7 +1042,7 @@ class StudentGroupController extends Controller
                                     ->whereRaw('registration.id = refund.id_registration')
                                     ->where('refund.review', 1);
                             }) // 篩選退款資料 Rocky (2020/08/28)
-                            ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('b.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // ->groupby('registration.id')
                             // 抓最新來源
                             ->orderby('e.submissiondate', 'desc')
@@ -1113,7 +1115,7 @@ class StudentGroupController extends Controller
                         })
                         ->where('b.status_payment', '7')
                         ->where('b.id_events', '<>', '-99')
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         // ->whereNotExists(function ($query) {
                         //     $query->from('refund')
                         //         ->whereRaw('b.id = refund.id_registration')
@@ -1153,7 +1155,7 @@ class StudentGroupController extends Controller
                         })
                         ->where('a.status_payment', '7')
                         ->where('a.id_events', '<>', '-99')
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         // ->whereNotExists(function ($query) {
                         //     $query->from('refund')
                         //         ->whereRaw('a.id = refund.id_registration')
@@ -1219,7 +1221,7 @@ class StudentGroupController extends Controller
                             //         ->where('refund.review', 1);
                             // }) // 篩選退款資料 Rocky (2020/08/28)
                             ->where('a.id_events', '<>', '-99')
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->groupby('student.id')
                             ->get();
 
@@ -1246,7 +1248,7 @@ class StudentGroupController extends Controller
                             //         ->where('refund.review', 1);
                             // }) // 篩選退款資料 Rocky (2020/08/28)
                             ->where('a.id_events', '<>', '-99')
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->groupby('student.id')
                             ->get();
 
@@ -1377,7 +1379,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->whereNotExists(function ($query) {
                                 $query->from('refund')
                                     ->whereRaw('registration.id = refund.id_registration')
@@ -1405,7 +1407,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->orderby('b.submissiondate', 'desc')  // 抓最新來源
                             ->distinct()->get();
                     }
@@ -1437,7 +1439,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->whereNotExists(function ($query) {
                                 $query->from('refund')
                                     ->whereRaw('registration.id = refund.id_registration')
@@ -1465,7 +1467,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->orderby('b.submissiondate', 'desc')  // 抓最新來源
                             ->distinct()->get();
                     }
@@ -1514,7 +1516,7 @@ class StudentGroupController extends Controller
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
 
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->get();
                 } else {
@@ -1549,7 +1551,7 @@ class StudentGroupController extends Controller
                         ->where(function ($query3) use ($sdate, $edate) {
                             $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                         })
-                        ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                         ->groupby('student.id')
                         ->get();
 
@@ -1606,7 +1608,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->groupby('student.id')
                             ->get();
 
@@ -1629,7 +1631,7 @@ class StudentGroupController extends Controller
                             ->where(function ($query3) use ($sdate, $edate) {
                                 $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
                             })
-                            ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->groupby('student.id')
                             ->get();
 
