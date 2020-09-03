@@ -1441,9 +1441,11 @@
               select_events = '<select class="custom-select form-control col-sm-8" id="' + id_select_events + '" name="select_teacher"  onblur="update_events($(this),' + id + ',' + type + ',' + id_student + ');" > </select >'
               /*場次 - E*/
 
+              id_events = val['id_events']
+
               if (type == 0) {
                 // 銷講
-                course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
+                course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:<a href="{{ route("course_return") }}' + '?id=' + id_events + '" target="_blank">' + val['course'] + '</a><br>' +
                   '課程開始時間:' + events_start + '<br>' +
                   '<div class="form-group row">' +
                   '<label class="col-sm-2" >場次: </label>' + select_events +
@@ -1451,15 +1453,25 @@
                 // +'</div>'
               } else if (type == 1) {
                 // 正課
-                course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
-                  '課程開始時間:' + events_start + '<br>' +
-                  '<div class="form-group row">' +
-                  '<label class="col-sm-2" >場次: </label>' + select_events +
-                  '</div>'
-                //  +'</div>'
+                
+                if (id_events != "" && id_events != null && id_events != 0 && id_events != -99) {
+                  course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:<a href="{{ route("course_return") }}' + '?id=' + id_events + '" target="_blank">' + val['course'] + '</a><br>' +
+                    '課程開始時間:' + events_start + '<br>' +
+                    '<div class="form-group row">' +
+                    '<label class="col-sm-2" >場次: </label>' + select_events +
+                    '</div>'
+                  //  +'</div>'
+                } else{
+                  course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>課程內容</b>' + '<br>' + '課程名稱:' + val['course'] + '<br>' +
+                    '課程開始時間:' + events_start + '<br>' +
+                    '<div class="form-group row">' +
+                    '<label class="col-sm-2" >場次: </label>' + select_events +
+                    '</div>'
+                  //  +'</div>'
+                }
               } else if (type == 2) {
                 // 活動
-                course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>活動內容</b>' + '<br>' + '活動名稱:' + val['course'] + '<br>' +
+                course = '<hr/><div style="text-align:left;padding-top: 1%;"><b>活動內容</b>' + '<br>' + '活動名稱:<a href="{{ route("course_return") }}' + '?id=' + id_events + '" target="_blank">' + val['course'] + '</a><br>' +
                   '活動開始時間:' + events_start + '<br>' +
                   '<div class="form-group row">' +
                   '<label class="col-sm-2" >場次: </label>' + select_events +
@@ -1467,11 +1479,11 @@
                 // +'</div>'
               }
 
-              id_events = val['id_events']
-
               //已填表單加入該場場次報表按鈕 Sandy(2020/08/11)
               if (source_events != '無') {
                 course += '<div class="form-group row"><a role="button" class="btn btn-sm btn-primary ml-auto mr-3" href="{{ route("course_return") }}' + '?id=' + source_events + '" target="_blank">場次報表</a></div></div>'
+              } else {
+                course += '</div>';
               }
               // if (id_events != "" && id_events != null && id_events != 0 && id_events != -99) {
               //   course += '<div class="form-group row"><a role="button" class="btn btn-sm btn-primary ml-auto mr-3" href="{{ route("course_return") }}' + '?id=' + id_events + '" target="_blank">場次報表</a></div></div>'
