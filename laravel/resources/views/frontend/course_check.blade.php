@@ -136,7 +136,7 @@
                   </div>
                   <div class="form-group">
                     <label for="new_address" class="col-form-label">居住區域</label>
-                    <input type="search" list="list_address" id="new_address" name="new_address" class="form-control" required />
+                    <input type="search" list="list_address" id="new_address" name="new_address" class="form-control" />
                     <datalist class="w-100" id="list_address">
                     {{-- <select class="custom-select form-control" name="new_address" id="new_address"> --}}
                       <option selected disabled>請選擇居住區域</option>

@@ -105,7 +105,7 @@
                 </button>
               </div>
               <div class="modal-body text-left">
-                <form action="{{ url('course_return_insert_data') }}" name="insert" method="POST">
+                <form action="{{ url('course_return_insert_data') }}" id="insertForm" name="insert" method="POST">
                   @csrf
                   <input type="hidden" name="form_event_id" id="form_event_id" value="{{ $course->id }}">
                   <div class="form-group required">
@@ -1213,6 +1213,18 @@
     check_auth();
 
 
+  });
+
+  //送出新增資料表單前驗證是否有選擇報名場次 event
+  $('#insertForm').submit(function(e) {
+    //驗證是否有選擇場次
+    var ievent_len = $('#insertForm input.ievent:checked').length;
+    if( ievent_len == 0 ){
+      alert('請選擇報名場次。');
+      //取消送出表單
+      e.preventDefault(); //this will prevent the default submit
+      // $(this).unbind('submit').submit(); // continue the submit unbind preventDefault
+    }
   });
 
 
