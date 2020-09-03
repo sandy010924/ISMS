@@ -60,21 +60,21 @@ class CourseListDataController extends Controller
                 $count_apply = count(SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
                                                     ->where('sales_registration.id_events', $data['id'])
                                                     ->where('sales_registration.id_status', '<>', 2)
-                                                    ->Where('student.check_blacklist', 0 ) 
+                                                    // ->Where('student.check_blacklist', 0 ) 
                                                     ->get());
 
                 /* 取消數 */
                 $count_cancel = count(SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
                                                     ->where('sales_registration.id_events', $data['id'])
                                                     ->where('sales_registration.id_status', 5)
-                                                    ->Where('student.check_blacklist', 0 ) 
+                                                    // ->Where('student.check_blacklist', 0 ) 
                                                     ->get());
 
                 /* 報到數 */
                 $count_check = count(SalesRegistration::leftjoin('student', 'student.id', '=', 'sales_registration.id_student')
                                                     ->where('sales_registration.id_events', $data['id'])
                                                     ->where('sales_registration.id_status', 4)
-                                                    ->Where('student.check_blacklist', 0 ) 
+                                                    // ->Where('student.check_blacklist', 0 ) 
                                                     ->get());
 
                 /* 報到率 */
@@ -92,7 +92,7 @@ class CourseListDataController extends Controller
                 $deal = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
                                         ->Where('registration.source_events', $data['id'] )
                                         ->Where('registration.status_payment', 7)
-                                        ->Where('student.check_blacklist', 0 ) 
+                                        // ->Where('student.check_blacklist', 0 ) 
                                         ->whereNotExists(function($query){
                                             $query->from('refund')
                                                 ->whereRaw('registration.id = refund.id_registration')
@@ -111,7 +111,7 @@ class CourseListDataController extends Controller
                 $count_apply = count(Register::leftjoin('student', 'student.id', '=', 'register.id_student')
                                         ->where('register.id_events', $data['id'])
                                         ->where('register.id_status', '<>', 2)
-                                        ->Where('student.check_blacklist', 0 ) 
+                                        // ->Where('student.check_blacklist', 0 ) 
                                         ->whereNotExists(function($query){
                                             $query->from('refund')
                                                 ->whereRaw('register.id_registration = refund.id_registration')
@@ -123,7 +123,7 @@ class CourseListDataController extends Controller
                 $count_cancel = count(Register::leftjoin('student', 'student.id', '=', 'register.id_student')
                                             ->where('register.id_events', $data['id'])
                                             ->where('register.id_status', 5)
-                                            ->Where('student.check_blacklist', 0 ) 
+                                            // ->Where('student.check_blacklist', 0 ) 
                                             ->whereNotExists(function($query){
                                                 $query->from('refund')
                                                     ->whereRaw('register.id_registration = refund.id_registration')
@@ -135,7 +135,7 @@ class CourseListDataController extends Controller
                 $count_check = count(Register::leftjoin('student', 'student.id', '=', 'register.id_student')
                                             ->where('register.id_events', $data['id'])
                                             ->where('register.id_status', 4)
-                                            ->Where('student.check_blacklist', 0 ) 
+                                            // ->Where('student.check_blacklist', 0 ) 
                                             ->whereNotExists(function($query){
                                                 $query->from('refund')
                                                     ->whereRaw('register.id_registration = refund.id_registration')
@@ -157,7 +157,7 @@ class CourseListDataController extends Controller
                 $deal = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
                                         ->Where('registration.source_events', $data['id'] )
                                         ->Where('registration.status_payment', 7)
-                                        ->Where('student.check_blacklist', 0 ) 
+                                        // ->Where('student.check_blacklist', 0 ) 
                                         ->whereNotExists(function($query){
                                             $query->from('refund')
                                                 ->whereRaw('registration.id = refund.id_registration')
@@ -175,21 +175,21 @@ class CourseListDataController extends Controller
                 $count_apply = count(Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
                                                 ->where('activity.id_events', $data['id'])
                                                 ->where('activity.id_status', '<>', 2)
-                                                ->Where('student.check_blacklist', 0 ) 
+                                                // ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
                 /* 取消數 */
                 $count_cancel = count(Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
                                                 ->where('activity.id_events', $data['id'])
                                                 ->where('activity.id_status', 5)
-                                                ->Where('student.check_blacklist', 0 ) 
+                                                // ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
                 /* 報到數 */
                 $count_check = count(Activity::leftjoin('student', 'student.id', '=', 'activity.id_student')
                                                 ->where('activity.id_events', $data['id'])
                                                 ->where('activity.id_status', 4)
-                                                ->Where('student.check_blacklist', 0 ) 
+                                                // ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
                 /* 報到率 */
@@ -207,7 +207,7 @@ class CourseListDataController extends Controller
                 $deal = count(Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
                                         ->Where('registration.source_events', $data['id'] )
                                         ->Where('registration.status_payment', 7)
-                                        ->Where('student.check_blacklist', 0 ) 
+                                        // ->Where('student.check_blacklist', 0 ) 
                                         ->whereNotExists(function($query){
                                             $query->from('refund')
                                                 ->whereRaw('registration.id = refund.id_registration')

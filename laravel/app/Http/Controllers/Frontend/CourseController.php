@@ -69,7 +69,7 @@ class CourseController extends Controller
                     ->join('student', 'student.id', '=', 'sales_registration.id_student')
                     ->Where('events_course.id', $data['id'])
                     ->Where('sales_registration.id_status', '<>', 2)
-                    ->Where('student.check_blacklist', 0 ) 
+                    // ->Where('student.check_blacklist', 0 ) 
                     ->get());
 
                 //取消筆數
@@ -77,7 +77,7 @@ class CourseController extends Controller
                     ->join('student', 'student.id', '=', 'sales_registration.id_student')
                     ->Where('events_course.id', $data['id'])
                     ->Where('sales_registration.id_status', 5)
-                    ->Where('student.check_blacklist', 0 ) 
+                    // ->Where('student.check_blacklist', 0 ) 
                     ->get());
 
                 //報到筆數
@@ -85,7 +85,7 @@ class CourseController extends Controller
                     ->join('student', 'student.id', '=', 'sales_registration.id_student')
                     ->Where('events_course.id', $data['id'])
                     ->Where('sales_registration.id_status', 4)
-                    ->Where('student.check_blacklist', 0 ) 
+                    // ->Where('student.check_blacklist', 0 ) 
                     ->get());
 
                 $events[count($events)] = [
@@ -128,7 +128,7 @@ class CourseController extends Controller
                                         ->orWhere('registration.status_payment', 9);
                                     })
                                     ->Where('register.id_status','<>', 2)
-                                    ->Where('student.check_blacklist', 0 ) 
+                                    // ->Where('student.check_blacklist', 0 ) 
                                     ->get();
 
                 //報名筆數
@@ -241,7 +241,7 @@ class CourseController extends Controller
                                                 ->join('student', 'student.id', '=','activity.id_student')
                                                 ->Where('events_course.id', $data['id'])
                                                 ->Where('activity.id_status', '<>', 2)
-                                                ->Where('student.check_blacklist', 0 ) 
+                                                // ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
                 //取消筆數
@@ -249,7 +249,7 @@ class CourseController extends Controller
                                                 ->join('student', 'student.id', '=','activity.id_student')
                                                 ->Where('events_course.id', $data['id'])
                                                 ->Where('activity.id_status', 5)
-                                                ->Where('student.check_blacklist', 0 ) 
+                                                // ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
                 //報到筆數
@@ -257,7 +257,7 @@ class CourseController extends Controller
                                                 ->join('student', 'student.id', '=','activity.id_student')
                                                 ->Where('events_course.id', $data['id'])
                                                 ->Where('activity.id_status', 4)
-                                                ->Where('student.check_blacklist', 0 ) 
+                                                // ->Where('student.check_blacklist', 0 ) 
                                                 ->get());
 
                 $events[count($events)] = [

@@ -163,7 +163,8 @@ class ReportController extends Controller
 
                     }
 
-                    $count = $count->Where('student.check_blacklist', 0 )->get();
+                    // $count = $count->Where('student.check_blacklist', 0 )->get();
+                    $count = $count->get();
 
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
@@ -251,9 +252,10 @@ class ReportController extends Controller
 
                     $apply = $apply->Where('id_status', '<>', 2)
                                     ->Where('id_status', '<>', 5)
-                                    ->Where('student.check_blacklist', 0 )
+                                    // ->Where('student.check_blacklist', 0 )
                                     ->get();
-                    $check = $check->where('id_status', 4)->Where('student.check_blacklist', 0 )->get();
+                    // $check = $check->where('id_status', 4)->Where('student.check_blacklist', 0 )->get();
+                    $check = $check->where('id_status', 4)->get();
                 
                     $out = 0;
                     foreach($result[$key] as $key_result => $data_result){
@@ -348,7 +350,7 @@ class ReportController extends Controller
                     }
 
                     $check = $check->where('id_status', 4)
-                                    ->Where('student.check_blacklist', 0 )
+                                    // ->Where('student.check_blacklist', 0 )
                                     ->get();
 
                     $deal = Registration::leftjoin('student', 'student.id', '=', 'registration.id_student')
@@ -379,12 +381,12 @@ class ReportController extends Controller
                             break;
                     }
 
-                    $deal = $deal->Where('student.check_blacklist', 0 )
-                                ->whereNotExists(function($query){
+                    $deal = $deal->whereNotExists(function($query){
                                     $query->from('refund')
                                         ->whereRaw('registration.id = refund.id_registration')
                                         ->where('refund.review' , 1);
                                 })
+                                // ->Where('student.check_blacklist', 0 )
                                 ->get();
 
                     $out = 0;
@@ -497,7 +499,8 @@ class ReportController extends Controller
                                 $pay->whereIn('status_payment', [7,8]);
                             }
 
-                            $pay = $pay->Where('student.check_blacklist', 0 )->get();
+                            // $pay = $pay->Where('student.check_blacklist', 0 )->get();
+                            $pay = $pay->get();
 
                         }else if( $data_search['type'] == 2 || $data_search['type'] == 3 ){
                             //正課沒有來源故為0
@@ -526,7 +529,8 @@ class ReportController extends Controller
                             $pay->whereIn('status_payment', [7,8]);
                         }
 
-                        $pay = $pay->Where('student.check_blacklist', 0 )->get();
+                        // $pay = $pay->Where('student.check_blacklist', 0 )->get();
+                        $pay = $pay->get();
                     
                     }
 

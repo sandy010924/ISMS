@@ -243,7 +243,7 @@
     <tr>
       <td class="align-middle">{{ $coursecheck['row']  }}</td>
       <td scope="row" class="align-middle" name="search_name">
-        @if( $coursecheck['check_blacklist'] == 1 )
+        @if( $coursecheck['check_blacklist'] == 1 && ($course->type == 1 || $course->type == 4) )
           <span class="text-danger border border-danger">黑名單</span>
         @endif
         {{ $coursecheck['name'] }}

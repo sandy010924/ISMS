@@ -65,21 +65,21 @@ class CourseTodayController extends Controller
                 ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
                 ->Where( $type . '.id_status', '<>', 2)
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->get());
 
             $data_cancel = count(EventsCourse::join($type, $type . '.id_events', '=', 'events_course.id')
                 ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
                 ->Where( $type . '.id_status', 5)
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->get());
 
             $data_check = count(EventsCourse::join($type, $type . '.id_events', '=', 'events_course.id')
                 ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
                 ->Where( $type . '.id_status', 4)
-                ->Where('student.check_blacklist', 0 )
+                // ->Where('student.check_blacklist', 0 )
                 ->get());
 
             array_push($count_apply, $data_apply);

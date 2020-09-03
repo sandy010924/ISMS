@@ -81,7 +81,7 @@ class CourseListController extends Controller
                                                     ->join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
                                                     ->select('student.id')
                                                     ->Where('sales_registration.id_course', $data['id_course'])
-                                                    ->Where('student.check_blacklist', 0 )
+                                                    // ->Where('student.check_blacklist', 0 )
                                                     ->distinct()
                                                     ->get());
 
@@ -103,7 +103,7 @@ class CourseListController extends Controller
                                                 $q ->orWhere('registration.status_payment', 7)
                                                     ->orWhere('registration.status_payment', 9);
                                             })
-                                            ->Where('student.check_blacklist', 0 )
+                                            // ->Where('student.check_blacklist', 0 )
                                             ->whereNotExists(function($query){
                                                 $query->from('refund')
                                                     ->whereRaw('registration.id = refund.id_registration')
@@ -124,7 +124,7 @@ class CourseListController extends Controller
                                             ->join('events_course', 'events_course.id', '=', 'activity.id_events')
                                             ->select('student.id')   
                                             ->Where('activity.id_course', $data['id_course'])
-                                            ->Where('student.check_blacklist', 0 )
+                                            // ->Where('student.check_blacklist', 0 )
                                             ->distinct()
                                             ->get());
 

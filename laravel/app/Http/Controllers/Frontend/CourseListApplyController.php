@@ -46,7 +46,7 @@ class CourseListApplyController extends Controller
                                                 'events_course.name as event', 
                                                 'events_course.course_start_at as course_start_at')
                                       ->Where('sales_registration.id_course', $id)
-                                      ->Where('student.check_blacklist', 0 )
+                                    //   ->Where('student.check_blacklist', 0 )
                                       ->get();
                                       
             foreach( $apply_table as $key => $data ){
@@ -124,7 +124,7 @@ class CourseListApplyController extends Controller
                                             $q->orWhere('registration.status_payment', 7)
                                               ->orWhere('registration.status_payment', 9);
                                         })
-                                        ->Where('student.check_blacklist', 0 )
+                                        // ->Where('student.check_blacklist', 0 )
                                         ->distinct()
                                         ->get();
 
@@ -224,7 +224,7 @@ class CourseListApplyController extends Controller
                                             'events_course.name as event', 
                                             'events_course.course_start_at as course_start_at')
                                     ->Where('activity.id_course', $id)
-                                    ->Where('student.check_blacklist', 0 )
+                                    // ->Where('student.check_blacklist', 0 )
                                     ->get();
                                       
             foreach( $apply_table as $key => $data ){             
