@@ -605,22 +605,39 @@ function second_judge(x,send){
   $("#events_check").click(function(){
     // var now = parseInt($(this).parent().attr("id").split("form").pop());
     var now = parseInt($(this).data("form").split("form").pop());
+    var number = true;
+    var event = true;
+
     if($('#inumber').val()!=""){
 
         var rule1=/^\d{5}$/
         if(!rule1.test($('#inumber').val())){
           $("#inumber").addClass("is-invalid");
-
+          number = false;
         }
         else{
           $("#inumber").removeClass("is-invalid");
           // console.log("IR");
-          next(now);
+          // next(now);
         }
     }
     else{
       $("#inumber").removeClass("is-invalid");
       // console.log("IR");
+      // next(now);
+    }
+
+    //驗證是否有選擇場次
+    var ievent_len = $('#form4 input.ievent:checked').length;
+    if( ievent_len == 0 ){
+      alert('請選擇報名場次。');
+      event = false;
+      //取消送出表單
+      // e.preventDefault(); //this will prevent the default submit
+      // $(this).unbind('submit').submit(); // continue the submit unbind preventDefault
+    }
+    
+    if ( number && event){
       next(now);
     }
 	});
@@ -876,35 +893,6 @@ function second_judge(x,send){
       }
     });
   });
-
-  /**
-   * 待改寫，submit會驗證require，然後不要直接送出!!
-   * 要驗證有無簽名 才可以送出
-   */
-
-  // $('#confirmRegistration').on('click', function() {
-    // 驗證有無簽章
-  //   if(signaturePad.isEmpty()) {
-  //     alert("請中文正楷簽章!");
-  //     return false ;
-  //   } else {
-  //     var canvas = document.getElementById('signature_pad');
-  //     var dataURL = canvas.toDataURL();
-  //     $.ajax({
-  //       type: "POST",
-  //       headers: {
-  //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //       },
-  //       url: "signature",
-  //       data: {
-  //         imgBase64: dataURL
-  //       }
-  //     }).done(function(res) {
-  //       console.log(res);
-  //     });
-  //   }
-  // });
-
 
 </script>
 
