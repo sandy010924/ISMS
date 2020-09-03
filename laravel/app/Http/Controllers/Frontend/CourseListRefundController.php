@@ -91,7 +91,7 @@ class CourseListRefundController extends Controller
             //                      ->get();
             
             $refund_table = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
-                                //  ->join('events_course', 'events_course.id', '=', 'registration.id_events')
+                                 ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
                                  ->join('student', 'student.id', '=', 'refund.id_student')
                                  ->select('student.name as name', 
                                           'student.phone as phone', 
@@ -108,6 +108,7 @@ class CourseListRefundController extends Controller
                                  ->Where('registration.id_course', $id)
                                 //  ->Where('student.check_blacklist', 0 )
                                  ->orderby('review')
+                                 ->distinct()
                                  ->get();
  
                                  
@@ -268,22 +269,17 @@ class CourseListRefundController extends Controller
         $course = array();
         
         $student = Student::join('registration', 'registration.id_student', '=', 'student.id')
-                          ->select('student.*')
-                          ->Where('phone', $phone)
-                          ->Where('id_course', $id)
-                          ->first();
+                        //   ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
+                        //   ->join('course', 'course.id', '=', 'events_course.id_course')
+                          ->select('student.*', 'registration.id as id_registration')
+                          ->Where('student.phone', $phone)
+                          ->Where('registration.id_course', $id)
+                        //   ->Where('student.check_blacklist', 0 )
+                          ->distinct('id_registration')
+                          ->get();
 
-        if( !empty($student) ){
-            // $course = Registration::join('course', 'course.id', '=', 'registration.id_course')
-            //                         ->select('course.*')  
-            //                         ->Where('id_student', $student->id)
-            //                         ->Where('id_course', $id)
-            //                         ->distinct()
-            //                         ->get();
-
-            // return Response(array('student' => $student, 'course' => $course));
-
-            return Response(array('student' => $student));
+        if( count($student) != 0 ){
+            return Response($student);
         }else{
             return 'nodata';
         }

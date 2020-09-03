@@ -5,6 +5,27 @@
 
 @section('content')
 <!-- Content Start -->
+
+  
+  <!-- 同電話學員選項 -->
+  <div id="student_option" class="modal fade" tabindex="1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">請選擇自動填入的學員資料</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 同電話學員選項 -->
+
+
   <!--查看退費名單-->
   <div class="card m-3">
     <div class="card-body">
@@ -198,6 +219,21 @@
     </div>
   </div>
   <!-- Content End -->
+  <style>    
+    /* modal層級 */
+    .modal:nth-of-type(even) {
+      z-index: 1052 !important;
+    }
+
+    .modal-backdrop.show:nth-of-type(even) {
+      z-index: 1051 !important;
+    }
+
+    .modal {
+      overflow-y: auto !important;
+    }
+  </style>
+
   <script>
     //DataTable
     var table;
@@ -317,14 +353,24 @@
       }
     });
 
-    $('#form_phone').on('blur', function() {
-      // if (form.checkValidity() === false) {
-      //     event.preventDefault();
-      //     event.stopPropagation();
-      //   }
-      //   form.classList.add('was-validated');
-      fill($(this).val());
+    // $('#form_phone').on('blur', function() {
+    //   // if (form.checkValidity() === false) {
+    //   //     event.preventDefault();
+    //   //     event.stopPropagation();
+    //   //   }
+    //   //   form.classList.add('was-validated');
+    //   fill_data($(this).val());
+    // });
+    $('body').on('blur', '#form_phone', function() {
+      var phone = $(this).val();
+      fill_data(phone);
     });
+    // $('body').on('keyup', '#form_phone', function(e) {
+    //   if (e.keyCode === 13) {
+    //     var phone = $(this).val();
+    //     fill_data(phone);
+    //   }
+    // });
     // $('#form_phone').on('keyup', function(e) {
     //   // if (form.checkValidity() === false) {
     //   //     event.preventDefault();
@@ -335,8 +381,9 @@
     //     fill($(this).val());
     //   }
     // });
-
-    function fill(phone){
+    
+    //填入資料
+    function fill_data(phone){
       var course_id = $("#course_id").val();
       $.ajax({
         type : 'GET',
@@ -350,17 +397,45 @@
           // console.log(data);
           
           if( data != 'nodata'){
-            $('#form_student').val(data['student']['id']);
-            $('#form_name').val(data['student']['name']);
-            $('#form_email').val(data['student']['email']);
-            $('#btn_refund').prop("disabled", false);
-            // if( data['student'] != null ){
-            //   $('#form_name').val(data['student']['name']);
-            //   $('#form_email').val(data['student']['email']);
-            // }else{
-            //   $('#form_name').val('');
-            //   $('#form_email').val('');
-            // }
+            if (data.length > 1) {
+              $('#student_option').modal('show');
+              var option;
+              option = `<table class="table table-striped table-sm text-center border rounded-lg dataTable no-footer">
+                          <thead>
+                            <tr>
+                              <th>姓名</th>
+                              <th>電話</th>
+                              <th>信箱</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                        `;
+              for (var i = 0; i < data.length; i++) {
+                option += `<tr>
+                            <td class="align-middle">${data[i].name}</td>
+                            <td class="align-middle">${data[i].phone}</td>
+                            <td class="align-middle">${data[i].email}</td>
+                            <td class="align-middle">
+                              <button id="option_${i}" type="button" class="btn btn-sm btn-primary">選擇</button>
+                            </td>
+                          </tr>`;
+              }
+
+              option += `</tbody></table>`;
+              $('#student_option .modal-body').html(option).on('click', 'button', function() {
+                //點選按鈕填入學員資料
+                // console.log($(this).closest('tr').index());
+                option_click(data[$(this).closest('tr').index()]);
+              });;
+
+            } else {
+              //針對空格做填入 
+              $('#form_student').val(data[0].id);
+              $('#form_name').val(data[0].name);
+              $('#form_email').val(data[0].email);
+              $('#btn_refund').prop("disabled", false);              
+            }
           }else{
             alert('此學員未報名此課程！');
             $('#btn_refund').prop("disabled", true);
@@ -384,6 +459,16 @@
         }
       });
     }
+
+    function option_click(student) {
+      $('#form_student').val(student.id);
+      $('#form_name').val(student.name);
+      $('#form_email').val(student.email);
+      $('#btn_refund').prop("disabled", false);
+
+      $('#student_option').modal('hide');
+    }
+
 
     //form 選擇場次後跳出學員
     // $("#form_events").change(function() {
