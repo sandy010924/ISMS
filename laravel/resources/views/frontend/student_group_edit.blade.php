@@ -1096,14 +1096,18 @@
         });
         if (check_array_student.length == 0) {
           array_old_studentid.push(data[index]);
+          // array_upate_studentid.push(data[index]);
+        }
+        if (check_array_student.length == 0 && type_show == "search") {
           array_upate_studentid.push(data[index]);
         }
       });
     }
-
+    // console.log(data['check_blacklist'])
     if (array_old_studentid.length != 0) {
       $.each(array_old_studentid, function(index, val) {
         if (val['name'] != null) {
+          var name = '';
           datasource = val['datasource']
           submissiondate = val['submissiondate']
           email = val['email']
@@ -1117,9 +1121,17 @@
           if (email == null) {
             email = ''
           }
+
+          if (val['check_blacklist'] == 1) {
+            name = '<span class="text-danger border border-danger">黑名單</span>' + val['name']
+
+          } else {
+            name = val['name']
+          }
+
           data +=
             '<tr>' +
-            '<td>' + val['name'] + '</td>' +
+            '<td>' + name + '</td>' +
             '<td>' + val['phone'] + '</td>' +
             '<td>' + email + '</td>' +
             '<td>' + datasource + '</td>' +
@@ -1136,6 +1148,72 @@
     }
   }
 
+
+
+  // 細分組更新
+  function update() {
+    var name_group = $('#name_group').val()
+    var id = $('#id_group').val()
+    var condition = search_show_log + search_orlog + search_log
+
+    console.log(array_upate_studentid)
+    // 檢查有沒有搜尋 
+    if (check_search == 1) {
+      $.ajax({
+        type: 'POST',
+        url: 'studentgroup_update',
+        // dataType:'json',
+        data: {
+          id: id,
+          name_group: name_group,
+          condition: condition,
+          array_upate_studentid: array_upate_studentid
+        },
+        success: function(data) {
+          // console.log(data)
+          if (data = "儲存成功") {
+            $("#success_alert_text").html("儲存成功");
+            fade($("#success_alert"));
+
+            // location.replace(location)
+          } else {
+            $("#error_alert_text").html("儲存失敗");
+            fade($("#error_alert"));
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error))
+        }
+      })
+    } else {
+      $.ajax({
+        type: 'POST',
+        url: 'studentgroup_update',
+        // dataType:'json',
+        data: {
+          id: id,
+          name_group: name_group,
+          condition: condition
+        },
+        success: function(data) {
+          // console.log(data)
+          if (data = "儲存成功") {
+            $("#success_alert_text").html("儲存成功");
+            fade($("#success_alert"));
+
+            location.replace(location)
+          } else {
+            $("#error_alert_text").html("儲存失敗");
+            fade($("#error_alert"));
+          }
+        },
+        error: function(error) {
+          console.log(JSON.stringify(error))
+        }
+      })
+    }
+
+  }
 
   /* 完整內容 -S Rocky(2020/02/29) */
 
@@ -1923,69 +2001,6 @@
     });
   }
 
-  // 細分組更新
-  function update() {
-    var name_group = $('#name_group').val()
-    var id = $('#id_group').val()
-    var condition = search_show_log + search_orlog + search_log
-
-    // 檢查有沒有搜尋 
-    if (check_search == 1) {
-      $.ajax({
-        type: 'POST',
-        url: 'studentgroup_update',
-        // dataType:'json',
-        data: {
-          id: id,
-          name_group: name_group,
-          condition: condition,
-          array_upate_studentid: array_upate_studentid
-        },
-        success: function(data) {
-          // console.log(data)
-          if (data = "儲存成功") {
-            $("#success_alert_text").html("儲存成功");
-            fade($("#success_alert"));
-
-            location.replace(location)
-          } else {
-            $("#error_alert_text").html("儲存失敗");
-            fade($("#error_alert"));
-          }
-        },
-        error: function(error) {
-          console.log(JSON.stringify(error))
-        }
-      })
-    } else {
-      $.ajax({
-        type: 'POST',
-        url: 'studentgroup_update',
-        // dataType:'json',
-        data: {
-          id: id,
-          name_group: name_group,
-          condition: condition
-        },
-        success: function(data) {
-          // console.log(data)
-          if (data = "儲存成功") {
-            $("#success_alert_text").html("儲存成功");
-            fade($("#success_alert"));
-
-            location.replace(location)
-          } else {
-            $("#error_alert_text").html("儲存失敗");
-            fade($("#error_alert"));
-          }
-        },
-        error: function(error) {
-          console.log(JSON.stringify(error))
-        }
-      })
-    }
-
-  }
 
   // 自動儲存
   function save_data(data, id, type) {

@@ -21,7 +21,7 @@
     <div class="row mb-3">
       <div class="col-4"></div>
       <div class="col-3">
-        <input type="search" class="form-control" placeholder="輸入電話或姓名或email" aria-label="Student's Phone or Email" id="search_input" onkeyup="value=value.replace(/[^\w_.@]/g,'')">
+        <input type="search" class="form-control" placeholder="輸入電話或姓名或email" aria-label="Student's Phone or Email" id="search_input" >
       </div>
       <div class="col-2">
         <button class="btn btn-outline-secondary" type="button" id="btn_search">搜尋</button>
