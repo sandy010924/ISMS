@@ -82,7 +82,7 @@
               <div class="form-group">
                 <label class="col-form-label" for="">發送對象</label>
                 <div>
-                  <input id="groupDetailBtn" type="button" class="btn btn-sm btn-secondary" value="細分組搜尋" data-toggle="modal" data-target="#messageModal">
+                  <input id="groupDetailBtn" type="button" class="btn btn-sm btn-secondary" value="名單列表搜尋" data-toggle="modal" data-target="#messageModal">
                 </div>
               </div>
 
@@ -173,8 +173,8 @@
             <div class="modal-content">
 
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">細分組名單</h5>
-                <button class="btn btn-sm btn-outline-secondary ml-3" type="button" onclick="javascript:location.href='{{ route('student_group') }}'">新增細分組</button>
+                <h5 class="modal-title" id="exampleModalLabel">名單列表名單</h5>
+                <button class="btn btn-sm btn-outline-secondary ml-3" type="button" onclick="javascript:location.href='{{ route('student_group') }}'">新增名單列表</button>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -187,7 +187,7 @@
               <!-- <div class="modal-body">
 
                 <div id="Group" style="display: flex;  justify-content: space-around;;">
-                  <input type="search"  id="wndSearchGroup" class="form-control" placeholder="輸入細分組名稱" aria-label="Group's name" aria-describedby="btn_search" style="width: 80%;">
+                  <input type="search"  id="wndSearchGroup" class="form-control" placeholder="輸入名單列表名稱" aria-label="Group's name" aria-describedby="btn_search" style="width: 80%;">
                   <button class="btn btn-outline-secondary" type="button" id="wndSearchGroupBtn" style="width: 15%;">搜尋</button>
                 </div>
 
@@ -197,7 +197,7 @@
                     <table class="table table-striped table-sm text-center" style="margin: 10px 0px;">
                       <thead>
                         <tr>
-                          <th>細分組名稱</th>
+                          <th>名單列表名稱</th>
                           <th>創建日期</th>
                           <th>名單筆數</th>
                           <th></th>
@@ -298,9 +298,9 @@
       "groupArrayName": "groupData",
       "itemName": "name",
       "valueName": "id",
-      tabNameText: "細分組成員",
-      rightTabNameText: "已選擇細分組成員",
-      searchPlaceholderText: "搜尋細分組成員",
+      tabNameText: "名單列表成員",
+      rightTabNameText: "已選擇名單列表成員",
+      searchPlaceholderText: "搜尋名單列表成員",
       "callable": function (data, names) {
         selectedDataId = [];
         data.forEach(item => {
@@ -329,7 +329,7 @@
     });
 
 
-    // 細分組搜尋確定Btn
+    // 名單列表搜尋確定Btn
     $('#wndSaveChecked').on('click', function() {
       // 清空data
       allDataPhone = [];
@@ -341,8 +341,12 @@
           for( var z = 0; z<selectedDataId.length; z++) {
             if (selectedDataId[z] == groupData[i].groupData[j].id) {
               // console.log(groupData[i].groupData[j].phone);
-              allDataPhone.push(groupData[i].groupData[j].phone);
-              allDataEmail.push(groupData[i].groupData[j].email);
+
+              //判斷是否為黑名單
+              if( groupData[i].groupData[j].check_blacklist != 1 ){
+                allDataPhone.push(groupData[i].groupData[j].phone);
+                allDataEmail.push(groupData[i].groupData[j].email);
+              }
             }
 
           }
@@ -359,7 +363,7 @@
         $('#receiverPhone').val(allDataPhone);
       }
 
-      // 找傳送給哪一個細分組，後端做紀錄
+      // 找傳送給哪一個名單列表，後端做紀錄
       // for (var i = 0; i< $(".group-select-all-1e5364e841u5i1m541urm1b0tblg0").length; i++) {
       //   if ($(".group-select-all-1e5364e841u5i1m541urm1b0tblg0").eq(i).prop("checked")) {
       //     console.log($(this).id);
