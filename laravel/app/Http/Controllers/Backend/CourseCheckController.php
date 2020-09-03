@@ -536,9 +536,12 @@ class CourseCheckController extends Controller
             /*學員報名資料 - S*/
 
             //判斷系統是否已有該學員資料
-            $check_student = Student::where('name', $name)
-                                    ->where('phone', $phone)
-                                    ->where('email', $email)
+            $check_student = Student::leftjoin('sales_registration', 'sales_registration.id_student', '=', 'student.id')
+                                    // ->where('name', $name)
+                                    // ->where('phone', $phone)
+                                    // ->where('email', $email)
+                                    ->select('student.*')
+                                    ->where('sales_registration.id', $id)
                                     ->get();
 
             // 檢查學員資料
@@ -571,6 +574,9 @@ class CourseCheckController extends Controller
                 //更新學員資料
                 Student::where('id', $id_student)
                     ->update([
+                        'name' => $name,
+                        'phone' => $phone,
+                        'email' => $email,
                         'address' => $address,
                         'profession' => $profession,
                     ]);
