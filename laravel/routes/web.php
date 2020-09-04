@@ -503,6 +503,7 @@ Route::get('report_search', 'Frontend\ReportController@search');
 Route::get('merge_student', 'Frontend\MergeStudentController@show')->name('merge_student');
 Route::get('merge_student_search', 'Frontend\MergeStudentController@search')->name('merge_student_search');
 Route::post('merge_student_student', 'Frontend\MergeStudentController@merge')->name('merge_student_student');
+Route::post('merge_test', 'Frontend\MergeStudentController@test')->name('merge_test');
 
 Route::get('authority', 'Frontend\AuthorityController@show')->name('authority');
 /*** 搜尋資料 Rocky(2020/02/17) ***/

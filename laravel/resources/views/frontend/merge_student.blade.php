@@ -25,6 +25,7 @@
       <div class="=col-sm-3">
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary" onclick="edite_student();">合併</button>
+          <button type="submit" class="btn btn-primary" onclick="test();">測試</button>
         </div>
       </div>
     </div>
@@ -209,5 +210,22 @@
     });
   }
   /* 合併資料 - E Rocky(2020/08/29) */
+
+
+  function test() {
+
+    $.ajax({
+      type: 'POST',
+      url: 'merge_test',
+      success: function(data) {
+
+        console.log(data);
+
+      },
+      error: function(jqXHR) {
+        console.log(JSON.stringify(jqXHR));
+      }
+    });
+  }
 </script>
 @endsection

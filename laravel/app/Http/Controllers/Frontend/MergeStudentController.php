@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Mail;
 use Response;
 use App\Model\Debt;
 use App\Model\Mark;
@@ -23,6 +24,24 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MergeStudentController extends Controller
 {
+
+    public function test()
+    {
+        $tt = Mail::raw('測試使用 Laravel 5 的 Gmail 寄信服務', function ($message) {
+            $message->from('sandy010924@gmail.com', 'Laravel');
+            $message->to('goduu10202200@gmail.com', 'test')->subject('rr');
+        });
+        //寄送訊息
+        // $tt = Mail::send('frontend.model_email', ['content' => "rr"], function ($message) {
+        //     $message->subject('test');
+        //     // foreach ($emailAddr as $email) {
+        //         $message->to('goduu10202200@gmail.com');
+        //     // }
+        // });
+        return $tt;
+    }
+
+
     // 顯示資料
     public function show()
     {
