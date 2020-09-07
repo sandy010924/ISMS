@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SendEmail::class,
         \App\Console\Commands\ScheduleSMS::class,
         // \App\Console\Commands\AutoMsg::class,
+        \App\Console\Commands\UnpublishEvents::class,
     ];
 
     /**
@@ -49,6 +50,10 @@ class Kernel extends ConsoleKernel
         // 每分鐘執行 Artisan 命令 sms:schedule
         $schedule->command('sms:schedule')->everyMinute()->withoutOverlapping();
         // $schedule->command('emails:send')->dailyAt('8:00')->withoutOverlapping();
+
+        
+        // 每天早上6點 Artisan 命令 unpublish:events
+        $schedule->command('unpublish:events')->dailyAt('6:00')->withoutOverlapping();
 
     }
 
