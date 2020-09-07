@@ -1421,16 +1421,16 @@ class CourseListController extends Controller
 
                     foreach ($apply_table as $data_apply) {
                         //刪除報到
-                        Register::where('id_registration', $data->id)->delete();
+                        Register::where('id_registration', $data_apply->id)->delete();
 
                         // //刪除追單
-                        // Debt::where('id_registration', $data->id)->delete();
+                        // Debt::where('id_registration', $data_apply->id)->delete();
 
                         //刪除退費
-                        Refund::where('id_registration', $data->id)->delete();
+                        Refund::where('id_registration', $data_apply->id)->delete();
 
                         // //刪除付款
-                        // Payment::where('id_registration', $data->id)->delete();   
+                        // Payment::where('id_registration', $data_apply->id)->delete();   
                     }
                     /* 刪除該報名表相關資料 E */
                 }
