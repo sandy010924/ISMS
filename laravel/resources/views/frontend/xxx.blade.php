@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
 
-  <title>？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？</title>
+
 
 
   <!-- Bootstrap core CSS -->
@@ -24,18 +24,14 @@
 
 <body style='background:#ffeb00'>
 
-  <div id="xxx_t">？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？</div>
+
   <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
   <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('js/feather.min.js') }}"></script>
 
 
   <script>
-    var aa = ''
-    for (var i = 1; i <= 999; i++) {
-      aa += "？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？" + '<br>'
-    }
-    $('#xxx_t').html(aa)
+
   </script>
 </body>
 

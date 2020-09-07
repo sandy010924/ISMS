@@ -27,10 +27,10 @@ class MergeStudentController extends Controller
 
     public function test()
     {
-        $tt = Mail::raw('測試使用 Laravel 5 的 Gmail 寄信服務', function ($message) {
-            $message->from('sandy010924@gmail.com', 'Laravel');
-            $message->to('goduu10202200@gmail.com', 'test')->subject('rr');
-        });
+        // $tt = Mail::raw('測試使用 Laravel 5 的 Gmail 寄信服務', function ($message) {
+        //     $message->from('sandy010924@gmail.com', 'Laravel');
+        //     $message->to('goduu10202200@gmail.com', 'test')->subject('rr');
+        // });
         //寄送訊息
         // $tt = Mail::send('frontend.model_email', ['content' => "rr"], function ($message) {
         //     $message->subject('test');
@@ -38,7 +38,9 @@ class MergeStudentController extends Controller
         //         $message->to('goduu10202200@gmail.com');
         //     // }
         // });
-        return $tt;
+
+        $student = Student::get();
+        return $student;
     }
 
 

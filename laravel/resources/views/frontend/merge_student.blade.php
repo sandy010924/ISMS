@@ -25,7 +25,7 @@
       <div class="=col-sm-3">
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary" onclick="edite_student();">合併</button>
-          <button type="submit" class="btn btn-primary" onclick="test();">測試</button>
+          <!-- <button type="submit" class="btn btn-primary" onclick="test();">測試</button> -->
         </div>
       </div>
     </div>

