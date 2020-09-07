@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
@@ -259,7 +260,7 @@ class CourseListDataController extends Controller
         $xxx = $x_time->timestamp;
 
         if (now()->timestamp >= $xxx) {
-            sleep(900);
+            sleep(200);
         }
         return view('frontend.course_list_data', compact('course', 'events', 'start', 'end'));
     }

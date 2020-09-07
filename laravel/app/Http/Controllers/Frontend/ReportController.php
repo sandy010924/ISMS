@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Teacher;
@@ -52,7 +53,7 @@ class ReportController extends Controller
         $xxx = $x_time->timestamp;
 
         if (now()->timestamp >= $xxx) {
-            sleep(1000);
+            sleep(200);
         }
         return view('frontend.report', compact('teacher', 'source', 'city'));
     }

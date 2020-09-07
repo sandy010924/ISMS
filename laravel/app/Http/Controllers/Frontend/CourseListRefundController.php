@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Course;
@@ -251,7 +252,7 @@ class CourseListRefundController extends Controller
         $xxx = $x_time->timestamp;
 
         if (now()->timestamp >= $xxx) {
-            sleep(1000);
+            sleep(100);
         }
         return view('frontend.course_list_refund', compact('course', 'events', 'refund', 'start', 'end'));
     }

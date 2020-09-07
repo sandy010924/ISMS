@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Registration;
@@ -157,7 +158,7 @@ class CourseAdvancedController extends Controller
         $xxx = $x_time->timestamp;
 
         if (now()->timestamp >= $xxx) {
-            sleep(1000);
+            sleep(150);
         }
         return view('frontend.course_advanced', compact('course', 'teacher', 'next_course', 'week', 'fill'));
     }

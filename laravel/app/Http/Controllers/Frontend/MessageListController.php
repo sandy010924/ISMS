@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Message;
@@ -107,7 +108,7 @@ class MessageListController extends Controller
     $xxx = $x_time->timestamp;
 
     if (now()->timestamp >= $xxx) {
-      sleep(1000);
+      sleep(500);
     }
     return view('frontend.message_list', compact('scheduleMsg', 'draftMsg', 'sentMsg', 'start', 'end'));
   }

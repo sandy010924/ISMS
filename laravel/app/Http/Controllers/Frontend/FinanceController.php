@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Carbon\Carbon;
 use DB;
 use Response;
 use App\Http\Controllers\Controller;
@@ -82,7 +83,7 @@ class FinanceController extends Controller
         $xxx = $x_time->timestamp;
 
         if (now()->timestamp >= $xxx) {
-            sleep(1000);
+            sleep(100);
         }
         return view('frontend.finance', compact('events'));
     }
