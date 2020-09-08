@@ -119,7 +119,7 @@ class CourseListApplyController extends Controller
             //                      ->Where('registration.id_course', $id)
             //                      ->get();
             $apply_table = Registration::join('student', 'student.id', '=', 'registration.id_student')
-                ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
+                // ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
                 ->select('student.name as name', 'student.phone as phone', 'student.email as email', 'student.profession as profession', 'registration.*')
                 ->Where('registration.id_course', $id)
                 // ->Where('registration.status_payment', 7)
@@ -159,7 +159,7 @@ class CourseListApplyController extends Controller
                 //     continue;
                 // }
 
-                if ($data['id_group'] != null) {
+                if ($data['id_group'] != null && $data['id_group'] != -99 && $data['id_group'] != 0) {
                     $course_group = EventsCourse::Where('id_group', $data['id_group'])
                         ->get();
 

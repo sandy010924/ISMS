@@ -92,7 +92,7 @@ class CourseListRefundController extends Controller
             //                      ->get();
 
             $refund_table = Refund::join('registration', 'registration.id', '=', 'refund.id_registration')
-                ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
+                // ->join('events_course', 'events_course.id_group', '=', 'registration.id_group')
                 ->join('student', 'student.id', '=', 'refund.id_student')
                 ->select(
                     'student.name as name',
@@ -117,7 +117,7 @@ class CourseListRefundController extends Controller
 
             foreach ($refund_table as $key => $data) {
 
-                if ($data['id_group'] != null) {
+                if ($data['id_group'] != null && $data['id_group'] != -99 && $data['id_group'] != 0) {
 
                     //場次群組
                     $events_group = EventsCourse::Where('id_group', $data['id_group'])
