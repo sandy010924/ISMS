@@ -18,7 +18,8 @@ class DatabaseController extends Controller
     // 顯示資訊
     public function show()
     {
-        $datas = Mdatabase::get();
+        $datas = Mdatabase::orderby('created_at', 'desc')
+            ->take(5)->get();
 
         return view('frontend.database', compact('datas'));
     }
