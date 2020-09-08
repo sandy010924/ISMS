@@ -831,7 +831,7 @@
   show_condition3();
   /*條件判斷 - E Rocky(2020/04/05)*/
 
-  function show_requirement_course(type) {
+  function show_requirement_course(type, id) {
     $.ajax({
       type: 'POST',
       url: 'show_requirement_course',
@@ -840,13 +840,20 @@
         type: type
       },
       success: function(data) {
+        // // console.log(data);
+        // $('#select_course').find('option').remove();
+        // $.each(data, function(index, val) {
+        //   $('#select_course').append(new Option(val['name'], val['id']))
+        // });
+
+        // $('#select_course').selectpicker('refresh');
         // console.log(data);
-        $('#select_course').find('option').remove();
+        $(id).find('option').remove();
         $.each(data, function(index, val) {
-          $('#select_course').append(new Option(val['name'], val['id']))
+          $(id).append(new Option(val['name'], val['id']))
         });
 
-        $('#select_course').selectpicker('refresh');
+        $(id).selectpicker('refresh');
 
       },
       error: function(error) {
