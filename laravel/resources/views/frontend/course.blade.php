@@ -118,7 +118,7 @@
     <tr>
       <td>{{ $event['date'] }}</td>
       <td class="text-left">
-        @if( $event['type'] == 1 && $event['unpublish'] == 1 )
+        @if( $event['unpublish'] == 1 )
         <span class="text-danger border border-danger">取消場次</span>
         @endif
         @if($event['events_multi_data'] != '')

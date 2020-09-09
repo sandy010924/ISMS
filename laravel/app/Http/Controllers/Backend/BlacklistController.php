@@ -63,7 +63,7 @@ class BlacklistController extends Controller
             //leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
             ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
             ->join('events_course', 'events_course.id', '=', 'b.id_events')
-            ->where('events_course.unpublish', '0')
+            ->where('events_course.unpublish', '<>', '1')
             ->where('student.check_blacklist', '0')
             ->where(function ($query) {
                 $query->where(function ($query) {
@@ -86,7 +86,7 @@ class BlacklistController extends Controller
             //leftjoin('sales_registration as b', 'b.id_student', '=', 'student.id')
             ->join('events_course', 'events_course.id', '=', 'b.id_events')
             ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
-            ->where('events_course.unpublish', '0')
+            ->where('events_course.unpublish', '<>','1')
             ->where('student.check_blacklist', '0')
             ->where(function ($query) {
                 $query->where(function ($query) {
@@ -111,7 +111,7 @@ class BlacklistController extends Controller
             ->leftjoin('student as d', 'd.id', '=', 'sales_registration.id_student')
             ->where('d.check_blacklist', '0')
             ->where('sales_registration.id_status', '4')
-            ->where('events_course.unpublish', '0')
+            ->where('events_course.unpublish', '<>', '1')
             ->whereNotNull('c.id_type')
             ->whereNotExists(function ($query) {
                 $query->from('registration')

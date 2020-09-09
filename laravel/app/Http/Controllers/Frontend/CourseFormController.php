@@ -27,14 +27,6 @@ class CourseFormController extends Controller
         $events = array();
 
 
-
-        // //已過場次 就取消場次
-        // if(strtotime(date('Y-m-d', strtotime($data_group['course_start_at']))) < strtotime(date("Y-m-d"))){
-        //     EventsCourse::Where('id', $data_group['id'])
-        //                 ->update(['unpublish' => 1]);
-        // }
-
-
         $course = Course::join('events_course', 'events_course.id_course', '=', 'course.id')
             ->select('course.*')
             ->Where('course.id_type', $source_course)

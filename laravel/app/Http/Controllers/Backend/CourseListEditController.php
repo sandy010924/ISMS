@@ -59,11 +59,15 @@ class CourseListEditController extends Controller
             if($action == 0){
                 //上架場次
                 EventsCourse::where('id_group', $id_group)->update(['unpublish' => 0]);
-                $status = "publish_ok";
+                $status = "on";
             }elseif($action == 1){
                 //取消場次
                 EventsCourse::where('id_group', $id_group)->update(['unpublish' => 1]);
-                $status = "unpublish_ok";
+                $status = "cancel";
+            }elseif($action == 2){
+                //下架場次
+                EventsCourse::where('id_group', $id_group)->update(['unpublish' => 2]);
+                $status = "off";
             } 
         } else {
             $status = "error";

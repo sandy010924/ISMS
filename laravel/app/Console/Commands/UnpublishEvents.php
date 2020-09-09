@@ -51,10 +51,10 @@ class UnpublishEvents extends Command
      */
     protected function unpublish() 
     {
-        //找出過期場次取消場次
+        //找出過期場次下架場次
         $msg = EventsCourse::where('course_start_at', '<', date('Y-m-d H:i:s'))
                         ->where('unpublish', 0)
-                        ->update(['unpublish' => 1]);
+                        ->update(['unpublish' => 2]);
 
     }
 

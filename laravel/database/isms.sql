@@ -764,3 +764,7 @@ ALTER TABLE `course` modify COLUMN pay_url VARCHAR(255) NULL COMMENT '刷卡連�
 
 -- 新增資料 - 狀態資料表 Rocky(2020/08/13)
 INSERT INTO isms_status (`name`,`type`)  VALUES ('參與','4');
+
+
+-- 課程資料表 - 修改不公開欄位說明 Sandy(2020/09/09)
+ALTER TABLE `events_course` modify COLUMN unpublish INT NULL COMMENT '不公開(0:上架,1:取消,2:下架)';

@@ -83,12 +83,6 @@ class CourseListEditController extends Controller
 
             foreach ($course_group as $key_group => $data_group) {
 
-                // //已過場次 就取消場次
-                // if(strtotime(date('Y-m-d', strtotime($data_group['course_start_at']))) < strtotime(date("Y-m-d"))){
-                //     EventsCourse::Where('id', $data_group['id'])
-                //                 ->update(['unpublish' => 1]);
-                // }
-
                 //日期
                 $date = date('Y-m-d', strtotime($data_group['course_start_at']));
                 //星期
@@ -101,7 +95,9 @@ class CourseListEditController extends Controller
                     $events_group .= $date . '（' . $week . '）' . '、';
                 }
 
-                array_push($unpublish_group, $data_group['unpublish']);
+                // 上架/下架/取消
+                // array_push($unpublish_group, $data_group['unpublish']);
+                $unpublish = $data_group['unpublish'];
             }
             //時間
             $time_strat = date('H:i', strtotime($data['course_start_at']));
@@ -112,13 +108,13 @@ class CourseListEditController extends Controller
 
             // $events[$key] = $events_group . ' ' . $time_strat . '-' . $time_end . ' ' . $data['Events'] . '（' . $data['location'] . '）';
 
-            //不公開
-            $unpublish = 0;
-            if (in_array(1, $unpublish_group)) {
-                $unpublish = 1;
-            } else {
-                $unpublish = 0;
-            }
+            // //不公開
+            // $unpublish = 0;
+            // if (in_array(1, $unpublish_group)) {
+            //     $unpublish = 1;
+            // } else {
+            //     $unpublish = 0;
+            // }
 
             $events[$key] = array(
                 'date' => $events_group,

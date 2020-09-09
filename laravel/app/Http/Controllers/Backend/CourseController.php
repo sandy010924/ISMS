@@ -536,7 +536,7 @@ class CourseController extends Controller
                             $events_course->course_end_at    = $time_end;            // 課程結束時間
                             $events_course->memo             = '';                   // 課程備註
                             $events_course->id_group         = strtotime($time_start) . $id_course;     // 群組ID
-                            $events_course->unpublish        = 0;                    // 不公開
+                            $events_course->unpublish        = 0;                    // 上架/下架/取消場次
                             $events_course->save();
                             $id_events = $events_course->id;
                         } elseif ($check == 1) {

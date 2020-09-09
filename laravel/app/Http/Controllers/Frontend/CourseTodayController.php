@@ -39,10 +39,11 @@ class CourseTodayController extends Controller
             $events = EventsCourse::join('course', 'course.id', '=', 'events_course.id_course')
                 ->select('events_course.*', 'course.name as course', 'course.type as type')
                 ->Where('course_start_at', 'like', '%' . date("Y-m-d") . '%')
-                ->where(function ($query) {
-                    $query->orWhere('type', '<>', 1)
-                        ->orWhere('unpublish', '<>', 1);
-                })
+                // ->where(function ($query) {
+                //     $query->orWhere('type', '<>', 1)
+                //         ->orWhere('unpublish', '<>', 1);
+                // })
+                ->Where('unpublish', '<>', 1)
                 ->get();
         }
 

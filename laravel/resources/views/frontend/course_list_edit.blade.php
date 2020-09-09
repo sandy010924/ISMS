@@ -109,7 +109,7 @@
         <th>時間</th>
       @endif
       <th>地點</th>
-      <th></th>
+      <th>狀態</th>
       <th class="no-sort"></th>
     </tr>
     @endslot
@@ -124,11 +124,28 @@
       @endif
       <td>{{ $data['location'] }}</td>
       <td>
-        @if( $data['unpublish'] == 0)
+        {{-- @if( $data['unpublish'] == 0)
         <a role="button" class="btn btn-dark btn-sm mx-1 text-white" onclick="btn_update( {{ $data['id_group'] }}, 1 );">取消場次</a>
         @else
         <a role="button" class="btn btn-success btn-sm mx-1 text-white" onclick="btn_update( {{ $data['id_group'] }}, 0 );">上架場次</a>
-        @endif
+        @endif --}}
+        
+        <div class="btn-group">
+          <button class="btn btn-secondary dropdown-toggle btn-sm mx-1 text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @if( $data['unpublish'] == 0)
+              上架中
+            @elseif( $data['unpublish'] == 1)
+              已取消場次
+            @elseif( $data['unpublish'] == 2)
+              已下架場次
+            @endif
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" onclick="btn_update( {{ $data['id_group'] }}, 0 );">上架場次</a>
+            <a class="dropdown-item" onclick="btn_update( {{ $data['id_group'] }}, 1 );">取消場次</a>
+            <a class="dropdown-item" onclick="btn_update( {{ $data['id_group'] }}, 2 );">下架場次</a>
+          </div>
+        </div>
       </td>
       <td>
         <a role="button" class="btn btn-secondary btn-sm text-white mr-1 edit_data" data-id="{{ $data['id_group'] }}" data-toggle="modal" data-target="#edit_form">編輯</a>
@@ -293,8 +310,10 @@
     var msg;
     if (action == 0) {
       msg = "是否上架此場次?";
-    } else {
+    } else if(action == 1) {
       msg = "是否取消此場次?";
+    } else if(action == 2) {
+      msg = "是否下架此場次?";
     }
 
     if (confirm(msg) == true) {
@@ -308,14 +327,20 @@
         },
         success: function(data) {
           console.log(data);
-          if (data['data'] == "publish_ok") {
+          if (data['data'] == "on") {
             alert('上架場次成功！！')
             location.reload();
             /** alert **/
             // $("#success_alert_text").html("取消場次成功");
             // fade($("#success_alert"));
-          } else if (data['data'] == "unpublish_ok") {
+          } else if (data['data'] == "cancel") {
             alert('取消場次成功！！')
+            location.reload();
+            /** alert **/
+            // $("#success_alert_text").html("取消場次成功");
+            // fade($("#success_alert"));
+          } else if (data['data'] == "off") {
+            alert('下架場次成功！！')
             location.reload();
             /** alert **/
             // $("#success_alert_text").html("取消場次成功");
