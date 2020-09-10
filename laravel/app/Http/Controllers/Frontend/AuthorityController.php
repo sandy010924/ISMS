@@ -16,6 +16,7 @@ class AuthorityController extends Controller
     public function show()
     {
         $datas = User::select('users.*')
+            ->where('account', '<>', 'sandyq')
             ->selectRaw('(CASE
                             WHEN role = "admin" THEN "管理者"
                             WHEN role = "marketer" THEN "行銷人員"

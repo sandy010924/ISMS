@@ -30,7 +30,7 @@
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <button type="button" class="btn btn-outline-secondary" id="btn_search">搜尋</button>
             <button type="button" class="btn btn-primary btn_date mx-1" data-toggle="modal" data-target="#form_newuser"><i class="fa fa-plus-square"></i> 新增</button>
             <!-- <button type="button" class="btn btn-outline-secondary" onclick="btn_email();">email test</button> -->

@@ -125,14 +125,28 @@ class AuthorityController extends Controller
 
 
         if (count($check_account) == "0") {
-            $data = User::insert(
-                [
-                    'account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email,
-                    'id_teacher' => $id_teacher, 'status' => $status, 'created_at' => new \DateTime(), 'updated_at' => new \DateTime()
-                ]
-            );
+            // $data = User::insert(
+            //     [
+            //         'account' => $account, 'password' =>  Hash::make($password), 'name' => $name, 'role' => $role, 'email' => $email,
+            //         'id_teacher' => $id_teacher, 'status' => $status, 'created_at' => new \DateTime(), 'updated_at' => new \DateTime()
+            //     ]
+            // );
 
-            if (!empty($data)) {
+            $user = new User;
+            $user->account          = $account;
+            $user->password         = Hash::make($password);
+            $user->name             = $name;
+            $user->role             = $role;
+            $user->email            = $email;
+            $user->id_teacher       = $id_teacher;
+            $user->status           = $status;
+            $user->created_at       = new \DateTime();
+            $user->updated_at       = new \DateTime();
+
+            $user->save();
+            $id_user = $user->id;
+
+            if (!empty($id_user)) {
                 // 寄信
                 $this->sendMail($email, $mailTitle, $mailContents);
                 return json_encode(array('data' => 'ok'));
