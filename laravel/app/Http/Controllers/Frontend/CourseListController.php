@@ -168,9 +168,7 @@ class CourseListController extends Controller
         $x_time = Carbon::parse('2022-01-01 00:00:00');
         $xxx = $x_time->timestamp;
 
-        if (now()->timestamp >= $xxx) {
-            sleep(400);
-        }
+   
         return view('frontend.course_list', compact('course', 'course_list', 'teachers'));
     }
 }

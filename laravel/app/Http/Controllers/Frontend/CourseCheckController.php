@@ -311,9 +311,7 @@ class CourseCheckController extends Controller
         $x_time = Carbon::parse('2022-01-01 00:00:00');
         $xxx = $x_time->timestamp;
 
-        if (now()->timestamp >= $xxx) {
-            sleep(77);
-        }
+    
         return view('frontend.course_check', compact('coursechecks', 'course', 'week', 'count_apply', 'count_check', 'count_cancel', 'nextLevel'));
     }
 

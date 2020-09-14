@@ -13,12 +13,10 @@ class LoginController extends Controller
     // 顯示資訊
     public function show()
     {
-        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $x_time = Carbon::parse('2025-01-01 00:00:00');
         $xxx = $x_time->timestamp;
 
-        if (now()->timestamp >= $xxx) {
-            return 'xxx';
-        }
+     
 
         if (Auth::user() == null) {
             return 'error';
@@ -30,12 +28,10 @@ class LoginController extends Controller
     // 登入
     public function login(Request $request)
     {
-        $x_time = Carbon::parse('2022-01-01 00:00:00');
+        $x_time = Carbon::parse('2025-01-01 00:00:00');
         $xxx = $x_time->timestamp;
 
-        if (now()->timestamp >= $xxx) {
-            return "xxx";
-        }
+     
 
         $account = $request->get('uname');
         $psw = $request->get('psw');

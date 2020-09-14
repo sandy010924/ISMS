@@ -118,9 +118,7 @@ class CourseFormController extends Controller
         $x_time = Carbon::parse('2022-01-01 00:00:00');
         $xxx = $x_time->timestamp;
 
-        if (now()->timestamp >= $xxx) {
-            sleep(100);
-        }
+   
 
         // dd($events);
 

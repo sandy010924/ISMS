@@ -401,6 +401,7 @@
       cache: false,
       processData: false,
       success: function(data) {
+        
         // 判斷有沒有重複資料
         if (data['status'] == 'successful') {
           // 關閉匯入Modal

@@ -56,8 +56,6 @@
         success: function(data) {
           if (data == "error") {
             window.location.href = "./error_authority";
-          } else if (data == "xxx") {
-            window.location.href = "./xxx";
           } else {
             $("#user_name").html("<li class='far fa-user'></li> " + data)
           }

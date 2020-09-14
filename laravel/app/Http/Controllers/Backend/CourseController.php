@@ -332,7 +332,7 @@ class CourseController extends Controller
             }
             /* 檢查是否有重複的學員 Rocky (2020/08/01) - E */
 
-            // 如果有重複資料就回傳 
+            // 如果有重複資料就回傳
             if (count($array_student) > 0) {
                 return response::json([
                     'datas' => $array_student,
@@ -520,12 +520,24 @@ class CourseController extends Controller
                         /*課程資料 - E*/
 
                         /* 場次資料 (2020/03/05) - S*/
+
+                        if (empty($time_star)) {
+                            $time_start = '1997-01-01 19:00:00';
+                        }
+
+                        if (empty($time_end)) {
+                            $time_end = '1997-01-01 19:00:00';
+                        }
+
+
+
                         $check_events = $events_course::where('name', $events)
                             ->where('id_course', $id_course)
                             // ->where('location', $address) 場次判斷不要判斷地址 Rocky (2020/07/01)
                             ->where('course_start_at', $time_start)
                             ->where('course_end_at', $time_end)
                             ->get();
+                 
                         if (count($check_events) != 0) {
                             $id_events = $check_events[0]["id"];
                         } elseif (!empty($id_course) && $check != 1) {
@@ -544,7 +556,7 @@ class CourseController extends Controller
                             $id_events = "-99";
                         }
                         /* 場次資料 - E*/
-
+                      
                         /*學員報名資料 - S*/
 
                         // 檢查學生資料
@@ -705,7 +717,6 @@ class CourseController extends Controller
 
                         //刪除付款
                         Payment::where('id_registration', $data_apply['id'])->delete();
-                        
                     }
 
                     //刪除進階報名表
@@ -716,7 +727,7 @@ class CourseController extends Controller
                     //刪除報名表
                     SalesRegistration::where('id_events', $data->id)->delete();
                 }
-            } else if ($events[0]->type == 2 || $events[0]->type == 3) {
+            } elseif ($events[0]->type == 2 || $events[0]->type == 3) {
                 //正課
 
                 // $apply_table = Registration::where('id_group', $id_group)
@@ -761,8 +772,7 @@ class CourseController extends Controller
                         Refund::where('id_registration', $data_apply->id)->delete();
 
                         // //刪除付款
-                        // Payment::where('id_registration', $data_apply->id)->delete();   
-                    
+                        // Payment::where('id_registration', $data_apply->id)->delete();
                     }
                     /* 刪除該報名表相關資料 E */
                 }
@@ -774,14 +784,13 @@ class CourseController extends Controller
                                 'id_group' => -99,
                                 'id_events' => -99,
                                 ]);
-
-            } else if ($events[0]->type == 4) {
+            } elseif ($events[0]->type == 4) {
                 //活動
                 foreach ($events as $data) {
                     //刪除報名表
                     Activity::where('id_events', $data->id)->delete();
                 }
-            } 
+            }
 
             //刪除場次
             EventsCourse::where('id_group', $id_group)->delete();

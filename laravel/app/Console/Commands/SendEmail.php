@@ -8,7 +8,6 @@ use App\Model\Message;
 use App\Model\Receiver;
 use Carbon;
 
-
 class SendEmail extends Command
 {
     /**
@@ -52,7 +51,7 @@ class SendEmail extends Command
     /**
      * Mail
      */
-    protected function sendMail() 
+    protected function sendMail()
     {
         //找出已預約今日並已到期要發送的訊息
         $msg = Message::where('send_at', '<', date('Y-m-d H:i:s'))
@@ -64,7 +63,7 @@ class SendEmail extends Command
                         ->where('id_status', 21)
                         ->get();
 
-        foreach( $msg as $dataMsg){
+        foreach ($msg as $dataMsg) {
             $mailTitle = $dataMsg['title'];
             $mailContents = $dataMsg['content'];
 
@@ -73,28 +72,27 @@ class SendEmail extends Command
                                 ->where('id_message', $dataMsg['id'])
                                 ->get();
 
-            if( !empty($emailAddr) ){
+            if (!empty($emailAddr)) {
                 //寄送訊息
-                Mail::send('frontend.model_email', ['content'=>$mailContents], function($message) use ($mailTitle, $emailAddr) {
+                Mail::send('frontend.model_email', ['content'=>$mailContents], function ($message) use ($mailTitle, $emailAddr) {
                     $message->subject($mailTitle);
                     foreach ($emailAddr as $email) {
                         $message->to($email['email']);
                     }
-                });              
+                });
                 // 更新訊息狀態為已傳送
                 Message::where('id', $dataMsg['id'])
                         ->update([
                             'id_status' => 19
-                        ]);  
+                        ]);
 
                 
                 // 更新收件狀態為已傳送
                 Receiver::where('id_message', $dataMsg['id'])
                         ->update([
                             'id_status' => 19
-                        ]);  
+                        ]);
             }
         }
     }
-
 }

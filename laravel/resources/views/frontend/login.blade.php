@@ -116,9 +116,6 @@
             case 'saleser':
               window.location.href = "./course_list";
               break;
-            case 'xxx':
-              window.location.href = "http://mpg1668.com/";
-              break;
             default:
               alert('請確認帳號密碼 / 狀態')
           }

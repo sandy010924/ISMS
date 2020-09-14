@@ -52,9 +52,7 @@ class ReportController extends Controller
         $x_time = Carbon::parse('2022-01-01 00:00:00');
         $xxx = $x_time->timestamp;
 
-        if (now()->timestamp >= $xxx) {
-            sleep(200);
-        }
+      
         return view('frontend.report', compact('teacher', 'source', 'city'));
     }
 

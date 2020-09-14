@@ -131,9 +131,7 @@ class CourseListEditController extends Controller
         $x_time = Carbon::parse('2022-01-01 00:00:00');
         $xxx = $x_time->timestamp;
 
-        if (now()->timestamp >= $xxx) {
-            sleep(200);
-        }
+ 
         return view('frontend.course_list_edit', compact('course', 'course_all', 'events'));
     }
 

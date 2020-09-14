@@ -336,7 +336,7 @@ class CourseListController extends Controller
                     }
                 }
                 /* 檢查是否有重複的學員 Rocky (2020/08/01) - E */
-                // 如果有重複資料就回傳 
+                // 如果有重複資料就回傳
                 if (count($array_student) > 0) {
                     return response::json([
                         'datas' => $array_student,
@@ -522,6 +522,14 @@ class CourseListController extends Controller
                             /*課程資料 - E*/
 
                             /* 場次資料 (2020/03/05) - S*/
+                            if (empty($time_star)) {
+                                $time_start = '1997-01-01 19:00:00';
+                            }
+
+                            if (empty($time_end)) {
+                                $time_end = '1997-01-01 19:00:00';
+                            }
+
                             $check_events = $events_course::where('name', $events)
                                 ->where('id_course', $id_course)
                                 // ->where('location', $address) 場次判斷不要判斷地址 Rocky (2020/07/01)
@@ -729,7 +737,7 @@ class CourseListController extends Controller
                         'status' => "error"
                     ]);
                 }
-            } else if ($type == 4) {
+            } elseif ($type == 4) {
                 // 活動
 
                 // 宣告欄位順序變數 Rocky(2020/02/05)
@@ -1024,7 +1032,7 @@ class CourseListController extends Controller
                     }
                 }
                 /* 檢查是否有重複的學員 Rocky (2020/08/01) - E */
-                // 如果有重複資料就回傳 
+                // 如果有重複資料就回傳
                 if (count($array_student) > 0) {
                     return response::json([
                         'datas' => $array_student,
@@ -1302,7 +1310,7 @@ class CourseListController extends Controller
                                 // 新增銷售講座報名資料
                                 if ($id_course != "" && $id_student != "") {
                                     $date = gmdate('Y-m-d H:i:s', $submissiondate);
-                                    $Activity->submissiondate   = $date;                           // Submission Date                                   
+                                    $Activity->submissiondate   = $date;                           // Submission Date
                                     $Activity->id_student       = $id_student;                     // 學員ID
                                     // 增加備註欄位 Rocky(2020/07/02)
                                     if ($int_memo != 0 && $data[$int_memo] != '') {
@@ -1310,7 +1318,7 @@ class CourseListController extends Controller
                                     }
                                     $Activity->id_events       = $id_events;                   // 場次ID
                                     $Activity->id_course       = $id_course;                   // 課程ID
-                                    $Activity->id_status       = 1;                            // 報名狀態ID                                   
+                                    $Activity->id_status       = 1;                            // 報名狀態ID
                                     $Activity->course_content  = $data[$int_text];              // 你有什麼問題想要詢問
 
                                     $Activity->save();
@@ -1387,7 +1395,7 @@ class CourseListController extends Controller
 
                 // $apply_table = SalesRegistration::where('id_course', $course->id)
                 //     ->get();
-            } else if ($course->type == 2 || $course->type == 3) {
+            } elseif ($course->type == 2 || $course->type == 3) {
                 //正課
                 
                 // Registration::where('id_course', $course->id)->delete();
@@ -1430,7 +1438,7 @@ class CourseListController extends Controller
                         Refund::where('id_registration', $data_apply->id)->delete();
 
                         // //刪除付款
-                        // Payment::where('id_registration', $data_apply->id)->delete();   
+                        // Payment::where('id_registration', $data_apply->id)->delete();
                     }
                     /* 刪除該報名表相關資料 E */
                 }
@@ -1442,8 +1450,7 @@ class CourseListController extends Controller
                                             'id_group' => -99,
                                             'id_events' => -99,
                                             ]);
-
-            } else if ($course->type == 4) {
+            } elseif ($course->type == 4) {
                 //活動
                 Activity::where('id_course', $course->id)->delete();
 
