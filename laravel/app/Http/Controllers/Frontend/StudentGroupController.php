@@ -31,7 +31,7 @@ class StudentGroupController extends Controller
         $x_time = Carbon::parse('2022-01-01 00:00:00');
         $xxx = $x_time->timestamp;
 
-      
+
         return view('frontend.student_group', compact('datas'));
     }
     // 顯示細分條件資料 Rocky(2020/03/14)
@@ -82,18 +82,40 @@ class StudentGroupController extends Controller
 
         for ($i = 0; $i < count($array_search); $i++) {
             if ($i == 0) {
-                if (!empty($this->search($array_search[$i]))) {
-                    $array_search1 = $this->search($array_search[$i]);
+                if (!empty($this->search($array_search[$i], '0', ''))) {
+                    $array_search1 = $this->search($array_search[$i], '0', '');
                     // $array_search_deal = array_merge($array_search_deal, json_decode($array_search1, true));
                 }
             } elseif ($i == 1) {
-                if (!empty($this->search($array_search[$i]))) {
-                    $array_search2 = $this->search($array_search[$i]);
+                if (!empty($this->search($array_search[$i], '1', ''))) {
+                    $events_name = '';
+                    if (!empty($array_search[0])) {
+                        if ($array_search[0]['opt1'] == 'id_events') {
+                            $events_name = $array_search[0]['value'];
+                        } else {
+                            $events_name = '';
+                        }
+                    }
+                    $array_search2 = $this->search($array_search[$i], '1', $events_name);
                     // $array_search_deal = array_merge($array_search_deal, json_decode($array_search2, true));
                 }
             } elseif ($i == 2) {
-                if (!empty($this->search($array_search[$i]))) {
-                    $array_search3 = $this->search($array_search[$i]);
+                if (!empty($this->search($array_search[$i], '2', ''))) {
+                    $events_name = '';
+                    if (!empty($array_search[0])) {
+                        if ($array_search[0]['opt1'] == 'id_events') {
+                            $events_name = $array_search[0]['value'];
+                        } else {
+                            $events_name = '';
+                        }
+                    } else if (!empty($array_search[1])) {
+                        if ($array_search[1]['opt1'] == 'id_events') {
+                            $events_name = $array_search[1]['value'];
+                        } else {
+                            $events_name = '';
+                        }
+                    }
+                    $array_search3 = $this->search($array_search[$i], '2', $events_name);
                     // $array_search_deal = array_merge($array_search_deal, json_decode($array_search3, true));
                 }
             }
@@ -146,7 +168,7 @@ class StudentGroupController extends Controller
         return strcmp($val1['id'], $val2['id']);
     }
 
-    public function search($array_search)
+    public function search($array_search, $type, $events_name)
     {
         $type_course = "";
         $id_course = "";
@@ -499,35 +521,88 @@ class StudentGroupController extends Controller
                             ->orderby('d.submissiondate', 'desc') // 抓最新來源
                             ->distinct()->get();
                     } else if ($opt2 == '2') {
-                        $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                            ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
-                            ->where(function ($query2) use ($id_course) {
-                                $query2->whereIn('b.id_course', $id_course);
-                            })
-                            ->where(function ($query) use ($opt2) {
-                                $query->where('b.id_status', '=', $opt2);
-                            })
-                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
-                            // 抓最新來源
-                            ->orderby('b.submissiondate', 'desc')
-                            ->distinct()->get();
+                        if (($type == '1' || $type == '2') && $events_name != '') {
+                            $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                                ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                                ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                                ->where(function ($query2) use ($id_course) {
+                                    $query2->whereIn('b.id_course', $id_course);
+                                })
+                                ->where(function ($query) use ($opt2) {
+                                    $query->where('b.id_status', '=', $opt2);
+                                })
+                                ->where('c.name', 'like', '%' . $events_name . '%')
+
+                                // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                                // 抓最新來源
+                                ->orderby('b.submissiondate', 'desc')
+                                ->distinct()->get();
+                        } else {
+                            $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                                ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                                ->where(function ($query2) use ($id_course) {
+                                    $query2->whereIn('b.id_course', $id_course);
+                                })
+                                ->where(function ($query) use ($opt2) {
+                                    $query->where('b.id_status', '=', $opt2);
+                                })
+                                // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                                // 抓最新來源
+                                ->orderby('b.submissiondate', 'desc')
+                                ->distinct()->get();
+                        }
                     } else {
-                        $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                            ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
-                            ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
-                            ->where(function ($query2) use ($id_course) {
-                                $query2->whereIn('b.id_course', $id_course);
-                            })
-                            ->where(function ($query) use ($opt2) {
-                                $query->where('b.id_status', '=', $opt2);
-                            })
-                            ->where(function ($query3) use ($sdate, $edate) {
-                                $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
-                            })
-                            // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
-                            // 抓最新來源
-                            ->orderby('b.submissiondate', 'desc')
-                            ->distinct()->get();
+                        if (($type == '1' || $type == '2') && $events_name != '') {
+                            // $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                            //     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                            //     ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                            //     ->where(function ($query2) use ($id_course) {
+                            //         $query2->whereIn('b.id_course', $id_course);
+                            //     })
+                            //     ->where(function ($query) use ($opt2) {
+                            //         $query->where('b.id_status', '=', $opt2);
+                            //     })
+                            //     ->where('c.name', 'like', '%' . $events_name . '%')
+
+                            //     // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            //     // 抓最新來源
+                            //     ->orderby('b.submissiondate', 'desc')
+                            //     ->distinct()->get();
+                            $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                                ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                                ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                                ->where(function ($query2) use ($id_course) {
+                                    $query2->whereIn('b.id_course', $id_course);
+                                })
+                                ->where(function ($query) use ($opt2) {
+                                    $query->where('b.id_status', '=', $opt2);
+                                })
+                                ->where(function ($query3) use ($sdate, $edate) {
+                                    $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                                })
+                                ->where('c.name', 'like', '%' . $events_name . '%')
+                                // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                                // 抓最新來源
+                                ->orderby('b.submissiondate', 'desc')
+                                ->distinct()->get();
+                        } else {
+                            $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                                ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                                ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                                ->where(function ($query2) use ($id_course) {
+                                    $query2->whereIn('b.id_course', $id_course);
+                                })
+                                ->where(function ($query) use ($opt2) {
+                                    $query->where('b.id_status', '=', $opt2);
+                                })
+                                ->where(function ($query3) use ($sdate, $edate) {
+                                    $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                                })
+                                // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                                // 抓最新來源
+                                ->orderby('b.submissiondate', 'desc')
+                                ->distinct()->get();
+                        }
                     }
                 } else {
                     if ($opt2 != '3' && $opt2 != '4' && $opt2 != '5' && $opt2 != '2') {
