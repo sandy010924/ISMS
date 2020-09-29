@@ -182,7 +182,7 @@ class CourseListApplyController extends Controller
                         }
                     }
                 } else {
-                    $events = '尚未選擇場次';
+                    $events = '我要選擇其他場次';
                 }
 
                 $apply[$key] = array(
