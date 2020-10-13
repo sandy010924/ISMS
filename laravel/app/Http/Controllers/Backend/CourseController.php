@@ -48,8 +48,7 @@ class CourseController extends Controller
             $events = "";               // 場次
             $location = "";             // 場次+地址
             $address = "";              // 地址
-            $time_start = "";           // 課程開始
-            $time_end = "";             // 課程結束
+           
             $check_excel_status = "0";  // 檢查是不是第一次執行function
             $check_course = "";         // 檢查是否有重複課程
             $check_events = "";         // 檢查是否有重複場次
@@ -348,6 +347,8 @@ class CourseController extends Controller
                         $or_address = "";
                         $address_strchr_finish = array();
                         $location = "";
+                        $time_start = "";           // 課程開始
+                        $time_end = "";             // 課程結束
 
                         $check = 0;
 
@@ -520,12 +521,12 @@ class CourseController extends Controller
                         /*課程資料 - E*/
 
                         /* 場次資料 (2020/03/05) - S*/
-
-                        if (empty($time_star)) {
+                       
+                        if ($time_start == '') {
                             $time_start = '1997-01-01 19:00:00';
                         }
 
-                        if (empty($time_end)) {
+                        if ($time_end== '') {
                             $time_end = '1997-01-01 19:00:00';
                         }
 
