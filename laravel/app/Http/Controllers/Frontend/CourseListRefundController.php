@@ -142,7 +142,7 @@ class CourseListRefundController extends Controller
                         }
                     }
                 } else {
-                    $event = '尚未選擇場次';
+                    $event = '我要選擇其他場次';
                 }
 
                 //付款方式細項

@@ -94,7 +94,7 @@ class CourseAdvancedController extends Controller
                         }
                     }
                 } else {
-                    $events_date = '尚未選擇報名場次';
+                    $events_date = '我要選擇其他場次';
                 }
 
 
@@ -102,11 +102,11 @@ class CourseAdvancedController extends Controller
                 if (!empty($event)) {
                     $event = $event->name;
                 } else {
-                    $event = "尚未選擇報名場次";
+                    $event = "我要選擇其他場次";
                 }
             } else {
-                $events_date = '尚未選擇報名場次';
-                $event = '尚未選擇報名場次';
+                $events_date = '我要選擇其他場次';
+                $event = '我要選擇其他場次';
             }
 
 
