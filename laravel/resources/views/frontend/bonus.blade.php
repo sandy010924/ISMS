@@ -52,7 +52,7 @@
         </td>
         <td>{{ $data['created_at'] }}</td>
         <td>
-          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant'|| Auth::user()->role == 'saleser'))
+          @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant'|| Auth::user()->role == 'saleser' || Auth::user()->role == 'msaleser')))
           <a role="button" class="btn btn-secondary btn-sm mx-1" href="{{ route('show_bonus_detail', [ 'id' => $data['id'] ] ) }}">完整內容</a>
           @endif
           @if (isset(Auth::user()->role) != '' && (Auth::user()->role == 'admin' || Auth::user()->role == 'accountant'))

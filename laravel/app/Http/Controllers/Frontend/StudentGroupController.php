@@ -499,27 +499,67 @@ class StudentGroupController extends Controller
                         //     LEFT JOIN student c on a.id_student = c.id
                         // WHERE b.id_course = '31' AND a.status_payment = '6' AND c.name = '張益裕'
 
-                        $datas = Registration::leftjoin('events_course as b', 'registration.source_events', '=', 'b.id')
-                            ->leftjoin('student as c', 'registration.id_student', '=', 'c.id')
-                            ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
-                            ->select('c.*', 'd.datasource', 'd.submissiondate', 'd.id_status')
-                            ->where(function ($query2) use ($id_course) {
-                                $query2->whereIn('b.id_course', $id_course);
-                            })
+                        $datas = Student::leftjoin(
+                            DB::raw(
+                                " 
+                                (SELECT sort_regi.* FROM (
+                                    SELECT registration.id,status_payment,source_events,id_student,events_course.id_course,events_course.course_start_at
+                                        ,row_number()  over(partition by events_course.id_course order by course_start_at desc)
+                                        FROM  registration RIGHT JOIN (SELECT * FROM events_course 
+                                            ORDER BY course_start_at DESC ) as events_course 
+                                        ON registration.source_events = events_course.id
+                                        ORDER BY course_start_at DESC
+                                    ) AS sort_regi
+                                WHERE  id_course in (" . implode(",", $id_course) . ") 
+                                GROUP BY id_student
+                                ) as a"
+                            ),
+                            function ($join) {
+                                $join->on("a.id_student", "=", "student.id");
+                            }
+                        )
+                            // ->leftjoin('student as c', 'registration.id_student', '=', 'c.id')
+                            ->leftjoin('sales_registration as d', 'd.id_student', '=', 'student.id')
+                            ->select('student.*', 'd.datasource', 'd.submissiondate', 'd.id_status')
+                            // ->where(function ($query2) use ($id_course) {
+                            //     $query2->whereIn('b.id_course', $id_course);
+                            // })
                             ->where(function ($query) use ($opt2) {
-                                $query->where('registration.status_payment', '=', $opt2);
+                                $query->where('a.status_payment', '=', $opt2);
                             })
                             ->where(function ($query3) use ($sdate, $edate) {
-                                $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
+                                $query3->whereBetween('a.course_start_at', [$sdate, $edate]);
                             })
                             // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->whereNotExists(function ($query) {
                                 $query->from('refund')
-                                    ->whereRaw('registration.id = refund.id_registration')
+                                    ->whereRaw('a.id = refund.id_registration')
                                     ->where('refund.review', 1);
                             }) // 篩選退款資料 Rocky (2020/08/28)
                             ->orderby('d.submissiondate', 'desc') // 抓最新來源
                             ->distinct()->get();
+
+                        // $datas = Registration::leftjoin('events_course as b', 'registration.source_events', '=', 'b.id')
+                        //     ->leftjoin('student as c', 'registration.id_student', '=', 'c.id')
+                        //     ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
+                        //     ->select('c.*', 'd.datasource', 'd.submissiondate', 'd.id_status')
+                        //     ->where(function ($query2) use ($id_course) {
+                        //         $query2->whereIn('b.id_course', $id_course);
+                        //     })
+                        //     ->where(function ($query) use ($opt2) {
+                        //         $query->where('registration.status_payment', '=', $opt2);
+                        //     })
+                        //     ->where(function ($query3) use ($sdate, $edate) {
+                        //         $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
+                        //     })
+                        //     // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        //     ->whereNotExists(function ($query) {
+                        //         $query->from('refund')
+                        //             ->whereRaw('registration.id = refund.id_registration')
+                        //             ->where('refund.review', 1);
+                        //     }) // 篩選退款資料 Rocky (2020/08/28)
+                        //     ->orderby('d.submissiondate', 'desc') // 抓最新來源
+                        //     ->distinct()->get();
                     } else if ($opt2 == '2') {
                         if (($type == '1' || $type == '2') && $events_name != '') {
                             $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
@@ -538,18 +578,53 @@ class StudentGroupController extends Controller
                                 ->orderby('b.submissiondate', 'desc')
                                 ->distinct()->get();
                         } else {
-                            $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                                ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
-                                ->where(function ($query2) use ($id_course) {
-                                    $query2->whereIn('b.id_course', $id_course);
-                                })
+                            $datas = Student::leftjoin(
+                                DB::raw(
+                                    " 
+                                    (SELECT ee.* FROM (
+                                        SELECT sales_registration.id_course,sales_registration.id_student,sales_registration.id_status,sales_registration.datasource,sales_registration.submissiondate  ,row_number()  over(partition by sales_registration.id_course order by submissiondate desc)
+                                        FROM sales_registration RIGHT JOIN events_course 
+                                                ON sales_registration.id_events = events_course.id
+                                            ORDER BY submissiondate DESC
+                                        ) AS ee
+                                    WHERE ee.id_course in (" . implode(",", $id_course) . ") GROUP BY id_student) as a"
+                                ),
+                                function ($join) {
+                                    $join->on("a.id_student", "=", "student.id");
+                                }
+                            )
+                                ->leftjoin(
+                                    DB::raw(
+                                        " (SELECT datasource,id_student FROM sales_registration  ORDER BY submissiondate DESC LIMIT 99999999999999999) as b"
+                                    ),
+                                    function ($join) {
+                                        $join->on("b.id_student", "=", "a.id_student");
+                                    }
+                                )
+                                ->select('student.*', 'b.datasource', 'a.submissiondate', 'a.id_status')
+                                // ->where(function ($query2) use ($id_course) {
+                                //     $query2->whereIn('b.id_course', $id_course);
+                                // })
                                 ->where(function ($query) use ($opt2) {
-                                    $query->where('b.id_status', '=', $opt2);
+                                    $query->where('a.id_status', '=', $opt2);
                                 })
                                 // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                                 // 抓最新來源
-                                ->orderby('b.submissiondate', 'desc')
-                                ->distinct()->get();
+                                // ->orderby('b.submissiondate', 'desc')
+                                ->groupby("student.id")
+                                ->get();
+                            // $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                            //     ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                            //     ->where(function ($query2) use ($id_course) {
+                            //         $query2->whereIn('b.id_course', $id_course);
+                            //     })
+                            //     ->where(function ($query) use ($opt2) {
+                            //         $query->where('b.id_status', '=', $opt2);
+                            //     })
+                            //     // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            //     // 抓最新來源
+                            //     ->orderby('b.submissiondate', 'desc')
+                            //     ->distinct()->get();
                         }
                     } else {
                         if (($type == '1' || $type == '2') && $events_name != '') {
@@ -586,22 +661,57 @@ class StudentGroupController extends Controller
                                 ->orderby('b.submissiondate', 'desc')
                                 ->distinct()->get();
                         } else {
-                            $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                                ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
-                                ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
-                                ->where(function ($query2) use ($id_course) {
-                                    $query2->whereIn('b.id_course', $id_course);
-                                })
+                            $datas = Student::leftjoin(
+                                DB::raw(
+                                    " 
+                                    (SELECT ee.* FROM (
+                                        SELECT sales_registration.id_course,sales_registration.id_student,sales_registration.id_status,sales_registration.datasource,sales_registration.submissiondate  ,row_number()  over(partition by sales_registration.id_course order by submissiondate desc)
+                                        FROM sales_registration RIGHT JOIN events_course 
+                                                ON sales_registration.id_events = events_course.id
+                                            ORDER BY submissiondate DESC
+                                        ) AS ee
+                                    WHERE ee.id_course in (" . implode(",", $id_course) . ") GROUP BY id_student) as a"
+                                ),
+                                function ($join) {
+                                    $join->on("a.id_student", "=", "student.id");
+                                }
+                            )
+                                ->leftjoin(
+                                    DB::raw(
+                                        " (SELECT datasource,id_student FROM sales_registration  ORDER BY submissiondate DESC LIMIT 99999999999999999) as b"
+                                    ),
+                                    function ($join) {
+                                        $join->on("b.id_student", "=", "a.id_student");
+                                    }
+                                )
+                                ->select('student.*', 'b.datasource', 'a.submissiondate', 'a.id_status')
+                                // ->where(function ($query2) use ($id_course) {
+                                //     $query2->whereIn('b.id_course', $id_course);
+                                // })
                                 ->where(function ($query) use ($opt2) {
-                                    $query->where('b.id_status', '=', $opt2);
-                                })
-                                ->where(function ($query3) use ($sdate, $edate) {
-                                    $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                                    $query->where('a.id_status', '=', $opt2);
                                 })
                                 // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                                 // 抓最新來源
-                                ->orderby('b.submissiondate', 'desc')
-                                ->distinct()->get();
+                                // ->orderby('b.submissiondate', 'desc')
+                                ->groupby("student.id")
+                                ->get();
+                            // $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                            //     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                            //     ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                            //     ->where(function ($query2) use ($id_course) {
+                            //         $query2->whereIn('b.id_course', $id_course);
+                            //     })
+                            //     ->where(function ($query) use ($opt2) {
+                            //         $query->where('b.id_status', '=', $opt2);
+                            //     })
+                            //     ->where(function ($query3) use ($sdate, $edate) {
+                            //         $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                            //     })
+                            //     // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                            //     // 抓最新來源
+                            //     ->orderby('b.submissiondate', 'desc')
+                            //     ->distinct()->get();
                         }
                     }
                 } else {
@@ -612,46 +722,120 @@ class StudentGroupController extends Controller
                         // 	LEFT JOIN events_course b on a.source_events = b.id
                         //     LEFT JOIN student c on a.id_student = c.id
                         // WHERE b.id_course = '31' AND a.status_payment = '6' AND c.name = '張益裕'
-
-                        $datas = Registration::leftjoin('events_course as b', 'registration.source_events', '=', 'b.id')
-                            ->leftjoin('student as c', 'registration.id_student', '=', 'c.id')
-                            ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
-                            ->select('c.*', 'd.datasource', 'd.submissiondate', 'd.id_status')
-                            ->where(function ($query2) use ($id_course) {
-                                $query2->whereIn('b.id_course', $id_course);
-                            })
+                        $datas = Student::leftjoin(
+                            DB::raw(
+                                " 
+                                (SELECT sort_regi.* FROM (
+                                    SELECT registration.id,status_payment,source_events,id_student,events_course.id_course,events_course.course_start_at
+                                        ,row_number()  over(partition by events_course.id_course order by course_start_at desc)
+                                        FROM  registration RIGHT JOIN (SELECT * FROM events_course 
+                                            ORDER BY course_start_at DESC ) as events_course 
+                                        ON registration.source_events = events_course.id
+                                        ORDER BY course_start_at DESC
+                                    ) AS sort_regi
+                                WHERE  id_course in (" . implode(",", $id_course) . ") 
+                                GROUP BY id_student
+                                ) as a"
+                            ),
+                            function ($join) {
+                                $join->on("a.id_student", "=", "student.id");
+                            }
+                        )
+                            // ->leftjoin('student as c', 'registration.id_student', '=', 'c.id')
+                            ->leftjoin('sales_registration as d', 'd.id_student', '=', 'student.id')
+                            ->select('student.*', 'd.datasource', 'd.submissiondate', 'd.id_status')
+                            // ->where(function ($query2) use ($id_course) {
+                            //     $query2->whereIn('b.id_course', $id_course);
+                            // })
                             ->where(function ($query) use ($opt2) {
-                                $query->where('registration.status_payment', '<>', $opt2);
+                                $query->where('a.status_payment', '<>', $opt2);
                             })
                             ->where(function ($query3) use ($sdate, $edate) {
-                                $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
+                                $query3->whereBetween('a.course_start_at', [$sdate, $edate]);
                             })
+                            // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             ->whereNotExists(function ($query) {
                                 $query->from('refund')
-                                    ->whereRaw('registration.id = refund.id_registration')
+                                    ->whereRaw('a.id = refund.id_registration')
                                     ->where('refund.review', 1);
                             }) // 篩選退款資料 Rocky (2020/08/28)
-                            // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
-                            // 抓最新來源
-                            ->orderby('d.submissiondate', 'desc')
+                            ->orderby('d.submissiondate', 'desc') // 抓最新來源
                             ->distinct()->get();
+                        // $datas = Registration::leftjoin('events_course as b', 'registration.source_events', '=', 'b.id')
+                        //     ->leftjoin('student as c', 'registration.id_student', '=', 'c.id')
+                        //     ->leftjoin('sales_registration as d', 'd.id_student', '=', 'c.id')
+                        //     ->select('c.*', 'd.datasource', 'd.submissiondate', 'd.id_status')
+                        //     ->where(function ($query2) use ($id_course) {
+                        //         $query2->whereIn('b.id_course', $id_course);
+                        //     })
+                        //     ->where(function ($query) use ($opt2) {
+                        //         $query->where('registration.status_payment', '<>', $opt2);
+                        //     })
+                        //     ->where(function ($query3) use ($sdate, $edate) {
+                        //         $query3->whereBetween('b.course_start_at', [$sdate, $edate]);
+                        //     })
+                        //     ->whereNotExists(function ($query) {
+                        //         $query->from('refund')
+                        //             ->whereRaw('registration.id = refund.id_registration')
+                        //             ->where('refund.review', 1);
+                        //     }) // 篩選退款資料 Rocky (2020/08/28)
+                        //     // ->where('c.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        //     // 抓最新來源
+                        //     ->orderby('d.submissiondate', 'desc')
+                        //     ->distinct()->get();
                     } else {
-                        $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
-                            ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
-                            ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
-                            ->where(function ($query2) use ($id_course) {
-                                $query2->whereIn('b.id_course', $id_course);
-                            })
+                        $datas = Student::leftjoin(
+                            DB::raw(
+                                " 
+                                    (SELECT ee.* FROM (
+                                        SELECT sales_registration.id_course,sales_registration.id_student,sales_registration.id_status,sales_registration.datasource,sales_registration.submissiondate  ,row_number()  over(partition by sales_registration.id_course order by submissiondate desc)
+                                        FROM sales_registration RIGHT JOIN events_course 
+                                                ON sales_registration.id_events = events_course.id
+                                            ORDER BY submissiondate DESC
+                                        ) AS ee
+                                    WHERE ee.id_course in (" . implode(",", $id_course) . ") GROUP BY id_student) as a"
+                            ),
+                            function ($join) {
+                                $join->on("a.id_student", "=", "student.id");
+                            }
+                        )
+                            ->leftjoin(
+                                DB::raw(
+                                    " (SELECT datasource,id_student FROM sales_registration  ORDER BY submissiondate DESC LIMIT 99999999999999999) as b"
+                                ),
+                                function ($join) {
+                                    $join->on("b.id_student", "=", "a.id_student");
+                                }
+                            )
+                            ->select('student.*', 'b.datasource', 'a.submissiondate', 'a.id_status')
+                            // ->where(function ($query2) use ($id_course) {
+                            //     $query2->whereIn('b.id_course', $id_course);
+                            // })
                             ->where(function ($query) use ($opt2) {
-                                $query->where('b.id_status', '<>', $opt2);
-                            })
-                            ->where(function ($query3) use ($sdate, $edate) {
-                                $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                                $query->where('a.id_status', '<>', $opt2);
                             })
                             // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
                             // 抓最新來源
-                            ->orderby('b.submissiondate', 'desc')
-                            ->distinct()->get();
+                            // ->orderby('b.submissiondate', 'desc')
+                            ->groupby("student.id")
+                            ->get();
+
+                        // $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                        //     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                        //     ->select('student.*', 'b.datasource', 'b.submissiondate', 'b.id_status')
+                        //     ->where(function ($query2) use ($id_course) {
+                        //         $query2->whereIn('b.id_course', $id_course);
+                        //     })
+                        //     ->where(function ($query) use ($opt2) {
+                        //         $query->where('b.id_status', '<>', $opt2);
+                        //     })
+                        //     ->where(function ($query3) use ($sdate, $edate) {
+                        //         $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                        //     })
+                        //     // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        //     // 抓最新來源
+                        //     ->orderby('b.submissiondate', 'desc')
+                        //     ->distinct()->get();
                     }
                     // $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
                     //     ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
