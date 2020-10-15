@@ -854,7 +854,7 @@ class StudentGroupController extends Controller
                 // 標籤
                 if ($opt1 == "yes") {
                     // 已分配
-                    $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                   $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
                         // ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
                         ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
                         // ->leftjoin('mark as d', 'd.id_student', '=', 'student.id', 'd.course_id', '=', 'c.id')
@@ -1924,6 +1924,185 @@ class StudentGroupController extends Controller
                     }
                     $datas = json_encode($array_student);
                 }
+            }
+        } else {
+            if ($opt1 == "yes") {
+                    // 已分配
+                    if ($type_course == "0" ) {
+                        $datas = Student::leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                        // ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+                        // ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                        // ->leftjoin('mark as d', 'd.id_student', '=', 'student.id', 'd.course_id', '=', 'c.id')
+                        ->leftjoin('mark as d', 'd.id_student', '=', 'student.id')
+                        ->select('student.*', 'b.datasource', 'b.submissiondate')
+                        // ->where(function ($query2) use ($id_course) {
+                        //     $query2->whereIn('b.id_course', $id_course);
+                        // })
+                        ->where(function ($query) use ($opt1, $opt2, $value) {
+                            // 標籤
+                            $opt1 = 'd.name_mark';
+
+                            switch ($opt2) {
+                                case "yes":
+                                    $query->where($opt1, '=', $value);
+                                    break;
+                                case "no":
+                                    $query->where($opt1, '<>', $value);
+                                    break;
+                                case "like":
+                                    $query->where($opt1, 'like', '%' . $value . '%');
+                                    break;
+                                case "notlike":
+                                    $query->where($opt1, 'not like', '%' . $value . '%');
+                                    break;
+                            }
+                        })
+                        // ->where(function ($query3) use ($sdate, $edate) {
+                        //     // $query3->whereBetween('b.created_at', [$sdate, $edate]);
+                        //     $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                        // })
+
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        ->groupby('student.id')
+                        ->get();
+                    } 
+            } else {
+                // 未分配 改寫 Rocky (2020/08/12)
+
+                // 宣告
+                $array_student_id = array();
+                $array_student = array();
+                $array_search_deal = array();
+                $array_search_student = array();
+
+
+                // 1. 先找不存在標籤資料表
+                $datas_notexists_mark = Student::leftjoin(
+                    DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 99999999) as b"),
+                    function ($join) {
+                        $join->on("b.id_student", "=", "student.id");
+                    }
+                )
+                    // leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                    // ->leftjoin('course as c', 'b.id_course', '=', 'c.id')
+                    // ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                    ->select('student.*', 'b.datasource', 'b.submissiondate')
+                    ->whereNotExists(function ($query) {
+                        $query->from('mark')
+                            ->whereRaw('id_student = student.id');
+                    })
+                    // ->where(function ($query2) use ($id_course) {
+                    //     $query2->whereIn('b.id_course', $id_course);
+                    // })
+                    // ->where(function ($query3) use ($sdate, $edate) {
+                    //     $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                    // })
+                    // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                    ->groupby('student.id')
+                    ->get();
+
+
+                // 將不存在標籤資料表內資料新增到array
+                foreach ($datas_notexists_mark as $key => $value_notexists_mark) {
+                    array_push($array_student, array(
+                        'id'                    => $datas_notexists_mark[$key]['id'],
+                        'name'                  => $datas_notexists_mark[$key]['name'],
+                        'phone'                 => $datas_notexists_mark[$key]['phone'],
+                        'email'                 => $datas_notexists_mark[$key]['email'],
+                        'datasource'            => $datas_notexists_mark[$key]['datasource'],
+                        'submissiondate'        => $datas_notexists_mark[$key]['submissiondate'],
+                    ));
+                }
+
+
+                if ($value != "") {
+                    // 2. 符合標籤條件的學員
+                    $datas_exists_mark = Student::leftjoin(
+                        DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as b"),
+                        function ($join) {
+                            $join->on("b.id_student", "=", "student.id");
+                        }
+                    )
+                        // leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                        // ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                        // ->leftjoin('mark as d', 'd.id_student', '=', 'student.id', 'd.course_id', '=', 'c.id')
+                        ->leftjoin('mark as d', 'd.id_student', '=', 'student.id')
+                        ->select('student.*', 'b.datasource', 'b.submissiondate', 'd.name_mark')
+                        // ->where(function ($query2) use ($id_course) {
+                        //     $query2->whereIn('b.id_course', $id_course);
+                        // })
+                        // ->where('d.name_mark', '=', $value)
+                        ->where(function ($query) use ($opt1, $opt2, $value) {
+                            // 標籤
+                            $opt1 = 'd.name_mark';
+
+                            switch ($opt2) {
+                                case "yes":
+                                    $query->where($opt1, '=', $value);
+                                    break;
+                                case "no":
+                                    $query->where($opt1, '<>', $value);
+                                    break;
+                                case "like":
+                                    $query->where($opt1, 'like', '%' . $value . '%');
+                                    break;
+                                case "notlike":
+                                    $query->where($opt1, 'not like', '%' . $value . '%');
+                                    break;
+                            }
+                        })
+                        // ->where(function ($query3) use ($sdate, $edate) {
+                        //     $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                        // })
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        ->groupby('student.id')
+                        ->get();
+
+                    // 3. 符合課程條件的全部學員
+                    $datas_exists_student = Student::leftjoin(
+                        DB::raw(" (SELECT * FROM sales_registration ORDER BY submissiondate desc LIMIT 9999) as b"),
+                        function ($join) {
+                            $join->on("b.id_student", "=", "student.id");
+                        }
+                    )
+                        // leftjoin('sales_registration as b', 'student.id', '=', 'b.id_student')
+                        // ->leftjoin('events_course as c', 'b.id_events', '=', 'c.id')
+                        // ->leftjoin('mark as d', 'd.id_student', '=', 'student.id', 'd.course_id', '=', 'c.id')
+                        // ->leftjoin('mark as d', 'd.id_student', '=', 'student.id')
+                        ->select('student.*', 'b.datasource', 'b.submissiondate')
+                        // ->where(function ($query2) use ($id_course) {
+                        //     $query2->whereIn('b.id_course', $id_course);
+                        // })
+                        // ->where(function ($query3) use ($sdate, $edate) {
+                        //     $query3->whereBetween('c.course_start_at', [$sdate, $edate]);
+                        // })
+                        // ->where('student.check_blacklist', '0') // 不是黑名單 Rocky (2020/08/05)
+                        ->groupby('student.id')
+                        ->get();
+
+                    $arr = array_column(
+                        array_merge($array_search_student, json_decode($datas_exists_mark, true)),
+                        'id'
+                    );
+
+                    // 比較全部學員和符合標籤學員
+                    foreach ($datas_exists_student as $key => $value_exists_student) {
+                        $check_array_search = array_search($value_exists_student['id'], $arr);
+                        // 沒有重複值才新增
+                        if ($check_array_search === false) {
+                            array_push($array_student, array(
+                                'id'                    => $datas_exists_student[$key]['id'],
+                                'name'                  => $datas_exists_student[$key]['name'],
+                                'phone'                 => $datas_exists_student[$key]['phone'],
+                                'email'                 => $datas_exists_student[$key]['email'],
+                                'datasource'            => $datas_exists_student[$key]['datasource'],
+                                'submissiondate'        => $datas_exists_student[$key]['submissiondate'],
+                                // 'name_mark'             => $datas_exists_student[$key]['name_mark'],
+                            ));
+                        }
+                    }
+                }
+                $datas = json_encode($array_student);
             }
         }
 
